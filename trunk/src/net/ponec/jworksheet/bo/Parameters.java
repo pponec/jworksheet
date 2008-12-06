@@ -94,6 +94,8 @@ public class Parameters extends ArrayUjo {
     public static final UjoProperty<Parameters,File> P_DATA_FILE_PATH = newProperty("DataFilePath", new File(VALUE_DEFAULT), propertyCount++);
     /** Project table sorted column */
     public static final UjoProperty<Parameters,String> P_SORT_PROJ_COLUMN = newProperty("SortProjColumn", Project.P_ID.getName(), propertyCount++);
+    /** JWorkSheet module loader */
+    public static final UjoProperty<Parameters,String> P_MODULE_LOADER = newProperty("ModuleLoader", /*String.class*/ net.ponec.module.SampleModule.class.getName(), propertyCount++);
     
     /** Decimal Formatter */
     private DecimalFormat decimalFormat = null;

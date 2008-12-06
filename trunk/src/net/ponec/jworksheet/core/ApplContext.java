@@ -24,6 +24,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStreamWriter;
 import java.io.Writer;
+import java.lang.reflect.Constructor;
 import java.nio.charset.Charset;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
@@ -58,7 +59,7 @@ import org.ujoframework.core.UjoManagerXML;
  * A Main Application Context
  * @author Pavel Ponec
  */
-public class ApplContext implements TableModelListener, Runnable {
+public class ApplContext implements TableModelListener, Runnable, ApplContextInterface {
     
     /** Logger */
     public static final Logger LOGGER = Logger.getLogger(ApplContext.class.getName());
@@ -102,16 +103,12 @@ public class ApplContext implements TableModelListener, Runnable {
     /** Warning: data is restored from a backup! */
     private boolean dataRestored = false;
     
-    /**
-     * Creates a new instance of ApplContext
-     */
+    /** Creates a new instance of ApplContext */
     public ApplContext() {
         systray = SysTray.getInstance(this);
     }
     
-    /**
-     * Load WorkSpace
-     */
+    /** Returns WorkSpace */
     public WorkSpace getWorkSpace(){
         return workSpace;
     }
@@ -243,6 +240,8 @@ public class ApplContext implements TableModelListener, Runnable {
         if (lock.exists()) {
             lock.delete();
         }
+        
+        fireModuleEvent();
         
     }
     
@@ -494,7 +493,27 @@ public class ApplContext implements TableModelListener, Runnable {
     
     /** Initializaton flag */
     public void setInitialized() {
+        fireModuleEvent();
         this.initialized = true;
+    }
+    
+    public boolean isStarting() {
+        return !this.initialized;
+    }
+    
+    /** File an module event. */
+    @SuppressWarnings("unchecked")
+    public void fireModuleEvent() {
+        String moduleLoader = Parameters.P_MODULE_LOADER.of(parameters);
+        if (ApplTools.isValid(moduleLoader)) try {
+            Class loaderClass = Class.forName(moduleLoader);
+            Constructor constr = loaderClass.getConstructor(ApplContextInterface.class);
+            Runnable loader = (Runnable) constr.newInstance(this);
+            loader.run();            
+        } catch (Throwable e) {
+            throw new IllegalArgumentException("Bad module loader class " + moduleLoader, e);
+        }
+        
     }
     
     /** Returns an old version. */
