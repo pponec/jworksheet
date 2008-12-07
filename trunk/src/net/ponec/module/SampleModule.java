@@ -21,7 +21,7 @@ public class SampleModule implements Runnable {
 
     public void run() {
         if (context.isStarting()) {
-            System.out.println("STATING jWorkSheet");
+            System.out.println("STARTING jWorkSheet");
         } else {
             System.out.println("FINISHING jWorkSheet");
         }
