@@ -105,6 +105,7 @@ public class SysTray6 extends SysTray implements MouseListener, ActionListener {
         
         frame.setVisibleLock(true);
         
+        // It is a fix solution for the Ubuntu 8.04:
         new Thread(new Runnable() {
             public void run() {
                 ApplTools.sleep(80);
@@ -173,7 +174,11 @@ public class SysTray6 extends SysTray implements MouseListener, ActionListener {
         Object source  = e.getSource();
         if (source==miExit) {
             try {
-                applContext.closeAppl(true);
+                // applContext.closeAppl(true);
+                
+                // Data will be saved by a ShutdownHook:
+                applContext.getTopFrame().dispose();
+                System.exit(0);
             } catch (Throwable ex) {
                 String msg = ex.getMessage() + '\n' + ex.getClass().getName();
                 showMessage(msg, null);
