@@ -46,12 +46,12 @@ public class CommonTableRenderer extends DefaultTableCellRenderer {
     
     @Override
     public Component getTableCellRendererComponent
-    ( JTable aTable
-    , Object value
-    , boolean isSelected
-    , boolean hasFocus
-    , int rowIndex
-    , int viewColumn
+    ( final JTable aTable
+    , final Object value
+    , final boolean isSelected
+    , final boolean hasFocus
+    , final int rowIndex
+    , final int viewColumn
     ){
         JLabel result = (JLabel) super.getTableCellRendererComponent
         ( aTable

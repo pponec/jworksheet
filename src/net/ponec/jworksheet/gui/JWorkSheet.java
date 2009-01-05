@@ -76,8 +76,8 @@ import org.ujoframework.swing.UjoPropertyRow;
 @SuppressWarnings("unchecked")
 public final class JWorkSheet extends TopFrame {
     
-    public static final String APPL_VERSION  = "0.81.5" ;
-    public static final String APPL_RELEASED = "2008/12/07";
+    public static final String APPL_VERSION  = "0.82" ;
+    public static final String APPL_RELEASED = "2008/12/12";
     
     public static final String APPL_NAME     = "jWorkSheet";
     public static final String APPL_HOMEPAGE = "http://jworksheet.ponec.net/";
@@ -251,7 +251,7 @@ public final class JWorkSheet extends TopFrame {
             }
             
         } catch (Throwable e) {
-            super.showMessage("Can't open JWorkSheet", e);
+            super.showMessage("Can't open " + APPL_NAME, e);
             System.exit(-1);
         }
     }
@@ -347,7 +347,7 @@ public final class JWorkSheet extends TopFrame {
         cbTimeOffActionPerformed(null);
         
         if (today && model.getRowCount()==0) {
-            ((EventTableModel)eventTable.getModel()).inserRowAndDefault( new Event().initTime());
+            ((EventTableModel)eventTable.getModel()).insertRowAndDefault( new Event().initTime());
             // Save a startup event:
             applContext.saveData(false);
             
@@ -1228,7 +1228,7 @@ public final class JWorkSheet extends TopFrame {
         + "<br>&nbsp;<a href=\"http://famfamfam.com\">http://famfamfam.com</a>"
         , "UJO Framework"
         + "<br>&nbsp;(Apache License, Version 2.0)"
-        + "<br>&nbsp;<a href=\"http://www.ujoframework.org\">http://www.ujoframework.org</a>"
+        + "<br>&nbsp;<a href=\"http://ujoframework.org\">http://ujoframework.org</a>"
         , new ResourceProvider().getIcon(ResourceProvider.LOGO)
         , ApplTools.createCloseButton("OK")
         );
@@ -1400,7 +1400,7 @@ public final class JWorkSheet extends TopFrame {
             }
         }
         
-        model.inserRowAndDefault(newEvent);
+        model.insertRowAndDefault(newEvent);
         eventTable.selectRow(Integer.MAX_VALUE);
     }//GEN-LAST:event_bCreateActionPerformed
     
