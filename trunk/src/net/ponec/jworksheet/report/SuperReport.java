@@ -87,10 +87,10 @@ public abstract class SuperReport implements Calculator {
     }
     /** Escape a text parameter */
     protected String escape(Object aText, boolean fixSpace) {
-        if (aText==null) {
+        String text = String.valueOf(aText);
+        if (aText==null || text.length()==0) {
             return "&nbsp;" ;
         }
-        String text = String.valueOf(aText);
         StringBuilder sb = new StringBuilder(text.length() + 8);
         for (int i=0; i<text.length(); i++) {
             char c = text.charAt(i);

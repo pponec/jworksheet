@@ -77,7 +77,7 @@ public class EventTableModel extends UjoTableModel<Event> {
     }
     
     /** Insert a row to End of model and set a Default project */
-    public void inserRowAndDefault(Event row) {
+    public void insertRowAndDefault(Event row) {
         
         // Set Default values:
         Project defaultProj = applContext.getWorkSpace().findDefaultProject();

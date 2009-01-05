@@ -31,7 +31,10 @@ import java.io.PrintWriter;
 import java.io.StringWriter;
 import java.io.UnsupportedEncodingException;
 import java.lang.reflect.Method;
+import java.net.MalformedURLException;
 import java.net.URI;
+import java.net.URL;
+import java.net.URLClassLoader;
 import java.nio.charset.Charset;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
@@ -580,5 +583,14 @@ public class ApplTools {
         return result;
     }
     
+    /** Call the class from another JAR */
+    public static final Class getClass(String className, File jar) 
+        throws MalformedURLException, ClassNotFoundException 
+    {
+        final URL[] urls = new URL[]{ jar.toURI().toURL() };
+        final URLClassLoader child = new URLClassLoader(urls, ApplTools.class.getClassLoader());
+        final Class result = Class.forName (className, true, child);
+        return result;
+    }
     
 }

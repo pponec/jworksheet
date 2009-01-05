@@ -307,8 +307,8 @@ public class UjoTable extends JTable implements TableCellRenderer {
 
     /** Show selected column */
     public void showSortedColumn(final String property) {
-        sortedColumn = getColumn(Math.max(0, getModel().findColumn(property)));
-        showSortedColumn(sortedColumn);
+        final UjoProperty pro = getColumn(Math.max(0, getModel().findColumn(property)));
+        showSortedColumn(pro);
     }
 
     /** Get Sorted Column */
