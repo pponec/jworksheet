@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?> 
+<jnlp 
+  spec="1.0+" 
+  codebase="http://jworksheet.ponec.net/" 
+  href="file.jnlp"> 
+  <information> 
+    <title>JWorkSheet</title> 
+    <vendor>Pavel Ponec</vendor> 
+    <homepage href="."/> 
+    <description>...</description> 
+    <description kind="short">...</description> 
+    <icon href="logo.png"/>
+    <icon kind="splash" href="logo.png"/> 
+    <offline-allowed/> 
+  </information>
+  
+  <security>
+      <all-permissions/> 
+  </security>
+  
+  <resources> 
+    <j2se version="1.5+" max-heap-size="32m"/> 
+    <jar href="jWorkSheet.jar"/>
+    <jar href="lib/UJO.jar" />
+  </resources> 
+  <application-desc 
+      main-class="net.ponec.jworksheet.gui.JWorkSheet"> 
+     <argument>test</argument>
+  </application-desc> 
+</jnlp> 
+
