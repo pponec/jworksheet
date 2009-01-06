@@ -17,7 +17,11 @@
 
 package net.ponec.jworksheet.core;
 
+import java.net.MalformedURLException;
+import net.ponec.jworksheet.module.JwsContext;
 import java.awt.Rectangle;
+import java.io.BufferedInputStream;
+import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -33,6 +37,8 @@ import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 import java.util.Locale;
+import java.util.jar.JarEntry;
+import java.util.jar.JarFile;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.SwingUtilities;
@@ -50,6 +56,7 @@ import net.ponec.jworksheet.bo.WorkSpace;
 import net.ponec.jworksheet.bo.item.Time;
 import net.ponec.jworksheet.bo.item.YearMonthDay;
 import net.ponec.jworksheet.gui.JWorkSheet;
+import net.ponec.jworksheet.module.ModuleApi;
 import net.ponec.jworksheet.report.MetaReport;
 import net.ponec.jworksheet.resources.ResourceProvider;
 import org.ujoframework.core.UjoManagerRBundle;
@@ -59,7 +66,7 @@ import org.ujoframework.core.UjoManagerXML;
  * A Main Application Context
  * @author Pavel Ponec
  */
-public class ApplContext implements TableModelListener, Runnable, ApplContextInterface {
+public class ApplContext implements TableModelListener, Runnable, JwsContext {
     
     /** Logger */
     public static final Logger LOGGER = Logger.getLogger(ApplContext.class.getName());
@@ -72,9 +79,14 @@ public class ApplContext implements TableModelListener, Runnable, ApplContextInt
     
     /** Style subdirectory */
     public static final String FILE_STYLES = "styles";
+
+    /** Subdirectory of modules */
+    public static final String FILE_MODULES = "modules";
     
     /** A temporarry extension */
     public static final String EXTENSION_TMP = ".tmp";
+
+    public static final String MODULE_ENTRY = "META-INF/JWS-MODULE.MF";
     
     /** Basic window */
     protected JWorkSheet topFrame;
@@ -102,6 +114,10 @@ public class ApplContext implements TableModelListener, Runnable, ApplContextInt
     
     /** Warning: data is restored from a backup! */
     private boolean dataRestored = false;
+
+    private List<ModuleApi> modules;
+
+    // -----------------------------------------------------------------
     
     /** Creates a new instance of ApplContext */
     public ApplContext() {
@@ -169,6 +185,36 @@ public class ApplContext implements TableModelListener, Runnable, ApplContextInt
         // Select TODAY
         selectWorkDay(new YearMonthDay());
     }
+
+    public void initModules() {
+        modules = new ArrayList<ModuleApi>();
+        String fileName = "?";
+        for (File file : getModulesDir().listFiles()) {
+            if (file.getName().endsWith(".jar")) try {
+                fileName = file.getPath();
+                JarFile jarFile = new JarFile(file);
+                JarEntry jarEntry = jarFile.getJarEntry(MODULE_ENTRY);
+                if (jarEntry!=null) {
+                    InputStream is = new BufferedInputStream(jarFile.getInputStream(jarEntry));
+                    ByteArrayOutputStream os = new ByteArrayOutputStream(64);
+                    int c;
+                    while ((c=is.read())!=-1) { os.write(c); }
+                    String content = os.toString("UTF-8");
+                    int i = 1+content.indexOf(':');
+                    String className = content.substring(i).trim();
+                    if (ApplTools.isValid(content)) {
+                        Class<ModuleApi> mod = ApplTools.getClass(className, file);
+                        ModuleApi mapi = mod.newInstance();
+                        mapi.setJwsContext(this);
+                        this.modules.add(mapi);
+                    }
+                }
+            } catch (Throwable e) {
+                LOGGER.log(Level.WARNING, "Can't load module from file: " + fileName, e);
+            }
+        }
+    }
+
     
     /** Is the time to backup data? 
      *  If the archived timestamp is undefined, then method setup the timestamp to current date only
@@ -306,6 +352,13 @@ public class ApplContext implements TableModelListener, Runnable, ApplContextInt
         final File result = new File(getConfigDir(), FILE_STYLES);
         return result;
     }
+
+    /** Modules Directory */
+    public File getModulesDir() {
+        final File result = new File(getConfigDir(), FILE_MODULES);
+        return result;
+    }
+
     
     /** Configuration Directory */
     public File getConfigFile() {
@@ -493,6 +546,7 @@ public class ApplContext implements TableModelListener, Runnable, ApplContextInt
     
     /** Initializaton flag */
     public void setInitialized() {
+        initModules();
         fireModuleEvent();
         this.initialized = true;
     }
@@ -504,16 +558,9 @@ public class ApplContext implements TableModelListener, Runnable, ApplContextInt
     /** File an module event. */
     @SuppressWarnings("unchecked")
     public void fireModuleEvent() {
-        String moduleLoader = Parameters.P_MODULE_LOADER.of(parameters);
-        if (ApplTools.isValid(moduleLoader)) try {
-            Class loaderClass = Class.forName(moduleLoader);
-            Constructor constr = loaderClass.getConstructor(ApplContextInterface.class);
-            Runnable loader = (Runnable) constr.newInstance(this);
-            loader.run();            
-        } catch (Throwable e) {
-            throw new IllegalArgumentException("Bad module loader class " + moduleLoader, e);
+        for (ModuleApi mod : this.modules) {
+            mod.eventListener(isStarting());
         }
-        
     }
     
     /** Returns an old version. */

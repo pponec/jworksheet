@@ -584,7 +584,8 @@ public class ApplTools {
     }
     
     /** Call the class from another JAR */
-    public static final Class getClass(String className, File jar) 
+    @SuppressWarnings("unchecked")
+    public static final <T> Class<T> getClass(String className, File jar)
         throws MalformedURLException, ClassNotFoundException 
     {
         final URL[] urls = new URL[]{ jar.toURI().toURL() };
