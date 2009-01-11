@@ -126,7 +126,13 @@ public final class JWorkSheet extends TopFrame {
                     String descr = "";
                     int selectedRow = paramTable.getSelectedRow();
                     if (isVisible() && selectedRow>=0) {
-                        final String key = paramTable.getValueAt(selectedRow, paramTable.convertColumnIndexToModel(0)).toString();
+                        final String key 
+                            = "param."
+                            + paramTable.getValueAt
+                            ( selectedRow
+                            , paramTable.convertColumnIndexToModel(0)
+                            ).toString()
+                            ;
                         descr = new ResourceProvider().getText(key, Locale.ENGLISH);
                     }
                     paramDescr.setText(descr);

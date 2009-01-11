@@ -337,7 +337,7 @@ public class ApplContext implements TableModelListener, Runnable, JwsContext {
                 throw new MessageException("Can't write data to a parameter directory: " + userConfigDir);               
             }
         } else {        
-            result = new File(System.getProperty("user.home"), ".jWorkSheet");
+            result = new File(System.getProperty("user.home"), Parameters.CONFIG_DIR);
             if (!result.isDirectory()) {
                 if (!result.mkdirs()) {
                     throw new MessageException("Can't create directory: " + result);
