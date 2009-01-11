@@ -37,12 +37,15 @@ import static org.ujoframework.extensions.UjoAction.*;
  * @author Pavel Ponec
  */
 public class Parameters extends ArrayUjo {
-  
-    /** An Incrementator. Use a new counter for each subclass. */
-    protected static int propertyCount = ArrayUjo.propertyCount;
-    
+
+    /** A configuration subdirectory of a user home directory. */
+    public static final String CONFIG_DIR = ".jWorkSheet";
+
     /** A "Default Value" Label */
     private static final String VALUE_DEFAULT = "<default>";
+
+    /** An Incrementator. Use a new counter for each subclass. */
+    protected static int propertyCount = ArrayUjo.propertyCount;
     
     /** LocaleText lcalization */
     public static final UjoProperty<Parameters,Locale> P_LANG = newProperty("Language", Locale.getDefault(), propertyCount++);
