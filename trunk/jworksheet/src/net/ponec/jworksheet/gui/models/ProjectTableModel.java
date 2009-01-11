@@ -18,6 +18,7 @@
 package net.ponec.jworksheet.gui.models;
 
 import net.ponec.jworksheet.bo.Project;
+import net.ponec.jworksheet.core.ApplContext;
 import org.ujoframework.UjoProperty;
 import org.ujoframework.swing.UjoTableModel;
 import org.ujoframework.core.ZeroProvider;
@@ -30,14 +31,24 @@ public class ProjectTableModel extends UjoTableModel<Project> {
     
     /** Properties */
     public final static Project PROPS = null;
+
+    /** Application context */
+    private final ApplContext applContext;
     
     /**
      * Creates a new instance of UjoTableModel
      */
-    public ProjectTableModel() {
+    public ProjectTableModel(final ApplContext applContext) {
         super(Project.TABLE_COLUMNS);
+        this.applContext = applContext;
     }
-    
+
+    /** Returns a localized Column Name */
+    @Override
+    public String getColumnName(UjoProperty property) {
+        return applContext.getLanguageManager().getTextAllways("tab." + property);
+    }
+
     /** Get next Project id */
     protected Integer nextProjectId() {
         Integer result = ZeroProvider.ZERO_INT;

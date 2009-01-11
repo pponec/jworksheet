@@ -90,6 +90,9 @@ public class ApplContext implements TableModelListener, Runnable, JwsContext {
     
     /** Basic window */
     protected JWorkSheet topFrame;
+
+    /** LanguageMananer */
+    protected LanguageManager languageManager;
     
     /** SysTray */
     private SysTray systray;
@@ -547,6 +550,8 @@ public class ApplContext implements TableModelListener, Runnable, JwsContext {
     /** Initializaton flag */
     public void setInitialized() {
         initModules();
+        languageManager.setLocaleAndTranslate(Parameters.P_LANG.of(parameters), true); // translate the application
+
         fireModuleEvent();
         this.initialized = true;
     }
@@ -598,17 +603,18 @@ public class ApplContext implements TableModelListener, Runnable, JwsContext {
     }
     
     /** Set JWorkSheet */
-    public void setTopFrame(JWorkSheet topFrame) {
+    public void setTopFrame(JWorkSheet topFrame, boolean showDebugWindow) {
         this.topFrame = topFrame;
+        this.languageManager = new LanguageManager(topFrame, ResourceProvider.class, showDebugWindow);
+        this.languageManager.setLocaleAndTranslate(Parameters.P_LANG.of(parameters), false);
     }
 
     /** Set a user configuration directory */
     public void setUserConfigDir(String userConfigDir) {
         this.userConfigDir = userConfigDir;
     }
-    
-    
-    
+
+
     /**
      * Show a report in HTML viewer:
      * @param aData Null value means a BasicDataFile
@@ -749,6 +755,10 @@ public class ApplContext implements TableModelListener, Runnable, JwsContext {
             }
         }
     }
-    
-    
+
+    /** Returns manager */
+    public LanguageManager getLanguageManager() {
+        return languageManager;
+    }
+        
 }
