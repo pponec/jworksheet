@@ -65,6 +65,12 @@ public class EventTableModel extends UjoTableModel<Event> {
             ;
         }
     }
+
+    /** Returns a localized Column Name */
+    @Override
+    public String getColumnName(UjoProperty property) {
+        return applContext.getLanguageManager().getTextAllways("tab." + property);
+    }
     
     /** Insert a row to End of model. */
     public void insertRow(Event row) {

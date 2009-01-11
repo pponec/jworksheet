@@ -47,6 +47,12 @@ public class ParamTableModel extends SingleUjoTabModel {
         );
         this.applContext = applContext;
     }
+
+    /** Returns a localized Column Name */
+    @Override
+    public String getColumnName(UjoProperty property) {
+        return applContext.getLanguageManager().getTextAllways("tab." + property);
+    }
     
     /** Set a value to a cell of table model. */
     @Override

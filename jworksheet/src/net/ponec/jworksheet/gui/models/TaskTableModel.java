@@ -18,6 +18,7 @@
 package net.ponec.jworksheet.gui.models;
 
 import net.ponec.jworksheet.bo.TaskType;
+import net.ponec.jworksheet.core.ApplContext;
 import org.ujoframework.UjoProperty;
 import org.ujoframework.swing.UjoTableModel;
 import org.ujoframework.core.ZeroProvider;
@@ -32,13 +33,21 @@ public class TaskTableModel extends UjoTableModel<TaskType> {
     
     /** Properties */
     public final static TaskType PROPS = null;
-    
+
+    /** Application context */
+    private final ApplContext applContext;
     
     /** Creates a new instance of TaskTableModel */
-    public TaskTableModel() {
+    public TaskTableModel(final ApplContext applContext) {
         super( TaskType.class );
+        this.applContext = applContext;
     }
     
+    /** Returns a localized Column Name */
+    @Override
+    public String getColumnName(UjoProperty property) {
+        return applContext.getLanguageManager().getTextAllways("tab." + property);
+    }
     
     /** Get next Task id */
     protected Integer nextTaskId() {
