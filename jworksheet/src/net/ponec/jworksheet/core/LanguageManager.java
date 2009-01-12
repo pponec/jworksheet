@@ -527,11 +527,12 @@ public class LanguageManager {
                     && (i+1)<theText.length() 
                     && theText.charAt(i+1)!='&') {
                         StringBuilder sb = new StringBuilder(theText);
+                        sb.deleteCharAt(i);
                         sb.setLength(i);
                         sb.append(theText.substring(i+1));
                         theText = sb.toString();
                         btn.setText(theText);
-                        btn.setMnemonic(theText.charAt(i));
+                        btn.setMnemonic( (int) Character.toUpperCase(theText.charAt(i)) );
                         btn.setDisplayedMnemonicIndex(i);
                     } else {
                         btn.setMnemonic(KeyEvent.VK_UNDEFINED);

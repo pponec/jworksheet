@@ -548,9 +548,7 @@ public final class JWorkSheet extends TopFrame {
 
         pDays.setLayout(new java.awt.GridBagLayout());
 
-        bDayPrev.setMnemonic('P');
         bDayPrev.setText("Previous"); // NOI18N
-        bDayPrev.setToolTipText("Go to a previous day"); // NOI18N
         bDayPrev.setIconTextGap(0);
         bDayPrev.setMargin(new java.awt.Insets(2, 0, 2, 1));
         bDayPrev.setMaximumSize(new java.awt.Dimension(90, 23));
@@ -572,9 +570,7 @@ public final class JWorkSheet extends TopFrame {
         gridBagConstraints.insets = new java.awt.Insets(0, 5, 0, 5);
         pDays.add(lCurrentDay, gridBagConstraints);
 
-        bDayNext.setMnemonic('x');
         bDayNext.setText("Next"); // NOI18N
-        bDayNext.setToolTipText("Go to a next day"); // NOI18N
         bDayNext.setHorizontalTextPosition(javax.swing.SwingConstants.LEADING);
         bDayNext.setIconTextGap(2);
         bDayNext.setMargin(new java.awt.Insets(2, 1, 2, 0));
@@ -588,9 +584,7 @@ public final class JWorkSheet extends TopFrame {
         gridBagConstraints.insets = new java.awt.Insets(0, 0, 0, 2);
         pDays.add(bDayNext, gridBagConstraints);
 
-        bToday.setMnemonic('t');
         bToday.setText("Today"); // NOI18N
-        bToday.setToolTipText("Go to today"); // NOI18N
         bToday.setMargin(new java.awt.Insets(2, 0, 2, 0));
         bToday.setMaximumSize(new java.awt.Dimension(90, 23));
         bToday.setMinimumSize(new java.awt.Dimension(66, 23));
@@ -602,9 +596,7 @@ public final class JWorkSheet extends TopFrame {
         gridBagConstraints.insets = new java.awt.Insets(0, 0, 0, 2);
         pDays.add(bToday, gridBagConstraints);
 
-        bGoto.setMnemonic('G');
         bGoto.setText("Go to"); // NOI18N
-        bGoto.setToolTipText("Go to any day"); // NOI18N
         bGoto.setIconTextGap(3);
         bGoto.setMargin(new java.awt.Insets(2, 0, 2, 0));
         bGoto.setMaximumSize(new java.awt.Dimension(90, 23));
@@ -618,9 +610,7 @@ public final class JWorkSheet extends TopFrame {
         gridBagConstraints.insets = new java.awt.Insets(0, 0, 0, 2);
         pDays.add(bGoto, gridBagConstraints);
 
-        cbTimeOff.setMnemonic('O');
         cbTimeOff.setText("Day Off"); // NOI18N
-        cbTimeOff.setToolTipText("Day Off Work"); // NOI18N
         cbTimeOff.setBorder(javax.swing.BorderFactory.createEmptyBorder(0, 0, 0, 0));
         cbTimeOff.addActionListener(formListener);
         gridBagConstraints = new java.awt.GridBagConstraints();
@@ -649,9 +639,7 @@ public final class JWorkSheet extends TopFrame {
 
         pButtons.setLayout(new java.awt.GridBagLayout());
 
-        bCreate.setMnemonic('N');
-        bCreate.setText("New"); // NOI18N
-        bCreate.setToolTipText("Create new Event  [F5]"); // NOI18N
+        bCreate.setText("New1"); // NOI18N
         bCreate.setMaximumSize(new java.awt.Dimension(65, 65));
         bCreate.setMinimumSize(new java.awt.Dimension(63, 23));
         bCreate.setPreferredSize(new java.awt.Dimension(65, 55));
@@ -664,9 +652,7 @@ public final class JWorkSheet extends TopFrame {
         gridBagConstraints.insets = new java.awt.Insets(0, 0, 2, 0);
         pButtons.add(bCreate, gridBagConstraints);
 
-        bDelete.setMnemonic('D');
         bDelete.setText("Delete"); // NOI18N
-        bDelete.setToolTipText("Delete selected row"); // NOI18N
         bDelete.addActionListener(formListener);
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 1;
@@ -676,9 +662,7 @@ public final class JWorkSheet extends TopFrame {
         gridBagConstraints.insets = new java.awt.Insets(0, 0, 2, 0);
         pButtons.add(bDelete, gridBagConstraints);
 
-        bClone.setMnemonic('C');
         bClone.setText("Copy"); // NOI18N
-        bClone.setToolTipText("Copy selected Event to new row"); // NOI18N
         bClone.addActionListener(formListener);
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 1;
@@ -688,9 +672,7 @@ public final class JWorkSheet extends TopFrame {
         gridBagConstraints.insets = new java.awt.Insets(0, 0, 2, 0);
         pButtons.add(bClone, gridBagConstraints);
 
-        bSort.setMnemonic('S');
-        bSort.setText("Sort"); // NOI18N
-        bSort.setToolTipText("Sort by Time and recalculate all Periods  [F6]"); // NOI18N
+        bSort.setText("Sort1"); // NOI18N
         bSort.addActionListener(formListener);
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 1;
@@ -700,7 +682,6 @@ public final class JWorkSheet extends TopFrame {
         gridBagConstraints.insets = new java.awt.Insets(0, 0, 2, 0);
         pButtons.add(bSort, gridBagConstraints);
 
-        bReport.setMnemonic('R');
         bReport.setText("Report"); // NOI18N
         bReport.addActionListener(formListener);
         gridBagConstraints = new java.awt.GridBagConstraints();
@@ -712,9 +693,7 @@ public final class JWorkSheet extends TopFrame {
         gridBagConstraints.insets = new java.awt.Insets(0, 0, 2, 0);
         pButtons.add(bReport, gridBagConstraints);
 
-        bAbout.setMnemonic('A');
         bAbout.setText("About"); // NOI18N
-        bAbout.setToolTipText("Export a Group Statistics"); // NOI18N
         bAbout.addActionListener(formListener);
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 1;
@@ -774,9 +753,7 @@ public final class JWorkSheet extends TopFrame {
 
         pProjButtons.setLayout(new java.awt.GridBagLayout());
 
-        bProjCreate.setMnemonic('N');
         bProjCreate.setText("New"); // NOI18N
-        bProjCreate.setToolTipText("Create new Project"); // NOI18N
         bProjCreate.addActionListener(formListener);
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 1;
@@ -786,9 +763,7 @@ public final class JWorkSheet extends TopFrame {
         gridBagConstraints.insets = new java.awt.Insets(0, 0, 2, 0);
         pProjButtons.add(bProjCreate, gridBagConstraints);
 
-        bProjDelete.setMnemonic('D');
         bProjDelete.setText("Delete"); // NOI18N
-        bProjDelete.setToolTipText("Delete selected row"); // NOI18N
         bProjDelete.addActionListener(formListener);
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 1;
@@ -798,9 +773,7 @@ public final class JWorkSheet extends TopFrame {
         gridBagConstraints.insets = new java.awt.Insets(0, 0, 2, 0);
         pProjButtons.add(bProjDelete, gridBagConstraints);
 
-        bProjClone.setMnemonic('C');
         bProjClone.setText("Copy"); // NOI18N
-        bProjClone.setToolTipText("Copy selected row"); // NOI18N
         bProjClone.addActionListener(formListener);
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 1;
@@ -810,9 +783,7 @@ public final class JWorkSheet extends TopFrame {
         gridBagConstraints.insets = new java.awt.Insets(0, 0, 2, 0);
         pProjButtons.add(bProjClone, gridBagConstraints);
 
-        bProjSort.setMnemonic('S');
         bProjSort.setText("Sort"); // NOI18N
-        bProjSort.setToolTipText("Sort by ID"); // NOI18N
         bProjSort.addActionListener(formListener);
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 1;
@@ -822,9 +793,7 @@ public final class JWorkSheet extends TopFrame {
         gridBagConstraints.insets = new java.awt.Insets(0, 0, 2, 0);
         pProjButtons.add(bProjSort, gridBagConstraints);
 
-        bProjReport.setMnemonic('R');
         bProjReport.setText("Report"); // NOI18N
-        bProjReport.setToolTipText("Report to Internet browser"); // NOI18N
         bProjReport.addActionListener(formListener);
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 1;
@@ -872,8 +841,7 @@ public final class JWorkSheet extends TopFrame {
 
         pTaskButtons.setLayout(new java.awt.GridBagLayout());
 
-        bTaskCreate.setText("New"); // NOI18N
-        bTaskCreate.setToolTipText("Create new Task"); // NOI18N
+        bTaskCreate.setText("New2"); // NOI18N
         bTaskCreate.addActionListener(formListener);
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 1;
@@ -883,8 +851,7 @@ public final class JWorkSheet extends TopFrame {
         gridBagConstraints.insets = new java.awt.Insets(0, 0, 3, 0);
         pTaskButtons.add(bTaskCreate, gridBagConstraints);
 
-        bTaskDelete.setText("Delete"); // NOI18N
-        bTaskDelete.setToolTipText("Delete selected row"); // NOI18N
+        bTaskDelete.setText("Delete2"); // NOI18N
         bTaskDelete.addActionListener(formListener);
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 1;
@@ -894,8 +861,7 @@ public final class JWorkSheet extends TopFrame {
         gridBagConstraints.insets = new java.awt.Insets(0, 0, 3, 0);
         pTaskButtons.add(bTaskDelete, gridBagConstraints);
 
-        bTaskClone.setText("Copy"); // NOI18N
-        bTaskClone.setToolTipText("Copy selected row"); // NOI18N
+        bTaskClone.setText("Copy2"); // NOI18N
         bTaskClone.addActionListener(formListener);
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 1;
@@ -905,8 +871,7 @@ public final class JWorkSheet extends TopFrame {
         gridBagConstraints.insets = new java.awt.Insets(0, 0, 3, 0);
         pTaskButtons.add(bTaskClone, gridBagConstraints);
 
-        bTaskSort.setText("Sort"); // NOI18N
-        bTaskSort.setToolTipText("Sort by ID"); // NOI18N
+        bTaskSort.setText("Sort2"); // NOI18N
         bTaskSort.addActionListener(formListener);
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 1;
@@ -916,8 +881,7 @@ public final class JWorkSheet extends TopFrame {
         gridBagConstraints.insets = new java.awt.Insets(0, 0, 3, 0);
         pTaskButtons.add(bTaskSort, gridBagConstraints);
 
-        bTaskReport.setText("Report"); // NOI18N
-        bTaskReport.setToolTipText("Report to Internet browser"); // NOI18N
+        bTaskReport.setText("Report2"); // NOI18N
         bTaskReport.addActionListener(formListener);
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 1;
@@ -956,9 +920,7 @@ public final class JWorkSheet extends TopFrame {
 
         pParamButtons.setLayout(new java.awt.GridBagLayout());
 
-        bParamReport.setMnemonic('R');
         bParamReport.setText("Report"); // NOI18N
-        bParamReport.setToolTipText("Preview by an Internet browser"); // NOI18N
         bParamReport.addActionListener(formListener);
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 1;
@@ -968,9 +930,7 @@ public final class JWorkSheet extends TopFrame {
         gridBagConstraints.insets = new java.awt.Insets(0, 0, 2, 0);
         pParamButtons.add(bParamReport, gridBagConstraints);
 
-        bParamDefault.setMnemonic('D');
         bParamDefault.setText("Default"); // NOI18N
-        bParamDefault.setToolTipText("Reset all parameters to default value"); // NOI18N
         bParamDefault.addActionListener(formListener);
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 1;
@@ -982,7 +942,6 @@ public final class JWorkSheet extends TopFrame {
         pParamButtons.add(bParamDefault, gridBagConstraints);
 
         bHomePage.setText("<html>Home Page</html>"); // NOI18N
-        bHomePage.setToolTipText("Open the Home Page by an Internet browser"); // NOI18N
         bHomePage.setName(".Button.HomePage"); // NOI18N
         bHomePage.addActionListener(formListener);
         gridBagConstraints = new java.awt.GridBagConstraints();
