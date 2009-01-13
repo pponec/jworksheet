@@ -560,7 +560,7 @@ public final class JWorkSheet extends TopFrame {
         gridBagConstraints.gridy = 1;
         pDays.add(bDayPrev, gridBagConstraints);
 
-        lCurrentDay.setFont(new java.awt.Font("Tahoma", 1, 12)); // NOI18N
+        lCurrentDay.setFont(new java.awt.Font("Tahoma", 1, 12));
         lCurrentDay.setForeground(COLOR_WORK);
         lCurrentDay.setText("Thursday, 21.12.2006"); // NOI18N
         lCurrentDay.setName("~"); // NOI18N
@@ -639,7 +639,7 @@ public final class JWorkSheet extends TopFrame {
 
         pButtons.setLayout(new java.awt.GridBagLayout());
 
-        bCreate.setText("New1"); // NOI18N
+        bCreate.setText("New event"); // NOI18N
         bCreate.setMaximumSize(new java.awt.Dimension(65, 65));
         bCreate.setMinimumSize(new java.awt.Dimension(63, 23));
         bCreate.setPreferredSize(new java.awt.Dimension(65, 55));
@@ -672,7 +672,7 @@ public final class JWorkSheet extends TopFrame {
         gridBagConstraints.insets = new java.awt.Insets(0, 0, 2, 0);
         pButtons.add(bClone, gridBagConstraints);
 
-        bSort.setText("Sort1"); // NOI18N
+        bSort.setText("Sort event"); // NOI18N
         bSort.addActionListener(formListener);
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 1;
@@ -841,7 +841,7 @@ public final class JWorkSheet extends TopFrame {
 
         pTaskButtons.setLayout(new java.awt.GridBagLayout());
 
-        bTaskCreate.setText("New2"); // NOI18N
+        bTaskCreate.setText("New task"); // NOI18N
         bTaskCreate.addActionListener(formListener);
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 1;
@@ -851,7 +851,7 @@ public final class JWorkSheet extends TopFrame {
         gridBagConstraints.insets = new java.awt.Insets(0, 0, 3, 0);
         pTaskButtons.add(bTaskCreate, gridBagConstraints);
 
-        bTaskDelete.setText("Delete2"); // NOI18N
+        bTaskDelete.setText("Delete task"); // NOI18N
         bTaskDelete.addActionListener(formListener);
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 1;
@@ -861,7 +861,7 @@ public final class JWorkSheet extends TopFrame {
         gridBagConstraints.insets = new java.awt.Insets(0, 0, 3, 0);
         pTaskButtons.add(bTaskDelete, gridBagConstraints);
 
-        bTaskClone.setText("Copy2"); // NOI18N
+        bTaskClone.setText("Copy task"); // NOI18N
         bTaskClone.addActionListener(formListener);
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 1;
@@ -871,7 +871,7 @@ public final class JWorkSheet extends TopFrame {
         gridBagConstraints.insets = new java.awt.Insets(0, 0, 3, 0);
         pTaskButtons.add(bTaskClone, gridBagConstraints);
 
-        bTaskSort.setText("Sort2"); // NOI18N
+        bTaskSort.setText("Sort task"); // NOI18N
         bTaskSort.addActionListener(formListener);
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 1;
@@ -881,7 +881,7 @@ public final class JWorkSheet extends TopFrame {
         gridBagConstraints.insets = new java.awt.Insets(0, 0, 3, 0);
         pTaskButtons.add(bTaskSort, gridBagConstraints);
 
-        bTaskReport.setText("Report2"); // NOI18N
+        bTaskReport.setText("Report task"); // NOI18N
         bTaskReport.addActionListener(formListener);
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 1;
