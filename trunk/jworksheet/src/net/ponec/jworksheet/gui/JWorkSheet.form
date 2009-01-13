@@ -233,7 +233,7 @@
               <SubComponents>
                 <Component class="javax.swing.JButton" name="bCreate">
                   <Properties>
-                    <Property name="text" type="java.lang.String" value="New1" noResource="true"/>
+                    <Property name="text" type="java.lang.String" value="New event" noResource="true"/>
                     <Property name="maximumSize" type="java.awt.Dimension" editor="org.netbeans.beaninfo.editors.DimensionEditor">
                       <Dimension value="[65, 65]"/>
                     </Property>
@@ -281,7 +281,7 @@
                 </Component>
                 <Component class="javax.swing.JButton" name="bSort">
                   <Properties>
-                    <Property name="text" type="java.lang.String" value="Sort1" noResource="true"/>
+                    <Property name="text" type="java.lang.String" value="Sort event" noResource="true"/>
                   </Properties>
                   <Events>
                     <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="bSortActionPerformed"/>
@@ -541,7 +541,7 @@
                       <SubComponents>
                         <Component class="javax.swing.JButton" name="bTaskCreate">
                           <Properties>
-                            <Property name="text" type="java.lang.String" value="New2" noResource="true"/>
+                            <Property name="text" type="java.lang.String" value="New task" noResource="true"/>
                           </Properties>
                           <Events>
                             <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="bTaskCreateActionPerformed"/>
@@ -554,7 +554,7 @@
                         </Component>
                         <Component class="javax.swing.JButton" name="bTaskDelete">
                           <Properties>
-                            <Property name="text" type="java.lang.String" value="Delete2" noResource="true"/>
+                            <Property name="text" type="java.lang.String" value="Delete task" noResource="true"/>
                           </Properties>
                           <Events>
                             <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="bTaskDeleteActionPerformed"/>
@@ -567,7 +567,7 @@
                         </Component>
                         <Component class="javax.swing.JButton" name="bTaskClone">
                           <Properties>
-                            <Property name="text" type="java.lang.String" value="Copy2" noResource="true"/>
+                            <Property name="text" type="java.lang.String" value="Copy task" noResource="true"/>
                           </Properties>
                           <Events>
                             <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="bTaskCloneActionPerformed"/>
@@ -580,7 +580,7 @@
                         </Component>
                         <Component class="javax.swing.JButton" name="bTaskSort">
                           <Properties>
-                            <Property name="text" type="java.lang.String" value="Sort2" noResource="true"/>
+                            <Property name="text" type="java.lang.String" value="Sort task" noResource="true"/>
                           </Properties>
                           <Events>
                             <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="bTaskSortActionPerformed"/>
@@ -593,7 +593,7 @@
                         </Component>
                         <Component class="javax.swing.JButton" name="bTaskReport">
                           <Properties>
-                            <Property name="text" type="java.lang.String" value="Report2" noResource="true"/>
+                            <Property name="text" type="java.lang.String" value="Report task" noResource="true"/>
                           </Properties>
                           <Events>
                             <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="bTaskReportActionPerformed"/>
