@@ -19,7 +19,6 @@ package net.ponec.jworksheet.gui;
 
 import java.awt.Color;
 import java.awt.Dimension;
-import java.awt.Insets;
 import java.awt.event.ActionEvent;
 import java.awt.event.KeyEvent;
 import java.awt.event.WindowAdapter;
@@ -27,7 +26,6 @@ import java.awt.event.WindowEvent;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
-import java.util.Locale;
 import javax.swing.AbstractAction;
 import javax.swing.DefaultCellEditor;
 import javax.swing.Icon;
@@ -64,8 +62,8 @@ import net.ponec.jworksheet.gui.models.TaskTableModel;
 import net.ponec.jworksheet.gui.models.UjoComboBoxModel;
 import net.ponec.jworksheet.report.TableReport;
 import net.ponec.jworksheet.resources.ResourceProvider;
+import org.ujoframework.Ujo;
 import org.ujoframework.UjoProperty;
-import org.ujoframework.core.UjoManager;
 import org.ujoframework.swing.UjoTableModel;
 import org.ujoframework.core.ZeroProvider;
 import org.ujoframework.swing.UjoPropertyRow;
@@ -1181,7 +1179,7 @@ public final class JWorkSheet extends TopFrame {
     
     private void bAboutActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_bAboutActionPerformed
 
-        final Package ujo  = UjoManager.class.getPackage();
+        final Package ujo  = Ujo.class.getPackage();
 
         eventTable.submitEditMode(true);
         ApplTools.aboutApplication
