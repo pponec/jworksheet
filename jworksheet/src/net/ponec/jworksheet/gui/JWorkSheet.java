@@ -65,6 +65,7 @@ import net.ponec.jworksheet.gui.models.UjoComboBoxModel;
 import net.ponec.jworksheet.report.TableReport;
 import net.ponec.jworksheet.resources.ResourceProvider;
 import org.ujoframework.UjoProperty;
+import org.ujoframework.core.UjoManager;
 import org.ujoframework.swing.UjoTableModel;
 import org.ujoframework.core.ZeroProvider;
 import org.ujoframework.swing.UjoPropertyRow;
@@ -1179,6 +1180,9 @@ public final class JWorkSheet extends TopFrame {
     }//GEN-LAST:event_tabbedPaneStateChanged
     
     private void bAboutActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_bAboutActionPerformed
+
+        final Package ujo  = UjoManager.class.getPackage();
+
         eventTable.submitEditMode(true);
         ApplTools.aboutApplication
         ( this
@@ -1191,7 +1195,7 @@ public final class JWorkSheet extends TopFrame {
         , "Mark James' icons"
         + "<br>&nbsp;(Creative Commons Attribution License)"
         + "<br>&nbsp;<a href=\"http://famfamfam.com\">http://famfamfam.com</a>"
-        , "UJO Framework"
+        , ujo.getSpecificationTitle() + " " + ujo.getSpecificationVersion()
         + "<br>&nbsp;(Apache License, Version 2.0)"
         + "<br>&nbsp;<a href=\"http://ujoframework.org\">http://ujoframework.org</a>"
         , new ResourceProvider().getIcon(ResourceProvider.LOGO)
