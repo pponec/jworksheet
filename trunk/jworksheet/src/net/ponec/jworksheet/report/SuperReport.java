@@ -19,7 +19,9 @@ import net.ponec.jworksheet.bo.Parameters;
 import net.ponec.jworksheet.bo.WorkDay;
 import net.ponec.jworksheet.bo.WorkSpace;
 import net.ponec.jworksheet.bo.item.YearMonthDay;
+import net.ponec.jworksheet.core.LanguageManager;
 import net.ponec.jworksheet.gui.JWorkSheet;
+import org.ujoframework.UjoProperty;
 
 /**
  * Standard report
@@ -38,7 +40,17 @@ public abstract class SuperReport implements Calculator {
     
     public SuperReport() {
     }
-    
+
+    /** Translate key pro UjoProperty */
+    protected String getText(CharSequence key) {
+        LanguageManager lm = applContext.getLanguageManager();
+        if (key instanceof UjoProperty) {
+            return lm.getTextAllways((UjoProperty) key);
+        } else {
+            return lm.getTextAllways(key.toString());
+        }
+    }
+
     /** General initialization, calculate all report.
      * Call "init()" method on the start.
      * For each Event call "calculate()" method.
@@ -121,13 +133,17 @@ public abstract class SuperReport implements Calculator {
     public void printFilter(StringBuilder sb) {
         
         if (dateFrom.equals(dateTo)) {
-            sb.append("\n<div style=\"margin-top:5px;\">Date: " + dateFrom.toString() + "</div>");
+            sb.append("\n<div style=\"margin-top:5px;\">");
+            sb.append(getText("Date"));
+            sb.append(": ");
+            sb.append(dateFrom.toString());
+            sb.append("</div>");
         } else {
             String[] content = new String[]
             {  "\n<table class=\"filter\" cellspacing=\"0\" border=\"0\">"
                , "<tr>"
                , "<td>"
-               , "Date from"
+               , getText("DateFrom")
                , "</td><td>"
                , ": "
                , "</td><td>"
@@ -135,7 +151,7 @@ public abstract class SuperReport implements Calculator {
                , "</td>"
                , "</tr><tr>"
                , "<td>"
-               , "Date to"
+               , getText("DateTo")
                , "</td><td>"
                , ": "
                , "</td><td>"
@@ -143,7 +159,7 @@ public abstract class SuperReport implements Calculator {
                , "</td>"
                , "</tr><tr>"
                , "<td>"
-               , "Work Days"
+               , getText("WorkDays")
                , "</td><td>"
                , ": "
                , "</td><td>"

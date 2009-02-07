@@ -34,6 +34,7 @@ public class TopDialog extends javax.swing.JDialog {
     public TopDialog(ApplContext aContext) {
         super(aContext.getTopFrame(), true);
         applContext = aContext;
+        setName("");
         initComponents();
         
         ApplTools.registerEscapeAction(getRootPane(), new AbstractAction("escape") {

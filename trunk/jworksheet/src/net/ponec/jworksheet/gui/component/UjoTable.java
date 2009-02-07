@@ -36,6 +36,7 @@ import javax.swing.table.TableCellRenderer;
 import javax.swing.table.TableColumn;
 import javax.swing.table.TableColumnModel;
 import javax.swing.table.TableModel;
+import net.ponec.jworksheet.core.ApplContext;
 import net.ponec.jworksheet.resources.ResourceProvider;
 import org.ujoframework.Ujo;
 import org.ujoframework.UjoProperty;
@@ -237,7 +238,7 @@ public class UjoTable extends JTable implements TableCellRenderer {
     // -------------------- SORTING --------------------------------------
     
     /** Set a sorter for change columns order. */
-    public void enableSorting(/*cz.ponec.tools.gui.ISorterGet aSorter*/) {
+    public void enableSorting(/*cz.ponec.tools.gui.ISorterGet aSorter*/ ApplContext context) {
         // setColumnSelectionAllowed(false);
         if (superRenderer!=null) { return; }
         
@@ -245,7 +246,7 @@ public class UjoTable extends JTable implements TableCellRenderer {
         this.superRenderer = getTableHeader().getDefaultRenderer();
         this.sortIcon = new ResourceProvider().getIcon(ResourceProvider.SORT);
         getTableHeader().setDefaultRenderer(this);
-        getTableHeader().setToolTipText("Click on any header to sort column values");
+        getTableHeader().setToolTipText(context.getLanguageManager().getText("SortedTableColumn.TIP"));
         sortedColumn = getModel().getColumn(0);
         
         // Add MouseListener;

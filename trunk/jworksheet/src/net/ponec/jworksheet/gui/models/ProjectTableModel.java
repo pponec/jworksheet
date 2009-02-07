@@ -46,7 +46,7 @@ public class ProjectTableModel extends UjoTableModel<Project> {
     /** Returns a localized Column Name */
     @Override
     public String getColumnName(UjoProperty property) {
-        return applContext.getLanguageManager().getTextAllways("tab." + property);
+        return applContext.getLanguageManager().getTextAllways(property);
     }
 
     /** Get next Project id */

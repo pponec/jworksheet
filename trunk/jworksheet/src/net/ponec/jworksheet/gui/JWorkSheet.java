@@ -1,6 +1,6 @@
 /**;
  * 
- * Copyright (C) 2007-8, Paul Ponec, contact: http://ponec.net/
+ * Copyright (C) 2007-9, Paul Ponec, contact: http://ponec.net/
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -75,8 +75,8 @@ import org.ujoframework.swing.UjoPropertyRow;
 @SuppressWarnings("unchecked")
 public final class JWorkSheet extends TopFrame {
     
-    public static final String APPL_VERSION  = "0.82" ;
-    public static final String APPL_RELEASED = "2008/12/12";
+    public static final String APPL_VERSION  = "0.82.2" ;
+    public static final String APPL_RELEASED = "2009/02/07";
     
     public static final String APPL_NAME     = "jWorkSheet";
     public static final String APPL_HOMEPAGE = "http://jworksheet.ponec.net/";
@@ -112,8 +112,8 @@ public final class JWorkSheet extends TopFrame {
             applContext.setTopFrame(this, SHOW_LANGUAGE_WINDOW);
             initComponents();
 
-            projTable.enableSorting();
-            taskTable.enableSorting();
+            projTable.enableSorting(applContext);
+            taskTable.enableSorting(applContext);
             
             paramTable.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
             projTable.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
@@ -1197,7 +1197,8 @@ public final class JWorkSheet extends TopFrame {
         + "<br>&nbsp;(Apache License, Version 2.0)"
         + "<br>&nbsp;<a href=\"http://ujoframework.org\">http://ujoframework.org</a>"
         , new ResourceProvider().getIcon(ResourceProvider.LOGO)
-        , ApplTools.createCloseButton("OK")
+        , ApplTools.createCloseButton(applContext.getLanguageManager().getText("OK"))
+        , applContext.getLanguageManager()
         );
     }//GEN-LAST:event_bAboutActionPerformed
     

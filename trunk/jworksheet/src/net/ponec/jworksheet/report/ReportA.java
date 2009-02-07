@@ -23,7 +23,6 @@ import net.ponec.jworksheet.bo.Event;
 import net.ponec.jworksheet.bo.Project;
 import net.ponec.jworksheet.bo.TaskType;
 import net.ponec.jworksheet.bo.WorkDay;
-import org.ujoframework.Ujo;
 import org.ujoframework.core.UjoComparator;
 
 /**
@@ -80,9 +79,9 @@ public class ReportA extends SuperReport {
         int total = 0;
         
         sb.append("<tr>");
-        sb.append("<th align=\"left\">").append("Project" ).append("</th>");
-        sb.append("<th align=\"left\">").append("Task"    ).append("</th>");
-        sb.append("<th align=\"right\">").append("Time [hours]").append("</th>");
+        sb.append("<th align=\"left\">").append(getText(Event.P_PROJ)).append("</th>");
+        sb.append("<th align=\"left\">").append(getText(Event.P_TASK)).append("</th>");
+        sb.append("<th align=\"right\">").append(getText("Time[hours]")).append("</th>");
         sb.append("</tr>");
         
         for(TaskGroup group : groupSet.getGroups()) {
@@ -106,7 +105,7 @@ public class ReportA extends SuperReport {
         
         // Total time:
         sb.append("<tr class=\"total\">");
-        sb.append("<td class=\"alignLeft\">").append("Total time").append("</td>");
+        sb.append("<td class=\"alignLeft\">").append(getText("TotalTime")).append("</td>");
         if (tasks) {
             sb.append("<td>").append("&nbsp;").append("</td>");
         }
@@ -116,7 +115,7 @@ public class ReportA extends SuperReport {
         // Overtime:
         float requiredTime = getWorkDayCount()*Parameters.P_WORKING_HOURS.of(applContext.getParameters());
         sb.append("<tr class=\"total\">");
-        sb.append("<td class=\"alignLeft\">").append("Overtime").append("</td>");
+        sb.append("<td class=\"alignLeft\">").append(getText("Overtime")).append("</td>");
         if (tasks) {
             sb.append("<td>").append("&nbsp;").append("</td>");
         }

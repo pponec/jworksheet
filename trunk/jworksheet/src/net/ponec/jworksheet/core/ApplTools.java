@@ -1,11 +1,19 @@
-/*
- * ApplTools.java
- *
- * Created on 1. èervenec 2007, 7:20
- *
- * To change this template, choose Tools | Template Manager
- * and open the template in the editor.
- */
+/**
+  * Copyright (C) 2007-9, Paul Ponec, contact: http://ponec.net/
+  *
+  * This program is free software; you can redistribute it and/or modify
+  * it under the terms of the GNU General Public License as published by
+  * the Free Software Foundation version 2 of the License.
+  *
+  * This program is distributed in the hope that it will be useful,
+  * but WITHOUT ANY WARRANTY; without even the implied warranty of
+  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+  * GNU General Public License for more details.
+  *
+  * You may obtain a copy of the License at
+  * http://www.gnu.org/licenses/gpl-2.0.txt
+  */
+
 
 package net.ponec.jworksheet.core;
 
@@ -177,8 +185,9 @@ public class ApplTools {
     , String libraryLicence
     , Icon   logo
     , JButton okButton
+    , LanguageManager lm
     ) {
-        
+
         int currentYear = getCurrentYear();
         int copyrightYear = Math.max(currentYear, Calendar.getInstance().get(Calendar.YEAR));
         if (copyrightYear > currentYear+9) {
@@ -192,67 +201,71 @@ public class ApplTools {
           , "<table border=\"0\" cellpadding=\"0\" cellspacing=\"0\"  style=\"font-weight:bold;\">"
           //
           , "<tr><td>"
-          , "Application"
+          , lm.getText("Application")
           , "</td><td>: "
           ,  title
           //
           , _NEW_LINE_
-          , "Version"
+          , lm.getText("Version")
           , "</td><td>: "
           ,  version
           //
           , _NEW_LINE_
-          , "Copyright&nbsp;"
+          , lm.getText("Copyright") + "&nbsp;"
           , "</td><td>: "
           , "\u00a9 " + copyrightYear + " PPonec"
           //
           , _NEW_LINE_
-          , "License"
+          , lm.getText("License")
           , "</td><td>: "
           ,  licence
           //
           , _NEW_LINE_
-          , "Home"
+          , lm.getText("Home")
           , "</td><td>: "
           , homePage
           //
           , _NEW_LINE_
-          , "Finished"
+          , lm.getText("Finished")
           , "</td><td>: "
           ,  date
           //
           , _NEW_LINE_
-          , "Library"
+          , lm.getText("Library")
           , "</td><td>: "
           ,  libraryLicence
           , "</td></tr>"
           //
           , _NEW_LINE_
-          , "Icons"
+          , lm.getText("Icons")
           , "</td><td>: "
           ,  iconLicence
           //
           , _NEW_LINE_
-          , "Java"
+          , lm.getText("Java")
           , "</td><td>: "
           ,  System.getProperty("java.version")
           , " - "
           ,  System.getProperty("java.vendor")
           //
           , _NEW_LINE_
-          , "IDE"
+          , lm.getText("IDE")
           , "</td><td>: "
           ,  ide // NetBeans
+          //
+          , _NEW_LINE_
+          , lm.getText("TranslatedBy")
+          , "</td><td>: "
+          , lm.getText("TranslatedBy.YOUR_NAME")
           //
           , "</td></tr>"
           , "</table></html>"
         } ;
         
-        
         javax.swing.JOptionPane.showOptionDialog
         ( frame instanceof Component ? (Component) frame : null
         , stringCat("", msg)
-        , "About"
+        , lm.getText("About")
         , javax.swing.JOptionPane.OK_OPTION
         , javax.swing.JOptionPane.INFORMATION_MESSAGE
         , logo

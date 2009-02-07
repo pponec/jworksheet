@@ -1,6 +1,11 @@
 The jWorkSheet change list
 **************************
 
+release 0.83 (2009-02-XX)
++ multilanguage application, support: English (en), Czech (cs)
++ module support
++ UJO Framework release 0.831 is used to faster reading XML files
+
 release 0.82 (2008-12-12)
 + look and feel called Nimbus (form Java 6) is supported now, it is a defaut look for Linux
 + button Delete calls an action Sort too
