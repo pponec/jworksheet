@@ -28,7 +28,6 @@ import net.ponec.jworksheet.bo.Event;
 import net.ponec.jworksheet.bo.Parameters;
 import net.ponec.jworksheet.bo.WorkDay;
 import net.ponec.jworksheet.bo.item.YearMonthDay;
-import org.ujoframework.Ujo;
 import org.ujoframework.core.UjoComparator;
 
 /**
@@ -36,8 +35,6 @@ import org.ujoframework.core.UjoComparator;
  * @author Pavel Ponec
  */
 public class ReportTab extends SuperReport {
-    
-    public static final String NAME = "Detail report in a table format";
     
     /** Table of results */
     protected List<GroupSet> data = new ArrayList<GroupSet>();

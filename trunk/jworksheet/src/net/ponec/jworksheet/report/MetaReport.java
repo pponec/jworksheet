@@ -61,7 +61,7 @@ public class MetaReport implements Comparable<MetaReport> {
         return title;
     }
 
-    private void setTitle(String title) {
+    public void setTitle(String title) {
         this.title = title;
     }
 
