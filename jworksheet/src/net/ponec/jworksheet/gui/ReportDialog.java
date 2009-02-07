@@ -105,16 +105,27 @@ public class ReportDialog extends TopDialog implements java.awt.event.ActionList
         LanguageManager languageManager = applContext.getLanguageManager();
         languageManager.setFirstRunTexts(this);
     }
+
+    /** Returns a localized text */
+    private String getTitle(String key) {
+        try {
+           return applContext.getLanguageManager().getText("rpt."+key);
+        } catch (Throwable e) {
+           return key;
+        }
+    }
     
     /** Create a List of Reports. */
     private ListModel createReportModel() {
         DefaultListModel model = new DefaultListModel();
-        model.addElement(new MetaReport( ReportTab.NAME           , ReportTab.class));
-        model.addElement(new MetaReport("Project and Task summary", ReportA.class));
-        model.addElement(new MetaReport("Project summary"         , ReportB.class));
-        model.addElement(new MetaReport("Detail day reports"      , ReportC.class));
+        model.addElement(new MetaReport(getTitle("DetailInTable"        ), ReportTab.class));
+        model.addElement(new MetaReport(getTitle("ProjectAndTaskSummary"), ReportA.class));
+        model.addElement(new MetaReport(getTitle("ProjectSummary"       ), ReportB.class));
+        model.addElement(new MetaReport(getTitle("DetailDayReports"     ), ReportC.class));
         
         for (MetaReport report : applContext.getMetaReports()) {
+            String title = report.getTitle();
+            report.setTitle(getTitle(title));
             model.addElement(report);
         }
         
