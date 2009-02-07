@@ -1,5 +1,5 @@
 /**
-  * Copyright (C) 2007-8, Paul Ponec, contact: http://ponec.net/
+  * Copyright (C) 2007-9, Paul Ponec, contact: http://ponec.net/
   *
   * This program is free software; you can redistribute it and/or modify
   * it under the terms of the GNU General Public License as published by
@@ -26,6 +26,7 @@ import javax.swing.JSpinner;
 import net.ponec.jworksheet.core.ApplContext;
 import net.ponec.jworksheet.core.ApplTools;
 import net.ponec.jworksheet.bo.Parameters;
+import net.ponec.jworksheet.core.LanguageManager;
 import net.ponec.jworksheet.resources.ResourceProvider;
 
 /**
@@ -76,6 +77,10 @@ public class DateDialog extends TopDialog implements java.awt.event.ActionListen
             bToday.setIcon(rp.getIcon(ResourceProvider.IMG_EMPTY));
             bToday.setIconTextGap(0);
         }
+
+        LanguageManager languageManager = applContext.getLanguageManager();
+        languageManager.setFirstRunTexts(this);
+
     }
     
     /** Create a date spinner */

@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2007-8, Paul Ponec, contact: http://ponec.net/
+ * Copyright (C) 2007-9, Paul Ponec, contact: http://ponec.net/
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -21,11 +21,13 @@ package net.ponec.jworksheet.core;
  * Created on 2001/10/26
  */
 
+import java.awt.Component;
 import javax.swing.*;
 import java.awt.event.*;
 import java.net.URL;
 import java.text.MessageFormat;
 import java.util.*;
+import org.ujoframework.UjoProperty;
 
 
 /**
@@ -50,7 +52,7 @@ import java.util.*;
  * </p>
  *
  * @author  Pavel Ponec
- * @version 1.1
+ * @version 1.2
  */
 public class LanguageManager {
     
@@ -120,8 +122,7 @@ public class LanguageManager {
             properties = new StringBuilder();
             warnings   = new StringBuilder();
         }
-    }
-    
+    }    
     
     // ----------- Methods --------------------
     
@@ -141,7 +142,8 @@ public class LanguageManager {
      * @param topContainer A root of the component tree.  */
     public void setFirstRunTexts(java.awt.Container topContainer, Locale aLocale) {
         firstRuning = true;
-        setTexts(aLocale, topContainer);
+        //setTexts(aLocale, topContainer);
+        setTexts(null, topContainer);
     }
     
    
@@ -316,7 +318,9 @@ public class LanguageManager {
             } catch (Throwable e) { e.printStackTrace(); }
         } else if (aCont instanceof javax.swing.JTabbedPane) {
             javax.swing.JTabbedPane tp = (javax.swing.JTabbedPane) aCont;
-            for (i=0; i<tp.getTabCount(); i++) createName3(tp.getComponentAt(i));
+            for (i=0; i<tp.getTabCount(); i++) {
+                createName3(tp.getComponentAt(i));
+            }
         } else if (aCont instanceof javax.swing.JScrollPane) {
             javax.swing.JScrollPane sp = (javax.swing.JScrollPane) aCont;
             createName3(sp.getViewport().getView());
@@ -362,38 +366,45 @@ public class LanguageManager {
             // SetName:
             if (firstRuning && isEmptyName(name) && tp.getTabCount()>0) {
                 
-                text = tp.getTitleAt(0);
-                name = "~" + text2key(text);
-                tp.setName(name);
-                
-                if (show) for (i=0; i<tp.getTabCount(); i++) {
-                    properties.append
-                    ( clas
-                    + DOT
-                    + text2key(text)
-                    + DOT
-                    + i
-                    + "="
-                    + tp.getTitleAt(i)
-                    + nl
-                    ) ;
+                tp.setName("~TabbedPane");
+                for (i=0; i<tp.getTabCount(); i++) {
+                    Component subComp = tp.getComponentAt(i);
+                    if (subComp!=null && isEmptyName(subComp.getName())) {
+
+                        text = tp.getTitleAt(i);
+                        name = text2key(text);
+                        subComp.setName("~" + name);
+
+                        if (show) {
+                            properties.append
+                            ( clas
+                            + DOT
+                            + text2key(name)
+                            + "="
+                            + tp.getTitleAt(i)
+                            + nl
+                            ) ;
+                        }
+                    }
                 }
             }
             
             // SetText:
-            if (isDefinedName(name)) {
-                text = (name.startsWith("~")
-                ? clas
-                + DOT
-                + name.substring(1)
-                : name)
-                + DOT
-                ;
+            if (isDefinedName(tp.getName())) {
                 for (i=0; i<tp.getTabCount(); i++) {
-                    try {
-                        tp.setTitleAt(i, getText(text+i));
-                    } catch (Throwable e) {
-                        e.printStackTrace();
+
+                    Component subComp = tp.getComponentAt(i);
+                    if (subComp!=null && isDefinedName(subComp.getName())) {
+
+                        name = subComp.getName();
+                        text = name.startsWith("~")
+                        ? clas
+                        + DOT
+                        + name.substring(1)
+                        : name
+                        ;
+
+                        tp.setTitleAt(i, getText(text));
                     }
                 }
             }
@@ -464,6 +475,11 @@ public class LanguageManager {
             ? mTitle
             : mText
             ;
+
+            if ( aCont instanceof javax.swing.JDialog) {
+                int iii = 1;
+
+            }
             
             // SetName:
             if (firstRuning && isEmptyName(name)) {
@@ -704,7 +720,16 @@ public class LanguageManager {
         }
         return rb.getString(key);
     }
-    
+
+
+    /** Language Sensitive Text. Does not throw any exception.
+     * Does not return null nor empty String!
+     * @param key
+     * @return Text from properties. */
+    public String getTextAllways(UjoProperty key) {
+        return getTextAllways("tab." + key.getName());
+    }
+
     /** Language Sensitive Text. Does not throw any exception.
      * Does not return null nor empty String!
      * @param key

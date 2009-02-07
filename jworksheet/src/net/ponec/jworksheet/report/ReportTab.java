@@ -113,16 +113,20 @@ public class ReportTab extends SuperReport {
         SimpleDateFormat tooltipDateFormat = new SimpleDateFormat(tipFormat, applContext.getLanguage());
         
         // Header ---
-        sb.append("<tr>\n<th>Projects</th>\n");
+        sb.append("<tr>\n<th>");
+        sb.append(getText(".TabbedPane.Projects"));
+        sb.append("</th>\n");
         for(YearMonthDay day : days) {
             boolean dayOff = isDayOff(day);
-            sb.append("<th title=\"" + escape((dayOff?"Day off: ":"") + tooltipDateFormat.format(day.getTime())) + "\"");
+            sb.append("<th title=\"" + escape((dayOff?(getText("DayOff")+": "):"") + tooltipDateFormat.format(day.getTime())) + "\"");
             if (dayOff) { sb.append(" class=\"dayOff\""); }
             sb.append(">");
             sb.append(exportDateFormat.format(day.getTime()));
             sb.append("</th>\n");
         }
-        sb.append("<th>&nbsp;&nbsp;Total</th>");
+        sb.append("<th>&nbsp;&nbsp;");
+        sb.append(getText("Total"));
+        sb.append("</th>");
         sb.append("</tr>\n");
         
         // Body ---
@@ -130,7 +134,7 @@ public class ReportTab extends SuperReport {
             sb.append("<tr>");
             
             sb.append("<td>");
-            sb.append(escape(proj.P_PROJ.of(proj) + " / " + proj.P_TASK.of(proj), true));
+            sb.append(escape(TaskGroup.P_PROJ.of(proj) + " / " + TaskGroup.P_TASK.of(proj), true));
             sb.append("</td>\n");
             
             int total = 0;
@@ -150,7 +154,9 @@ public class ReportTab extends SuperReport {
         // Total time ---
         LinkedList<Integer> totals = new LinkedList<Integer>();
         int total = 0;
-        sb.append("<tr class=\"total\">\n<td class=\"alignLeft\">Total time</td>\n");
+        sb.append("<tr class=\"total\">\n<td class=\"alignLeft\">");
+        sb.append(getText("TotalTime"));
+        sb.append("</td>\n");
         for(YearMonthDay day : days) {
             int time = getDayTime(day);
             totals.add(time);
@@ -168,7 +174,9 @@ public class ReportTab extends SuperReport {
         // Overtime ---
         total = 0;
         int workingMinutes = Math.round(Parameters.P_WORKING_HOURS.of(applContext.getParameters())*60);
-        sb.append("<tr class=\"total\">\n<td class=\"alignLeft\">Overtime</td>\n");
+        sb.append("<tr class=\"total\">\n<td class=\"alignLeft\">");
+        sb.append(getText("Overtime"));
+        sb.append("</td>\n");
         for(YearMonthDay day : days) {
             int time = totals.removeFirst();
             if (!isDayOff(day)) {

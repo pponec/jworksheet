@@ -18,9 +18,9 @@
 package net.ponec.jworksheet.report;
 
 import java.io.IOException;
+import net.ponec.jworksheet.bo.Event;
 import net.ponec.jworksheet.bo.Project;
 import net.ponec.jworksheet.bo.TaskType;
-import org.ujoframework.Ujo;
 import org.ujoframework.core.UjoComparator;
 
 /**
@@ -42,8 +42,8 @@ public class ReportB extends ReportA {
         int total = 0;
         
         sb.append("<tr>");
-        sb.append("<th>").append("Project").append("</th>");
-        sb.append("<th align=\"right\">").append("Time [hours]").append("</th>");
+        sb.append("<th>").append(getText(Event.P_PROJ)).append("</th>");
+        sb.append("<th align=\"right\">").append(getText("Time[hours]")).append("</th>");
         sb.append("</tr>");
         
         for(TaskGroup group : groupSet.getGroups()) {

@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 
-<Form version="1.0" type="org.netbeans.modules.form.forminfo.JDialogFormInfo">
+<Form version="1.2" maxVersion="1.2" type="org.netbeans.modules.form.forminfo.JDialogFormInfo">
   <NonVisualComponents>
     <Component class="javax.swing.ButtonGroup" name="currentDayGroup">
     </Component>
@@ -15,7 +15,11 @@
     <SyntheticProperty name="generateCenter" type="boolean" value="true"/>
   </SyntheticProperties>
   <AuxValues>
+    <AuxValue name="FormSettings_autoResourcing" type="java.lang.Integer" value="0"/>
+    <AuxValue name="FormSettings_autoSetComponentName" type="java.lang.Boolean" value="false"/>
+    <AuxValue name="FormSettings_generateFQN" type="java.lang.Boolean" value="true"/>
     <AuxValue name="FormSettings_generateMnemonicsCode" type="java.lang.Boolean" value="false"/>
+    <AuxValue name="FormSettings_i18nAutoMode" type="java.lang.Boolean" value="false"/>
     <AuxValue name="FormSettings_layoutCodeTarget" type="java.lang.Integer" value="2"/>
     <AuxValue name="FormSettings_listenerGenerationStyle" type="java.lang.Integer" value="2"/>
     <AuxValue name="FormSettings_variablesLocal" type="java.lang.Boolean" value="false"/>
@@ -149,7 +153,7 @@
             <Component class="javax.swing.JButton" name="bReport">
               <Properties>
                 <Property name="mnemonic" type="int" value="82"/>
-                <Property name="text" type="java.lang.String" value="Report"/>
+                <Property name="text" type="java.lang.String" value="DReport"/>
                 <Property name="toolTipText" type="java.lang.String" value="Open report but don&apos;t close this dialog"/>
               </Properties>
               <Events>
@@ -183,7 +187,7 @@
         </Component>
         <Component class="javax.swing.JButton" name="bTodayFrom">
           <Properties>
-            <Property name="text" type="java.lang.String" value="Today"/>
+            <Property name="text" type="java.lang.String" value="GoToday"/>
             <Property name="margin" type="java.awt.Insets" editor="org.netbeans.beaninfo.editors.InsetsEditor">
               <Insets value="[1, 14, 1, 14]"/>
             </Property>
@@ -205,7 +209,7 @@
         </Component>
         <Component class="javax.swing.JButton" name="bTodayTo">
           <Properties>
-            <Property name="text" type="java.lang.String" value="Today"/>
+            <Property name="text" type="java.lang.String" value="GoToday"/>
             <Property name="margin" type="java.awt.Insets" editor="org.netbeans.beaninfo.editors.InsetsEditor">
               <Insets value="[1, 14, 1, 14]"/>
             </Property>

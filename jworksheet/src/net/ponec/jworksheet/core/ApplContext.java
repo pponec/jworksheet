@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2007-8, Paul Ponec, contact: http://ponec.net/
+ * Copyright (C) 2007-9, Paul Ponec, contact: http://ponec.net/
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -252,7 +252,7 @@ public class ApplContext implements TableModelListener, Runnable, JwsContext {
             WorkSpace.P_VERSN.setValue(workSpace, JWorkSheet.APPL_VERSION);
             
             String header = false ? null // Default Header
-            : UjoManagerXML.XML_HEADER + "<!-- <?xml-stylesheet type=\"text/xsl\" href=\"styles/"+ResourceProvider.REPORT_BASE+"\"?> -->\n"
+            : UjoManagerXML.XML_HEADER + "\n<!-- <?xml-stylesheet type=\"text/xsl\" href=\"styles/"+ResourceProvider.REPORT_BASE+"\"?> -->"
             ;
             File dataFileTemp = getDataFileTemp();
             UjoManagerXML.getInstance().saveXML(dataFileTemp, workSpace, header, this);
