@@ -24,6 +24,7 @@ import javax.swing.JFileChooser;
 import net.ponec.jworksheet.core.ApplContext;
 import net.ponec.jworksheet.core.ApplTools;
 import net.ponec.jworksheet.bo.Parameters;
+import net.ponec.jworksheet.core.LanguageManager;
 import net.ponec.jworksheet.resources.ResourceProvider;
 
 /**
@@ -42,7 +43,7 @@ public class BrowserDialog extends TopDialog {
      */
     public BrowserDialog(ApplContext aContext, String initValue) {
         super(aContext);
-        setLocale(aContext.getParameters().getLanguage());
+        setLocale(aContext.getLanguage());
         
         initComponents();
         tBrowser.setText(initValue);
@@ -56,7 +57,9 @@ public class BrowserDialog extends TopDialog {
             bOK.setIcon    (rp.getIcon(ResourceProvider.IMG_OK));
             bCancel.setIcon(rp.getIcon(ResourceProvider.IMG_CANCEL));
         }
-        
+
+        LanguageManager languageManager = applContext.getLanguageManager();
+        languageManager.setFirstRunTexts(this);
     }
     
     /** Return result */

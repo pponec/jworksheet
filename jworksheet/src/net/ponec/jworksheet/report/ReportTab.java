@@ -106,7 +106,7 @@ public class ReportTab extends SuperReport {
         List<YearMonthDay> days = getDays();
         
         SimpleDateFormat exportDateFormat = new SimpleDateFormat(Parameters.P_DATE_REPORT_FORMAT2.of(applContext.getParameters()), applContext.getLanguage());
-        String tipFormat = Parameters.P_DATE_REPORT_FORMAT.of(applContext.getParameters());
+        String tipFormat = applContext.getParameters().getDateFormat(Parameters.P_DATE_REPORT_FORMAT, applContext);
         SimpleDateFormat tooltipDateFormat = new SimpleDateFormat(tipFormat, applContext.getLanguage());
         
         // Header ---

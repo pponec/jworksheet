@@ -23,6 +23,7 @@ import java.util.Date;
 import java.util.Locale;
 import net.ponec.jworksheet.core.ApplTools;
 import net.ponec.jworksheet.bo.Parameters;
+import net.ponec.jworksheet.core.ApplContext;
 import org.ujoframework.extensions.PropertyTextable;
 import org.ujoframework.extensions.UjoCloneable;
 
@@ -145,9 +146,9 @@ public class YearMonthDay implements Comparable, PropertyTextable, UjoCloneable 
     }
     
     /** Get Localized String to GUI. */
-    public String toString(Parameters params) {
-        Locale language = Parameters.P_LANG.of(params);
-        String sFormat  = Parameters.P_DATE_MAIN_FORMAT.of(params);
+    public String toString(ApplContext context) {
+        Locale language = Parameters.P_LANG.of(context.getParameters());
+        String sFormat = context.getParameters().getDateFormat(Parameters.P_DATE_MAIN_FORMAT, context);
         
         SimpleDateFormat format = new SimpleDateFormat(sFormat, language);
         String result = format.format(getTime());
