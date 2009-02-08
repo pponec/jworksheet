@@ -206,7 +206,7 @@ public abstract class SuperReport implements Calculator {
     }
     
     protected void printTableBeg(StringBuilder sb) throws IOException {
-        sb.append("<table border=\"1\" cellspacing=\"1\" class=\"projects\">");
+        sb.append("<table cellspacing=\"0\" class=\"projects border\">");
     }
     
     protected void printTableEnd(StringBuilder sb) throws IOException {

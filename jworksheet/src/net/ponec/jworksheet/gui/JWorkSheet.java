@@ -75,8 +75,8 @@ import org.ujoframework.swing.UjoPropertyRow;
 @SuppressWarnings("unchecked")
 public final class JWorkSheet extends TopFrame {
     
-    public static final String APPL_VERSION  = "0.82.2" ;
-    public static final String APPL_RELEASED = "2009/02/07";
+    public static final String APPL_VERSION  = "0.82.4" ;
+    public static final String APPL_RELEASED = "2009/02/08";
     
     public static final String APPL_NAME     = "jWorkSheet";
     public static final String APPL_HOMEPAGE = "http://jworksheet.ponec.net/";
