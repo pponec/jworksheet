@@ -56,7 +56,7 @@ public class Parameters extends ArrayUjo {
     /** Decimal time format. */
     public static final UjoProperty<Parameters,Boolean> P_DECIMAL_TIME_FORMAT = newProperty("DecimalTimeFormat", true, propertyCount++);
     /** The Main selecton format. */
-    public static final UjoProperty<Parameters,String> P_DATE_MAIN_FORMAT = newProperty("DateMainFormat", "EE, yyyy/MM/dd'  Week: 'ww", propertyCount++);
+    public static final UjoProperty<Parameters,String> P_DATE_MAIN_FORMAT = newProperty("DateMainFormat", "EE, yyyy/MM/dd'  %s: 'ww", propertyCount++);
     /** The Export Date Selection. */
     public static final UjoProperty<Parameters,String> P_DATE_REPORT_FORMAT = newProperty("DateReportFormat", P_DATE_MAIN_FORMAT.getDefault() , propertyCount++);
     /** The Export Date Selection. */
@@ -194,12 +194,15 @@ public class Parameters extends ArrayUjo {
     }
     
     // --------------------------------
-    
-    public Locale getLanguage() {
-        final Locale result = P_LANG.of(this);
+
+    /** Returns a localized date format */
+    public String getDateFormat(UjoProperty<Parameters,String> property, ApplContext context) {
+        String result = property.of(this);
+        String week   = context.getLanguageManager().getTextAllways("Week");
+        result = String.format(result, week);
         return result;
     }
-    
+
     
     /** Set new Decimal FormatsetLocale  */
     private void setDecimalFormat() {

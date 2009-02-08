@@ -51,11 +51,10 @@ public class DateDialog extends TopDialog implements java.awt.event.ActionListen
      */
     public DateDialog(ApplContext aContext) {
         super(aContext);
-        setLocale(aContext.getParameters().getLanguage());
+        setLocale(aContext.getLanguage());
         
-        Date originalDay = aContext.getSelectedDay().getCalendar().getTime();
-        mainFormat = Parameters.P_DATE_MAIN_FORMAT.of(applContext.getParameters());
-        gotoFormat = Parameters.P_DATE_GOTO_FORMAT.of(applContext.getParameters());
+        mainFormat = applContext.getParameters().getDateFormat(Parameters.P_DATE_MAIN_FORMAT, aContext);
+        gotoFormat = applContext.getParameters().getDateFormat(Parameters.P_DATE_GOTO_FORMAT, aContext);
         
         initComponents();
         tDate.setValue(applContext.getSelectedDay().getTime());
@@ -93,7 +92,8 @@ public class DateDialog extends TopDialog implements java.awt.event.ActionListen
         setVisible(true);
         return result;
     }
-    
+
+    @Override
     final public void escapeAction(ActionEvent e) {
         bCancelActionPerformed(e);
     }
@@ -201,7 +201,7 @@ public class DateDialog extends TopDialog implements java.awt.event.ActionListen
     
     private void tDateStateChanged(javax.swing.event.ChangeEvent evt) {//GEN-FIRST:event_tDateStateChanged
         Date date = (Date) tDate.getValue();
-        SimpleDateFormat df = new SimpleDateFormat(mainFormat);
+        SimpleDateFormat df = new SimpleDateFormat(mainFormat, applContext.getLanguage());
         setTitle(df.format(date));
     }//GEN-LAST:event_tDateStateChanged
     

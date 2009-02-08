@@ -415,7 +415,7 @@ public class ApplContext implements TableModelListener, Runnable, JwsContext {
     
     /** GetCurrentDay */
     public String getSelectedDayStr() {
-        return getSelectedDay().toString(getParameters());
+        return getSelectedDay().toString(this);
     }
     
     /** Is selected time Today? */
@@ -425,7 +425,7 @@ public class ApplContext implements TableModelListener, Runnable, JwsContext {
     
     /** Current Language */
     public Locale getLanguage() {
-        return parameters.getLanguage();
+        return Parameters.P_LANG.of(parameters);
     }
     
     /**

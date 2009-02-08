@@ -76,8 +76,8 @@ public class ReportDialog extends TopDialog implements java.awt.event.ActionList
         super(aContext);
         originalDay = aContext.getSelectedDay().getCalendar().getTimeInMillis();
         
-        setLocale(aContext.getParameters().getLanguage());
-        spinnerFormat = Parameters.P_DATE_REPORT_FORMAT.of(applContext.getParameters());
+        setLocale(aContext.getLanguage());
+        spinnerFormat = applContext.getParameters().getDateFormat(Parameters.P_DATE_REPORT_FORMAT, aContext);
         initComponents();
         selectDayAction(new java.awt.event.ActionEvent(rbDay, -1, ""));
         
