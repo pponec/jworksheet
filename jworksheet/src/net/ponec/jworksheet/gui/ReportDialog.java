@@ -28,10 +28,12 @@ import javax.swing.JFormattedTextField;
 import javax.swing.JSpinner;
 import javax.swing.ListModel;
 import javax.swing.ListSelectionModel;
+import net.ponec.jworksheet.bo.Event;
 import net.ponec.jworksheet.core.ApplContext;
 import net.ponec.jworksheet.core.ApplTools;
 import net.ponec.jworksheet.core.Calculator;
 import net.ponec.jworksheet.bo.Parameters;
+import net.ponec.jworksheet.bo.Project;
 import net.ponec.jworksheet.bo.item.YearMonthDay;
 import net.ponec.jworksheet.core.LanguageManager;
 import net.ponec.jworksheet.report.MetaReport;
@@ -40,6 +42,7 @@ import net.ponec.jworksheet.report.ReportB;
 import net.ponec.jworksheet.report.ReportC;
 import net.ponec.jworksheet.report.ReportTab;
 import net.ponec.jworksheet.resources.ResourceProvider;
+import org.ujoframework.Ujo;
 import org.ujoframework.UjoProperty;
 import org.ujoframework.core.UjoActionImpl;
 
@@ -106,7 +109,7 @@ public class ReportDialog extends TopDialog implements java.awt.event.ActionList
         languageManager.setFirstRunTexts(this);
     }
 
-    /** Returns a localized text */
+    /** Returns a localized report title */
     private String getTitle(String key) {
         try {
            return applContext.getLanguageManager().getText("rpt."+key);
@@ -114,6 +117,12 @@ public class ReportDialog extends TopDialog implements java.awt.event.ActionList
            return key;
         }
     }
+
+    /** Returns a localized text */
+    private String getText(String key) {
+        return applContext.getLanguageManager().getTextAllways(key);
+    }
+
     
     /** Create a List of Reports. */
     private ListModel createReportModel() {
@@ -170,7 +179,30 @@ public class ReportDialog extends TopDialog implements java.awt.event.ActionList
         result.add(getXslParamItem(Parameters.P_COLOR_PRIVATE));
         result.add(getXslParamItem(Parameters.P_COLOR_FINISHED_PROJ));
         result.add(getXslParamItem(Parameters.P_REPORT_CSS));
-        
+
+        // Labels:
+        result.add(new String[] {"labelCreated" , getText("Created")});
+        result.add(new String[] {"labelDate"    , getText("Date")});
+        result.add(new String[] {"labelDateFrom", getText("DateFrom")});
+        result.add(new String[] {"labelDateTo"  , getText("DateTo")});
+        result.add(new String[] {"labelTasks"   , getText("Tasks")});
+
+        UjoProperty[] properties = new UjoProperty[]
+        { Event.P_DESCR
+        , Event.P_PERIOD
+        , Event.P_PROJ
+        , Event.P_TASK
+        , Event.P_TIME
+        , Project.P_ID
+        , Project.P_DEFAULT
+        , Project.P_FINISHED
+        , Project.P_PRIVATE
+        , Project.P_TASKS
+        };
+        for (UjoProperty p : properties) {
+           result.add(getXslLabelItem(p));
+        }
+
         return result;
     }
     
@@ -178,11 +210,20 @@ public class ReportDialog extends TopDialog implements java.awt.event.ActionList
     private String[] getXslParamItem(UjoProperty param) {
         final String[] result = new String[]
         { param.getName()
-          , applContext.getParameters().readValueString(param, new UjoActionImpl(this))
+        , applContext.getParameters().readValueString(param, new UjoActionImpl(this))
         } ;
         return result;
     }
     
+    /** Returns XSL Labels: */
+    private String[] getXslLabelItem(UjoProperty param) {
+        final String[] result = new String[]
+        { "label" + param.getName()
+        , applContext.getLanguageManager().getTextAllways(param)
+        } ;
+        return result;
+    }
+
     
     /** This method is called from within the constructor to
      * initialize the form.
