@@ -44,12 +44,12 @@
 <h2 style="margin-bottom:0px;"><xsl:value-of select="$Title"/></h2>
 <div style="margin-bottom:20px;"><xsl:value-of select="$labelCreated"/>: <xsl:value-of select="translate(/body/Created,'T','&nbsp;&nbsp;')"/></div>
 
-<table class="filter" cellspacing="0" border="0">
+<table cellspacing="0" class="filter">
     <tr><td><xsl:value-of select="$labelDateFrom"/>: </td><td><xsl:value-of select="$DateFrom" /></td></tr>
     <tr><td><xsl:value-of select="$labelDateTo"/>:   </td><td><xsl:value-of select="$DateTo"   /></td></tr>
 </table>    
 
-<table border="1" cellspacing="1" class="events">
+<table cellspacing="0" class="events border">
         <tr>
         <th align="left"><xsl:value-of select="$labelDate"/></th>
         <th align="right"><xsl:value-of select="$labelTime"/></th>

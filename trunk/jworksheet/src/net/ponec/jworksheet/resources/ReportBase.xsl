@@ -50,7 +50,7 @@
 <h2 style="margin-bottom:0px;"><xsl:value-of select="$Title"/></h2>
 <div style="margin-bottom:20px;"><xsl:value-of select="$labelCreated"/>: <xsl:value-of select="translate(/body/Created,'T','&nbsp;&nbsp;')"/></div>
 
-<table class="filter" cellspacing="0" border="0">
+<table cellspacing="0" class="filter">
     <tr><td><xsl:value-of select="$labelDateFrom"/>: </td><td><xsl:value-of select="$DateFrom" /></td></tr>
     <tr><td><xsl:value-of select="$labelDateTo"/>:   </td><td><xsl:value-of select="$DateTo"   /></td></tr>
 </table>
@@ -61,7 +61,7 @@
     <xsl:if test="translate(Date,'-','')>=translate($DateFrom,'-','') and translate(Date,'-','')&lt;=translate($DateTo,'-','')">
 
 	<div style="margin-top:10px;"><strong><xsl:value-of select="$labelDate"/>: </strong><xsl:value-of select="Date"/></div>
-	<table border="1" cellspacing="1" class="events">
+	<table cellspacing="0" class="events border">
 		<tr>
 		<th align="right"><xsl:value-of select="$labelTime"/></th>
 		<th align="right" title="[second]"><xsl:value-of select="$labelPeriod"/></th>
@@ -91,7 +91,7 @@
 <xsl:sort select="ID"/>
 
 &nbsp;<br />
-<table border="0" cellspacing="1" class="projects">
+<table cellspacing="0" class="projects">
 <tr><td align="right"><strong><xsl:value-of select="$labelProject"/>&nbsp;<xsl:value-of select="$labelID"/>:</strong></td><td><xsl:value-of select="ID"/></td></tr>
 
 <xsl:if test="string-length(Description)>0">
@@ -103,7 +103,7 @@
 <tr><td align="right"><xsl:value-of select="$labelPrivate"/>:</td><td><xsl:value-of select="Private"/></td></tr>
 <tr><td align="right"><xsl:value-of select="$labelTasks"/>:</td><td>&nbsp;</td></tr>
 </table>
-	<table border="1" cellspacing="1" class="tasks">
+	<table cellspacing="0" class="tasks border">
 		<tr>
 		<th align="right"><xsl:value-of select="$labelID"/></th>
 		<th align="left"><xsl:value-of select="$labelDefault"/></th>

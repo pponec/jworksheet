@@ -1,13 +1,54 @@
 /* Document: style.css of jWorkSheet
- * Author  : PPone(c)2008
+ * License : GNU/GPL 2.0
+ * Author  : PPone(c)2008-2009
  */
 
-body{ font-family: Arial, sans-serif; } 
-h2  { color: blue; }
-table th { background-color: #def8f8;  }
-table th.dayOff, .dayOff { background-color: #fddce1; }
-table tr.total td, td.total { background-color: #fcfddc; text-align: right;}
-hr  { margin-top: 20px; }
-.footer { text-align: center; color: gray;  }
-table.events .projId, table.events .taskId, .smallMonth { font-size: x-small; vertical-align: top; }
-table tr td.alignLeft, .alignLeft {text-align: left;}
+body {  font-family: Arial, Verdana, sans-serif;
+}
+h2  {   color: blue;
+}
+table, th, td {
+        border: 0px none;
+}
+th, td {
+        padding: 2px 8px;
+}
+th  {   background-color: #def8f8;
+}
+
+table.border {
+        border: 1px solid silver;
+}
+table.border th,
+table.border td {
+        border-bottom: 1px solid silver;
+        border-right : 1px solid silver;
+}
+
+th.dayOff,
+.dayOff  {
+        background-color: #fddce1;
+}
+td.total,
+tr.total td {
+        background-color: #fcfddc;
+        text-align: right;
+}
+hr  {   margin-top: 20px;
+}
+
+.footer {
+        text-align: center; color: gray;
+}
+.smallMonth {
+        font-size: 10px;
+}
+table.events .projId,
+table.events .taskId {
+        font-size: 10px;
+        vertical-align: top;
+}
+table td.alignLeft,
+.alignLeft {
+        text-align: left;
+}
