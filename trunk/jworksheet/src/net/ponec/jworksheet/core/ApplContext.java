@@ -356,9 +356,12 @@ public class ApplContext implements TableModelListener, Runnable, JwsContext {
         return result;
     }
 
-    /** Modules Directory */
+    /** Get Modules directory and create one if the directory is missing. */
     public File getModulesDir() {
         final File result = new File(getConfigDir(), FILE_MODULES);
+        if (!result.isDirectory()) {
+            result.mkdirs();
+        }
         return result;
     }
 
@@ -549,7 +552,11 @@ public class ApplContext implements TableModelListener, Runnable, JwsContext {
     
     /** Initializaton flag */
     public void setInitialized() {
-        initModules();
+        try {
+           initModules();
+        } catch (Throwable e ) {
+           e.printStackTrace();
+        }
         languageManager.setLocaleAndTranslate(Parameters.P_LANG.of(parameters), true); // translate the application
 
         fireModuleEvent();
