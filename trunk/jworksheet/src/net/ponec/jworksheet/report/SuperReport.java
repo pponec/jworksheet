@@ -21,6 +21,7 @@ import net.ponec.jworksheet.bo.WorkSpace;
 import net.ponec.jworksheet.bo.item.YearMonthDay;
 import net.ponec.jworksheet.core.LanguageManager;
 import net.ponec.jworksheet.gui.JWorkSheet;
+import net.ponec.jworksheet.resources.ResourceProvider;
 import org.ujoframework.UjoProperty;
 
 /**
@@ -168,7 +169,7 @@ public abstract class SuperReport implements Calculator {
                , "</tr>"
                , "</table>"
             };
-            String result = ApplTools.stringCat("\n", content);
+            String result = ApplTools.stringCat("", content);
             sb.append(result);
         }
     }
@@ -197,7 +198,7 @@ public abstract class SuperReport implements Calculator {
          , "&nbsp;<br />"
          , body
          , "<hr />"
-         , "<div class=\"footer\">Powered by <a href=\"" + JWorkSheet.APPL_HOMEPAGE + "\">" + JWorkSheet.APPL_NAME + "</a> version " + JWorkSheet.APPL_VERSION + "</div>"
+         , "<div class=\"footer\">Powered by <a href=\"" + JWorkSheet.APPL_HOMEPAGE + "\">" + JWorkSheet.APPL_NAME + "</a> version " + JWorkSheet.APPL_VERSION + "<img src=\"styles/"+ResourceProvider.LOGO16+"\"/></div>"
          , "</body>"
          , "</html>"
         };

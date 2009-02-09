@@ -124,7 +124,7 @@
 <hr />
 <div class="footer">Powered by 
 <a><xsl:attribute name="href"><xsl:value-of select="$JWSHomePage" /></xsl:attribute><xsl:value-of select="$JWSName" /></a> 
- version <xsl:value-of select="/body/Version" />
+ version <xsl:value-of select="/body/Version" /><img src="styles/logo16.png"/>
 </div>
 
 </body>
