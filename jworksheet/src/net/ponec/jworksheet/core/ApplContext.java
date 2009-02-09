@@ -506,25 +506,21 @@ public class ApplContext implements TableModelListener, Runnable, JwsContext {
                 }
             }
             
-            fileName = ResourceProvider.REPORT_BASE;
-            is = new ResourceProvider().getUrl(fileName).openStream();
-            target = getStyleFile(fileName);
-            ApplTools.copy(is, target);
-            is.close();
-            //
-            fileName = ResourceProvider.REPORT_BASE2;
-            is = new ResourceProvider().getUrl(fileName).openStream();
-            target = getStyleFile(fileName);
-            ApplTools.copy(is, target);
-            is.close();
-            //
-            fileName = ResourceProvider.FILE_CSS;
-            is = new ResourceProvider().getUrl(fileName).openStream();
-            target = getStyleFile(fileName);
-            ApplTools.copy(is, target);
-            is.close();
+            /** Copy files to target: */
+            final String[] fileNames = 
+            { ResourceProvider.REPORT_BASE
+            , ResourceProvider.REPORT_BASE2
+            , ResourceProvider.FILE_CSS
+            , ResourceProvider.LOGO16
+            };            
+            for (String f : fileNames) {
+                is = new ResourceProvider().getUrl(f).openStream();
+                target = getStyleFile(f);
+                ApplTools.copy(is, target);
+                is.close();                
+            }
             
-        } catch (IOException ex) {
+        } catch (IOException e) {
             LOGGER.log(Level.WARNING, "Can't create an file " + fileName);
         } finally {
             if (is!=null) {

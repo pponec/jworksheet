@@ -475,12 +475,7 @@ public class LanguageManager {
             ? mTitle
             : mText
             ;
-
-            if ( aCont instanceof javax.swing.JDialog) {
-                int iii = 1;
-
-            }
-            
+           
             // SetName:
             if (firstRuning && isEmptyName(name)) {
                 me   = aCont.getClass().getMethod(mt[0], parameterTypes1);

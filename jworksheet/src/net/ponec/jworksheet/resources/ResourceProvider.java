@@ -41,6 +41,7 @@ public class ResourceProvider {
     
     /** Icon s */
     public static String LOGO     = "logo.png";
+    public static String LOGO16   = "logo16.png";
     public static String LOGO_TRY = "logoTray.gif";
     public static String SORT     = "sort.png";
     
