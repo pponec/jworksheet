@@ -52,7 +52,7 @@ import org.ujoframework.core.UjoActionImpl;
  */
 public class ReportDialog extends TopDialog implements java.awt.event.ActionListener, javax.swing.event.ChangeListener, java.awt.event.MouseListener {
     
-    public static final Logger LOGGER = Logger.getLogger(ReportDialog.class.getName());
+    protected static final Logger LOGGER = Logger.getLogger(ReportDialog.class.getName());
     
     /** A spinner format */
     private String spinnerFormat;

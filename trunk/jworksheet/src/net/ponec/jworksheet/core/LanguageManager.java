@@ -27,6 +27,8 @@ import java.awt.event.*;
 import java.net.URL;
 import java.text.MessageFormat;
 import java.util.*;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import org.ujoframework.UjoProperty;
 
 
@@ -55,6 +57,8 @@ import org.ujoframework.UjoProperty;
  * @version 1.2
  */
 public class LanguageManager {
+
+    private static final Logger LOGGER = Logger.getLogger(LanguageManager.class.getName());
     
     // --- Konstants ----
     
@@ -246,7 +250,9 @@ public class LanguageManager {
         keyConvertorBuffer = new StringBuilder(50);
         try {
             createName2(topContainer);
-        } catch (Exception e) { e.printStackTrace(); }
+        } catch (Exception e) {
+            LOGGER.log(Level.WARNING, "Language", e);
+        }
         keyConvertorBuffer = null;
         
         
@@ -315,7 +321,9 @@ public class LanguageManager {
             javax.swing.JToolBar tp = (javax.swing.JToolBar) aCont;
             try {
                 for (i=0; i<1000; i++) createName3(tp.getComponentAtIndex(i));
-            } catch (Throwable e) { e.printStackTrace(); }
+            } catch (Throwable e) {
+                LOGGER.log(Level.WARNING, "Language", e);
+            }
         } else if (aCont instanceof javax.swing.JTabbedPane) {
             javax.swing.JTabbedPane tp = (javax.swing.JTabbedPane) aCont;
             for (i=0; i<tp.getTabCount(); i++) {
@@ -449,7 +457,7 @@ public class LanguageManager {
                         border.setTitle(getText(text));
                         aCont.repaint(); // Border is not repainted automaticaly.
                     } catch (Throwable e) {
-                        e.printStackTrace();
+                        LOGGER.log(Level.WARNING, "Language", e);
                     }
                 }
                 aCont.setLocale(locale);
