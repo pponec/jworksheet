@@ -35,7 +35,7 @@ import net.ponec.jworksheet.resources.ResourceProvider;
  */
 public class DateDialog extends TopDialog implements java.awt.event.ActionListener, javax.swing.event.ChangeListener {
     
-    public static final Logger LOGGER = Logger.getLogger(DateDialog.class.getName());
+    private static final Logger LOGGER = Logger.getLogger(DateDialog.class.getName());
     
     /** A spinner format */
     final private String gotoFormat;

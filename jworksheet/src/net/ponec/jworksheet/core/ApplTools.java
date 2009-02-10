@@ -78,7 +78,7 @@ import net.ponec.jworksheet.resources.ResourceProvider;
  */
 public class ApplTools {
     
-    public static final Logger LOGGER = Logger.getLogger("ApplTools");
+    private static final Logger LOGGER = Logger.getLogger("ApplTools");
     
     /**
      * Get StackTrace from an Exception.
@@ -505,7 +505,7 @@ public class ApplTools {
         try {
             Thread.sleep(milis);
         } catch (InterruptedException e) {
-            e.printStackTrace();
+            LOGGER.log(Level.WARNING, "err", e);
         }
     }
     

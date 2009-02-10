@@ -38,7 +38,7 @@ import net.ponec.jworksheet.bo.Parameters;
 public class TopFrame extends JFrame {
     
     /** Logger */
-    public static final Logger LOGGER = Logger.getLogger(TopFrame.class.getName());
+    private static final Logger LOGGER = Logger.getLogger(TopFrame.class.getName());
     
     final protected ApplContext applContext;
     

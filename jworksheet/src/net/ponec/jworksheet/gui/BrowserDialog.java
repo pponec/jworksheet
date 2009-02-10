@@ -33,7 +33,7 @@ import net.ponec.jworksheet.resources.ResourceProvider;
  */
 public class BrowserDialog extends TopDialog {
     
-    public static final Logger LOGGER = Logger.getLogger(BrowserDialog.class.getName());
+    private static final Logger LOGGER = Logger.getLogger(BrowserDialog.class.getName());
     
     /** A select daty */
     private String result = null;

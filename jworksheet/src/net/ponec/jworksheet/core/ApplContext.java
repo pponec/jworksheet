@@ -69,7 +69,7 @@ import org.ujoframework.core.UjoManagerXML;
 public class ApplContext implements TableModelListener, Runnable, JwsContext {
     
     /** Logger */
-    public static final Logger LOGGER = Logger.getLogger(ApplContext.class.getName());
+    private static final Logger LOGGER = Logger.getLogger(ApplContext.class.getName());
     
     /** Lock File */
     public static final String FILE_LOCK = "locker.lck";
@@ -551,7 +551,7 @@ public class ApplContext implements TableModelListener, Runnable, JwsContext {
         try {
            initModules();
         } catch (Throwable e ) {
-           e.printStackTrace();
+           LOGGER.log(Level.WARNING, "err", e);
         }
         languageManager.setLocaleAndTranslate(Parameters.P_LANG.of(parameters), true); // translate the application
 
