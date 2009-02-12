@@ -17,6 +17,7 @@
 
 package net.ponec.jworksheet.gui.models;
 
+import java.util.List;
 import net.ponec.jworksheet.core.ApplContext;
 import net.ponec.jworksheet.bo.Parameters;
 import net.ponec.jworksheet.bo.Event;
@@ -37,7 +38,10 @@ public class EventTableModel extends UjoTableModel<Event> {
     
     /** Application workSpace */
     protected ApplContext applContext;
-    
+
+    /** Is changed a time of the current day? */
+    private boolean timeChange;
+
     /**
      * Creates a new instance of UjoTableModel
      * @param applContext Application Context
@@ -133,6 +137,8 @@ public class EventTableModel extends UjoTableModel<Event> {
     
     /** Sort table and recalculate periods. */
     public void sort(boolean enableInsertAction) {
+
+        timeChange = false;
         Event lastRow = getRowLast();
         super.sort(true, Event.P_TIME);
         
@@ -190,7 +196,7 @@ public class EventTableModel extends UjoTableModel<Event> {
     public void setValueAt(Object value, int rowIndex, UjoProperty column) {
         
         // Convert a decimal value to minutes:
-        if (PROPS.P_PERIOD==column ) {
+        if (PROPS.P_PERIOD==column) {
             String data = String.valueOf(value);
             
             final int timeSeparator = data.indexOf(':');
@@ -210,6 +216,10 @@ public class EventTableModel extends UjoTableModel<Event> {
             // Test:
             PROPS.P_TIME.of(getRow(rowIndex)).cloneAdd((Short)value);
         }
+        else if (PROPS.P_TIME==column) {
+            // the time change listener
+            timeChange=true;
+        }
         
         if (column==Event.P_PROJ
         &&  value!=null
@@ -219,5 +229,13 @@ public class EventTableModel extends UjoTableModel<Event> {
             super.setValueAt(taskType, rowIndex, Event.P_TASK);
         }
         super.setValueAt(value, rowIndex, column);
+    }
+
+    @Override
+    public void setRows(List<Event> events) {
+        if (timeChange && super.rows!=null) {
+            sort(false);
+        }
+        super.setRows(events);
     }
 }
