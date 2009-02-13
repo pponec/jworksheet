@@ -59,6 +59,9 @@ import org.ujoframework.UjoProperty;
 public class LanguageManager {
 
     private static final Logger LOGGER = Logger.getLogger(LanguageManager.class.getName());
+
+    /** A key word to skipping a generic translation for marked component.  */
+    public static final String STOP_TRANSLATION = "~STOP~TRANSLATION";
     
     // --- Konstants ----
     
@@ -309,7 +312,7 @@ public class LanguageManager {
         
         // ---- Null Test -------------------
         
-        if (aCont==null) {
+        if (aCont==null || STOP_TRANSLATION.equals(aCont.getName())) {
             return;
         }
      
