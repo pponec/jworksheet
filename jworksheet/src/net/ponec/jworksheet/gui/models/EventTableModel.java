@@ -18,6 +18,8 @@
 package net.ponec.jworksheet.gui.models;
 
 import java.util.List;
+import javax.swing.SwingUtilities;
+import javax.swing.event.TableModelEvent;
 import net.ponec.jworksheet.core.ApplContext;
 import net.ponec.jworksheet.bo.Parameters;
 import net.ponec.jworksheet.bo.Event;
@@ -32,7 +34,9 @@ import org.ujoframework.swing.UjoTableModel;
  * @author Pavel Ponec
  */
 public class EventTableModel extends UjoTableModel<Event> {
-    
+
+    public static final int ACTION_SELECT_EVENT = 1001;
+
     /** Properties */
     public final static Event PROPS = null;
     
@@ -229,6 +233,25 @@ public class EventTableModel extends UjoTableModel<Event> {
             super.setValueAt(taskType, rowIndex, Event.P_TASK);
         }
         super.setValueAt(value, rowIndex, column);
+
+        if (timeChange 
+        && Parameters.P_AUTOMATIC_SORTING_BY_TIME.of(applContext.getParameters())) {
+            final Event e = getRow(rowIndex);
+
+            SwingUtilities.invokeLater(new Runnable() {
+                public void run() {
+                    Thread.yield();
+                    sort(true);
+                    fireTableChanged(new TableModelEvent
+                        ( EventTableModel.this
+                        , getRowIndex(e)
+                        , 0
+                        , 0
+                        , ACTION_SELECT_EVENT)
+                        );
+                }
+            });
+        }
     }
 
     @Override

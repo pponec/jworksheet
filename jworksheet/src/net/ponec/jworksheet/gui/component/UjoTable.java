@@ -37,6 +37,7 @@ import javax.swing.table.TableColumn;
 import javax.swing.table.TableColumnModel;
 import javax.swing.table.TableModel;
 import net.ponec.jworksheet.core.ApplContext;
+import net.ponec.jworksheet.gui.models.EventTableModel;
 import net.ponec.jworksheet.resources.ResourceProvider;
 import org.ujoframework.Ujo;
 import org.ujoframework.UjoProperty;
@@ -316,5 +317,15 @@ public class UjoTable extends JTable implements TableCellRenderer {
     public UjoProperty getSortedColumn() {
         return sortedColumn;
     }
-    
+
+    /** Table change listener */
+    @Override
+    public void tableChanged(TableModelEvent e) {
+        if (e.getType()==EventTableModel.ACTION_SELECT_EVENT ) {
+            selectRow(e.getFirstRow());
+        } else {
+            super.tableChanged(e);
+        }
+    }
+
 }

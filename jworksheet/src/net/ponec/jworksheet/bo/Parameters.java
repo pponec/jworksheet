@@ -89,6 +89,8 @@ public class Parameters extends ArrayUjo {
     public static final UjoProperty<Parameters,Rectangle> P_WINDOW_SIZE = newProperty("WindowSize", new Rectangle(-1, -1, 622, 405), propertyCount++);
     /** Restore a last application window size and position. */
     public static final UjoProperty<Parameters,Boolean> P_WINDOW_SIZE_RESTORATION = newProperty("WindowSizeRestoration", true, propertyCount++);
+    /** Automatic sorting of the events by time. */
+    public static final UjoProperty<Parameters,Boolean> P_AUTOMATIC_SORTING_BY_TIME = newProperty("AutomaticSortingByTime", true, propertyCount++);
     /** A full path to a system browser. */
     public static final UjoProperty<Parameters,String> P_SYSTEM_BROWSER_PATH = newProperty("SystemBrowserPath", VALUE_DEFAULT, propertyCount++);
     /** Close Report Dialog after OK. */
