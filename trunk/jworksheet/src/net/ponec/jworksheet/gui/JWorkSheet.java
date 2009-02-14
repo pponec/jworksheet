@@ -75,8 +75,8 @@ import org.ujoframework.swing.UjoPropertyRow;
 @SuppressWarnings("unchecked")
 public final class JWorkSheet extends TopFrame {
     
-    public static final String APPL_VERSION  = "0.82.6" ;
-    public static final String APPL_RELEASED = "2009/02/11";
+    public static final String APPL_VERSION  = "0.82.7" ;
+    public static final String APPL_RELEASED = "2009/02/14";
     
     public static final String APPL_NAME     = "jWorkSheet";
     public static final String APPL_HOMEPAGE = "http://jworksheet.ponec.net/";
@@ -418,7 +418,8 @@ public final class JWorkSheet extends TopFrame {
         bDayPrev.setIcon(imageProvider.getIcon(ResourceProvider.IMG_PREV, hideIcon));
         bDayNext.setIcon(imageProvider.getIcon(ResourceProvider.IMG_NEXT, hideIcon));
         bGoto   .setIcon(imageProvider.getIcon(ResourceProvider.IMG_DATE, hideIcon));
-                    
+
+        bSort.setVisible(!Parameters.P_AUTOMATIC_SORTING_BY_TIME.of(applContext.getParameters()));
         //setImage(bToday  , ResourceProvider.IMG_DATE, imageProvider);
         //
         setImage(bCreate, ResourceProvider.IMG_ADD, imageProvider);

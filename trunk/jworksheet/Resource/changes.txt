@@ -1,12 +1,15 @@
 The jWorkSheet change list
 **************************
 
-release 0.83 (2009-02-XX)
-+ multilanguage application, support: English (en), Czech (cs)
-+ a change of day action sorts the day events if an event time item was changed by user
-+ simple module support
-+ UJO Framework release 0.831 is used to faster reading XML files
+release 0.85 (2009-02-XX)
++ multilanguage application, supported languages are: English (en), Czech (cs)
++ all day events are sorted automatically after a change of time value. The original behavior you can set by parameter
++ a simple module support
++ the UJO Framework release 0.831 is used to faster reading data from XML file
 + code cleaning
+
+release 0.84 (skipped)
+release 0.83 (skipped)
 
 release 0.82 (2008-12-12)
 + look and feel called Nimbus (form Java 6) is supported now, it is a defaut look for Linux
