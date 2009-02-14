@@ -63,7 +63,8 @@ public class ParamTableModel extends SingleUjoTabModel {
         if (Parameters.P_COLOR_EDITABLE==row.getProperty()) {
             // Repaint color background;
             fireTableColumnUpdated(column);
-        } else if (Parameters.P_HIDE_ICONS==row.getProperty()) {
+        } else if (Parameters.P_HIDE_ICONS==row.getProperty()
+        ||         Parameters.P_AUTOMATIC_SORTING_BY_TIME==row.getProperty()) {
             applContext.getTopFrame().initIcons();
         }
     }
