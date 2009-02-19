@@ -75,8 +75,8 @@ import org.ujoframework.swing.UjoPropertyRow;
 @SuppressWarnings("unchecked")
 public final class JWorkSheet extends TopFrame {
     
-    public static final String APPL_VERSION  = "0.82.7" ;
-    public static final String APPL_RELEASED = "2009/02/14";
+    public static final String APPL_VERSION  = "0.82.8" ;
+    public static final String APPL_RELEASED = "2009/02/19";
     
     public static final String APPL_NAME     = "jWorkSheet";
     public static final String APPL_HOMEPAGE = "http://jworksheet.ponec.net/";
@@ -234,9 +234,11 @@ public final class JWorkSheet extends TopFrame {
                 }
                 @Override
                 public void windowDeiconified(WindowEvent e) {
-                    // System.err.println("Calculate time");
+                    if (!applContext.isSystrayEnabled()
+                    &&   applContext.isToday()) {
+                        bSortActionPerformed(null);
+                    }
                 }
-                
             });
             
             // Exit application:
