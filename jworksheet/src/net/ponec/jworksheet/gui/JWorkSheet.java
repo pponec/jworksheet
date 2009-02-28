@@ -76,7 +76,7 @@ import org.ujoframework.swing.UjoPropertyRow;
 public final class JWorkSheet extends TopFrame {
     
     public static final String APPL_VERSION  = "0.82.8" ;
-    public static final String APPL_RELEASED = "2009/02/19";
+    public static final String APPL_RELEASED = "2009/02/28";
     
     public static final String APPL_NAME     = "jWorkSheet";
     public static final String APPL_HOMEPAGE = "http://jworksheet.ponec.net/";
@@ -727,6 +727,7 @@ public final class JWorkSheet extends TopFrame {
         tTimeTotal.setEditable(false);
         tTimeTotal.setMinimumSize(new java.awt.Dimension(110, 22));
         tTimeTotal.setPreferredSize(new java.awt.Dimension(100, 22));
+        tTimeTotal.addMouseListener(formListener);
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 2;
         gridBagConstraints.gridy = 1;
@@ -1026,7 +1027,7 @@ public final class JWorkSheet extends TopFrame {
 
     // Code for dispatching events from components to event handlers.
 
-    private class FormListener implements java.awt.event.ActionListener, javax.swing.event.ChangeListener {
+    private class FormListener implements java.awt.event.ActionListener, java.awt.event.MouseListener, javax.swing.event.ChangeListener {
         FormListener() {}
         public void actionPerformed(java.awt.event.ActionEvent evt) {
             if (evt.getSource() == bDayPrev) {
@@ -1101,6 +1102,24 @@ public final class JWorkSheet extends TopFrame {
             else if (evt.getSource() == bHomePage) {
                 JWorkSheet.this.bHomePageActionPerformed(evt);
             }
+        }
+
+        public void mouseClicked(java.awt.event.MouseEvent evt) {
+            if (evt.getSource() == tTimeTotal) {
+                JWorkSheet.this.tTimeTotalMouseClicked(evt);
+            }
+        }
+
+        public void mouseEntered(java.awt.event.MouseEvent evt) {
+        }
+
+        public void mouseExited(java.awt.event.MouseEvent evt) {
+        }
+
+        public void mousePressed(java.awt.event.MouseEvent evt) {
+        }
+
+        public void mouseReleased(java.awt.event.MouseEvent evt) {
         }
 
         public void stateChanged(javax.swing.event.ChangeEvent evt) {
@@ -1374,6 +1393,10 @@ public final class JWorkSheet extends TopFrame {
         model.insertRowAndDefault(newEvent);
         eventTable.selectRow(Integer.MAX_VALUE);
     }//GEN-LAST:event_bCreateActionPerformed
+
+    private void tTimeTotalMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tTimeTotalMouseClicked
+        bSortActionPerformed(null);
+    }//GEN-LAST:event_tTimeTotalMouseClicked
     
     /** Create new work Event */
     public void createWorkEvent(boolean currentDay) {
