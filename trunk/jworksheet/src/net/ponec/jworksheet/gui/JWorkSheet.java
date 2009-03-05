@@ -1,4 +1,4 @@
-/**;
+/**
  * 
  * Copyright (C) 2007-9, Paul Ponec, contact: http://ponec.net/
  *
@@ -75,8 +75,8 @@ import org.ujoframework.swing.UjoPropertyRow;
 @SuppressWarnings("unchecked")
 public final class JWorkSheet extends TopFrame {
     
-    public static final String APPL_VERSION  = "0.82.8" ;
-    public static final String APPL_RELEASED = "2009/02/28";
+    public static final String APPL_VERSION  = "0.82.81" ;
+    public static final String APPL_RELEASED = "2009/03/05";
     
     public static final String APPL_NAME     = "jWorkSheet";
     public static final String APPL_HOMEPAGE = "http://jworksheet.ponec.net/";
@@ -130,10 +130,10 @@ public final class JWorkSheet extends TopFrame {
                             = "param."
                             + paramTable.getValueAt
                             ( selectedRow
-                            , paramTable.convertColumnIndexToModel(0)
+                            , paramTable.convertColumnIndexToModel(1)
                             ).toString()
                             ;
-                        descr = applContext.getLanguageManager().getText(key);
+                        descr = applContext.getLanguageManager().getTextAllways(key);
                     }
                     paramDescr.setText(descr);
                     paramDescr.select(0,0);
@@ -189,6 +189,7 @@ public final class JWorkSheet extends TopFrame {
             paramTable.setModel(new ParamTableModel(applContext.getParameters(), applContext));
             paramTable.getTableColumn(UjoPropertyRow.P_DEFAULT).setMinWidth(0);
             paramTable.getTableColumn(UjoPropertyRow.P_DEFAULT).setMaxWidth(0);
+            paramTable.getTableColumn(UjoPropertyRow.P_INDEX).setMaxWidth(25);
             paramTable.getTableColumn(UjoPropertyRow.P_NAME ).setPreferredWidth(100);
             paramTable.getTableColumn(UjoPropertyRow.P_VALUE).setPreferredWidth(200);
             
