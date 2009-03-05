@@ -39,8 +39,9 @@ public class ParamTableModel extends SingleUjoTabModel {
     public ParamTableModel(Parameters params, ApplContext applContext) {
         super
         ( params
+        , PROPS.P_INDEX
         , PROPS.P_NAME
-        , PROPS.P_CLASSNAME
+        , PROPS.P_TYPENAME
         , PROPS.P_VALUE
         //, PROPS.P_TEXT
         , PROPS.P_DEFAULT
