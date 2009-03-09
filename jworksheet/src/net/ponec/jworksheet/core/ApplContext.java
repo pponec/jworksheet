@@ -17,7 +17,6 @@
 
 package net.ponec.jworksheet.core;
 
-import java.net.MalformedURLException;
 import net.ponec.jworksheet.module.JwsContext;
 import java.awt.Rectangle;
 import java.io.BufferedInputStream;
@@ -28,7 +27,6 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStreamWriter;
 import java.io.Writer;
-import java.lang.reflect.Constructor;
 import java.nio.charset.Charset;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
@@ -68,6 +66,9 @@ import org.ujoframework.core.UjoManagerXML;
  */
 public class ApplContext implements TableModelListener, Runnable, JwsContext {
     
+    /** Is the language manager enabled? */
+    public static final boolean LANGUAGE_MANAGER_ENABLED = true;
+
     /** Logger */
     private static final Logger LOGGER = Logger.getLogger(ApplContext.class.getName());
     
@@ -245,7 +246,7 @@ public class ApplContext implements TableModelListener, Runnable, JwsContext {
     }
     
     /** Save data into file(s) */
-    public void saveData(boolean includeParams) {
+    public synchronized void saveData(boolean includeParams) {
         try {
             // WorkSpace attributes
             WorkSpace.P_CREATED.setValue(workSpace, new Date());
@@ -553,7 +554,10 @@ public class ApplContext implements TableModelListener, Runnable, JwsContext {
         } catch (Throwable e ) {
            LOGGER.log(Level.WARNING, "err", e);
         }
-        languageManager.setLocaleAndTranslate(Parameters.P_LANG.of(parameters), true); // translate the application
+        if (LANGUAGE_MANAGER_ENABLED) {
+           // translate the application:
+           languageManager.setLocaleAndTranslate(Parameters.P_LANG.of(parameters), true);
+        }
 
         fireModuleEvent();
         this.initialized = true;
@@ -608,8 +612,11 @@ public class ApplContext implements TableModelListener, Runnable, JwsContext {
     /** Set JWorkSheet */
     public void setTopFrame(JWorkSheet topFrame, boolean showDebugWindow) {
         this.topFrame = topFrame;
-        this.languageManager = new LanguageManager(topFrame, ResourceProvider.class, showDebugWindow);
-        this.languageManager.setLocaleAndTranslate(Parameters.P_LANG.of(parameters), false);
+
+        if (LANGUAGE_MANAGER_ENABLED) {
+            this.languageManager = new LanguageManager(topFrame, ResourceProvider.class, showDebugWindow);
+            this.languageManager.setLocaleAndTranslate(Parameters.P_LANG.of(parameters), false);
+        }
     }
 
     /** Set a user configuration directory */
