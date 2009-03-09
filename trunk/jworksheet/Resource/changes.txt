@@ -1,11 +1,11 @@
 The jWorkSheet change list
 **************************
 
-release 0.85 (2009-02-XX)
+release 0.85 (2009-03-XX)
 + multilanguage application, supported languages are: English (en), Czech (cs)
 + all day events are sorted automatically after a change of time value. The original behavior you can set by parameter
 + a simple module support
-+ the UJO Framework release 0.831 is used to faster reading data from XML file
++ the UJO Framework release 0.84 is used to faster reading data from a XML file
 + code cleaning
 
 release 0.84 (skipped)
