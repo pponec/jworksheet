@@ -31,7 +31,7 @@ import net.ponec.jworksheet.bo.item.YearMonthDay;
 import org.ujoframework.core.UjoComparator;
 
 /**
- * Days Report
+ * Day Report with a task resolution.
  * @author Pavel Ponec
  */
 public class ReportTab extends SuperReport {
@@ -84,7 +84,7 @@ public class ReportTab extends SuperReport {
         
         //GroupSet groupSet = report.getGroupSet();
         for(TaskGroup tg : groupSet.getGroups() ) {
-            tg.P_DAY.setValue(tg, ymd);
+            TaskGroup.P_DAY.setValue(tg, ymd);
         }
         data.add(report.getGroupSet());
     }
@@ -229,7 +229,7 @@ public class ReportTab extends SuperReport {
         List<YearMonthDay> result = new ArrayList<YearMonthDay>();
         for (GroupSet set : data) {
             for (TaskGroup group : set.getGroups()) {
-                final YearMonthDay ymd = group.P_DAY.of(group);
+                final YearMonthDay ymd = TaskGroup.P_DAY.of(group);
                 if (ymd!=null
                 &&! result.contains(ymd)
                 ){

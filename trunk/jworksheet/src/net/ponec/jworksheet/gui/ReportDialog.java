@@ -41,8 +41,8 @@ import net.ponec.jworksheet.report.ReportA;
 import net.ponec.jworksheet.report.ReportB;
 import net.ponec.jworksheet.report.ReportC;
 import net.ponec.jworksheet.report.ReportTab;
+import net.ponec.jworksheet.report.ReportTabProj;
 import net.ponec.jworksheet.resources.ResourceProvider;
-import org.ujoframework.Ujo;
 import org.ujoframework.UjoProperty;
 import org.ujoframework.core.UjoActionImpl;
 
@@ -128,6 +128,7 @@ public class ReportDialog extends TopDialog implements java.awt.event.ActionList
     private ListModel createReportModel() {
         DefaultListModel model = new DefaultListModel();
         model.addElement(new MetaReport(getTitle("DetailInTable"        ), ReportTab.class));
+        model.addElement(new MetaReport(getTitle("DetailInTableProj"    ), ReportTabProj.class));
         model.addElement(new MetaReport(getTitle("ProjectAndTaskSummary"), ReportA.class));
         model.addElement(new MetaReport(getTitle("ProjectSummary"       ), ReportB.class));
         model.addElement(new MetaReport(getTitle("DetailDayReports"     ), ReportC.class));
