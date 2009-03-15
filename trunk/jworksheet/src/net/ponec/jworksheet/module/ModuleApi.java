@@ -21,8 +21,10 @@ import java.util.Locale;
 
 
 /**
- * An module interface
+ * An module interface. The implementation must have got a no parameter constructor.
  * @author Ponec
+ * @since 0.85
+ * @composed 1 - 1 JwsContext
  */
 public interface ModuleApi {
 

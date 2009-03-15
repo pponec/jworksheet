@@ -158,6 +158,27 @@ Released   : 20080129
              
              
           <div class="post">
+            <img src="images2/milky-127.png" width="48" height="48" alt="architecture" style="float:left; margin: 0 15px 0 0; vertical-align:text-top; border:0" />
+            <h2 class="title" id="module"><a href="#">Module support</a></h2>
+            <div class="entry">
+                Since release 0.85 the application supports so-called modules where the each module can extended a graphical user interface
+                or can perform some action on starting or on closing the application. Some basic module features:
+
+                <ul>
+                    <li>a module in a JAR format must be located in a directory: $HOME/.jWorkSheet/modules</li>
+                    <li>the JAR file module file must contain a meta file in the text format: META-INF\JWS-MODULE.MF</li>
+                    <li>the contain of the meta file has a specification of the module main class by a template: Main-Class: testmodule.TestModule</li>
+                    <li>the module main class must to implement an interface: net.ponec.jworksheet.module.ModuleApi with a no parameter constructor.</li>
+                </ul>
+
+                There is an template project for a new module implementation in the CSV repository in the NetBeans format.
+                See a <a href="javadoc/net/ponec/jworksheet/module/package-summary.html">more information</a> in a JavaDoc.
+            </div>
+            <p class="meta"> <a href="http://www.w3schools.com/xsl/" class="permalink">Read more</a> </p>
+          </div><!-- post -->
+
+
+          <div class="post">
             <img src="images2/milky-44.png" width="48" height="48" alt="architecture" style="float:left; margin: 0 15px 0 0; vertical-align:text-top; border:0" />
             <h2 class="title" id="reviews"><a href="#">Reviews:</a></h2>
             <div class="entry">
@@ -188,6 +209,7 @@ Released   : 20080129
                 <li>support of table component</li>
                 <li>small source code of your UJO objects</li>
                 <li>checking by unit tests</li>
+                <li>simple module support</li>
                 <li>tiny framework without further dependencies</li>
               </ul>
               Source code is Java 5.0 compatible, an <a href="http://www.netbeans.org/">NetBeans IDE</a> was used. 
@@ -278,6 +300,7 @@ Released   : 20080129
                  <li><a href="flash/JWorkSheet-en.htm">Flash presentation</a></li>
                  <li><a href="#tutorial">Tutorial</a></li>
                  <li><a href="#reports">User reports</a></li>
+                 <li><a href="#module">Module support</a></li>
                  <li><a href="http://ujoframework.blogspot.com/">Blog</a></li>
                  <li><a href="#download">Download</a> <a href="file.jnlp"><img src="images2/webstart_small.gif" alt="Java Web Start" title="Java Web Start" height="23" width="88" style="border: 0;"/></a></li>
                  <li><a href="#license">License</a></li>

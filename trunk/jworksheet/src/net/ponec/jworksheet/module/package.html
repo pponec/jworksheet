@@ -1,0 +1,28 @@
+
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html>
+  <head>
+    <title></title>
+    <meta http-equiv="Content-Type" content="text/html; charset=windows-1250">
+  </head>
+  <body>
+            The simple module support.
+            <h2 id="module">Description</h2>
+            <div class="entry">
+                Since release 0.85 the application supports so-called modules where the each module can extended a graphical user interface
+                or can perform some action on starting or on closing the application. Some basic module features:
+
+                <ul>
+                    <li>a module in a JAR format must be located in a directory: $HOME/.jWorkSheet/modules</li>
+                    <li>the JAR file module file must containt a meta file in the text format: META-INF\JWS-MODULE.MF</li>
+                    <li>the containt of the meta file has a specification of the module main class by a template: Main-Class: testmodule.TestModule</li>
+                    <li>the module main class must to implement an interface: net.ponec.jworksheet.module.ModuleApi with a no parameter constructor.</li>
+                </ul>
+
+                There is an template project for a new module implementation in the CSV repository in the NetBeans format.
+            </div>
+
+
+
+  </body>
+</html>

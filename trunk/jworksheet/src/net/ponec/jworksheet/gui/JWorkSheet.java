@@ -32,6 +32,7 @@ import javax.swing.Icon;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
 import javax.swing.JOptionPane;
+import javax.swing.JTabbedPane;
 import javax.swing.JTextField;
 import javax.swing.KeyStroke;
 import javax.swing.ListSelectionModel;
@@ -474,6 +475,12 @@ public final class JWorkSheet extends TopFrame {
         }
         super.setTitle(result);
     }
+
+    /** Get a main Tabbed pane */
+    public JTabbedPane getTabbedPane() {
+        return tabbedPane;
+    }
+
     
     /** This method is called from within the constructor to
      * initialize the form.
