@@ -22,8 +22,9 @@ import java.util.Date;
 import net.ponec.jworksheet.gui.JWorkSheet;
 
 /**
- * An sample moduel
- * @author pavel
+ * A sample of the simple module implementation.
+ * @author Ponec
+ * @since 0.85
  */
 public class ModuleSample extends ModuleApiImpl {
 
@@ -53,8 +54,5 @@ public class ModuleSample extends ModuleApiImpl {
     public String getRelease() {
         return JWorkSheet.APPL_VERSION;
     }
-
-
-
 
 }

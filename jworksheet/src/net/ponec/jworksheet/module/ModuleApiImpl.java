@@ -20,8 +20,9 @@ package net.ponec.jworksheet.module;
 import java.util.Locale;
 
 /**
- * An external module interface
+ * An extended module interface
  * @author Ponec
+ * @since 0.85
  */
 public abstract class ModuleApiImpl implements ModuleApi {
 

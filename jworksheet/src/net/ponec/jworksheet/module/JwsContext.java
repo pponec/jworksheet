@@ -19,6 +19,7 @@ package net.ponec.jworksheet.module;
 import java.io.File;
 import java.io.IOException;
 import java.util.Locale;
+import javax.swing.JTabbedPane;
 import net.ponec.jworksheet.bo.Parameters;
 import net.ponec.jworksheet.bo.WorkDay;
 import net.ponec.jworksheet.bo.WorkSpace;
@@ -26,8 +27,11 @@ import net.ponec.jworksheet.bo.item.YearMonthDay;
 import net.ponec.jworksheet.gui.JWorkSheet;
 
 /**
- * JwsContext
+ * The jWorkSeet module content.
+ * The method provides a useful information about state of parameters the jWorkSheet application.
+ *
  * @author Ponec
+ * @since 0.85
  */
 public interface JwsContext {
 
@@ -73,8 +77,11 @@ public interface JwsContext {
     /** Does application starting */
     public boolean isStarting();
 
-    /** Get JWorkSheet */
+    /** Get JWorkSheet instance */
     public JWorkSheet getTopFrame();
+
+    /** Get a main Tabbed pane of the application for adding a new panels. */
+    public JTabbedPane getTabbedPane();
 
     /** Systray is enabled in case a parameter is supported AND system is supported too */
     public boolean isSystrayEnabled();

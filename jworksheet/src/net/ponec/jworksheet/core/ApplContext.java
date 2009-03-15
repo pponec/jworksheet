@@ -39,6 +39,7 @@ import java.util.jar.JarEntry;
 import java.util.jar.JarFile;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.swing.JTabbedPane;
 import javax.swing.SwingUtilities;
 import javax.swing.event.TableModelEvent;
 import javax.swing.event.TableModelListener;
@@ -770,5 +771,10 @@ public class ApplContext implements TableModelListener, Runnable, JwsContext {
     public LanguageManager getLanguageManager() {
         return languageManager;
     }
-        
+
+    /** Get a main Tabbed pane of the application */
+    public JTabbedPane getTabbedPane() {
+        return getTopFrame().getTabbedPane();
+    }
+
 }

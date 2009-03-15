@@ -168,7 +168,7 @@
         
           <!-- Append CSS definition: -->
           <concat destfile="${dist.javadoc.dir}/stylesheet.css" append="true">
-              <filelist dir="etc/css" files="style.css"/>
+              <filelist dir="Resource" files="style.css"/>
           </concat>
           <!-- Copy Image(s): -->
           <copy file="${src.dir}/net/ponec/jworksheet/resources/logo.png" todir="${dist.javadoc.dir}/net"/>
