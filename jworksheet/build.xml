@@ -6,16 +6,16 @@
     <description>Builds, tests, and runs the project JWorkSheet.</description>
     
     <tstamp>
-       <format property="build.timestamp" pattern="yyyyMMdd'-'HHmmss" />
-       <format property="build.year"      pattern="yyyy" />
-    </tstamp>    
+        <format property="build.timestamp" pattern="yyyyMMdd'-'HHmmss" />
+        <format property="build.year"      pattern="yyyy" />
+    </tstamp>
 
     <!-- Read build properties -->
     <property file="Resource/build.properties"/>
-    <property name="encoding" value="UTF-8" />    
-    <property name="year" value="2007-${build.year}" />    
+    <property name="encoding" value="UTF-8" />
+    <property name="year" value="2007-${build.year}" />
     
-    <property name="javadoc.additionalparam" 
+    <property name="javadoc.additionalparam"
         value="-header '&lt;a href='${homePage}' target='_top' class='logo'&gt; ${name}&lt;br&gt;release ${version}&lt;/a&gt;' -bottom '&lt;i&gt;Copyright © ${year} &lt;a href='${homePage}' target='_top'&gt; PPonec &lt;/a&gt;'&lt;/i&gt; -link 'http://ujoframework.org/javadoc/' -charset 'windows-1250'"
     />
     <!-- -.->
@@ -100,22 +100,23 @@
         
         <!-- Append CSS definition: -->
         <concat destfile="${dist.javadoc.dir}/stylesheet.css" append="true">
-            <filelist dir="etc/css" files="style.css"/>
+            <filelist dir="Resource" files="style.css"/>
         </concat>
+
         <!-- Copy Image(s): -->
         <copy file="${src.dir}/net/ponec/jworksheet/resources/logo.png" todir="${dist.javadoc.dir}/net"/>
         <copy file="Resource/changes.txt" todir="${dist.javadoc.dir}"/>
         
-    </target>    
+    </target>
     
     
     <target name="javadocsUml"  depends="init" description="generates javadoc and also UML Diagram">
         
         <echo message="src.dir: ${src.dir}"/>
-        <property name="reports.dir" value="${dist.javadoc.dir}/.." />    
+        <property name="reports.dir" value="${dist.javadoc.dir}/.." />
         
-		<mkdir dir="${dist.javadoc.dir}"/>
-        <javadoc additionalparam="${javadoc.additionalparam}" 
+        <mkdir dir="${dist.javadoc.dir}"/>
+        <javadoc additionalparam="${javadoc.additionalparam}"
             author="${javadoc.author}" 
             charset="UTF-8" 
             destdir="${dist.javadoc.dir}" 
@@ -133,48 +134,48 @@
             version="${javadoc.version}" 
             windowtitle="${javadoc.windowtitle}">
         
-                    <classpath>
-                        <path path="${javac.classpath}"/>
-                    </classpath>       
-                    <fileset dir="${src.dir}" excludes="${excludes}" includes="${includes}">
-                        <filename name="**/*.java"/>
-                    </fileset>                    
+            <classpath>
+                <path path="${javac.classpath}"/>
+            </classpath>
+            <fileset dir="${src.dir}" excludes="${excludes}" includes="${includes}">
+                <filename name="**/*.java"/>
+            </fileset>
                     
-	        	   <doclet name="org.umlgraph.doclet.UmlGraphDoc"
+            <doclet name="org.umlgraph.doclet.UmlGraphDoc"
 	        		       path="C:\Progra~1\UMLGraph-5.0\lib\UmlGraph.jar">
-	        	        <param name="-attributes" />
-	        	        <param name="-operations" />
-	        	        <param name="-qualify" />
-	        	        <param name="-types" />
-	        	        <param name="-visibility" />
-	        	    </doclet>
-	      </javadoc>
-		  <apply executable="dot" 
+                <param name="-attributes" />
+                <param name="-operations" />
+                <param name="-qualify" />
+                <param name="-types" />
+                <param name="-visibility" />
+            </doclet>
+        </javadoc>
+        <apply executable="dot"
                  dest="${reports.dir}" 
                  parallel="false"
                  >
-		    <arg value="-Tpng"/>
-		    <arg value="-o"/>
-		     <targetfile/>
-		     <srcfile/>
-		     <fileset dir="${reports.dir}" includes="*.dot"/>
-		     <mapper type="glob" from="*.dot" to="*.png"/>
-		  </apply>
+            <arg value="-Tpng"/>
+            <arg value="-o"/>
+            <targetfile/>
+            <srcfile/>
+            <fileset dir="${reports.dir}" includes="*.dot"/>
+            <mapper type="glob" from="*.dot" to="*.png"/>
+        </apply>
           
           <!-- Delete temp files: -->
-          <delete>
-              <fileset dir="${dist.javadoc.dir}" includes="**/*.map,**/*.dot"/>
-          </delete>
+        <delete>
+            <fileset dir="${dist.javadoc.dir}" includes="**/*.map,**/*.dot"/>
+        </delete>
         
           <!-- Append CSS definition: -->
-          <concat destfile="${dist.javadoc.dir}/stylesheet.css" append="true">
-              <filelist dir="Resource" files="style.css"/>
-          </concat>
+        <concat destfile="${dist.javadoc.dir}/stylesheet.css" append="true">
+            <filelist dir="Resource" files="style.css"/>
+        </concat>
           <!-- Copy Image(s): -->
-          <copy file="${src.dir}/net/ponec/jworksheet/resources/logo.png" todir="${dist.javadoc.dir}/net"/>
-          <copy file="Resource/changes.txt" todir="${dist.javadoc.dir}"/>
+        <copy file="${src.dir}/net/ponec/jworksheet/resources/logo.png" todir="${dist.javadoc.dir}/net"/>
+        <copy file="Resource/changes.txt" todir="${dist.javadoc.dir}"/>
           
-	</target>    
+    </target>
         
     
 </project>
