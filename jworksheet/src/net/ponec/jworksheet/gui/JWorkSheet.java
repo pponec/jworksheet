@@ -76,8 +76,8 @@ import org.ujoframework.swing.UjoPropertyRow;
 @SuppressWarnings("unchecked")
 public final class JWorkSheet extends TopFrame {
     
-    public static final String APPL_VERSION  = "0.85" ;
-    public static final String APPL_RELEASED = "2009/03/15";
+    public static final String APPL_VERSION  = "0.85.1" ;
+    public static final String APPL_RELEASED = "2009/03/18";
     
     public static final String APPL_NAME     = "jWorkSheet";
     public static final String APPL_HOMEPAGE = "http://jworksheet.ponec.net/";
@@ -1195,6 +1195,7 @@ public final class JWorkSheet extends TopFrame {
         ){
             setTableEventEditor();
             displaySelectedDay();
+            bSortActionPerformed(null);
         }
         
         // Parameters

@@ -1,6 +1,9 @@
 The jWorkSheet change list
 **************************
 
+release 0.85.1 (2009-03-XX)
++ bug fixing: the value of Period Total is changed in case the private state of a project is changed
+
 release 0.85 (2009-03-15)
 + multilanguage application, supported languages are:
    - Spanish (es) thanks to Carlos David González Abraham,

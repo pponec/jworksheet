@@ -220,7 +220,9 @@ public class EventTableModel extends UjoTableModel<Event> {
             // Test:
             PROPS.P_TIME.of(getRow(rowIndex)).cloneAdd((Short)value);
         }
-        else if (PROPS.P_TIME==column) {
+        else if (PROPS.P_TIME==column
+        ||       PROPS.P_PROJ==column // a case PRIVATE state change
+        ){
             // the time change listener
             timeChange=true;
         }
