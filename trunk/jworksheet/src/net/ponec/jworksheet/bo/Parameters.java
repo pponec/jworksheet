@@ -176,9 +176,11 @@ public class Parameters extends ArrayUjo {
     
     /** An authorization settings. */
     @Override
+    @SuppressWarnings("unchecked")
     public boolean readAuthorization(UjoAction action, UjoProperty property, Object value) {
         switch(action.getType()) {
-            case ACTION_RESBUNDLE_EXPORT : return !isDefaultValue(property, value);
+            case ACTION_RESBUNDLE_EXPORT:
+                return !property.isDefault(this);
             case ACTION_TABLE_SHOW:
                 if (property==P_SORT_PROJ_COLUMN){
                     return false;
@@ -191,7 +193,8 @@ public class Parameters extends ArrayUjo {
                 ;
                 
                 return result;
-            default: return super.readAuthorization(action, property, value);
+            default:
+                return super.readAuthorization(action, property, value);
         }
     }
     
@@ -210,12 +213,6 @@ public class Parameters extends ArrayUjo {
     private void setDecimalFormat() {
         Locale locale = P_LANG.of(this);
         decimalFormat = ApplTools.createDecimalFormat("0.00", locale);
-    }
-    
-    /** Is it a default value? */
-    public boolean isDefaultValue(UjoProperty property, Object value) {
-        final Object defVal = property.getDefault();
-        return readUjoManager().equals(defVal, value);
     }
     
     /** WriteValueString */
