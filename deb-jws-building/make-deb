@@ -1,0 +1,11 @@
+#!/bin/sh
+
+echo      abc > "tmp~"
+echo rm `find . -name "*~"`
+rm      `find . -name "*~"`
+
+`find . -type f | awk '/.\// { print substr($0, 3) }'` > tmp/DEBIAN/md5sums
+dpkg-deb -b tmp jworksheet_0.85_all.deb
+
+
+

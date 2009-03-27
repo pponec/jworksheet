@@ -1,0 +1,3 @@
+?package(jworksheet):needs="X11" section="Applications/Office" \
+  icon="/usr/share/pixmaps/jworksheet.png" \
+  title="jWorkSheet" command="/usr/bin/jworksheet"

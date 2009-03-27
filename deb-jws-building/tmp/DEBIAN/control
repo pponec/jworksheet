@@ -1,0 +1,13 @@
+Package: jworksheet
+Version: 0.82
+Section: sekce - především oficiální balíky
+Priority: optional
+Recommends: firefox
+Depends: sun-java5-jre | sun-java6-jre | open-jdk6-jre | open-jdk5-jre | java5-runtime | java6-runtime
+Architecture: all
+Installed-Size: 207
+Maintainer: Paul Ponec <ujoframework@gmail.com>
+Description: Personal time tracker
+ The jWorkSheet is a desktop time tracker application for your projects, data are presented in a spreadsheet like format. Application offers some completed work sheet reports, however you can create your own user reports by XSL transformations. 
+ .
+ http://jworksheet.ponec.net/
