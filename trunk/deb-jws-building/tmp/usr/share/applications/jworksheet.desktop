@@ -1,0 +1,11 @@
+[Desktop Entry]
+Name=jWorkSheet
+GenericName=Personal time tracker
+Comment=The desktop time tracker application for your projects
+Exec=jworksheet %U
+Icon=jworksheet.png
+Terminal=false
+Type=Application
+Categories=Office;ProjectManagement;
+StartupNotify=true
+MimeType=text/plain;
