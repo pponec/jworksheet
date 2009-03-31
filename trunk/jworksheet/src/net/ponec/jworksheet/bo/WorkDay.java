@@ -38,6 +38,7 @@ public class WorkDay extends MapUjo implements Comparable {
     /** List of events */
     public static final ListProperty<WorkDay,Event>     P_EVENTS = newPropertyList("Event", Event.class);
     
+    /** Overrided for additional features */
     @Override
     public boolean readAuthorization(UjoAction action, UjoProperty property, Object value) {
         switch(action.getType()) {
@@ -48,6 +49,7 @@ public class WorkDay extends MapUjo implements Comparable {
         }
     }
 
+    /** Compare to another WorkDay by a P_DATE. */
     @Override
     public int compareTo(Object o) {
         final YearMonthDay d1 = P_DATE.of(this);

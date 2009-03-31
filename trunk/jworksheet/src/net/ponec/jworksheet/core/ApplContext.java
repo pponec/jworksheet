@@ -673,13 +673,13 @@ public class ApplContext implements TableModelListener, Runnable, JwsContext {
     }
     
     
-    /** Returns a Last Event Today, or null. */
+    /** Returns the Last Event Today, or null. */
     public Event findLastEventToday() {
         if (getWorkSpace()==null) { return null; }
         
         //WorkDay workDay = getWorkSpace().findWorkDay(getSelectedDay()); // YearMonthDay
         WorkDay workDay = getWorkSpace().findWorkDay(new YearMonthDay());
-        ArrayList<Event> events = WorkDay.P_EVENTS.getList(workDay);
+        List<Event> events = WorkDay.P_EVENTS.getList(workDay);
         int lastIndex = events.size()-1;
         return lastIndex>=0 ? events.get(lastIndex) : null;
     }

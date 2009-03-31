@@ -84,7 +84,7 @@ public class EventTableModel extends UjoTableModel<Event> {
     public void insertRow(Event row) {
         Event lastRow = getRowLast();
         if (lastRow!=null) {
-            // Set a last period:
+            // Set the last period:
             lastRow.setPeriod(Event.P_TIME.of(row));
         }
         super.addRow(row);

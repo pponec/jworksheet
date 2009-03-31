@@ -51,13 +51,15 @@ public class Project extends MapUjo implements Comparable {
     , P_PRIVATE
     , P_DESCR
     };
-    
+
+    /** Show description */
     @Override
     public String toString() {
         String result = P_DESCR.of(this);
         return ApplTools.isValid(result) ? result : String.valueOf(P_ID.of(this)) ;
     }
-    
+
+    /** Find a TaskType by its id */
     public TaskType findTaskType(Integer taskId) {
         for (TaskType task : P_TASKS.getList(this)) {
             if (TaskType.P_ID.equals(task, taskId)) {
@@ -67,7 +69,7 @@ public class Project extends MapUjo implements Comparable {
         return null;
     }
     
-    /** Returns a first "default" TaskType, null. */
+    /** Returns the first "default" TaskType, null. */
     public TaskType findDefaultTask() {
         for (TaskType task : P_TASKS.getList(this)) {
             if (TaskType.P_DEFAULT.of(task)
@@ -88,10 +90,6 @@ public class Project extends MapUjo implements Comparable {
             }
         }
         return result;
-    }
-
-    public boolean isFinished(UjoProperty column) {
-        return false;
     }
 
     /** Compare to another Project by ID. */
