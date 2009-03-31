@@ -35,7 +35,8 @@ public class TaskType extends MapUjo implements Comparable {
     public static final UjoProperty<TaskType,Boolean> P_FINISHED = newProperty("Finished", false);
     /** Description of the task. */
     public static final UjoProperty<TaskType,String>  P_DESCR    = newProperty("Description", "");
-    
+
+    /** Show description */
     @Override
     public String toString() {
         String result = P_DESCR.of(this);

@@ -76,8 +76,8 @@ import org.ujoframework.swing.UjoPropertyRow;
 @SuppressWarnings("unchecked")
 public final class JWorkSheet extends TopFrame {
     
-    public static final String APPL_VERSION  = "0.85.1" ;
-    public static final String APPL_RELEASED = "2009/03/18";
+    public static final String APPL_VERSION  = "0.85.2" ;
+    public static final String APPL_RELEASED = "2009/03/31";
     
     public static final String APPL_NAME     = "jWorkSheet";
     public static final String APPL_HOMEPAGE = "http://jworksheet.ponec.net/";
@@ -386,7 +386,7 @@ public final class JWorkSheet extends TopFrame {
     private void synchonizeTaskTable() {
         int row = projTable.getSelectedRow();
         Project project = row>=0 ? (Project) projTable.getModel().getRowNullable(row) : null ;
-        ArrayList<TaskType> list = project!=null ? Project.P_TASKS.getList(project) : new ArrayList<TaskType>();
+        List<TaskType> list = project!=null ? Project.P_TASKS.getList(project) : new ArrayList<TaskType>();
         taskTable.getModel().setRows(list);
         taskTable.selectRow(0);
         taskTable.showSortedColumn(TaskType.P_ID);

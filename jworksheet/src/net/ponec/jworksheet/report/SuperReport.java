@@ -10,7 +10,7 @@
 package net.ponec.jworksheet.report;
 
 import java.io.IOException;
-import java.util.ArrayList;
+import java.util.List;
 import net.ponec.jworksheet.core.ApplContext;
 import net.ponec.jworksheet.core.ApplTools;
 import net.ponec.jworksheet.core.Calculator;
@@ -232,7 +232,7 @@ public abstract class SuperReport implements Calculator {
     
     /** Is the day a DayOff? */
     protected boolean isDayOff(YearMonthDay aDay) {
-        final ArrayList<WorkDay> days = WorkSpace.P_DAYS.getList(applContext.getWorkSpace());
+        final List<WorkDay> days = WorkSpace.P_DAYS.getList(applContext.getWorkSpace());
         for(WorkDay day : days) {
             if (WorkDay.P_DATE.equals(day, aDay)) {
                 final boolean result = WorkDay.P_DAYOFF.of(day);

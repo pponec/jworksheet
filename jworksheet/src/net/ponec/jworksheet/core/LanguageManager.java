@@ -135,7 +135,7 @@ public class LanguageManager {
     
     /**
      * Create an key Name for the <b>param</b> container
-     * and their subcomponents for a first run.
+     * and their subcomponents for the first run.
      * This was meaning for a DIALOG box.
      * @param topContainer A root of the component tree.  */
     public void setFirstRunTexts(java.awt.Container topContainer) {
@@ -144,7 +144,7 @@ public class LanguageManager {
     
     /**
      * Create an key Name for the <b>param</b> container
-     * and their subcomponents for a first run.
+     * and their subcomponents for the first run.
      * This was meaning for a DIALOG box.
      * @param topContainer A root of the component tree.  */
     public void setFirstRunTexts(java.awt.Container topContainer, Locale aLocale) {

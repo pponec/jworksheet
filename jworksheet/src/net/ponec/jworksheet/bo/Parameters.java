@@ -27,7 +27,7 @@ import java.util.Calendar;
 import java.util.Locale;
 import net.ponec.jworksheet.core.*;
 import org.ujoframework.UjoProperty;
-import org.ujoframework.extensions.SuperProperty;
+import org.ujoframework.extensions.AbstractProperty;
 import org.ujoframework.extensions.UjoAction;
 import org.ujoframework.implementation.array.ArrayUjo;
 import static org.ujoframework.extensions.UjoAction.*;
@@ -87,7 +87,7 @@ public class Parameters extends ArrayUjo {
     public static final UjoProperty<Parameters,Boolean> P_HIDE_ICONS = newProperty("HideButtonIcons", false, propertyCount++);
     /** Last window size and position. */
     public static final UjoProperty<Parameters,Rectangle> P_WINDOW_SIZE = newProperty("WindowSize", new Rectangle(-1, -1, 622, 405), propertyCount++);
-    /** Restore a last application window size and position. */
+    /** Restore the last application window size and position. */
     public static final UjoProperty<Parameters,Boolean> P_WINDOW_SIZE_RESTORATION = newProperty("WindowSizeRestoration", true, propertyCount++);
     /** Automatic sorting of the events by time. */
     public static final UjoProperty<Parameters,Boolean> P_AUTOMATIC_SORTING_BY_TIME = newProperty("AutomaticSortingByTime", true, propertyCount++);
@@ -103,7 +103,7 @@ public class Parameters extends ArrayUjo {
     /** Decimal Formatter */
     private DecimalFormat decimalFormat = null;
     
-    
+    /** Parameters constructor */
     public Parameters() {
         // Default initialization:
         UjoProperty[] params = readProperties();
@@ -118,6 +118,7 @@ public class Parameters extends ArrayUjo {
         return propertyCount;
     }
     
+    /** Overrided for additional features */
     @Override
     public void writeValue(UjoProperty property, Object value) {
         
@@ -224,7 +225,7 @@ public class Parameters extends ArrayUjo {
             if (ApplTools.isValid(value)) {
                super.writeValueString(property, value.toUpperCase(), type, action);
             } else {
-               ((SuperProperty) property).setValueFromDefault(this);         
+               ((AbstractProperty) property).setValueFromDefault(this);
             }
         } else {
               super.writeValueString(property, value, type, action);

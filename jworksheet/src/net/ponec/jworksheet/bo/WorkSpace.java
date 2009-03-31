@@ -20,14 +20,14 @@ import java.util.ArrayList;
 import java.util.Date;
 import net.ponec.jworksheet.bo.item.YearMonthDay;
 import org.ujoframework.UjoProperty;
+import org.ujoframework.extensions.AbstractPropertyList;
 import org.ujoframework.extensions.ListProperty;
-import org.ujoframework.extensions.SuperPropertyList;
 import org.ujoframework.extensions.UjoAction;
 import org.ujoframework.implementation.map.MapUjo;
 import static org.ujoframework.extensions.UjoAction.*;
 
 /**
- * This is a root of all persistent business objects.
+ * This is a <strong>root</strong> of all persistent business objects.
  * @author Pavel Ponec
  * @composed 1 - * WorkDay
  * @composed 1 - * Project
@@ -70,7 +70,7 @@ public class WorkSpace extends MapUjo {
         return null;
     }
     
-    /** Returns a first "default" TaskType, null. */
+    /** Returns the first "default" TaskType, null. */
     public Project findDefaultProject() {
         for (Project proj : P_PROJS.getList(this)) {
             if (Project.P_DEFAULT.of(proj)
@@ -124,10 +124,10 @@ public class WorkSpace extends MapUjo {
     /** Sort Days by a YearMonthDay */
     @SuppressWarnings("unchecked")
     public void sortDays() {
-        ((SuperPropertyList)P_DAYS).sort(this, true, WorkDay.P_DATE);
+        ((AbstractPropertyList)P_DAYS).sort(this, true, WorkDay.P_DATE);
     }
     
-    
+    /** An authorization of ACTION_XML_EXPORT */
     @Override
     public boolean readAuthorization(UjoAction action, UjoProperty property, Object value) {
         

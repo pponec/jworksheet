@@ -127,7 +127,8 @@ public class Event extends BeanUjo {
         P_TIME.setValue(this, new Time(true));
         return this;
     }
-    
+
+    /** Set a time period */
     public void setPeriod(Time time) {
         final short period = time.substract(P_TIME.of(this));
         P_PERIOD.setValue(this, period);
@@ -154,7 +155,8 @@ public class Event extends BeanUjo {
         }
         return super.readAuthorization(action, property, value);
     }
-    
+
+    /** Overrided for additional features */
     @Override
     public Object readValue(UjoProperty property) {
         Object result;
@@ -170,6 +172,7 @@ public class Event extends BeanUjo {
         return result;
     }
     
+    /** Overrided for additional features */
     @Override
     public void writeValue(UjoProperty property, Object value) {
         if (P_PERIOD==property
