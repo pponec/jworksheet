@@ -144,7 +144,7 @@ public class EventTableModel extends UjoTableModel<Event> {
 
         timeChange = false;
         Event lastRow = getRowLast();
-        super.sort(true, Event.P_TIME);
+        super.sort(Event.P_TIME);
         
         if (enableInsertAction) {
             performAfterInsertAction(lastRow);

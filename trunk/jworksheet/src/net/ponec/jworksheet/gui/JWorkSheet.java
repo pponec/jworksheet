@@ -1271,7 +1271,7 @@ public final class JWorkSheet extends TopFrame {
     
     private void bTaskSortActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_bTaskSortActionPerformed
         taskTable.submitEditMode(true);
-        taskTable.getModel().sort(true, TaskType.P_ID,  TaskType.P_DESCR);
+        taskTable.getModel().sort(TaskType.P_ID,  TaskType.P_DESCR);
         taskTable.showSortedColumn(TaskType.P_ID);
     }//GEN-LAST:event_bTaskSortActionPerformed
     
@@ -1301,7 +1301,7 @@ public final class JWorkSheet extends TopFrame {
     
     private void bProjSortActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_bProjSortActionPerformed
         projTable.submitEditMode(true);
-        projTable.getModel().sort(true, Project.P_ID,  Project.P_DESCR);
+        projTable.getModel().sort(Project.P_ID,  Project.P_DESCR);
         projTable.showSortedColumn(Project.P_ID);
     }//GEN-LAST:event_bProjSortActionPerformed
     

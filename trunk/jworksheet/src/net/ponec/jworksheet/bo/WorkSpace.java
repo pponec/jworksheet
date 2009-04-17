@@ -124,7 +124,7 @@ public class WorkSpace extends MapUjo {
     /** Sort Days by a YearMonthDay */
     @SuppressWarnings("unchecked")
     public void sortDays() {
-        ((AbstractPropertyList)P_DAYS).sort(this, true, WorkDay.P_DATE);
+        ((AbstractPropertyList)P_DAYS).sort(this, WorkDay.P_DATE);
     }
     
     /** An authorization of ACTION_XML_EXPORT */

@@ -27,6 +27,7 @@ import java.util.Calendar;
 import java.util.Locale;
 import net.ponec.jworksheet.core.*;
 import org.ujoframework.UjoProperty;
+import org.ujoframework.core.UjoManager;
 import org.ujoframework.extensions.AbstractProperty;
 import org.ujoframework.extensions.UjoAction;
 import org.ujoframework.implementation.array.ArrayUjo;
@@ -99,7 +100,10 @@ public class Parameters extends ArrayUjo {
     public static final UjoProperty<Parameters,File> P_DATA_FILE_PATH = newProperty("DataFilePath", new File(VALUE_DEFAULT), propertyCount++);
     /** Project table sorted column */
     public static final UjoProperty<Parameters,String> P_SORT_PROJ_COLUMN = newProperty("SortProjColumn", Project.P_ID.getName(), propertyCount++);
-    
+
+    // --- An optional property unique name test ---
+    static { UjoManager.checkUniqueProperties(Parameters.class); }
+
     /** Decimal Formatter */
     private DecimalFormat decimalFormat = null;
     

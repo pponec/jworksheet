@@ -63,7 +63,7 @@ public class ReportTab extends SuperReport {
     
     /** Create Comparator */
     protected UjoComparator createUjoComparator() {
-        UjoComparator comparator = UjoComparator.create(true, TaskGroup.P_PROJ, TaskGroup.P_TASK);
+        UjoComparator comparator = UjoComparator.newInstance(TaskGroup.P_PROJ, TaskGroup.P_TASK);
         return comparator;
     }
     
