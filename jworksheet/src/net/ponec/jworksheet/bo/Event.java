@@ -20,6 +20,7 @@ package net.ponec.jworksheet.bo;
 import net.ponec.jworksheet.bo.item.Time;
 import net.ponec.jworksheet.core.ApplTools;
 import org.ujoframework.UjoProperty;
+import org.ujoframework.core.UjoManager;
 import org.ujoframework.core.UjoService;
 import org.ujoframework.core.ZeroProvider;
 import org.ujoframework.extensions.UjoAction;
@@ -52,6 +53,8 @@ public class Event extends BeanUjo {
     /** Description of the event */
     public static final UjoProperty<Event,String>   P_DESCR  = newProperty("Description", "");
     
+    // --- An optional property unique name test ---
+    static { UjoManager.checkUniqueProperties(Event.class); }
     
     // ------------------------ JAVABEAN BEG ------------------------
     

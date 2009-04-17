@@ -266,7 +266,7 @@ public class UjoTable extends JTable implements TableCellRenderer {
                     Ujo selected = getRowSelectionAllowed() && row>=0
                     ? getModel().getRow(row) : null ;
                     
-                    getModel().sort(true, sortedColumn);
+                    getModel().sort(sortedColumn);
                     
                     if (selected!=null) {   // Restore selection:                        
                         selectRow(selected);

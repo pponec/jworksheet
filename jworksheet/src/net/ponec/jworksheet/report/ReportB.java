@@ -32,7 +32,7 @@ public class ReportB extends ReportA {
     /** Create Comparator */
     @Override
     protected UjoComparator createUjoComparator() {
-        UjoComparator comparator = UjoComparator.create(true, TaskGroup.P_PROJ);
+        UjoComparator comparator = UjoComparator.newInstance(TaskGroup.P_PROJ);
         return comparator;
     }
     
