@@ -190,7 +190,7 @@ public final class JWorkSheet extends TopFrame {
             paramTable.setModel(new ParamTableModel(applContext.getParameters(), applContext));
             paramTable.getTableColumn(UjoPropertyRow.P_DEFAULT).setMinWidth(0);
             paramTable.getTableColumn(UjoPropertyRow.P_DEFAULT).setMaxWidth(0);
-            paramTable.getTableColumn(UjoPropertyRow.P_INDEX).setMaxWidth(25);
+            paramTable.getTableColumn(UjoPropertyRow.P_INDEX).setMaxWidth(30);
             paramTable.getTableColumn(UjoPropertyRow.P_NAME ).setPreferredWidth(100);
             paramTable.getTableColumn(UjoPropertyRow.P_VALUE).setPreferredWidth(200);
             
