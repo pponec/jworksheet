@@ -28,7 +28,7 @@ import org.ujoframework.implementation.bean.*;
 import static org.ujoframework.extensions.UjoAction.*;
 
 /** An Event of the Work Day.
- * I have selected the PojoUjo implementaton for its small memory footprint, two fields are stored in a memory safe data type in addition:
+ * I have selected the BeanUjo implementaton for its small memory footprint, two fields are stored in a memory safe data type in addition:
  * <ul>
  * <li>time - primitive short</li>
  * <li>description - byte array in a UTF format</li>
