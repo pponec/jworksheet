@@ -1,44 +1,57 @@
-/* Document: style.css of jWorkSheet
+/* Document: style.css of the jWorkSheet
  * License : GNU/GPL 2.0
  * Author  : PPone(c)2008-2009
  */
 
-body {  font-family: Arial, Verdana, sans-serif;
+*, h1, h2, h3, h4, a img, table, td, th {
+  padding: 0;
+  margin: 0;
+  border: 0;
+  text-indent: 0;
 }
-h2  {   color: blue;
+
+body {
+    font-family: Arial, Verdana, sans-serif;
+    padding: 2px 8px;
+}
+h2 {
+    color: blue;
 }
 table, th, td {
-        border: 0px none;
+    border: 0px none;
 }
 th, td {
-        padding: 2px 5px;
+    padding: 2px 5px;
 }
-th  {   background-color: #def8f8;
+th {
+    background-color: #def8f8;
 }
 
 table.border {
-        border: 1px solid silver;
+    border: 1px solid silver;
 }
 table.border th,
 table.border td {
-        border-bottom: 1px solid silver;
-        border-right : 1px solid silver;
+    border-bottom: 1px solid silver;
+    border-right : 1px solid silver;
 }
 
 th.dayOff,
 .dayOff  {
-        background-color: #fddce1;
+    background-color: #fddce1;
 }
 td.total,
 tr.total td {
-        background-color: #fcfddc;
-        text-align: right;
+    background-color: #fcfddc;
+    text-align: right;
+    white-space: nowrap;
 }
-hr  {   margin-top: 20px;
+hr {
+    margin-top: 20px;
 }
 
 .footer {
-        text-align: center; color: gray;
+    text-align: center; color: gray;
 }
 .footer img {  /** Loogo: */
     width: 16px;
@@ -48,14 +61,21 @@ hr  {   margin-top: 20px;
     top: 3px;
 }
 .smallMonth {
-        font-size: 10px;
+    font-size: 10px;
 }
 table.events .projId,
 table.events .taskId {
-        font-size: 10px;
-        vertical-align: top;
+    font-size: 10px;
+    vertical-align: top;
 }
 table td.alignLeft,
 .alignLeft {
-        text-align: left;
+    text-align: left;
+}
+.num {
+    text-align: right;
+    white-space: nowrap;
+}
+table.projects td {
+    white-space: nowrap;
 }

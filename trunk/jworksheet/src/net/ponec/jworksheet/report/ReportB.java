@@ -53,7 +53,7 @@ public class ReportB extends ReportA {
             if (proj==null || !Project.P_PRIVATE.of(proj)) {
                 sb.append("<tr>");
                 sb.append("<td>").append(escape(proj)).append("</td>");
-                sb.append("<td align=\"right\">").append(formatTime(group.getTime())).append("</td>");
+                sb.append("<td class=\"num\">").append(formatTime(group.getTime())).append("</td>");
                 sb.append("</tr>");
                 total += group.getTime();
             }

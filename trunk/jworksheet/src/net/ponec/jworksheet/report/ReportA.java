@@ -92,7 +92,7 @@ public class ReportA extends SuperReport {
                 sb.append("<tr>");
                 sb.append("<td>").append( escape(proj) ).append("</td>");
                 sb.append("<td>").append( escape(task) ).append("</td>");
-                sb.append("<td align=\"right\">").append(formatTime(group.getTime())).append("</td>");
+                sb.append("<td class=\"num\">").append(formatTime(group.getTime())).append("</td>");
                 sb.append("</tr>");
                 total += group.getTime();
             }

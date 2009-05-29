@@ -76,8 +76,8 @@ import org.ujoframework.swing.UjoPropertyRow;
 @SuppressWarnings("unchecked")
 public final class JWorkSheet extends TopFrame {
     
-    public static final String APPL_VERSION  = "0.85.2" ;
-    public static final String APPL_RELEASED = "2009/03/31";
+    public static final String APPL_VERSION  = "0.85.4" ;
+    public static final String APPL_RELEASED = "2009/05/29";
     
     public static final String APPL_NAME     = "jWorkSheet";
     public static final String APPL_HOMEPAGE = "http://jworksheet.ponec.net/";
@@ -193,8 +193,7 @@ public final class JWorkSheet extends TopFrame {
             paramTable.getTableColumn(UjoPropertyRow.P_INDEX).setMaxWidth(30);
             paramTable.getTableColumn(UjoPropertyRow.P_NAME ).setPreferredWidth(100);
             paramTable.getTableColumn(UjoPropertyRow.P_VALUE).setPreferredWidth(200);
-            
-            
+
             if (ApplTools.isNimbusLAF()) {
                 CheckBoxRenderer checkBoxRenderer = new CheckBoxRenderer();
                 projTable.getTableColumn(Project.P_PRIVATE).setCellRenderer(checkBoxRenderer);
