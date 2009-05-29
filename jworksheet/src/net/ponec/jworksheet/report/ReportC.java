@@ -51,7 +51,9 @@ public class ReportC extends SuperReport {
     }
     
     private void printDay() {
-        report = new ReportA();
+        if (report==null) {
+           report = new ReportA();
+        }
         report.init
         ( applContext
         , WorkDay.P_DATE.of(lastWorkDay)

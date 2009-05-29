@@ -131,14 +131,16 @@ public class ReportTab extends SuperReport {
             sb.append("<tr>");
             
             sb.append("<td>");
-            sb.append(escape(TaskGroup.P_PROJ.of(proj) + " / " + TaskGroup.P_TASK.of(proj), true));
+            sb.append(escape(TaskGroup.P_PROJ.of(proj)));
+            sb.append(" / ");
+            sb.append(escape(TaskGroup.P_TASK.of(proj)));
             sb.append("</td>\n");
             
             int total = 0;
             for(YearMonthDay day : days) {
                 int time = getCellTime(proj, day);
                 total += time;
-                sb.append("<td align=\"right\">");
+                sb.append("<td class=\"num\">");
                 sb.append(formatTimeZero(time));
                 sb.append("</td>\n");
             }

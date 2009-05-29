@@ -96,12 +96,8 @@ public abstract class SuperReport implements Calculator {
     
     /** Escape a text parameter */
     protected String escape(Object aText) {
-        return escape(aText, false);
-    }
-    /** Escape a text parameter */
-    protected String escape(Object aText, boolean fixSpace) {
-        String text = String.valueOf(aText);
-        if (aText==null || text.length()==0) {
+        String text = aText!=null ? aText.toString() : "";
+        if (text.length()==0) {
             return "&nbsp;" ;
         }
         StringBuilder sb = new StringBuilder(text.length() + 8);
@@ -113,7 +109,7 @@ public abstract class SuperReport implements Calculator {
                 case '&' : sb.append("&amp;") ; break;
                 case '"' : sb.append("&quot;"); break;
                 case '\'': sb.append("&apos;"); break;
-                case ' ' : sb.append(fixSpace ? "&nbsp;" : " "); break;
+                case ' ' : sb.append(' ')     ; break;
                 default  : {
                     if (c<32) {
                         sb.append("&#");
@@ -141,7 +137,7 @@ public abstract class SuperReport implements Calculator {
             sb.append("</div>");
         } else {
             String[] content = new String[]
-            {  "\n<table class=\"filter\" cellspacing=\"0\" border=\"0\">"
+            {  "\n<table class=\"filter\" cellspacing=\"0\">"
                , "<tr>"
                , "<td>"
                , getText("DateFrom")

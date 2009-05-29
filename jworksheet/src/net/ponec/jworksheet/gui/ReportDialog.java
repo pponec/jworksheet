@@ -38,6 +38,7 @@ import net.ponec.jworksheet.bo.item.YearMonthDay;
 import net.ponec.jworksheet.core.LanguageManager;
 import net.ponec.jworksheet.report.MetaReport;
 import net.ponec.jworksheet.report.ReportA;
+import net.ponec.jworksheet.report.ReportAttendance;
 import net.ponec.jworksheet.report.ReportB;
 import net.ponec.jworksheet.report.ReportC;
 import net.ponec.jworksheet.report.ReportTab;
@@ -132,6 +133,7 @@ public class ReportDialog extends TopDialog implements java.awt.event.ActionList
         model.addElement(new MetaReport(getTitle("ProjectAndTaskSummary"), ReportA.class));
         model.addElement(new MetaReport(getTitle("ProjectSummary"       ), ReportB.class));
         model.addElement(new MetaReport(getTitle("DetailDayReports"     ), ReportC.class));
+ // TODO:       model.addElement(new MetaReport(getTitle("AttendanceReport"     ), ReportAttendance.class));
         
         for (MetaReport report : applContext.getMetaReports()) {
             String title = report.getTitle();
