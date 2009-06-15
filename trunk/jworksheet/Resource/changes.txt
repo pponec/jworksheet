@@ -1,7 +1,8 @@
 The jWorkSheet change list
 **************************
 
-release 0.85.10 (2009-06-XX)
+release 0.85.40 (2009-06-XX)
++ localization to Russian thanks to Dmytro Barabash
 + bug fixing: the value of Period Total is changed in case the private state of a project is changed
 + report styling
 

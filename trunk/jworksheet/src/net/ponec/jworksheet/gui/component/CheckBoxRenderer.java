@@ -14,7 +14,7 @@ import javax.swing.table.TableCellRenderer;
 
 /**
  *  Nimbus L&F Renderer
- * @author pavel
+ * @author Pavel Ponec
  */
 public class CheckBoxRenderer extends JCheckBox implements TableCellRenderer {
 
