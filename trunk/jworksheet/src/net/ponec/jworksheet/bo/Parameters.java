@@ -27,9 +27,8 @@ import java.util.Calendar;
 import java.util.Locale;
 import net.ponec.jworksheet.core.*;
 import org.ujoframework.UjoProperty;
-import org.ujoframework.core.UjoManager;
-import org.ujoframework.extensions.AbstractProperty;
 import org.ujoframework.extensions.UjoAction;
+import org.ujoframework.extensions.UjoPropertyImpl;
 import org.ujoframework.implementation.array.ArrayUjo;
 import static org.ujoframework.extensions.UjoAction.*;
 
@@ -102,7 +101,7 @@ public class Parameters extends ArrayUjo {
     public static final UjoProperty<Parameters,String> P_SORT_PROJ_COLUMN = newProperty("SortProjColumn", Project.P_ID.getName(), propertyCount++);
 
     // --- An optional property unique name test ---
-    static { UjoManager.checkUniqueProperties(Parameters.class); }
+    static { init(Parameters.class,true); }
 
     /** Decimal Formatter */
     private DecimalFormat decimalFormat = null;
@@ -229,7 +228,7 @@ public class Parameters extends ArrayUjo {
             if (ApplTools.isValid(value)) {
                super.writeValueString(property, value.toUpperCase(), type, action);
             } else {
-               ((AbstractProperty) property).setValueFromDefault(this);
+               ((UjoPropertyImpl) property).setValueFromDefault(this);
             }
         } else {
               super.writeValueString(property, value, type, action);

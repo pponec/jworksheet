@@ -24,14 +24,14 @@ import java.util.Locale;
 import net.ponec.jworksheet.core.ApplTools;
 import net.ponec.jworksheet.bo.Parameters;
 import net.ponec.jworksheet.core.ApplContext;
-import org.ujoframework.extensions.PropertyTextable;
+import org.ujoframework.extensions.ValueTextable;
 import org.ujoframework.extensions.UjoCloneable;
 
 /**
  * Year, month and day
  * @author Pavel Ponec
  */
-public class YearMonthDay implements Comparable, PropertyTextable, UjoCloneable {
+public class YearMonthDay implements Comparable, ValueTextable, UjoCloneable {
     
     public static final int TYPE_DAY   = 0;
     public static final int TYPE_MONTH = 1;

@@ -24,7 +24,6 @@ import net.ponec.jworksheet.bo.item.YearMonthDay;
 import org.ujoframework.UjoProperty;
 import org.ujoframework.implementation.map.MapUjo;
 import net.ponec.jworksheet.bo.Event;
-import org.ujoframework.implementation.map.MapProperty;
 
 /**
  * Task Group
@@ -33,9 +32,9 @@ import org.ujoframework.implementation.map.MapProperty;
 @SuppressWarnings("unchecked")
 public class TaskGroup extends MapUjo {
     
-    public static final UjoProperty<TaskGroup,Project>     P_PROJ = new MapProperty(Event.P_PROJ, -3);
-    public static final UjoProperty<TaskGroup,TaskType>    P_TASK = new MapProperty(Event.P_TASK, -2);
-    public static final UjoProperty<TaskGroup,YearMonthDay> P_DAY = new MapProperty(WorkDay.P_DATE, -1);
+    public static final UjoProperty<TaskGroup,Project>     P_PROJ = newProperty(Event.P_PROJ, -3);
+    public static final UjoProperty<TaskGroup,TaskType>    P_TASK = newProperty(Event.P_TASK, -2);
+    public static final UjoProperty<TaskGroup,YearMonthDay> P_DAY = newProperty(WorkDay.P_DATE, -1);
     public static final UjoProperty<TaskGroup,Integer>    P_MONTH = newProperty("Month", Integer.class);
     public static final UjoProperty<TaskGroup,Integer>    P_YEAR  = newProperty("Year" , Integer.class);
     

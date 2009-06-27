@@ -4,6 +4,7 @@ The jWorkSheet change list
 release 0.85.40 (2009-06-XX)
 + localization to Russian thanks to Dmytro Barabash
 + bug fixing: the value of Period Total is changed in case the private state of a project is changed
++ preparing for the UJO Framework version 0.90 (fixing minor incompatibilities)
 + report styling
 
 release 0.85 (2009-03-15)

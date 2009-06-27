@@ -54,7 +54,7 @@ public class Event extends BeanUjo {
     public static final UjoProperty<Event,String>   P_DESCR  = newProperty("Description", "");
     
     // --- An optional property unique name test ---
-    static { UjoManager.checkUniqueProperties(Event.class); }
+    static { init(Event.class,true); }
     
     // ------------------------ JAVABEAN BEG ------------------------
     

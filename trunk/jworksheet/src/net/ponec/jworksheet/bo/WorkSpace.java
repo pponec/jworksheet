@@ -20,8 +20,8 @@ import java.util.ArrayList;
 import java.util.Date;
 import net.ponec.jworksheet.bo.item.YearMonthDay;
 import org.ujoframework.UjoProperty;
-import org.ujoframework.extensions.AbstractPropertyList;
 import org.ujoframework.extensions.ListProperty;
+import org.ujoframework.extensions.ListPropertyImpl;
 import org.ujoframework.extensions.UjoAction;
 import org.ujoframework.implementation.map.MapUjo;
 import static org.ujoframework.extensions.UjoAction.*;
@@ -124,7 +124,7 @@ public class WorkSpace extends MapUjo {
     /** Sort Days by a YearMonthDay */
     @SuppressWarnings("unchecked")
     public void sortDays() {
-        ((AbstractPropertyList)P_DAYS).sort(this, WorkDay.P_DATE);
+        ((ListPropertyImpl)P_DAYS).sort(this, WorkDay.P_DATE);
     }
     
     /** An authorization of ACTION_XML_EXPORT */

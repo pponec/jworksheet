@@ -20,14 +20,14 @@ package net.ponec.jworksheet.bo.item;
 import java.util.Calendar;
 import java.util.StringTokenizer;
 import net.ponec.jworksheet.core.*;
-import org.ujoframework.extensions.PropertyTextable;
+import org.ujoframework.extensions.ValueTextable;
 import org.ujoframework.extensions.UjoCloneable;
 
 /**
  * Time
  * @author Pavel Ponec
  */
-public class Time implements Comparable, PropertyTextable, UjoCloneable {
+public class Time implements Comparable, ValueTextable, UjoCloneable {
     
     /** Separator */
     public static final String SEPARATOR = ":";
