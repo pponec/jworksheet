@@ -20,9 +20,7 @@ package net.ponec.jworksheet.bo;
 import net.ponec.jworksheet.bo.item.Time;
 import net.ponec.jworksheet.core.ApplTools;
 import org.ujoframework.UjoProperty;
-import org.ujoframework.core.UjoManager;
 import org.ujoframework.core.UjoService;
-import org.ujoframework.core.ZeroProvider;
 import org.ujoframework.extensions.UjoAction;
 import org.ujoframework.implementation.bean.*;
 import static org.ujoframework.extensions.UjoAction.*;
@@ -37,11 +35,14 @@ import static org.ujoframework.extensions.UjoAction.*;
  * @composed 1 - * TaskType
  */
 public class Event extends BeanUjo {
+
+    public static final byte[] ZERO_BYTES = new byte[0];
+    public static final Short  ZERO_SHORT = (short)0;
     
     /** Start time of event */
     public static final UjoProperty<Event,Time>     P_TIME   = newProperty("Time"     , Time.class);
     /** Period of the event in minutes */
-    public static final UjoProperty<Event,Short>    P_PERIOD = newProperty("Period"   , ZeroProvider.ZERO_SHORT); // [min]
+    public static final UjoProperty<Event,Short>    P_PERIOD = newProperty("Period"   , ZERO_SHORT); // [min]
     /** Project (object) */
     public static final UjoProperty<Event,Project>  P_PROJ   = newProperty("Project"  , Project.class);
     /** Project ID for the persistence */
@@ -64,7 +65,7 @@ public class Event extends BeanUjo {
     private Integer  projectID;
     private TaskType task;
     private Integer  taskID;
-    private byte[]   descr = ZeroProvider.ZERO_BYTES;
+    private byte[]   descr = ZERO_BYTES;
     
     /** @deprecated This is a JavaBean method however the method is deprecated because the jWorkSheet application want to use an UJO access only. */ @Deprecated
     public Time getTime() {
@@ -120,7 +121,7 @@ public class Event extends BeanUjo {
     }
     /** @deprecated This is a JavaBean method however the method is deprecated because the jWorkSheet application want to use an UJO access only. */ @Deprecated
     public void setDescription(String description) {
-        this.descr = description!=null ? ApplTools.getBytes(description, UjoService.UTF_8) : ZeroProvider.ZERO_BYTES;
+        this.descr = description!=null ? ApplTools.getBytes(description, UjoService.UTF_8) : ZERO_BYTES;
     }    
     
     // ------------------------ JAVABEAN END ------------------------
@@ -181,7 +182,7 @@ public class Event extends BeanUjo {
         if (P_PERIOD==property
         && (value==null || ((Short)value)<=0)
         ){
-            value = ZeroProvider.ZERO_SHORT;
+            value = ZERO_SHORT;
         }
         super.writeValue(property, value);
     }
