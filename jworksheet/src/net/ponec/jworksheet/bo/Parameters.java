@@ -27,8 +27,8 @@ import java.util.Calendar;
 import java.util.Locale;
 import net.ponec.jworksheet.core.*;
 import org.ujoframework.UjoProperty;
+import org.ujoframework.extensions.Property;
 import org.ujoframework.extensions.UjoAction;
-import org.ujoframework.extensions.UjoPropertyImpl;
 import org.ujoframework.implementation.array.ArrayUjo;
 import static org.ujoframework.extensions.UjoAction.*;
 
@@ -109,8 +109,7 @@ public class Parameters extends ArrayUjo {
     /** Parameters constructor */
     public Parameters() {
         // Default initialization:
-        UjoProperty[] params = readProperties();
-        for (UjoProperty par : params) {
+        for (UjoProperty par : readProperties()) {
             writeValue(par, par.getDefault());
         }
     }
@@ -228,7 +227,7 @@ public class Parameters extends ArrayUjo {
             if (ApplTools.isValid(value)) {
                super.writeValueString(property, value.toUpperCase(), type, action);
             } else {
-               ((UjoPropertyImpl) property).setValueFromDefault(this);
+               ((Property) property).setValueFromDefault(this);
             }
         } else {
               super.writeValueString(property, value, type, action);

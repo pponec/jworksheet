@@ -66,7 +66,6 @@ import net.ponec.jworksheet.resources.ResourceProvider;
 import org.ujoframework.Ujo;
 import org.ujoframework.UjoProperty;
 import org.ujoframework.swing.UjoTableModel;
-import org.ujoframework.core.ZeroProvider;
 import org.ujoframework.swing.UjoPropertyRow;
 
 /**
@@ -1367,7 +1366,7 @@ public final class JWorkSheet extends TopFrame {
             model.cloneRow(rowIndex, 2, this);
             model.setValueAt( period                , lastRow-1, Event.P_PERIOD);
             model.setValueAt( time2                 , lastRow  , Event.P_TIME);
-            model.setValueAt(ZeroProvider.ZERO_SHORT, lastRow  , Event.P_PERIOD);
+            model.setValueAt(Event.ZERO_SHORT, lastRow  , Event.P_PERIOD);
             
         }
         eventTable.selectRow(Integer.MAX_VALUE);

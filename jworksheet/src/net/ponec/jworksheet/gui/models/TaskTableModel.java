@@ -21,7 +21,6 @@ import net.ponec.jworksheet.bo.TaskType;
 import net.ponec.jworksheet.core.ApplContext;
 import org.ujoframework.UjoProperty;
 import org.ujoframework.swing.UjoTableModel;
-import org.ujoframework.core.ZeroProvider;
 
 
 
@@ -51,7 +50,7 @@ public class TaskTableModel extends UjoTableModel<TaskType> {
     
     /** Get next Task id */
     protected Integer nextTaskId() {
-        Integer result = ZeroProvider.ZERO_INT;
+        Integer result = 0;
         for (TaskType task : super.rows) {
             Integer id = TaskType.P_ID.of(task);
             if (result.compareTo(id)<0) {

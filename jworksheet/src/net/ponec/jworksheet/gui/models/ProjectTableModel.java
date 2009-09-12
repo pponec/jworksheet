@@ -21,7 +21,6 @@ import net.ponec.jworksheet.bo.Project;
 import net.ponec.jworksheet.core.ApplContext;
 import org.ujoframework.UjoProperty;
 import org.ujoframework.swing.UjoTableModel;
-import org.ujoframework.core.ZeroProvider;
 
 /**
  * Project Table Model
@@ -51,7 +50,7 @@ public class ProjectTableModel extends UjoTableModel<Project> {
 
     /** Get next Project id */
     protected Integer nextProjectId() {
-        Integer result = ZeroProvider.ZERO_INT;
+        Integer result = 0;
         for (Project proj : super.rows) {
             Integer id = Project.P_ID.of(proj);
             if (result.compareTo(id)<0) {
