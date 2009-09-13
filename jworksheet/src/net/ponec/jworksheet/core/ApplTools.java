@@ -76,7 +76,7 @@ import net.ponec.jworksheet.resources.ResourceProvider;
  * Static methods.
  * @author Pavel Ponec
  */
-public class ApplTools {
+public final class ApplTools {
     
     private static final Logger LOGGER = Logger.getLogger("ApplTools");
     

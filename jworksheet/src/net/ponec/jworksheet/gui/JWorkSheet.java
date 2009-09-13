@@ -75,8 +75,8 @@ import org.ujoframework.swing.UjoPropertyRow;
 @SuppressWarnings("unchecked")
 public final class JWorkSheet extends TopFrame {
     
-    public static final String APPL_VERSION  = "0.85.5" ;
-    public static final String APPL_RELEASED = "2009/05/29";
+    public static final String APPL_VERSION  = "0.90" ;
+    public static final String APPL_RELEASED = "2009/09/13";
     
     public static final String APPL_NAME     = "jWorkSheet";
     public static final String APPL_HOMEPAGE = "http://jworksheet.ponec.net/";
@@ -248,6 +248,9 @@ public final class JWorkSheet extends TopFrame {
                     closeAppl(null);
                 }
             });
+            try {
+                JwsHandler.init(this);
+            } catch (Throwable e) {}
             
             // Window sizing:
             ApplTools.windowsSizing(this, Parameters.P_WINDOW_SIZE.of(applContext.getParameters()));
