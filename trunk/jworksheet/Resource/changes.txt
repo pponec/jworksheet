@@ -3,8 +3,8 @@ The jWorkSheet change list
 
 release 0.90 (2009-09-13)
 + localization to Russian and Ukrainian thanks to Dmytro Barabash
-+ personal data are stored on signal TERM (only for Windows OS)
-+ new release or UJO Framework 0.90 is included (fixing minor incompatibilities are fixing)
++ personal data are stored on signal TERM (only on Windows OS)
++ new release of UJO Framework 0.90 is included (minor incompatibilities are fixing)
 + bug fixing: the value of Period Total is changed in case the private state of a project is changed
 + some report styling
 
