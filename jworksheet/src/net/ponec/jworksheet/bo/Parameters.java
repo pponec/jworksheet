@@ -28,9 +28,9 @@ import java.util.Locale;
 import net.ponec.jworksheet.core.*;
 import org.ujoframework.UjoProperty;
 import org.ujoframework.extensions.Property;
-import org.ujoframework.extensions.UjoAction;
+import org.ujoframework.UjoAction;
 import org.ujoframework.implementation.array.ArrayUjo;
-import static org.ujoframework.extensions.UjoAction.*;
+import static org.ujoframework.UjoAction.*;
 
 /**
  * Parameters of the application.
