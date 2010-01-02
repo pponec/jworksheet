@@ -21,9 +21,9 @@ import java.util.Date;
 import net.ponec.jworksheet.bo.item.YearMonthDay;
 import org.ujoframework.UjoProperty;
 import org.ujoframework.extensions.ListProperty;
-import org.ujoframework.extensions.UjoAction;
+import org.ujoframework.UjoAction;
 import org.ujoframework.implementation.map.MapUjo;
-import static org.ujoframework.extensions.UjoAction.*;
+import static org.ujoframework.UjoAction.*;
 
 /**
  * This is a <strong>root</strong> of all persistent business objects.
