@@ -258,6 +258,18 @@ public class Parameters extends ArrayUjo {
             return sb.toString();
        }
     }
-    
+
+    @SuppressWarnings("unchecked")
+    public <UJO extends Parameters, VALUE> VALUE get(UjoProperty<UJO, VALUE> up) {
+        return up.getValue((UJO)this);
+    }
+
+    @SuppressWarnings("unchecked")
+    public <UJO extends Parameters, VALUE> UJO set(UjoProperty<UJO, VALUE> up, VALUE value) {
+        up.setValue((UJO)this, value);
+        return (UJO) this;
+    }
+
+
     
 }
