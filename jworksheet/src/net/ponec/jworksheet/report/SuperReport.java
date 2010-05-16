@@ -64,16 +64,16 @@ public abstract class SuperReport implements Calculator {
         init();
         
         // Loop:
-        for(WorkDay workDay : WorkSpace.P_DAYS.of(applContext.getWorkSpace())) {
-            YearMonthDay ymd = WorkDay.P_DATE.of(workDay);
+        for(WorkDay workDay : applContext.getWorkSpace().get(WorkSpace.P_DAYS)) {
+            YearMonthDay ymd = workDay.get(WorkDay.P_DATE);
             if (ymd.compareTo(dateFrom)>=0
             &&  ymd.compareTo(dateTo  )<=0
             &&  WorkDay.P_EVENTS.getItemCount(workDay)>0
             ){
-                if (!WorkDay.P_DAYOFF.of(workDay)) {
+                if (!workDay.get(WorkDay.P_DAYOFF)) {
                     ++workDayCount;
                 }
-                for (Event event : WorkDay.P_EVENTS.of(workDay)) {
+                for (Event event : workDay.get(WorkDay.P_EVENTS)) {
                     calculate(workDay, event);
                 }
             }
@@ -187,7 +187,7 @@ public abstract class SuperReport implements Calculator {
          , "<meta name=\"Generator\" content=\""+JWorkSheet.APPL_NAME+"\" />"
          , "<link rel=\"stylesheet\" type=\"text/css\" href=\""+Parameters.P_REPORT_CSS.getDefault()                    +"\" />"
          //, "<!-- A style from an application setup -- >"
-         , "<link rel=\"stylesheet\" type=\"text/css\" href=\""+Parameters.P_REPORT_CSS.of(applContext.getParameters())+"\" />"
+         , "<link rel=\"stylesheet\" type=\"text/css\" href=\""+applContext.getParameters().get(Parameters.P_REPORT_CSS)+"\" />"
          , "</head>"
          , "<body>"
          , "<h2 style=\"margin-bottom:0px;\">" + escape(title) + "</h2>"
@@ -231,7 +231,7 @@ public abstract class SuperReport implements Calculator {
         final List<WorkDay> days = WorkSpace.P_DAYS.getList(applContext.getWorkSpace());
         for(WorkDay day : days) {
             if (WorkDay.P_DATE.equals(day, aDay)) {
-                final boolean result = WorkDay.P_DAYOFF.of(day);
+                final boolean result = day.get(WorkDay.P_DAYOFF);
                 return result;
             }
         }

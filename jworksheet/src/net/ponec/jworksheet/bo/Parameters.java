@@ -205,7 +205,7 @@ public class Parameters extends ArrayUjo {
 
     /** Returns a localized date format */
     public String getDateFormat(UjoProperty<Parameters,String> property, ApplContext context) {
-        String result = property.of(this);
+        String result = get(property);
         String week   = context.getLanguageManager().getTextAllways("Week");
         result = String.format(result, week);
         return result;
@@ -214,7 +214,7 @@ public class Parameters extends ArrayUjo {
     
     /** Set new Decimal FormatsetLocale  */
     private void setDecimalFormat() {
-        Locale locale = P_LANG.of(this);
+        Locale locale = get(P_LANG);
         decimalFormat = ApplTools.createDecimalFormat("0.00", locale);
     }
     
@@ -236,7 +236,7 @@ public class Parameters extends ArrayUjo {
 
     /** Returns a format time. */
     public String formatTime(int minutes) {
-       final boolean deci = P_DECIMAL_TIME_FORMAT.of(this);
+       final boolean deci = get(P_DECIMAL_TIME_FORMAT);
        
        if (deci) {
             // Numeric format: 1.50

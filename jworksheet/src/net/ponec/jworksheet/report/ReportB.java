@@ -47,10 +47,10 @@ public class ReportB extends ReportA {
         sb.append("</tr>");
         
         for(TaskGroup group : groupSet.getGroups()) {
-            Project  proj = TaskGroup.P_PROJ.of(group);
-            TaskType task = TaskGroup.P_TASK.of(group);
+            Project  proj = group.get(TaskGroup.P_PROJ);
+            TaskType task = group.get(TaskGroup.P_TASK);
             
-            if (proj==null || !Project.P_PRIVATE.of(proj)) {
+            if (proj==null || !proj.get(Project.P_PRIVATE)) {
                 sb.append("<tr>");
                 sb.append("<td>").append(escape(proj)).append("</td>");
                 sb.append("<td class=\"num\">").append(formatTime(group.getTime())).append("</td>");

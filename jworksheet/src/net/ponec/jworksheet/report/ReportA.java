@@ -85,10 +85,10 @@ public class ReportA extends SuperReport {
         sb.append("</tr>");
         
         for(TaskGroup group : groupSet.getGroups()) {
-            Project  proj = TaskGroup.P_PROJ.of(group);
-            TaskType task = TaskGroup.P_TASK.of(group);
+            Project  proj = group.get(TaskGroup.P_PROJ);
+            TaskType task = group.get(TaskGroup.P_TASK);
             
-            if (proj==null || !Project.P_PRIVATE.of(proj)) {
+            if (proj==null || !proj.get(Project.P_PRIVATE)) {
                 sb.append("<tr>");
                 sb.append("<td>").append( escape(proj) ).append("</td>");
                 sb.append("<td>").append( escape(task) ).append("</td>");
@@ -113,7 +113,7 @@ public class ReportA extends SuperReport {
         sb.append("</tr>");
         
         // Overtime:
-        float requiredTime = getWorkDayCount()*Parameters.P_WORKING_HOURS.of(applContext.getParameters());
+        float requiredTime = getWorkDayCount()*applContext.getParameters().get(Parameters.P_WORKING_HOURS);
         sb.append("<tr class=\"total\">");
         sb.append("<td class=\"alignLeft\">").append(getText("Overtime")).append("</td>");
         if (tasks) {

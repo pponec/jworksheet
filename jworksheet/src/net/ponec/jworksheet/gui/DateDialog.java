@@ -69,7 +69,7 @@ public class DateDialog extends TopDialog implements java.awt.event.ActionListen
             ApplTools.setAlign(tDate, JFormattedTextField.RIGHT);
         }
         
-        if (!Parameters.P_HIDE_ICONS.of(applContext.getParameters())) {
+        if (!applContext.getParameters().get(Parameters.P_HIDE_ICONS)) {
             ResourceProvider rp = new ResourceProvider();
             bOK.setIcon    (rp.getIcon(ResourceProvider.IMG_OK));
             bCancel.setIcon(rp.getIcon(ResourceProvider.IMG_CANCEL));

@@ -68,7 +68,7 @@ public class EventTableModel extends UjoTableModel<Event> {
         if (Event.P_PERIOD==column) {
             return rowIndex==(getRowCount()-1);
         } else {
-            return Parameters.P_MODIFY_FINESHED_PROJ.of(applContext.getParameters())
+            return applContext.getParameters().get(Parameters.P_MODIFY_FINESHED_PROJ)
             ||   ! getRow(rowIndex).isFinished(column)
             ;
         }
@@ -85,7 +85,7 @@ public class EventTableModel extends UjoTableModel<Event> {
         Event lastRow = getRowLast();
         if (lastRow!=null) {
             // Set the last period:
-            lastRow.setPeriod(Event.P_TIME.of(row));
+            lastRow.setPeriod(row.get(Event.P_TIME));
         }
         super.addRow(row);
     }
@@ -124,12 +124,12 @@ public class EventTableModel extends UjoTableModel<Event> {
         int requPeriod; // Required period
         
         if (insertedRow!=null
-        && (requPeriod = Event.P_PERIOD.of(insertedRow)) > 0
+        && (requPeriod = insertedRow.get(Event.P_PERIOD)) > 0
         && (index = getRowIndex(insertedRow)) > 0
         && (index < getRowCount()-1)
         ){
-            final Time time1 = Event.P_TIME.of( insertedRow );
-            final Time time2 = Event.P_TIME.of( getRow(index+1) );
+            final Time time1 = insertedRow.get(Event.P_TIME);
+            final Time time2 = getRow(index+1).get(Event.P_TIME);
             int realPeriod = time2.substract(time1);
             if (realPeriod > requPeriod) {
                 Event nextEvent = (Event) getRow(index-1).clone(2, this);
@@ -158,7 +158,7 @@ public class EventTableModel extends UjoTableModel<Event> {
         for (int i=0; i<getRowCount(); i++) {
             Event newEvent = getRow(i);
             if (lastEvent!=null) {
-                lastEvent.setPeriod(Event.P_TIME.of(newEvent));
+                lastEvent.setPeriod(newEvent.get(Event.P_TIME));
             }
             lastEvent = newEvent;
         }
@@ -170,7 +170,7 @@ public class EventTableModel extends UjoTableModel<Event> {
         int time = 0 ;
         for (Event event : rows) {
             if (!event.isPrivate()) {
-                time += Event.P_PERIOD.of(event);
+                time += event.get(Event.P_PERIOD);
             }
         }
         return time;
@@ -218,7 +218,7 @@ public class EventTableModel extends UjoTableModel<Event> {
             }
             
             // Test:
-            PROPS.P_TIME.of(getRow(rowIndex)).cloneAdd((Short)value);
+            getRow(rowIndex).get(PROPS.P_TIME).cloneAdd((Short)value);
         }
         else if (PROPS.P_TIME==column
         ||       PROPS.P_PROJ==column // a case PRIVATE state change
@@ -237,7 +237,7 @@ public class EventTableModel extends UjoTableModel<Event> {
         super.setValueAt(value, rowIndex, column);
 
         if (timeChange 
-        && Parameters.P_AUTOMATIC_SORTING_BY_TIME.of(applContext.getParameters())) {
+        && applContext.getParameters().get(Parameters.P_AUTOMATIC_SORTING_BY_TIME)) {
             final Event e = getRow(rowIndex);
 
             SwingUtilities.invokeLater(new Runnable() {

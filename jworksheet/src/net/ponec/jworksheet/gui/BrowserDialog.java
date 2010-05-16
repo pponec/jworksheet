@@ -52,7 +52,7 @@ public class BrowserDialog extends TopDialog {
         setSize(450, 130);
         getRootPane().setDefaultButton(bOK);
         
-        if (!Parameters.P_HIDE_ICONS.of(applContext.getParameters())) {
+        if (!applContext.getParameters().get(Parameters.P_HIDE_ICONS)) {
             ResourceProvider rp = new ResourceProvider();
             bOK.setIcon    (rp.getIcon(ResourceProvider.IMG_OK));
             bCancel.setIcon(rp.getIcon(ResourceProvider.IMG_CANCEL));

@@ -49,7 +49,7 @@ public class TaskCellEditor extends DefaultCellEditor implements TableCellEditor
         
         UjoTableModel tableModel = (UjoTableModel) table.getModel();
         final Event event = (Event) tableModel.getRow(row);
-        final Project project = Event.P_PROJ.of(event);
+        final Project project = event.get(Event.P_PROJ);
         final ArrayList<TaskType> tasks = project!=null ? project.getOpenTasks() : null;
         
         if (tasks!=null && tasks.size()>0) {

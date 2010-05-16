@@ -182,7 +182,7 @@ public final class JWorkSheet extends TopFrame {
             projTable .getTableColumn(Project.P_PRIVATE).setMaxWidth(58);
             projTable .getTableColumn(Project.P_DEFAULT).setMaxWidth(58);
             projTable .getTableColumn(Project.P_FINISHED ).setMaxWidth(58);
-            projTable .showSortedColumn(Parameters.P_SORT_PROJ_COLUMN.of(applContext.getParameters()));
+            projTable .showSortedColumn(applContext.getParameters().get(Parameters.P_SORT_PROJ_COLUMN));
             taskTable .getTableColumn(TaskType.P_ID    ).setMaxWidth(48);
             taskTable .getTableColumn(TaskType.P_DEFAULT).setMaxWidth(58);
             taskTable .getTableColumn(TaskType.P_FINISHED).setMaxWidth(58);
@@ -253,7 +253,7 @@ public final class JWorkSheet extends TopFrame {
             } catch (Throwable e) {}
             
             // Window sizing:
-            ApplTools.windowsSizing(this, Parameters.P_WINDOW_SIZE.of(applContext.getParameters()));
+            ApplTools.windowsSizing(this, applContext.getParameters().get(Parameters.P_WINDOW_SIZE));
             
             applContext.tableChanged(null); // Save a startup event
             
@@ -354,7 +354,7 @@ public final class JWorkSheet extends TopFrame {
         UjoTableModel model = eventTable.getModel();
         WorkDay workDay = applContext.getWorkDay();
         model.setRows(WorkDay.P_EVENTS.getList(workDay));
-        cbTimeOff.setSelected(WorkDay.P_DAYOFF.of(workDay));
+        cbTimeOff.setSelected(workDay.get(WorkDay.P_DAYOFF));
         cbTimeOffActionPerformed(null);
         
         if (today && model.getRowCount()==0) {
@@ -419,12 +419,12 @@ public final class JWorkSheet extends TopFrame {
         tabbedPane.setIconAt(1, imageProvider.getIcon(ResourceProvider.IMG_APPLICATION_SPLIT));
         tabbedPane.setIconAt(2, imageProvider.getIcon(ResourceProvider.IMG_WRENCH));
         //
-        boolean hideIcon = Parameters.P_HIDE_ICONS.of(applContext.getParameters());
+        boolean hideIcon = applContext.getParameters().get(Parameters.P_HIDE_ICONS);
         bDayPrev.setIcon(imageProvider.getIcon(ResourceProvider.IMG_PREV, hideIcon));
         bDayNext.setIcon(imageProvider.getIcon(ResourceProvider.IMG_NEXT, hideIcon));
         bGoto   .setIcon(imageProvider.getIcon(ResourceProvider.IMG_DATE, hideIcon));
 
-        bSort.setVisible(!Parameters.P_AUTOMATIC_SORTING_BY_TIME.of(applContext.getParameters()));
+        bSort.setVisible(!applContext.getParameters().get(Parameters.P_AUTOMATIC_SORTING_BY_TIME));
         //setImage(bToday  , ResourceProvider.IMG_DATE, imageProvider);
         //
         setImage(bCreate, ResourceProvider.IMG_ADD, imageProvider);
@@ -453,7 +453,7 @@ public final class JWorkSheet extends TopFrame {
     
     /** Set Icon */
     private void setImage(JButton button, String resource, ResourceProvider imageProvider) {
-        if (Parameters.P_HIDE_ICONS.of(applContext.getParameters())) {
+        if (applContext.getParameters().get(Parameters.P_HIDE_ICONS)) {
             button.setIcon(null);
             button.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         } else {
@@ -1530,7 +1530,7 @@ public final class JWorkSheet extends TopFrame {
         try {
             applContext.setUserConfigDir(args.length>0 ? args[0] : null);
             applContext.loadData();
-            ApplTools.initLookAndFeel(Parameters.P_NIMBUS_LAF.of(applContext.getParameters()));
+            ApplTools.initLookAndFeel(applContext.getParameters().get(Parameters.P_NIMBUS_LAF));
         } catch (Throwable e) {
             error = e;
         }

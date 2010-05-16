@@ -78,10 +78,10 @@ public class CommonTableRenderer extends DefaultTableCellRenderer {
         
         Color result;
         if (row%2==0) {
-            result = Parameters.P_COLOR_EDITABLE.of(context.getParameters());
+            result = context.getParameters().get(Parameters.P_COLOR_EDITABLE);
         } else {
             if (colorAlt==null) {
-                colorAlt = Parameters.P_COLOR_EDITABLE.of(context.getParameters());
+                colorAlt = context.getParameters().get(Parameters.P_COLOR_EDITABLE);
                 colorAlt = ApplTools.modify(colorAlt, 30);
             }
             result = colorAlt;
