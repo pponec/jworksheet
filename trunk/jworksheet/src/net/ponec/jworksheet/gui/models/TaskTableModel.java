@@ -52,7 +52,7 @@ public class TaskTableModel extends UjoTableModel<TaskType> {
     protected Integer nextTaskId() {
         Integer result = 0;
         for (TaskType task : super.rows) {
-            Integer id = TaskType.P_ID.of(task);
+            Integer id = task.get(TaskType.P_ID);
             if (result.compareTo(id)<0) {
                 result = id;
             }

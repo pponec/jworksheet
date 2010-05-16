@@ -55,8 +55,8 @@ public class Project extends MapUjo implements Comparable {
     /** Show description */
     @Override
     public String toString() {
-        String result = P_DESCR.of(this);
-        return ApplTools.isValid(result) ? result : String.valueOf(P_ID.of(this)) ;
+        String result = get(P_DESCR);
+        return ApplTools.isValid(result) ? result : String.valueOf(get(P_ID)) ;
     }
 
     /** Find a TaskType by its id */
@@ -72,8 +72,8 @@ public class Project extends MapUjo implements Comparable {
     /** Returns the first "default" TaskType, null. */
     public TaskType findDefaultTask() {
         for (TaskType task : P_TASKS.getList(this)) {
-            if (TaskType.P_DEFAULT.of(task)
-            && !TaskType.P_FINISHED.of(task)
+            if (task.get(TaskType.P_DEFAULT)
+            && !task.get(TaskType.P_FINISHED)
             ){
                 return task;
             }
@@ -85,7 +85,7 @@ public class Project extends MapUjo implements Comparable {
     public ArrayList<TaskType> getOpenTasks() {
         ArrayList<TaskType> result = new ArrayList<TaskType>(P_TASKS.getItemCount(this));
         for (TaskType task : P_TASKS.getList(this)) {
-            if (!TaskType.P_FINISHED.of(task)) {
+            if (!task.get(TaskType.P_FINISHED)) {
                 result.add(task);
             }
         }
@@ -95,8 +95,8 @@ public class Project extends MapUjo implements Comparable {
     /** Compare to another Project by ID. */
     @Override
     public int compareTo(Object o) {
-          int id1 = P_ID.of(this);
-          int id2 = o!=null ? P_ID.of((Project)o) : Integer.MAX_VALUE;
+          int id1 = get(P_ID);
+          int id2 = o!=null ? ((Project)o).get(P_ID) : Integer.MAX_VALUE;
           final int result = id1<id2 ? -1 : id1>id2 ? +1 : 0 ;
           return result;
     }

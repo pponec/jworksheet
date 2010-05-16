@@ -131,7 +131,7 @@ public class TopFrame extends JFrame {
         try {
             try {
                 uri = new URI(url);
-                browser = Parameters.P_SYSTEM_BROWSER_PATH.of(applContext.getParameters());
+                browser = applContext.getParameters().get(Parameters.P_SYSTEM_BROWSER_PATH);
                 if (Parameters.P_SYSTEM_BROWSER_PATH.getDefault().equals(browser)) {
                     browser = "";
                 }

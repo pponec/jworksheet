@@ -82,9 +82,9 @@ public class EventTableRenderer extends DefaultTableCellRenderer {
             && model.isCellEditable(rowIndex, column)
             ;
         
-        Project project = Event.P_PROJ.of(event);
+        Project project = event.get(Event.P_PROJ);
         boolean finishedProj = project!=null && projOrTask && event.isFinished(column);
-        boolean privateProj  = project!=null && Project.P_PRIVATE.of(project);
+        boolean privateProj  = project!=null && project.get(Project.P_PRIVATE);
         
         result.setForeground
         ( isSelected   ? aTable.getSelectionForeground()
@@ -118,20 +118,20 @@ public class EventTableRenderer extends DefaultTableCellRenderer {
     
     /** Get Color of a private project. */
     protected Color getColorOfPrivateProject() {
-        final Color result = Parameters.P_COLOR_PRIVATE.of(context.getParameters());
+        final Color result = context.getParameters().get(Parameters.P_COLOR_PRIVATE);
         return result;
     }
     
     /** Get a Color of an editable area. */
     protected Color getColorOfFihishedProject() {
-        final Color result = Parameters.P_COLOR_FINISHED_PROJ.of(context.getParameters());
+        final Color result = context.getParameters().get(Parameters.P_COLOR_FINISHED_PROJ);
         return result;
     }
 
     
     /** Get a Color of an editable area. */
     protected Color getColorOfEditableArea() {
-        return Parameters.P_COLOR_EDITABLE.of(context.getParameters());
+        return context.getParameters().get(Parameters.P_COLOR_EDITABLE);
     }
     
     /** Get a Color of an editable area. */

@@ -147,7 +147,7 @@ public class YearMonthDay implements Comparable, ValueTextable, UjoCloneable {
     
     /** Get Localized String to GUI. */
     public String toString(ApplContext context) {
-        Locale language = Parameters.P_LANG.of(context.getParameters());
+        Locale language = context.getParameters().get(Parameters.P_LANG);
         String sFormat = context.getParameters().getDateFormat(Parameters.P_DATE_MAIN_FORMAT, context);
         
         SimpleDateFormat format = new SimpleDateFormat(sFormat, language);

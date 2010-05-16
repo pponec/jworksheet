@@ -56,8 +56,8 @@ public class ReportC extends SuperReport {
         }
         report.init
         ( applContext
-        , WorkDay.P_DATE.of(lastWorkDay)
-        , WorkDay.P_DATE.of(lastWorkDay)
+        , lastWorkDay.get(WorkDay.P_DATE)
+        , lastWorkDay.get(WorkDay.P_DATE)
         , reportTitle
         );
         

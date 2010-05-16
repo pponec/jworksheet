@@ -66,8 +66,8 @@ public class TaskGroup extends MapUjo {
     
     /** Get business time. */
     public int getBusinessTime() {
-        Project proj = P_PROJ.of(this);
-        return (proj!=null && Project.P_PRIVATE.of(proj)) ? 0 : totalTime;
+        Project proj = get(P_PROJ);
+        return (proj!=null && proj.get(Project.P_PRIVATE)) ? 0 : totalTime;
     }
     
     
@@ -77,7 +77,7 @@ public class TaskGroup extends MapUjo {
         if (P_MONTH==property
         ||  P_YEAR==property
         ){
-            YearMonthDay day = P_DAY.of(this);
+            YearMonthDay day = get(P_DAY);
             int type = P_MONTH==property
             ? YearMonthDay.TYPE_MONTH
             : YearMonthDay.TYPE_YEAR
@@ -86,5 +86,16 @@ public class TaskGroup extends MapUjo {
         }
         
         return super.readValue(property);
+    }
+
+    @SuppressWarnings("unchecked")
+    public <UJO extends TaskGroup, VALUE> VALUE get(UjoProperty<UJO, VALUE> up) {
+        return up.getValue((UJO)this);
+    }
+
+    @SuppressWarnings("unchecked")
+    public <UJO extends TaskGroup, VALUE> UJO set(UjoProperty<UJO, VALUE> up, VALUE value) {
+        up.setValue((UJO)this, value);
+        return (UJO) this;
     }
 }

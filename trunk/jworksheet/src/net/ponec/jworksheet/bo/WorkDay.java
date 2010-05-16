@@ -52,8 +52,8 @@ public class WorkDay extends MapUjo implements Comparable {
     /** Compare to another WorkDay by a P_DATE. */
     @Override
     public int compareTo(Object o) {
-        final YearMonthDay d1 = P_DATE.of(this);
-        final YearMonthDay d2 = P_DATE.of((WorkDay) o);
+        final YearMonthDay d1 = get(P_DATE);
+        final YearMonthDay d2 = ((WorkDay) o).get(P_DATE);
         final int result = d1.compareTo(d2);
         return result;
     }

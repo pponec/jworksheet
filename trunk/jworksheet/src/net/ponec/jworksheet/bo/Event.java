@@ -19,11 +19,9 @@ package net.ponec.jworksheet.bo;
 
 import net.ponec.jworksheet.bo.item.Time;
 import net.ponec.jworksheet.core.ApplTools;
-import org.ujoframework.Ujo;
 import org.ujoframework.UjoAction;
 import org.ujoframework.UjoProperty;
 import org.ujoframework.core.UjoService;
-import org.ujoframework.extensions.UjoMiddle;
 import org.ujoframework.implementation.bean.*;
 import static org.ujoframework.UjoAction.*;
 
@@ -136,14 +134,14 @@ public class Event extends BeanUjo {
 
     /** Set a time period */
     public void setPeriod(Time time) {
-        final short period = time.substract(P_TIME.of(this));
+        final short period = time.substract(get(P_TIME));
         P_PERIOD.setValue(this, period);
     }
     
     /** Is the event from a private project? */
     public boolean isPrivate() {
-        Project project = Event.P_PROJ.of(this);
-        final boolean result = project!=null && Project.P_PRIVATE.of(project);
+        Project project = get(Event.P_PROJ);
+        final boolean result = project!=null && project.get(Project.P_PRIVATE);
         return result;
     }
     
@@ -167,11 +165,11 @@ public class Event extends BeanUjo {
     public Object readValue(UjoProperty property) {
         Object result;
         if (property==P_PROJID) {
-            Project proj = P_PROJ.of(this);
-            result = proj!=null ? Project.P_ID.of(proj) : super.readValue(property);
+            Project proj = get(P_PROJ);
+            result = proj!=null ? proj.get(Project.P_ID) : super.readValue(property);
         } else if (property==P_TASKID) {
-            TaskType task = P_TASK.of(this);
-            result = task!=null ? TaskType.P_ID.of(task) : super.readValue(property);
+            TaskType task = get(P_TASK);
+            result = task!=null ? task.get(TaskType.P_ID) : super.readValue(property);
         } else {
             result = super.readValue(property);
         }
@@ -192,19 +190,19 @@ public class Event extends BeanUjo {
     /** Is property finished? */
     public boolean isFinished(UjoProperty property) {
         if (P_PROJ==property) {
-            Project proj = P_PROJ.of(this);
-            return proj!=null && Project.P_FINISHED.of(proj);
+            Project proj = get(P_PROJ);
+            return proj!=null && proj.get(Project.P_FINISHED);
         }
         if (P_TASK==property) {
-            TaskType task = P_TASK.of(this);
-            return isFinished(P_PROJ) || task!=null && TaskType.P_FINISHED.of(task);
+            TaskType task = get(P_TASK);
+            return isFinished(P_PROJ) || task!=null && task.get(TaskType.P_FINISHED);
         }
         return false;
     }
     
     /** Returns a Finished time */
     public Time getTimeFinished() {
-        final Time result = P_TIME.of(this).cloneAdd(P_PERIOD.of(this));
+        final Time result = get(P_TIME).cloneAdd(get(P_PERIOD));
         return result;
     }
 

@@ -72,8 +72,8 @@ public class WorkSpace extends MapUjo {
     /** Returns the first "default" TaskType, null. */
     public Project findDefaultProject() {
         for (Project proj : P_PROJS.getList(this)) {
-            if (Project.P_DEFAULT.of(proj)
-            && !Project.P_FINISHED.of(proj)
+            if (proj.get(Project.P_DEFAULT)
+            && !proj.get(Project.P_FINISHED)
             ){
                 return proj;
             }
@@ -85,7 +85,7 @@ public class WorkSpace extends MapUjo {
     public ArrayList<Project> getOpenProjects() {
         ArrayList<Project> result = new ArrayList<Project>(P_PROJS.getItemCount(this));
         for (Project task : P_PROJS.getList(this)) {
-            if (!Project.P_FINISHED.of(task)) {
+            if (!task.get(Project.P_FINISHED)) {
                 result.add(task);
             }
         }
@@ -96,8 +96,8 @@ public class WorkSpace extends MapUjo {
     public void assingTasks() {
         for (WorkDay day : P_DAYS.getList(this)) {
             for (Event event : WorkDay.P_EVENTS.getList(day)) {
-                Integer projectId = Event.P_PROJID.of(event);
-                Integer taskId    = Event.P_TASKID.of(event);
+                Integer projectId = event.get(Event.P_PROJID);
+                Integer taskId    = event.get(Event.P_TASKID);
                 //
                 Project project = this.findProject(projectId);
                 TaskType task   = project!=null ? project.findTaskType(taskId) : null ;

@@ -68,7 +68,7 @@ public class ReportTab extends SuperReport {
     }
     
     private void saveDay() {
-        YearMonthDay ymd = WorkDay.P_DATE.of(lastWorkDay);
+        YearMonthDay ymd = lastWorkDay.get(WorkDay.P_DATE);
         
         report = new ReportA();
         GroupSet groupSet = new GroupSet(createUjoComparator(), Event.P_PERIOD);
@@ -105,7 +105,7 @@ public class ReportTab extends SuperReport {
         List<TaskGroup> projs = getProjects();
         List<YearMonthDay> days = getDays();
         
-        SimpleDateFormat exportDateFormat = new SimpleDateFormat(Parameters.P_DATE_REPORT_FORMAT2.of(applContext.getParameters()), applContext.getLanguage());
+        SimpleDateFormat exportDateFormat = new SimpleDateFormat(applContext.getParameters().get(Parameters.P_DATE_REPORT_FORMAT2), applContext.getLanguage());
         String tipFormat = applContext.getParameters().getDateFormat(Parameters.P_DATE_REPORT_FORMAT, applContext);
         SimpleDateFormat tooltipDateFormat = new SimpleDateFormat(tipFormat, applContext.getLanguage());
         
@@ -131,9 +131,9 @@ public class ReportTab extends SuperReport {
             sb.append("<tr>");
             
             sb.append("<td>");
-            sb.append(escape(TaskGroup.P_PROJ.of(proj)));
+            sb.append(escape(proj.get(TaskGroup.P_PROJ)));
             sb.append(" / ");
-            sb.append(escape(TaskGroup.P_TASK.of(proj)));
+            sb.append(escape(proj.get(TaskGroup.P_TASK)));
             sb.append("</td>\n");
             
             int total = 0;
@@ -172,7 +172,7 @@ public class ReportTab extends SuperReport {
         
         // Overtime ---
         total = 0;
-        int workingMinutes = Math.round(Parameters.P_WORKING_HOURS.of(applContext.getParameters())*60);
+        int workingMinutes = Math.round(applContext.getParameters().get(Parameters.P_WORKING_HOURS)*60);
         sb.append("<tr class=\"total\">\n<td class=\"alignLeft\">");
         sb.append(getText("Overtime"));
         sb.append("</td>\n");
@@ -201,7 +201,7 @@ public class ReportTab extends SuperReport {
         
         for (GroupSet set : data) {
             for (TaskGroup proj : set.getGroups()) {
-                final YearMonthDay day = TaskGroup.P_DAY.of(proj);
+                final YearMonthDay day = proj.get(TaskGroup.P_DAY);
                 if (aDay.equals(day)
                 &&  comparator.equals(aProj, proj)
                 ){
@@ -218,7 +218,7 @@ public class ReportTab extends SuperReport {
         
         for (GroupSet set : data) {
             for (TaskGroup proj : set.getGroups()) {
-                final YearMonthDay day = TaskGroup.P_DAY.of(proj);
+                final YearMonthDay day = proj.get(TaskGroup.P_DAY);
                 if (aDay.equals(day)) {
                     result += proj.getBusinessTime();
                 }
@@ -231,7 +231,7 @@ public class ReportTab extends SuperReport {
         List<YearMonthDay> result = new ArrayList<YearMonthDay>();
         for (GroupSet set : data) {
             for (TaskGroup group : set.getGroups()) {
-                final YearMonthDay ymd = TaskGroup.P_DAY.of(group);
+                final YearMonthDay ymd = group.get(TaskGroup.P_DAY);
                 if (ymd!=null
                 &&! result.contains(ymd)
                 ){

@@ -73,22 +73,22 @@ public class ReportAttendance extends SuperReport {
 
         } else {
 
-            if (Project.P_PRIVATE.of(Event.P_PROJ.of(event))) {
-                breakTime += Event.P_PERIOD.of(event);
+            if (event.get(Event.P_PROJ).get(Project.P_PRIVATE)) {
+                breakTime += event.get(Event.P_PERIOD);
             } else {
-                workTime  += Event.P_PERIOD.of(event);
+                workTime  += event.get(Event.P_PERIOD);
 
-                String descr = Event.P_DESCR.of(event);
+                String descr = event.get(Event.P_DESCR);
                 if (!descrs.contains(descr)) {
                     descrs.add(descr);
                 }
             }
 
-            int startTime = Event.P_TIME.of(event).getMinutes();
+            int startTime = event.get(Event.P_TIME).getMinutes();
             if (arrival > startTime) {
                 arrival = startTime;
             }
-            int endTime = startTime + Event.P_PERIOD.of(event);
+            int endTime = startTime + event.get(Event.P_PERIOD);
             if (departure < endTime) {
                 departure = endTime;
             }

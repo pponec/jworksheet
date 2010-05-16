@@ -52,7 +52,7 @@ public class ProjectTableModel extends UjoTableModel<Project> {
     protected Integer nextProjectId() {
         Integer result = 0;
         for (Project proj : super.rows) {
-            Integer id = Project.P_ID.of(proj);
+            Integer id = proj.get(Project.P_ID);
             if (result.compareTo(id)<0) {
                 result = id;
             }
