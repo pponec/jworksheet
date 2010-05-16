@@ -6,11 +6,10 @@
 package net.ponec.jworksheet.gui;
 
 import net.ponec.jworksheet.core.ApplTools;
-import sun.misc.Signal;
 
 /**
  * Signal handler implementation.
- * @author pavel
+ * @author Pavel Ponec
  */
 @SuppressWarnings("all")
 public class JwsHandler implements sun.misc.SignalHandler {
@@ -22,7 +21,7 @@ public class JwsHandler implements sun.misc.SignalHandler {
         this.jWorkSheet = jWorkSheet;
     }
 
-    public void handle(Signal signal) {
+    public void handle(sun.misc.Signal signal) {
         if (running) {
             running = false;
             jWorkSheet.closeAppl(null);
@@ -36,11 +35,12 @@ public class JwsHandler implements sun.misc.SignalHandler {
      * @param jWorkSheet
      * @throws java.lang.Exception
      */
+    @SuppressWarnings("all")
     public static void init(final JWorkSheet jWorkSheet) throws Exception {
 
         JwsHandler h = new JwsHandler(jWorkSheet);
         String signal = ApplTools.isWindowsOS() ? "TERM" : "TERM";
-        Signal.handle(new Signal(signal), h);
+        sun.misc.Signal.handle(new sun.misc.Signal(signal), h);
 
     }
 }

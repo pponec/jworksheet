@@ -55,7 +55,17 @@ public class WorkDay extends MapUjo implements Comparable {
         final YearMonthDay d1 = P_DATE.of(this);
         final YearMonthDay d2 = P_DATE.of((WorkDay) o);
         final int result = d1.compareTo(d2);
-        return result;        
+        return result;
     }
-    
+
+   @SuppressWarnings("unchecked")
+   public <UJO extends WorkDay, VALUE> VALUE get(UjoProperty<UJO, VALUE> up) {
+        return up.getValue((UJO)this);
+    }
+
+    @SuppressWarnings("unchecked")
+    public <UJO extends WorkDay, VALUE> UJO set(UjoProperty<UJO, VALUE> up, VALUE value) {
+        up.setValue((UJO)this, value);
+        return (UJO) this;
+    }
 }

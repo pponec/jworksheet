@@ -19,9 +19,11 @@ package net.ponec.jworksheet.bo;
 
 import net.ponec.jworksheet.bo.item.Time;
 import net.ponec.jworksheet.core.ApplTools;
+import org.ujoframework.Ujo;
 import org.ujoframework.UjoAction;
 import org.ujoframework.UjoProperty;
 import org.ujoframework.core.UjoService;
+import org.ujoframework.extensions.UjoMiddle;
 import org.ujoframework.implementation.bean.*;
 import static org.ujoframework.UjoAction.*;
 
@@ -204,6 +206,17 @@ public class Event extends BeanUjo {
     public Time getTimeFinished() {
         final Time result = P_TIME.of(this).cloneAdd(P_PERIOD.of(this));
         return result;
+    }
+
+    @SuppressWarnings("unchecked")
+    public <UJO extends Event, VALUE> VALUE get(UjoProperty<UJO, VALUE> up) {
+        return up.getValue((UJO)this);
+    }
+
+    @SuppressWarnings("unchecked")
+    public <UJO extends Event, VALUE> UJO set(UjoProperty<UJO, VALUE> up, VALUE value) {
+        up.setValue((UJO)this, value);
+        return (UJO) this;
     }
     
 }

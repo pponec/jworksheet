@@ -100,5 +100,18 @@ public class Project extends MapUjo implements Comparable {
           final int result = id1<id2 ? -1 : id1>id2 ? +1 : 0 ;
           return result;
     }
+
+    @SuppressWarnings("unchecked")
+    public <UJO extends Project, VALUE> VALUE get(UjoProperty<UJO, VALUE> up) {
+        return up.getValue((UJO)this);
+    }
+
+    @SuppressWarnings("unchecked")
+    public <UJO extends Project, VALUE> UJO set(UjoProperty<UJO, VALUE> up, VALUE value) {
+        up.setValue((UJO)this, value);
+        return (UJO) this;
+    }
+
+
     
 }

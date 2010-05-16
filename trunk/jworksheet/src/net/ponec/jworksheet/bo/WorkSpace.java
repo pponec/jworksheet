@@ -146,5 +146,14 @@ public class WorkSpace extends MapUjo {
         return super.readAuthorization(action, property, value);
     }
     
-    
+   @SuppressWarnings("unchecked")
+   public <UJO extends WorkSpace, VALUE> VALUE get(UjoProperty<UJO, VALUE> up) {
+        return up.getValue((UJO)this);
+    }
+
+   @SuppressWarnings("unchecked")
+    public <UJO extends WorkSpace, VALUE> UJO set(UjoProperty<UJO, VALUE> up, VALUE value) {
+        up.setValue((UJO)this, value);
+        return (UJO) this;
+    }
 }
