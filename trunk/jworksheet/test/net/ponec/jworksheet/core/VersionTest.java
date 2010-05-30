@@ -23,62 +23,119 @@ public class VersionTest extends TestCase {
     public void testCompareTo() {
         System.out.println("compareTo");
         Version ver1, ver2;
+        String  txt1, txt2;
 
-        ver1 = new Version("abc1");
-        ver2 = new Version("abc1");
+        txt1 = "abc1";
+        txt2 = txt1;
+        ver1 = new Version(txt1);
+        ver2 = new Version(txt2);
         assertEquals(ver1, ver2);
+        assertEquals(txt1, ver1.toString());
+        assertEquals(txt2, ver2.toString());
 
-        ver1 = new Version("Abc1");
-        ver2 = new Version("abC1");
+        txt1 = "Abc1";
+        txt2 = "abC1";
+        ver1 = new Version(txt1);
+        ver2 = new Version(txt2);
         assertEquals(ver1, ver2);
+        assertEquals(txt1, ver1.toString());
+        assertEquals(txt2, ver2.toString());
 
-        ver1 = new Version("abc1");
-        ver2 = new Version("abc2");
+        txt1 = "abc1";
+        txt2 = "abc2";
+        ver1 = new Version(txt1);
+        ver2 = new Version(txt2);
         assertTrue(ver1.compareTo(ver2)<0);
+        assertEquals(txt1, ver1.toString());
+        assertEquals(txt2, ver2.toString());
 
-        ver1 = new Version("Abc");
-        ver2 = new Version("Bbc");
+        txt1 = "Abc";
+        txt2 = "Bbc";
+        ver1 = new Version(txt1);
+        ver2 = new Version(txt2);
         assertTrue(ver1.compareTo(ver2)<0);
+        assertEquals(txt1, ver1.toString());
+        assertEquals(txt2, ver2.toString());
 
-        ver1 = new Version("abc.001");
-        ver2 = new Version("abc.002");
+        txt1 = "abc.001";
+        txt2 = "abc.002";
+        ver1 = new Version(txt1);
+        ver2 = new Version(txt2);
         assertTrue(ver1.compareTo(ver2)<0);
+        assertEquals(txt1, ver1.toString());
+        assertEquals(txt2, ver2.toString());
 
-        ver1 = new Version("abc.001.9");
-        ver2 = new Version("abc.002.8");
+        txt1 = "abc.001.9";
+        txt2 = "abc.002.8";
+        ver1 = new Version(txt1);
+        ver2 = new Version(txt2);
         assertTrue(ver1.compareTo(ver2)<0);
+        assertEquals(txt1, ver1.toString());
+        assertEquals(txt2, ver2.toString());
 
-        ver1 = new Version("abc");
-        ver2 = new Version("abcd");
+        txt1 = "abc";
+        txt2 = "abcd";
+        ver1 = new Version(txt1);
+        ver2 = new Version(txt2);
         assertTrue(ver1.compareTo(ver2)<0);
+        assertEquals(txt1, ver1.toString());
+        assertEquals(txt2, ver2.toString());
 
-        ver1 = new Version("abc.02");
-        ver2 = new Version("abcd.01");
+        txt1 = "abc.02";
+        txt2 = "abcd.01";
+        ver1 = new Version(txt1);
+        ver2 = new Version(txt2);
         assertTrue(ver1.compareTo(ver2)<0);
+        assertEquals(txt1, ver1.toString());
+        assertEquals(txt2, ver2.toString());
 
-        ver1 = new Version("0.98");
-        ver2 = new Version("0.98D");
+        txt1 = "0.98";
+        txt2 = "0.98D";
+        ver1 = new Version(txt1);
+        ver2 = new Version(txt2);
         assertTrue(ver1.compareTo(ver2)<0);
+        assertEquals(txt1, ver1.toString());
+        assertEquals(txt2, ver2.toString());
 
-        ver1 = new Version("0.98");
-        ver2 = new Version("0.98.D");
+        txt1 = "0.98";
+        txt2 = "0.98.D";
+        ver1 = new Version(txt1);
+        ver2 = new Version(txt2);
         assertTrue(ver1.compareTo(ver2)<0);
+        assertEquals(txt1, ver1.toString());
+        assertEquals(txt2, ver2.toString());
 
-        ver1 = new Version("0.98.d");
-        ver2 = new Version("0.98.d2");
+        txt1 = "0.98.d";
+        txt2 = "0.98.d2";
+        ver1 = new Version(txt1);
+        ver2 = new Version(txt2);
         assertTrue(ver1.compareTo(ver2)<0);
+        assertEquals(txt1, ver1.toString());
+        assertEquals(txt2, ver2.toString());
 
-        ver1 = new Version("0.98.d3");
-        ver2 = new Version("1.98.d2");
+        txt1 = "0.98.d3";
+        txt2 = "1.98.d2";
+        ver1 = new Version(txt1);
+        ver2 = new Version(txt2);
         assertTrue(ver1.compareTo(ver2)<0);
+        assertEquals(txt1, ver1.toString());
+        assertEquals(txt2, ver2.toString());
 
-        ver1 = new Version( "0.98.d3");
-        ver2 = new Version("10.98.d2");
+        txt1 =  "0.98.d3";
+        txt2 = "10.98.d2";
+        ver1 = new Version(txt1);
+        ver2 = new Version(txt2);
         assertTrue(ver1.compareTo(ver2)<0);
+        assertEquals(txt1, ver1.toString());
+        assertEquals(txt2, ver2.toString());
 
-        ver1 = new Version( "9.98.d3");
-        ver2 = new Version("10.98.d2");
+        txt1 =  "9.98.d3";
+        txt2 = "10.98.d2";
+        ver1 = new Version(txt1);
+        ver2 = new Version(txt2);
         assertTrue(ver1.compareTo(ver2)<0);
+        assertEquals(txt1, ver1.toString());
+        assertEquals(txt2, ver2.toString());
 
 
     }
