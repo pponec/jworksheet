@@ -36,7 +36,7 @@ public class WorkDay extends MapUjo implements Comparable {
     /** A day off work */
     public static final UjoProperty<WorkDay,Boolean>    P_DAYOFF = newProperty("DayOff", false);
     /** List of events */
-    public static final ListProperty<WorkDay,Event>     P_EVENTS = newPropertyList("Event", Event.class);
+    public static final ListProperty<WorkDay,Event>     P_EVENTS = newListProperty("Event", Event.class);
     
     /** Overrided for additional features */
     @Override

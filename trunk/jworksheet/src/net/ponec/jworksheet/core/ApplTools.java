@@ -36,6 +36,7 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.io.PrintWriter;
+import java.io.Reader;
 import java.io.StringWriter;
 import java.io.UnsupportedEncodingException;
 import java.lang.reflect.Method;
@@ -176,7 +177,7 @@ public final class ApplTools {
     public static void aboutApplication
     ( Object frame
     , String title
-    , String version
+    , Version version
     , String licence
     , String homePage
     , String date
@@ -208,7 +209,7 @@ public final class ApplTools {
           , _NEW_LINE_
           , lm.getText("Version")
           , "</td><td>: "
-          ,  version
+          ,  version.toString()
           //
           , _NEW_LINE_
           , lm.getText("Copyright") + "&nbsp;"
@@ -606,5 +607,68 @@ public final class ApplTools {
         final Class result = Class.forName (className, true, child);
         return result;
     }
-    
+
+    /** Returns new application release */
+    public static Version getWebRelease(String url) {
+        InputStream is = null;
+        try {
+            is = new URL(url).openStream();
+            Reader reader = new InputStreamReader(new BufferedInputStream(is), "UTF-8");
+
+            String word = findWord(reader, "<description>Release:", "</description>").trim();
+            if (!isValid(word)) {
+                word = "0";
+            }
+
+            return new Version(word);
+        } catch (Throwable ex) {
+            LOGGER.log(Level.WARNING, null, ex);
+        } finally {
+            if (is != null) {
+                try {
+                    is.close();
+                } catch (IOException ex) {
+                    LOGGER.log(Level.SEVERE, null, ex);
+                }
+            }
+        }
+
+        return null;
+    }
+
+    /** Find word betveen beg and end text */
+    private static String findWord(Reader reader, String beg, String end) throws IOException {
+        StringBuilder result = new StringBuilder();
+        String border   = beg;
+        RingBuffer ring = new RingBuffer(border.length());
+
+        int state = 0;
+        int c;
+
+        while ((c=reader.read())!=-1) {
+
+            ring.add((char) c);
+            if (state==1) {
+               result.append((char)c);
+            }
+
+            if (ring.equals(border)) {
+                if (++state>1) {
+                    break;
+                } else {
+                    border = end;
+                    ring   = new RingBuffer(border.length());
+                }
+            }
+        }
+
+        // Remove the finish tag.
+        if (result.length()>end.length()) {
+            result.setLength(result.length()-end.length());
+        }
+
+        return result.toString().trim();
+    }
+
+
 }

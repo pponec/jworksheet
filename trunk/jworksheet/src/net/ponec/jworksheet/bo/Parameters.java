@@ -26,6 +26,7 @@ import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Locale;
 import net.ponec.jworksheet.core.*;
+import net.ponec.jworksheet.gui.JWorkSheet;
 import org.ujoframework.UjoProperty;
 import org.ujoframework.extensions.Property;
 import org.ujoframework.UjoAction;
@@ -91,6 +92,8 @@ public class Parameters extends ArrayUjo {
     public static final UjoProperty<Parameters,Boolean> P_WINDOW_SIZE_RESTORATION = newProperty("WindowSizeRestoration", true, propertyCount++);
     /** Automatic sorting of the events by time. */
     public static final UjoProperty<Parameters,Boolean> P_AUTOMATIC_SORTING_BY_TIME = newProperty("AutomaticSortingByTime", true, propertyCount++);
+    /** Check new release on the home page */
+    public static final UjoProperty<Parameters,Boolean> P_CHECK_NEW_RELEASE = newProperty("CheckNewRelease", true, propertyCount++);
     /** A full path to a system browser. */
     public static final UjoProperty<Parameters,String> P_SYSTEM_BROWSER_PATH = newProperty("SystemBrowserPath", VALUE_DEFAULT, propertyCount++);
     /** Close Report Dialog after OK. */
@@ -105,6 +108,9 @@ public class Parameters extends ArrayUjo {
 
     /** Decimal Formatter */
     private DecimalFormat decimalFormat = null;
+
+    /** WebRelease */
+    private Version webRelease;
     
     /** Parameters constructor */
     public Parameters() {
@@ -258,6 +264,14 @@ public class Parameters extends ArrayUjo {
             return sb.toString();
        }
     }
+
+    public Version getWebRelease() {
+        if (webRelease==null) {
+            webRelease = ApplTools.getWebRelease(JWorkSheet.APPL_JNLP);
+        }
+        return webRelease;
+    }
+
 
     @SuppressWarnings("unchecked")
     public <UJO extends Parameters, VALUE> VALUE get(UjoProperty<UJO, VALUE> up) {

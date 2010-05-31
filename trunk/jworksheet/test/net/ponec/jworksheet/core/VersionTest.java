@@ -9,7 +9,7 @@ import junit.framework.TestCase;
 
 /**
  *
- * @author pavel
+ * @author Ponec
  */
 public class VersionTest extends TestCase {
     
@@ -131,6 +131,14 @@ public class VersionTest extends TestCase {
 
         txt1 =  "9.98.d3";
         txt2 = "10.98.d2";
+        ver1 = new Version(txt1);
+        ver2 = new Version(txt2);
+        assertTrue(ver1.compareTo(ver2)<0);
+        assertEquals(txt1, ver1.toString());
+        assertEquals(txt2, ver2.toString());
+        
+        txt1 = "0.98a.d3";
+        txt2 = "0.99";
         ver1 = new Version(txt1);
         ver2 = new Version(txt2);
         assertTrue(ver1.compareTo(ver2)<0);
