@@ -52,7 +52,7 @@ public class ModuleSample extends ModuleApiImpl {
     }
 
     public String getRelease() {
-        return JWorkSheet.APPL_VERSION;
+        return JWorkSheet.APPL_VERSION.toString();
     }
 
 }

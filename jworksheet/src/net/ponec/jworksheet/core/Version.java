@@ -23,11 +23,11 @@ import java.util.StringTokenizer;
  * Code version.
  * @author Pavel Ponec
  */
-public class Version implements Comparable<Version>{
+final public class Version implements Comparable<Version>{
 
     final private String[] version;
 
-    public Version(String code) {
+    public Version(final String code) {
         StringTokenizer st = new StringTokenizer(code, ".");
         version = new String[st.countTokens()];
         int i = 0;
@@ -36,7 +36,6 @@ public class Version implements Comparable<Version>{
             version[i++] = st.nextToken();
         }
     }
-
 
     @Override
     public String toString() {
@@ -49,7 +48,6 @@ public class Version implements Comparable<Version>{
             result.append(s);
         }
         return result.toString();
-
     }
 
     /** Compare two integers */
@@ -62,11 +60,14 @@ public class Version implements Comparable<Version>{
              ;
     }
 
-    /** Compare two integers */
-    private int compare(String s1, String s2) {
-        int result = compare( s1.length()
-                            , s2.length()
-                            );
+    /** Compare two String elements */
+    private int compare(String s1, String s2, boolean lengthComparation) {
+        int result = 0;
+        if (lengthComparation) {
+           result = compare( s1.length()
+                           , s2.length()
+                           );
+        }
         return result==0
              ? s1.compareTo(s2)
              : result
@@ -83,7 +84,7 @@ public class Version implements Comparable<Version>{
         for (int i=0; i<max; i++) {
             String s1 = this.version[i].toUpperCase(Locale.ENGLISH);
             String s2 = parm.version[i].toUpperCase(Locale.ENGLISH);
-            int result = compare(s1, s2);
+            int result = compare(s1, s2, i==0);
             if (result!=0) return result;
         }
 
@@ -95,6 +96,5 @@ public class Version implements Comparable<Version>{
     public boolean equals(Object obj) {
         return compareTo((Version)obj)==0;
     }
-
 
 }

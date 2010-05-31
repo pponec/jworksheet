@@ -41,7 +41,7 @@ public class Project extends MapUjo implements Comparable {
     /** Project descripton */
     public static final UjoProperty<Project,String>  P_DESCR    = newProperty("Description", "");
     /** List of task */
-    public static final ListProperty<Project,TaskType> P_TASKS = newPropertyList("Task", TaskType.class);
+    public static final ListProperty<Project,TaskType> P_TASKS  = newListProperty("Task", TaskType.class);
     
     /** Table columns. */
     public static final UjoProperty[] TABLE_COLUMNS

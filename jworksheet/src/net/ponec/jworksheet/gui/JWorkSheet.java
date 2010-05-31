@@ -24,6 +24,7 @@ import java.awt.event.KeyEvent;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 import javax.swing.AbstractAction;
@@ -51,6 +52,7 @@ import net.ponec.jworksheet.bo.WorkSpace;
 import net.ponec.jworksheet.bo.item.Time;
 import net.ponec.jworksheet.bo.item.YearMonthDay;
 import net.ponec.jworksheet.core.ApplContext;
+import net.ponec.jworksheet.core.Version;
 import net.ponec.jworksheet.gui.component.CheckBoxRenderer;
 import net.ponec.jworksheet.gui.models.EventTableModel;
 import net.ponec.jworksheet.gui.models.EventTableRenderer;
@@ -75,11 +77,12 @@ import org.ujoframework.swing.UjoPropertyRow;
 @SuppressWarnings("unchecked")
 public final class JWorkSheet extends TopFrame {
     
-    public static final String APPL_VERSION  = "0.94" ;
+    public static final Version APPL_VERSION  = new Version("0.94") ;
     public static final String APPL_RELEASED = "2010/05/16";
     
     public static final String APPL_NAME     = "jWorkSheet";
     public static final String APPL_HOMEPAGE = "http://jworksheet.ponec.net/";
+    public static final String APPL_JNLP     = APPL_HOMEPAGE + "file2.jnlp";
     
     private final UjoTable eventTable;
     private final UjoTable projTable;
@@ -169,6 +172,7 @@ public final class JWorkSheet extends TopFrame {
             // ======= LOAD DATA =========
             initData();
             initIcons();
+            checkNewRelease();
             
             // ComboBox Editor:
             setTableEventEditor();
@@ -272,7 +276,50 @@ public final class JWorkSheet extends TopFrame {
         UjoComboBoxModel m2 = new UjoComboBoxModel(applContext.getWorkSpace().getOpenProjects());
         eventTable.getTableColumn(Event.P_PROJ).setCellEditor( new DefaultCellEditor(new JComboBox(m2)) );
     }
-    
+
+    /** Check new release. */
+    private void checkNewRelease() {
+
+        if (applContext.getParameters().get(Parameters.P_CHECK_NEW_RELEASE)) {
+
+            new Thread() {
+                @Override public void run() {
+                    ApplTools.sleep(1000);
+
+                    if (applContext.getWorkSpace().isReleaseNotification(applContext.getParameters())) {
+                        final int choice = showDialog();
+                        switch(choice) {
+                            case -1:
+                                System.out.println("Cancel dialog");
+                                break;
+                            case 0: 
+                                browse(APPL_HOMEPAGE + "#download");
+                                break;
+                            case 1:
+                                Calendar calendar = Calendar.getInstance();
+                                calendar.add(Calendar.HOUR, 1 /*24+12*/);
+                                applContext.getWorkSpace().set(WorkSpace.P_RELEASE_CHECK_DATE, calendar.getTime());
+                                break;
+                            case 2:
+                                Version version = applContext.getParameters().getWebRelease();
+                                applContext.getWorkSpace().set(WorkSpace.P_RELEASE_CHECK_VERSION, version);
+                                break;
+                        }
+                    }
+                }
+
+                private int showDialog() {
+                    Version version = applContext.getParameters().getWebRelease();
+                    String msg = "New release " + version + " of the " + APPL_NAME + " is available.";
+                    String[] buttons = new String[] {"Download", "Show later", "Ignore"};
+                    Icon icon = new ResourceProvider().getIcon(ResourceProvider.LOGO);
+                    int choice = showMessage(msg, JOptionPane.QUESTION_MESSAGE, icon, null, new Object[] {APPL_NAME}, buttons);
+                    return choice;
+                }
+            }.start();
+        }
+    }
+
     /** Load Data from XML file. */
     private void initData() {
         boolean lock = applContext.createLock(false);
@@ -287,7 +334,7 @@ public final class JWorkSheet extends TopFrame {
             }
             applContext.createLock(true);
         }
-        
+
         applContext.loadData();
 
         if (applContext.isDataRestored()) {
@@ -312,7 +359,6 @@ public final class JWorkSheet extends TopFrame {
     public void closeAppl(WindowEvent e) {
         try {
             Parameters.P_SORT_PROJ_COLUMN.setValue(applContext.getParameters(), projTable.getSortedColumn().getName());
-            
             applContext.closeAppl(false);
         } catch (Throwable ex) {
             showMessage("Can't save data.", ex);

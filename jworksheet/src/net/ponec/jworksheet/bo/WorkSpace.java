@@ -19,6 +19,9 @@ package net.ponec.jworksheet.bo;
 import java.util.ArrayList;
 import java.util.Date;
 import net.ponec.jworksheet.bo.item.YearMonthDay;
+import net.ponec.jworksheet.core.ApplTools;
+import net.ponec.jworksheet.core.Version;
+import net.ponec.jworksheet.gui.JWorkSheet;
 import org.ujoframework.UjoProperty;
 import org.ujoframework.extensions.ListProperty;
 import org.ujoframework.UjoAction;
@@ -34,16 +37,20 @@ import static org.ujoframework.UjoAction.*;
 public class WorkSpace extends MapUjo {
     
     /** Version of the persistence file format. */
-    public static final UjoProperty<WorkSpace,String> P_VERSN  = newProperty("Version", "");
+    public static final UjoProperty<WorkSpace,Version> P_VERSN  = newProperty("Version", new Version("0"));
     /** Date of the last file saving. */
     public static final UjoProperty<WorkSpace,Date> P_CREATED  = newProperty("Created", Date.class);
     /** Date of the last file archivation. */
     public static final UjoProperty<WorkSpace,Date> P_ARCHIVED = newProperty("Archived", Date.class);
+    /** Minimal date to check new release */
+    public static final UjoProperty<WorkSpace,Date> P_RELEASE_CHECK_DATE = newProperty("CheckReleaseDate", new Date(0L));
+    /** Minimal version to new release notification */
+    public static final UjoProperty<WorkSpace,Version> P_RELEASE_CHECK_VERSION = newProperty("CheckReleaseVersion", JWorkSheet.APPL_VERSION);
     
     /** Work day list */
-    public static final ListProperty<WorkSpace,WorkDay> P_DAYS  = newPropertyList("Day", WorkDay.class);
+    public static final ListProperty<WorkSpace,WorkDay> P_DAYS  = newListProperty("Day", WorkDay.class);
     /** Code-book of all projects. */
-    public static final ListProperty<WorkSpace,Project> P_PROJS = newPropertyList("Project", Project.class);
+    public static final ListProperty<WorkSpace,Project> P_PROJS = newListProperty("Project", Project.class);
     
     /** Find a workDay or create new. */
     public WorkDay findWorkDay(YearMonthDay dayId) {
@@ -152,8 +159,30 @@ public class WorkSpace extends MapUjo {
     }
 
    @SuppressWarnings("unchecked")
-    public <UJO extends WorkSpace, VALUE> UJO set(UjoProperty<UJO, VALUE> up, VALUE value) {
+   public <UJO extends WorkSpace, VALUE> UJO set(UjoProperty<UJO, VALUE> up, VALUE value) {
         up.setValue((UJO)this, value);
         return (UJO) this;
+   }
+
+   /** Show release notification */
+   public boolean isReleaseNotification(Parameters params) {
+        boolean result = false;
+
+        Date currentDate = new Date();
+        Date requiredDate = get(P_RELEASE_CHECK_DATE);
+
+        if (currentDate.compareTo(requiredDate)>=0) {
+
+            Version currentVersion = JWorkSheet.APPL_VERSION;
+            Version webVersion = params.getWebRelease();
+            Version requiredVersion = get(P_RELEASE_CHECK_VERSION);
+
+            if (webVersion.compareTo(currentVersion)>0
+            &&  webVersion.compareTo(requiredVersion)>0
+            ){
+                result = true;
+            }
+        }
+        return result;
     }
 }
