@@ -263,9 +263,9 @@ public class ApplContext implements TableModelListener, Runnable, JwsContext {
     public synchronized void saveData(boolean includeParams) {
         try {
             // WorkSpace attributes
-            WorkSpace.P_CREATED.setValue(workSpace, new Date());
-            WorkSpace.P_VERSN.setValue(workSpace, JWorkSheet.APPL_VERSION);
-            WorkSpace.P_USERNAME.setValue(workSpace, Parameters.P_USERNAME.of(getParameters()));
+            workSpace.set(WorkSpace.P_CREATED, new Date());
+            workSpace.set(WorkSpace.P_VERSN  , JWorkSheet.APPL_VERSION);
+            workSpace.set(WorkSpace.P_USERNAME, Parameters.P_USERNAME.of(getParameters()));
  
             String header = false ? null // Default Header
             : UjoManagerXML.XML_HEADER + "\n<!-- <?xml-stylesheet type=\"text/xsl\" href=\"styles/"+ResourceProvider.REPORT_BASE+"\"?> -->"

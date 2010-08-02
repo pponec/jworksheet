@@ -18,6 +18,7 @@
 package net.ponec.jworksheet.bo;
 
 import java.util.ArrayList;
+import java.util.List;
 import net.ponec.jworksheet.core.ApplTools;
 import org.ujoframework.UjoProperty;
 import org.ujoframework.extensions.ListProperty;
@@ -113,14 +114,14 @@ public class Project extends MapUjo implements Comparable {
     }
 
     public void copyFrom(Project otherProject) {
-        this.set(P_ID, otherProject.get(P_ID));
-        this.set(P_FINISHED, otherProject.get(P_FINISHED));
-        this.set(P_DEFAULT, otherProject.get(P_DEFAULT));
-        this.set(P_PRIVATE, otherProject.get(P_PRIVATE));
-        this.set(P_DESCR, otherProject.get(P_DESCR));
+        for (UjoProperty p : readProperties()) {
+            if (!p.isTypeOf(List.class)) {
+               p.copy(otherProject, this);
+            }
+        }
     }
 
-    /**Sync tasks with other Project. */
+    /** Sync tasks with other Project. */
     public void syncTasks(Project otherProject) {
         ArrayList<TaskType> newTasks = new ArrayList<TaskType>();
         for (TaskType otherTask : P_TASKS.getList(otherProject)) {
