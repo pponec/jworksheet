@@ -112,6 +112,47 @@ public class Project extends MapUjo implements Comparable {
         return (UJO) this;
     }
 
+    public void copyFrom(Project otherProject) {
+        this.set(P_ID, otherProject.get(P_ID));
+        this.set(P_FINISHED, otherProject.get(P_FINISHED));
+        this.set(P_DEFAULT, otherProject.get(P_DEFAULT));
+        this.set(P_PRIVATE, otherProject.get(P_PRIVATE));
+        this.set(P_DESCR, otherProject.get(P_DESCR));
+    }
 
-    
+    /**Sync tasks with other Project. */
+    public void syncTasks(Project otherProject) {
+        ArrayList<TaskType> newTasks = new ArrayList<TaskType>();
+        for (TaskType otherTask : P_TASKS.getList(otherProject)) {
+            boolean found = false;
+            for (TaskType thisTask : P_TASKS.getList(this)) {
+                if (TaskType.P_ID.equals(otherTask, thisTask.get(TaskType.P_ID))) {
+                    thisTask.copyFrom(otherTask);
+                    found = true;
+                    break;
+                }
+            }
+            if (!found) {
+                newTasks.add(otherTask);
+            }
+        }
+        for (TaskType thisTask : P_TASKS.getList(this)) {
+            boolean found = false;
+            for (TaskType otherTask : P_TASKS.getList(otherProject)) {
+                if (TaskType.P_ID.equals(otherTask, thisTask.get(TaskType.P_ID))) {
+                    found = true;
+                    break;
+                }
+            }
+            if (!found) {
+                thisTask.set(TaskType.P_FINISHED, true);
+            }
+        }
+        for (TaskType otherTask : newTasks) {
+            TaskType task = new TaskType();
+            task.copyFrom(otherTask);
+            Project.P_TASKS.addItem(this, task);
+        }
+    }
+
 }

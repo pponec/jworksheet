@@ -42,6 +42,8 @@ public class WorkSpace extends MapUjo {
     public static final UjoProperty<WorkSpace,Date> P_CREATED  = newProperty("Created", Date.class);
     /** Date of the last file archivation. */
     public static final UjoProperty<WorkSpace,Date> P_ARCHIVED = newProperty("Archived", Date.class);
+    /** Name of user of this workspace. */
+    public static final UjoProperty<WorkSpace,String> P_USERNAME = newProperty("Username", "?");
     /** Minimal date to check new release */
     public static final UjoProperty<WorkSpace,Date> P_RELEASE_CHECK_DATE = newProperty("CheckReleaseDate", new Date(0L));
     /** Minimal version to new release notification */
@@ -116,7 +118,44 @@ public class WorkSpace extends MapUjo {
             }
         }
     }
-    
+
+    /**Sync projects with other WorkSpace. */
+    public void syncProjects(WorkSpace otherSpace) {
+        ArrayList<Project> newProjects = new ArrayList<Project>();
+        for (Project otherProject : P_PROJS.getList(otherSpace)) {
+            boolean found = false;
+            for (Project thisProject : P_PROJS.getList(this)) {
+                if (Project.P_ID.equals(otherProject, thisProject.get(Project.P_ID))) {
+                    thisProject.copyFrom(otherProject);
+                    thisProject.syncTasks(otherProject);
+                    found = true;
+                    break;
+                }
+            }
+            if (!found) {
+                newProjects.add(otherProject);
+            }
+        }
+        for (Project thisProject : P_PROJS.getList(this)) {
+            boolean found = false;
+            for (Project otherProject : P_PROJS.getList(otherSpace)) {
+                if (Project.P_ID.equals(otherProject, thisProject.get(Project.P_ID))) {
+                    found = true;
+                    break;
+                }
+            }
+            if (!found) {
+                thisProject.set(Project.P_FINISHED, true);
+            }
+        }
+        for (Project otherProject : newProjects) {
+            Project project = new Project();
+            project.copyFrom(otherProject);
+            project.syncTasks(otherProject);
+            WorkSpace.P_PROJS.addItem(this, project);
+        }
+    }
+
     /** Create a DemoData */
     public void createDemoData() {
         TaskType task = new TaskType();

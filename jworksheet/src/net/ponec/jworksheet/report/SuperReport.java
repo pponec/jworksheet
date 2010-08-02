@@ -172,10 +172,13 @@ public abstract class SuperReport implements Calculator {
     
     /** Create HTML report */
     public String getReport(String body, String title ) {
+
+        String username = applContext.getParameters().get(Parameters.P_USERNAME);
+
         if (title==null) {
-            title = JWorkSheet.APPL_NAME + " Report";
+            title = JWorkSheet.APPL_NAME + " Report for " + username;
         } else {
-            title = escape(title);
+            title = escape(title + " for " + username);
         }
         
         String[] content = new String[]

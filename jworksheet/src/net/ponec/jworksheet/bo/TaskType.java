@@ -62,4 +62,11 @@ public class TaskType extends MapUjo implements Comparable {
         up.setValue((UJO)this, value);
         return (UJO) this;
     }
+
+    public void copyFrom(TaskType otherTask) {
+        this.set(P_ID, otherTask.get(P_ID));
+        this.set(P_DEFAULT, otherTask.get(P_DEFAULT));
+        this.set(P_FINISHED, otherTask.get(P_FINISHED));
+        this.set(P_DESCR, otherTask.get(P_DESCR));
+    }
 }
