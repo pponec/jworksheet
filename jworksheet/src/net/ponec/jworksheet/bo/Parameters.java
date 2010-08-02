@@ -105,7 +105,7 @@ public class Parameters extends ArrayUjo {
     /** A full path to a Shared Projects DataFile. */
     public static final UjoProperty<Parameters,File> P_PROJECTS_FILE_PATH = newProperty("SharedProjectsFilePath", new File(VALUE_DEFAULT), propertyCount++);
     /** Name of user of this application. */
-    public static final UjoProperty<Parameters,String> P_USERNAME = newProperty("Username", "?", propertyCount++);
+    public static final UjoProperty<Parameters,String> P_USERNAME = newProperty("Username", getSystemLogin(), propertyCount++);
 
     // --- An optional property unique name test ---
     static { init(Parameters.class,true); }
@@ -115,6 +115,15 @@ public class Parameters extends ArrayUjo {
 
     /** WebRelease */
     private Version webRelease;
+
+    /** Returns an operation system login */
+    public static String getSystemLogin() {
+        String result = System.getProperty("user.name");
+        return ApplTools.isValid(result)
+             ? Character.toUpperCase(result.charAt(0)) + result.substring(1)
+             : "?"
+             ;
+    }
     
     /** Parameters constructor */
     public Parameters() {
