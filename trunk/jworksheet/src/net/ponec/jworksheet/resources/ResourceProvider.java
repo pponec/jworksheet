@@ -38,6 +38,7 @@ public class ResourceProvider {
     /** A Report XSL Style Sheet */
     public static String REPORT_BASE  = "ReportBase.xsl";
     public static String REPORT_BASE2 = "ReportBase2.xsl";
+    public static String REPORT_BASE3 = "ReportBase3.xsl";
     
     /** Icon s */
     public static String LOGO     = "logo.png";

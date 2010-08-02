@@ -79,6 +79,9 @@ public class ApplContext implements TableModelListener, Runnable, JwsContext {
     /** Data XML File */
     public static final String FILE_DATA = "data.xml";
     
+    /** Shared Projects Data XML File */
+    public static final String PROJECTS_DATA = "projects.xml";
+
     /** Style subdirectory */
     public static final String FILE_STYLES = "styles";
 
@@ -152,8 +155,10 @@ public class ApplContext implements TableModelListener, Runnable, JwsContext {
         
         final File dataFile   = getDataFile();
         final File backupFile = getDataFileBackup();
+        final File projectsFile = getProjectsFile();
         boolean dataFileExists = dataFile.isFile() &&  dataFile.length()>0;
         boolean backupFileExists = dataFileExists ? false : (backupFile.isFile() &&  backupFile.length()>0);
+        boolean projectsFileExists = projectsFile.isFile() &&  projectsFile.length()>0;
         
         if (!dataFileExists && backupFileExists) try {
             ApplTools.copy(backupFile, dataFile);
@@ -177,6 +182,14 @@ public class ApplContext implements TableModelListener, Runnable, JwsContext {
         } else {
             workSpace = new WorkSpace();
             workSpace.createDemoData();
+        }
+
+        // sync projects from shared list
+        if (projectsFileExists) try {
+            WorkSpace result = UjoManagerXML.getInstance().parseXML(getProjectsFile(), WorkSpace.class, "Shared Projects Loading");
+            workSpace.syncProjects(result);
+        } catch (Throwable e) {
+            throw new MessageException("Can't load file: " + projectsFile, e);
         }
         
         // Backup an Original File, if parsing and loading was successful.
@@ -252,7 +265,8 @@ public class ApplContext implements TableModelListener, Runnable, JwsContext {
             // WorkSpace attributes
             WorkSpace.P_CREATED.setValue(workSpace, new Date());
             WorkSpace.P_VERSN.setValue(workSpace, JWorkSheet.APPL_VERSION);
-            
+            WorkSpace.P_USERNAME.setValue(workSpace, Parameters.P_USERNAME.of(getParameters()));
+ 
             String header = false ? null // Default Header
             : UjoManagerXML.XML_HEADER + "\n<!-- <?xml-stylesheet type=\"text/xsl\" href=\"styles/"+ResourceProvider.REPORT_BASE+"\"?> -->"
             ;
@@ -379,6 +393,15 @@ public class ApplContext implements TableModelListener, Runnable, JwsContext {
         File result = Parameters.P_DATA_FILE_PATH.of(getParameters());
         if (result==Parameters.P_DATA_FILE_PATH.getDefault()) {
             result = new File(getConfigDir(), FILE_DATA);
+        }
+        return result;
+    }
+
+    /** Shared Projects Data File */
+    public File getProjectsFile() {
+        File result = Parameters.P_PROJECTS_FILE_PATH.of(getParameters());
+        if (result==Parameters.P_PROJECTS_FILE_PATH.getDefault()) {
+            result = new File(getConfigDir(), PROJECTS_DATA);
         }
         return result;
     }
@@ -512,6 +535,7 @@ public class ApplContext implements TableModelListener, Runnable, JwsContext {
             final String[] fileNames = 
             { ResourceProvider.REPORT_BASE
             , ResourceProvider.REPORT_BASE2
+            , ResourceProvider.REPORT_BASE3
             , ResourceProvider.FILE_CSS
             , ResourceProvider.LOGO16
             };            

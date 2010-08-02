@@ -102,6 +102,10 @@ public class Parameters extends ArrayUjo {
     public static final UjoProperty<Parameters,File> P_DATA_FILE_PATH = newProperty("DataFilePath", new File(VALUE_DEFAULT), propertyCount++);
     /** Project table sorted column */
     public static final UjoProperty<Parameters,String> P_SORT_PROJ_COLUMN = newProperty("SortProjColumn", Project.P_ID.getName(), propertyCount++);
+    /** A full path to a Shared Projects DataFile. */
+    public static final UjoProperty<Parameters,File> P_PROJECTS_FILE_PATH = newProperty("SharedProjectsFilePath", new File(VALUE_DEFAULT), propertyCount++);
+    /** Name of user of this application. */
+    public static final UjoProperty<Parameters,String> P_USERNAME = newProperty("Username", "?", propertyCount++);
 
     // --- An optional property unique name test ---
     static { init(Parameters.class,true); }
