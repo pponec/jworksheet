@@ -17,6 +17,7 @@
 
 package net.ponec.jworksheet.bo.item;
 
+import java.io.Serializable;
 import java.util.Calendar;
 import java.util.StringTokenizer;
 import net.ponec.jworksheet.core.*;
@@ -27,7 +28,7 @@ import org.ujoframework.extensions.UjoCloneable;
  * Time
  * @author Pavel Ponec
  */
-public class Time implements Comparable, ValueTextable, UjoCloneable {
+public class Time implements Comparable, ValueTextable, UjoCloneable, Serializable {
     
     /** Separator */
     public static final String SEPARATOR = ":";
