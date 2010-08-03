@@ -149,7 +149,7 @@
 								<xsl:value-of select="/body/Project[ID = $ProjectID]/Task[ID = $TaskID]/Description"/>&#160;<span class="taskId">[<xsl:value-of select="TaskID"/>]</span>
 							</td>
 							<td align="right">
-								<xsl:value-of select="format-number(sum(../Event[ProjectID = $ProjectID]/Period) div 60, '####0.00')"/>
+								<xsl:value-of select="format-number(sum(../Event[ProjectID = $ProjectID and TaskID = $TaskID]/Period) div 60, '####0.00')"/>
 							</td>
 						</tr>
 					</xsl:for-each>
