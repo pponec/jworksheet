@@ -126,8 +126,12 @@ public class WorkSpace extends MapUjo {
             boolean found = false;
             for (Project thisProject : P_PROJS.getList(this)) {
                 if (Project.P_ID.equals(otherProject, thisProject.get(Project.P_ID))) {
-                    thisProject.copyFrom(otherProject);
-                    thisProject.syncTasks(otherProject);
+                    if (Project.P_DESCR.equals(otherProject, thisProject.get(Project.P_DESCR))) {
+                        // only update projects with same description, otherwise
+                        // old non-synced projects may change description
+                        thisProject.copyFrom(otherProject);
+                        thisProject.syncTasks(otherProject);
+                    }
                     found = true;
                     break;
                 }

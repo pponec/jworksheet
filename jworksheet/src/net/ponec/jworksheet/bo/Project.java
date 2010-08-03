@@ -128,7 +128,11 @@ public class Project extends MapUjo implements Comparable {
             boolean found = false;
             for (TaskType thisTask : P_TASKS.getList(this)) {
                 if (TaskType.P_ID.equals(otherTask, thisTask.get(TaskType.P_ID))) {
-                    thisTask.copyFrom(otherTask);
+                    if (TaskType.P_DESCR.equals(otherTask, thisTask.get(TaskType.P_DESCR))) {
+                        // only update tasks with same description, otherwise
+                        // old non-synced tasks may change description
+                        thisTask.copyFrom(otherTask);
+                    }
                     found = true;
                     break;
                 }
