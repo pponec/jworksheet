@@ -158,7 +158,7 @@ public class ApplContext implements TableModelListener, Runnable, JwsContext {
         final File projectsFile = getProjectsFile();
         boolean dataFileExists = dataFile.isFile() &&  dataFile.length()>0;
         boolean backupFileExists = dataFileExists ? false : (backupFile.isFile() &&  backupFile.length()>0);
-        boolean projectsFileExists = projectsFile.isFile() &&  projectsFile.length()>0;
+        boolean projectsFileExists = projectsFile.isFile() && projectsFile.length()>0;
         
         if (!dataFileExists && backupFileExists) try {
             ApplTools.copy(backupFile, dataFile);
