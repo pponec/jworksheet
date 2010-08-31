@@ -152,6 +152,7 @@ public class DateDialog extends TopDialog implements java.awt.event.ActionListen
         gridBagConstraints.gridy = 2;
         gridBagConstraints.gridwidth = 2;
         gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
+        gridBagConstraints.anchor = java.awt.GridBagConstraints.SOUTH;
         gridBagConstraints.weighty = 1.0;
         jPanel2.add(pButtons, gridBagConstraints);
 
