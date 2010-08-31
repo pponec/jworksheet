@@ -66,6 +66,7 @@ public class ResourceProvider {
     public static final String IMG_HOME_PAGE = "_page_world.png"; // Home Page
     public static final String IMG_PREV = "_resultset_previous.png"; // Go Prev
     public static final String IMG_NEXT = "_resultset_next.png";     // Go Next
+    public static final String IMG_HOME = "house.png";     // Go to today
     
     
     /**

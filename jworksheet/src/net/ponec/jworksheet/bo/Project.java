@@ -113,6 +113,7 @@ public class Project extends MapUjo implements Comparable {
         return (UJO) this;
     }
 
+    @SuppressWarnings("unchecked")
     public void copyFrom(Project otherProject) {
         for (UjoProperty p : readProperties()) {
             if (!p.isTypeOf(List.class)) {

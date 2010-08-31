@@ -469,9 +469,9 @@ public final class JWorkSheet extends TopFrame {
         bDayPrev.setIcon(imageProvider.getIcon(ResourceProvider.IMG_PREV, hideIcon));
         bDayNext.setIcon(imageProvider.getIcon(ResourceProvider.IMG_NEXT, hideIcon));
         bGoto   .setIcon(imageProvider.getIcon(ResourceProvider.IMG_DATE, hideIcon));
+        bToday  .setIcon(imageProvider.getIcon(ResourceProvider.IMG_HOME, hideIcon));
 
         bSort.setVisible(!applContext.getParameters().get(Parameters.P_AUTOMATIC_SORTING_BY_TIME));
-        //setImage(bToday  , ResourceProvider.IMG_DATE, imageProvider);
         //
         setImage(bCreate, ResourceProvider.IMG_ADD, imageProvider);
         setImage(bClone , ResourceProvider.IMG_APPLICATION_DOUBLE, imageProvider);
@@ -645,8 +645,8 @@ public final class JWorkSheet extends TopFrame {
         bToday.setText("Today"); // NOI18N
         bToday.setMargin(new java.awt.Insets(2, 0, 2, 0));
         bToday.setMaximumSize(new java.awt.Dimension(90, 23));
-        bToday.setMinimumSize(new java.awt.Dimension(66, 23));
-        bToday.setPreferredSize(new java.awt.Dimension(66, 23));
+        bToday.setMinimumSize(new java.awt.Dimension(80, 23));
+        bToday.setPreferredSize(new java.awt.Dimension(80, 23));
         bToday.addActionListener(formListener);
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 4;
@@ -655,7 +655,6 @@ public final class JWorkSheet extends TopFrame {
         pDays.add(bToday, gridBagConstraints);
 
         bGoto.setText("Go to"); // NOI18N
-        bGoto.setIconTextGap(3);
         bGoto.setMargin(new java.awt.Insets(2, 0, 2, 0));
         bGoto.setMaximumSize(new java.awt.Dimension(90, 23));
         bGoto.setMinimumSize(new java.awt.Dimension(80, 23));
@@ -1198,7 +1197,6 @@ public final class JWorkSheet extends TopFrame {
     }//GEN-LAST:event_bHomePageActionPerformed
     
     private void bGotoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_bGotoActionPerformed
-        
         Date date = new DateDialog(applContext).getResult();
         if (date!=null) {
             final YearMonthDay yearMonthDay = new YearMonthDay(date);
