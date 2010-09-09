@@ -25,7 +25,6 @@
   </resources> 
   <application-desc 
       main-class="net.ponec.jworksheet.gui.JWorkSheet"> 
-     <argument></argument>
   </application-desc> 
 </jnlp> 
 
