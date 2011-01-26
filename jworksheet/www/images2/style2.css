@@ -44,3 +44,11 @@ body {
 
 }
 
+/* ----- Tools -------- */
+
+.subTitle {
+    text-decoration: none;
+    font-weight: bold;
+    display: block;
+    color: #2B4E15;
+}
