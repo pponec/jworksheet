@@ -716,8 +716,8 @@ public class ReportDialog extends TopDialog implements java.awt.event.ActionList
         } else if (sourceComp==rbWeek
         ||         sourceComp==rbWeekPrev
         ){
-            int currDay = c2.get(Calendar.DAY_OF_WEEK);
-            c1.add(Calendar.DAY_OF_YEAR, firstDay-currDay);
+            int currDay = c2.get(Calendar.DAY_OF_WEEK); // Note: Calendar.SUNDAY=1
+            c1.add(Calendar.DAY_OF_YEAR, (firstDay-currDay-7) % 7);
             c2.setTimeInMillis(c1.getTimeInMillis());
             c2.add(Calendar.DAY_OF_YEAR, 6);
         } else if (sourceComp==rbMonth
