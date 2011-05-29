@@ -21,8 +21,8 @@ import net.ponec.jworksheet.bo.Project;
 import net.ponec.jworksheet.bo.TaskType;
 import net.ponec.jworksheet.bo.WorkDay;
 import net.ponec.jworksheet.bo.item.YearMonthDay;
-import org.ujoframework.UjoProperty;
-import org.ujoframework.implementation.map.MapUjo;
+import org.ujorm.UjoProperty;
+import org.ujorm.implementation.map.MapUjo;
 import net.ponec.jworksheet.bo.Event;
 
 /**

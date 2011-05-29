@@ -19,8 +19,8 @@ package net.ponec.jworksheet.gui.models;
 
 import net.ponec.jworksheet.bo.Project;
 import net.ponec.jworksheet.core.ApplContext;
-import org.ujoframework.UjoProperty;
-import org.ujoframework.swing.UjoTableModel;
+import org.ujorm.UjoProperty;
+import org.ujorm.swing.UjoTableModel;
 
 /**
  * Project Table Model

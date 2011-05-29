@@ -24,8 +24,8 @@ import java.util.Locale;
 import net.ponec.jworksheet.core.ApplTools;
 import net.ponec.jworksheet.bo.Parameters;
 import net.ponec.jworksheet.core.ApplContext;
-import org.ujoframework.extensions.ValueTextable;
-import org.ujoframework.extensions.UjoCloneable;
+import org.ujorm.extensions.ValueTextable;
+import org.ujorm.extensions.UjoCloneable;
 
 /**
  * Year, month and day

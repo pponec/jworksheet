@@ -29,7 +29,7 @@ import java.text.MessageFormat;
 import java.util.*;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import org.ujoframework.UjoProperty;
+import org.ujorm.UjoProperty;
 
 
 /**

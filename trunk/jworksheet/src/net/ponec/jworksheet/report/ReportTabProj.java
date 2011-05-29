@@ -16,7 +16,7 @@
 
 package net.ponec.jworksheet.report;
 
-import org.ujoframework.core.UjoComparator;
+import org.ujorm.core.UjoComparator;
 
 /**
  * Day Report with a project resolution.

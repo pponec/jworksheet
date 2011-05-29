@@ -23,7 +23,7 @@ import net.ponec.jworksheet.bo.Event;
 import net.ponec.jworksheet.bo.Project;
 import net.ponec.jworksheet.bo.TaskType;
 import net.ponec.jworksheet.bo.WorkDay;
-import org.ujoframework.core.UjoComparator;
+import org.ujorm.core.UjoComparator;
 
 /**
  * Standard report
@@ -124,7 +124,7 @@ public class ReportA extends SuperReport {
     }
     
     
-    /** Vrací sadu skupin: */
+    /** Vracï¿½ sadu skupin: */
     protected GroupSet getGroupSet() {
         return groupSet;
     }

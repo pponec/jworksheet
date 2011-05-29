@@ -27,7 +27,7 @@ import javax.swing.table.TableCellEditor;
 import net.ponec.jworksheet.bo.Event;
 import net.ponec.jworksheet.bo.Project;
 import net.ponec.jworksheet.bo.TaskType;
-import org.ujoframework.swing.UjoTableModel;
+import org.ujorm.swing.UjoTableModel;
 
 /**
  * A JComboBox cell editor

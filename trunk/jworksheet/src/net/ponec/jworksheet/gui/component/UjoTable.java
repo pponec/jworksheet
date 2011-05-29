@@ -39,9 +39,9 @@ import javax.swing.table.TableModel;
 import net.ponec.jworksheet.core.ApplContext;
 import net.ponec.jworksheet.gui.models.EventTableModel;
 import net.ponec.jworksheet.resources.ResourceProvider;
-import org.ujoframework.Ujo;
-import org.ujoframework.UjoProperty;
-import org.ujoframework.swing.UjoTableModel;
+import org.ujorm.Ujo;
+import org.ujorm.UjoProperty;
+import org.ujorm.swing.UjoTableModel;
 
 /**
  * UjoTable for an Ujo objects.

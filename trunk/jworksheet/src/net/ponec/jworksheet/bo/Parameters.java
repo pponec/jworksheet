@@ -27,11 +27,11 @@ import java.util.Calendar;
 import java.util.Locale;
 import net.ponec.jworksheet.core.*;
 import net.ponec.jworksheet.gui.JWorkSheet;
-import org.ujoframework.UjoProperty;
-import org.ujoframework.extensions.Property;
-import org.ujoframework.UjoAction;
-import org.ujoframework.implementation.array.ArrayUjo;
-import static org.ujoframework.UjoAction.*;
+import org.ujorm.UjoProperty;
+import org.ujorm.extensions.Property;
+import org.ujorm.UjoAction;
+import org.ujorm.implementation.array.ArrayUjo;
+import static org.ujorm.UjoAction.*;
 
 /**
  * Parameters of the application.

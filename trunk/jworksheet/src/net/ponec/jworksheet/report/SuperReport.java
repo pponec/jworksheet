@@ -1,7 +1,7 @@
 /*
  * ReportXX.java
  *
- * Created on 1. záøí 2007, 10:42
+ * Created on 1. zï¿½ï¿½ï¿½ 2007, 10:42
  *
  * To change this template, choose Tools | Template Manager
  * and open the template in the editor.
@@ -22,7 +22,7 @@ import net.ponec.jworksheet.bo.item.YearMonthDay;
 import net.ponec.jworksheet.core.LanguageManager;
 import net.ponec.jworksheet.gui.JWorkSheet;
 import net.ponec.jworksheet.resources.ResourceProvider;
-import org.ujoframework.UjoProperty;
+import org.ujorm.UjoProperty;
 
 /**
  * Standard report

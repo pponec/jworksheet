@@ -19,9 +19,9 @@ package net.ponec.jworksheet.gui.models;
 
 import net.ponec.jworksheet.core.ApplContext;
 import net.ponec.jworksheet.bo.Parameters;
-import org.ujoframework.UjoProperty;
-import org.ujoframework.swing.UjoPropertyRow;
-import org.ujoframework.swing.SingleUjoTabModel;
+import org.ujorm.UjoProperty;
+import org.ujorm.swing.UjoPropertyRow;
+import org.ujorm.swing.SingleUjoTabModel;
 
 /**
  * Row of Parameters table.

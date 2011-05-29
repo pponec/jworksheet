@@ -58,8 +58,8 @@ import net.ponec.jworksheet.gui.JWorkSheet;
 import net.ponec.jworksheet.module.ModuleApi;
 import net.ponec.jworksheet.report.MetaReport;
 import net.ponec.jworksheet.resources.ResourceProvider;
-import org.ujoframework.core.UjoManagerRBundle;
-import org.ujoframework.core.UjoManagerXML;
+import org.ujorm.core.UjoManagerRBundle;
+import org.ujorm.core.UjoManagerXML;
 
 /**
  * A Main Application Context
