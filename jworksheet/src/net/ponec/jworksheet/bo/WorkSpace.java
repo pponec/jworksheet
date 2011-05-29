@@ -22,11 +22,11 @@ import net.ponec.jworksheet.bo.item.YearMonthDay;
 import net.ponec.jworksheet.core.ApplTools;
 import net.ponec.jworksheet.core.Version;
 import net.ponec.jworksheet.gui.JWorkSheet;
-import org.ujoframework.UjoProperty;
-import org.ujoframework.extensions.ListProperty;
-import org.ujoframework.UjoAction;
-import org.ujoframework.implementation.map.MapUjo;
-import static org.ujoframework.UjoAction.*;
+import org.ujorm.UjoProperty;
+import org.ujorm.extensions.ListProperty;
+import org.ujorm.UjoAction;
+import org.ujorm.implementation.map.MapUjo;
+import static org.ujorm.UjoAction.*;
 
 /**
  * This is a <strong>root</strong> of all persistent business objects.

@@ -21,8 +21,8 @@ import java.io.Serializable;
 import java.util.Calendar;
 import java.util.StringTokenizer;
 import net.ponec.jworksheet.core.*;
-import org.ujoframework.extensions.ValueTextable;
-import org.ujoframework.extensions.UjoCloneable;
+import org.ujorm.extensions.ValueTextable;
+import org.ujorm.extensions.UjoCloneable;
 
 /**
  * Time

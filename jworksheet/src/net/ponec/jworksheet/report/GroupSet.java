@@ -20,9 +20,9 @@ package net.ponec.jworksheet.report;
 import java.util.ArrayList;
 import java.util.Collections;
 import net.ponec.jworksheet.bo.Event;
-import org.ujoframework.Ujo;
-import org.ujoframework.UjoProperty;
-import org.ujoframework.core.UjoComparator;
+import org.ujorm.Ujo;
+import org.ujorm.UjoProperty;
+import org.ujorm.core.UjoComparator;
 
 /**
  * Report Set
@@ -90,7 +90,7 @@ public class GroupSet {
         return "[" + size() + "]" ;
     }
     
-    /** Vrací èas */
+    /** Vracï¿½ ï¿½as */
     public UjoProperty getPropertyTime() {
         return propertyTime;
     }

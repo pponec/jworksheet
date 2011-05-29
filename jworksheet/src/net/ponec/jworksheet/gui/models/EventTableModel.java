@@ -26,8 +26,8 @@ import net.ponec.jworksheet.bo.Event;
 import net.ponec.jworksheet.bo.Project;
 import net.ponec.jworksheet.bo.TaskType;
 import net.ponec.jworksheet.bo.item.Time;
-import org.ujoframework.UjoProperty;
-import org.ujoframework.swing.UjoTableModel;
+import org.ujorm.UjoProperty;
+import org.ujorm.swing.UjoTableModel;
 
 /**
  * Event Table Model

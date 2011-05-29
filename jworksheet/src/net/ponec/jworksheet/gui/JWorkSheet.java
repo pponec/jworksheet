@@ -65,10 +65,10 @@ import net.ponec.jworksheet.gui.models.TaskTableModel;
 import net.ponec.jworksheet.gui.models.UjoComboBoxModel;
 import net.ponec.jworksheet.report.TableReport;
 import net.ponec.jworksheet.resources.ResourceProvider;
-import org.ujoframework.Ujo;
-import org.ujoframework.UjoProperty;
-import org.ujoframework.swing.UjoTableModel;
-import org.ujoframework.swing.UjoPropertyRow;
+import org.ujorm.Ujo;
+import org.ujorm.UjoProperty;
+import org.ujorm.swing.UjoTableModel;
+import org.ujorm.swing.UjoPropertyRow;
 
 /**
  * Java Work Sheet
@@ -1272,7 +1272,7 @@ public final class JWorkSheet extends TopFrame {
         + "<br>&nbsp;<a href=\"http://famfamfam.com\">http://famfamfam.com</a>"
         , ujo.getSpecificationTitle() + " " + ujo.getSpecificationVersion()
         + "<br>&nbsp;(Apache License, Version 2.0)"
-        + "<br>&nbsp;<a href=\"http://ujoframework.org\">http://ujoframework.org</a>"
+        + "<br>&nbsp;<a href=\"http://ujorm.org\">http://ujorm.org</a>"
         , new ResourceProvider().getIcon(ResourceProvider.LOGO)
         , ApplTools.createCloseButton(applContext.getLanguageManager().getText("OK"))
         , applContext.getLanguageManager()

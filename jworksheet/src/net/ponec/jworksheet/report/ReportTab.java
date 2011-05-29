@@ -28,7 +28,7 @@ import net.ponec.jworksheet.bo.Event;
 import net.ponec.jworksheet.bo.Parameters;
 import net.ponec.jworksheet.bo.WorkDay;
 import net.ponec.jworksheet.bo.item.YearMonthDay;
-import org.ujoframework.core.UjoComparator;
+import org.ujorm.core.UjoComparator;
 
 /**
  * Day Report with a task resolution.

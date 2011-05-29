@@ -28,8 +28,8 @@ import net.ponec.jworksheet.bo.Event;
 import net.ponec.jworksheet.bo.Project;
 import net.ponec.jworksheet.core.ApplTools;
 import net.ponec.jworksheet.gui.component.*;
-import org.ujoframework.UjoProperty;
-import org.ujoframework.swing.UjoTableModel;
+import org.ujorm.UjoProperty;
+import org.ujorm.swing.UjoTableModel;
 
 /**
  * EventTableRenderer.

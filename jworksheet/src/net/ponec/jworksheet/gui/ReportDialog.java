@@ -44,8 +44,8 @@ import net.ponec.jworksheet.report.ReportC;
 import net.ponec.jworksheet.report.ReportTab;
 import net.ponec.jworksheet.report.ReportTabProj;
 import net.ponec.jworksheet.resources.ResourceProvider;
-import org.ujoframework.UjoProperty;
-import org.ujoframework.core.UjoActionImpl;
+import org.ujorm.UjoProperty;
+import org.ujorm.core.UjoActionImpl;
 
 /**
  * Report Dialog

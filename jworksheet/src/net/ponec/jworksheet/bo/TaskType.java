@@ -18,8 +18,8 @@
 package net.ponec.jworksheet.bo;
 
 import net.ponec.jworksheet.core.ApplTools;
-import org.ujoframework.UjoProperty;
-import org.ujoframework.implementation.map.MapUjo;
+import org.ujorm.UjoProperty;
+import org.ujorm.implementation.map.MapUjo;
 
 /**
  * A Task of Project

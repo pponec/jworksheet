@@ -18,11 +18,11 @@
 package net.ponec.jworksheet.bo;
 
 import net.ponec.jworksheet.bo.item.YearMonthDay;
-import org.ujoframework.UjoProperty;
-import org.ujoframework.extensions.ListProperty;
-import org.ujoframework.UjoAction;
-import org.ujoframework.implementation.map.MapUjo;
-import static org.ujoframework.UjoAction.*;
+import org.ujorm.UjoProperty;
+import org.ujorm.extensions.ListProperty;
+import org.ujorm.UjoAction;
+import org.ujorm.implementation.map.MapUjo;
+import static org.ujorm.UjoAction.*;
 
 /**
  * One Work Day

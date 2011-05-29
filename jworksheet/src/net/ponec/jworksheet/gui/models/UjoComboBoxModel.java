@@ -20,7 +20,7 @@ package net.ponec.jworksheet.gui.models;
 import java.util.ArrayList;
 import java.util.List;
 import javax.swing.DefaultComboBoxModel;
-import org.ujoframework.Ujo;
+import org.ujorm.Ujo;
 
 /**
  * UjoComboBox Model

@@ -19,11 +19,11 @@ package net.ponec.jworksheet.bo;
 
 import net.ponec.jworksheet.bo.item.Time;
 import net.ponec.jworksheet.core.ApplTools;
-import org.ujoframework.UjoAction;
-import org.ujoframework.UjoProperty;
-import org.ujoframework.core.UjoService;
-import org.ujoframework.implementation.bean.*;
-import static org.ujoframework.UjoAction.*;
+import org.ujorm.UjoAction;
+import org.ujorm.UjoProperty;
+import org.ujorm.core.UjoService;
+import org.ujorm.implementation.bean.*;
+import static org.ujorm.UjoAction.*;
 
 /** An Event of the Work Day.
  * I have selected the BeanUjo implementaton for its small memory footprint, two fields are stored in a memory safe data type in addition:
