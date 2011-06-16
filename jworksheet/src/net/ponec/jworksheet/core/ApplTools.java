@@ -72,6 +72,7 @@ import javax.xml.transform.stream.StreamResult;
 import javax.xml.transform.stream.StreamSource;
 import net.ponec.jworksheet.gui.JWorkSheet;
 import net.ponec.jworksheet.resources.ResourceProvider;
+import org.ujorm.core.RingBuffer;
 
 /**
  * Static methods.
@@ -638,36 +639,7 @@ public final class ApplTools {
 
     /** Find word betveen beg and end text */
     private static String findWord(Reader reader, String beg, String end) throws IOException {
-        StringBuilder result = new StringBuilder();
-        String border   = beg;
-        RingBuffer ring = new RingBuffer(border.length());
-
-        int state = 0;
-        int c;
-
-        while ((c=reader.read())!=-1) {
-
-            ring.add((char) c);
-            if (state==1) {
-               result.append((char)c);
-            }
-
-            if (ring.equals(border)) {
-                if (++state>1) {
-                    break;
-                } else {
-                    border = end;
-                    ring   = new RingBuffer(border.length());
-                }
-            }
-        }
-
-        // Remove the finish tag.
-        if (result.length()>end.length()) {
-            result.setLength(result.length()-end.length());
-        }
-
-        return result.toString().trim();
+        return RingBuffer.findWord(reader, beg, end);
     }
 
 
