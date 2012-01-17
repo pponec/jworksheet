@@ -63,6 +63,7 @@ public class TaskType extends MapUjo implements Comparable {
         return (UJO) this;
     }
 
+    @SuppressWarnings("unchecked")
     public void copyFrom(TaskType otherTask) {
         for (UjoProperty p : readProperties()) {
             p.copy(otherTask, this);

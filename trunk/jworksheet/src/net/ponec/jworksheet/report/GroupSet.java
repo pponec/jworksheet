@@ -31,10 +31,10 @@ import org.ujorm.core.UjoComparator;
 public class GroupSet {
     
     /** Task Group Collection */
-    protected ArrayList<Ujo> tasks = new ArrayList<Ujo>();
+    protected ArrayList<TaskGroup> tasks = new ArrayList<TaskGroup>();
     
     /** Task Group Comparator */
-    protected UjoComparator comparator;
+    protected UjoComparator<TaskGroup> comparator;
     
     protected UjoProperty propertyTime;
     
@@ -43,7 +43,7 @@ public class GroupSet {
     /** Look-up KEY. */
     protected TaskGroup key = new TaskGroup(null);
     
-    public GroupSet(UjoComparator comparator, UjoProperty/*<Ujo,Integer>*/ propertyTime) {
+    public GroupSet(UjoComparator<TaskGroup> comparator, UjoProperty/*<Ujo,Integer>*/ propertyTime) {
         this.comparator   = comparator;
         this.propertyTime = propertyTime;
     }

@@ -42,7 +42,7 @@ public class ReportTab extends SuperReport {
     /** Last WorkDay. */
     protected WorkDay lastWorkDay;
     
-    protected UjoComparator comparator;
+    protected UjoComparator<TaskGroup> comparator;
     
     /** Last report */
     protected ReportA report = null;
@@ -62,9 +62,8 @@ public class ReportTab extends SuperReport {
     }
     
     /** Create Comparator */
-    protected UjoComparator createUjoComparator() {
-        UjoComparator comparator = UjoComparator.newInstance(TaskGroup.P_PROJ, TaskGroup.P_TASK);
-        return comparator;
+    protected UjoComparator<TaskGroup> createUjoComparator() {
+        return UjoComparator.<TaskGroup>newInstance(TaskGroup.P_PROJ, TaskGroup.P_TASK);
     }
     
     private void saveDay() {
@@ -265,8 +264,8 @@ public class ReportTab extends SuperReport {
                 }
             }
         }
-        
-        Collections.sort(result, comparator);
+
+        comparator.sort(result);
         return result;
     }
 }

@@ -26,9 +26,8 @@ public class ReportTabProj extends ReportTab {
 
     /** Create Comparator */
     @Override
-    protected UjoComparator createUjoComparator() {
-        UjoComparator comparator = UjoComparator.newInstance(TaskGroup.P_PROJ);
-        return comparator;
+    protected UjoComparator<TaskGroup> createUjoComparator() {
+        return UjoComparator.<TaskGroup>newInstance(TaskGroup.P_PROJ);
     }
 
 }
