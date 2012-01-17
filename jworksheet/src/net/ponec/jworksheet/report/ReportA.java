@@ -38,15 +38,14 @@ public class ReportA extends SuperReport {
     @Override
     protected void init() {
         if (groupSet==null) {
-            UjoComparator comparator = createUjoComparator();
+            UjoComparator<TaskGroup> comparator = createUjoComparator();
             groupSet = new GroupSet(comparator, Event.P_PERIOD);
         }
     }
     
     /** Create Comparator */
-    protected UjoComparator createUjoComparator() {
-        UjoComparator comparator = UjoComparator.newInstance(TaskGroup.P_PROJ, TaskGroup.P_TASK);
-        return comparator;
+    protected UjoComparator<TaskGroup> createUjoComparator() {
+        return UjoComparator.<TaskGroup>newInstance(TaskGroup.P_PROJ, TaskGroup.P_TASK);
     }
     
     /** Create report */

@@ -36,7 +36,7 @@ public class TaskGroup extends MapUjo {
     public static final UjoProperty<TaskGroup,TaskType>    P_TASK = newProperty(Event.P_TASK, -2);
     public static final UjoProperty<TaskGroup,YearMonthDay> P_DAY = newProperty(WorkDay.P_DATE, -1);
     public static final UjoProperty<TaskGroup,Integer>    P_MONTH = newProperty("Month", Integer.class);
-    public static final UjoProperty<TaskGroup,Integer>    P_YEAR  = newProperty("Year" , Integer.class);
+    public static final UjoProperty<TaskGroup,Integer>     P_YEAR = newProperty("Year" , Integer.class);
     
     /** A total time in minutes. */
     private int totalTime = 0;
