@@ -19,6 +19,7 @@ package net.ponec.jworksheet.gui.models;
 
 import net.ponec.jworksheet.core.ApplContext;
 import net.ponec.jworksheet.bo.Parameters;
+import org.ujorm.Key;
 import org.ujorm.UjoProperty;
 import org.ujorm.swing.UjoPropertyRow;
 import org.ujorm.swing.SingleUjoTabModel;
@@ -51,13 +52,13 @@ public class ParamTableModel extends SingleUjoTabModel {
 
     /** Returns a localized Column Name */
     @Override
-    public String getColumnName(UjoProperty property) {
+    public String getColumnName(Key property) {
         return applContext.getLanguageManager().getTextAllways(property);
     }
     
     /** Set a value to a cell of table model. */
     @Override
-    public void setValueAt(Object value, int rowIndex, UjoProperty column) {
+    public void setValueAt(Object value, int rowIndex, Key column) {
         super.setValueAt(value, rowIndex, column);
         
         UjoPropertyRow row = getRow(rowIndex);

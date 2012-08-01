@@ -17,6 +17,7 @@
 
 package net.ponec.jworksheet.bo;
 
+import org.ujorm.Key;
 import net.ponec.jworksheet.bo.item.Time;
 import net.ponec.jworksheet.core.ApplTools;
 import org.ujorm.UjoAction;
@@ -147,7 +148,7 @@ public class Event extends BeanUjo {
     
     /** Read Visibility: */
     @Override
-    public boolean readAuthorization(UjoAction action, UjoProperty property, Object value) {
+    public boolean readAuthorization(UjoAction action, Key property, Object value) {
         switch(action.getType()) {
             case ACTION_XML_EXPORT: {
                 final boolean enabled
@@ -162,7 +163,7 @@ public class Event extends BeanUjo {
 
     /** Overrided for additional features */
     @Override
-    public Object readValue(UjoProperty property) {
+    public Object readValue(Key property) {
         Object result;
         if (property==P_PROJID) {
             Project proj = get(P_PROJ);
@@ -178,7 +179,7 @@ public class Event extends BeanUjo {
     
     /** Overrided for additional features */
     @Override
-    public void writeValue(UjoProperty property, Object value) {
+    public void writeValue(Key property, Object value) {
         if (P_PERIOD==property
         && (value==null || ((Short)value)<=0)
         ){
@@ -188,7 +189,7 @@ public class Event extends BeanUjo {
     }
     
     /** Is property finished? */
-    public boolean isFinished(UjoProperty property) {
+    public boolean isFinished(Key property) {
         if (P_PROJ==property) {
             Project proj = get(P_PROJ);
             return proj!=null && proj.get(Project.P_FINISHED);
