@@ -26,6 +26,7 @@ import net.ponec.jworksheet.bo.Event;
 import net.ponec.jworksheet.bo.Project;
 import net.ponec.jworksheet.bo.TaskType;
 import net.ponec.jworksheet.bo.item.Time;
+import org.ujorm.Key;
 import org.ujorm.UjoProperty;
 import org.ujorm.swing.UjoTableModel;
 
@@ -64,7 +65,7 @@ public class EventTableModel extends UjoTableModel<Event> {
     
     /** Is the cell editable? */
     @Override
-    public boolean isCellEditable(int rowIndex, UjoProperty column) {
+    public boolean isCellEditable(int rowIndex, Key column) {
         if (Event.P_PERIOD==column) {
             return rowIndex==(getRowCount()-1);
         } else {
@@ -76,7 +77,7 @@ public class EventTableModel extends UjoTableModel<Event> {
 
     /** Returns a localized Column Name */
     @Override
-    public String getColumnName(UjoProperty property) {
+    public String getColumnName(Key property) {
         return applContext.getLanguageManager().getTextAllways(property);
     }
     
@@ -184,7 +185,7 @@ public class EventTableModel extends UjoTableModel<Event> {
     
     
     @Override
-    public Class getColumnClass(UjoProperty column) {
+    public Class getColumnClass(Key column) {
         @SuppressWarnings("static-access")
         final Class result
         = PROPS.P_PERIOD==column
@@ -197,7 +198,7 @@ public class EventTableModel extends UjoTableModel<Event> {
     /** Set value to cell. */
     @Override
     @SuppressWarnings("static-access")
-    public void setValueAt(Object value, int rowIndex, UjoProperty column) {
+    public void setValueAt(Object value, int rowIndex, Key column) {
         
         // Convert a decimal value to minutes:
         if (PROPS.P_PERIOD==column) {

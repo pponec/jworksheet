@@ -19,7 +19,7 @@ package net.ponec.jworksheet.gui.models;
 
 import net.ponec.jworksheet.bo.TaskType;
 import net.ponec.jworksheet.core.ApplContext;
-import org.ujorm.UjoProperty;
+import org.ujorm.Key;
 import org.ujorm.swing.UjoTableModel;
 
 
@@ -44,7 +44,7 @@ public class TaskTableModel extends UjoTableModel<TaskType> {
     
     /** Returns a localized Column Name */
     @Override
-    public String getColumnName(UjoProperty property) {
+    public String getColumnName(Key property) {
         return applContext.getLanguageManager().getTextAllways(property);
     }
     
@@ -69,7 +69,7 @@ public class TaskTableModel extends UjoTableModel<TaskType> {
     /** Set value to cell. */
     @Override
     @SuppressWarnings("unchecked")
-    public void setValueAt(Object value, int rowIndex, UjoProperty column) {
+    public void setValueAt(Object value, int rowIndex, Key column) {
         if (column==PROPS.P_DEFAULT && (Boolean) value) {
             TaskType selected = getRow(rowIndex);
             for (TaskType task : rows) {

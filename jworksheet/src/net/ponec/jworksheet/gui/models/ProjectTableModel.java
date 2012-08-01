@@ -19,6 +19,7 @@ package net.ponec.jworksheet.gui.models;
 
 import net.ponec.jworksheet.bo.Project;
 import net.ponec.jworksheet.core.ApplContext;
+import org.ujorm.Key;
 import org.ujorm.UjoProperty;
 import org.ujorm.swing.UjoTableModel;
 
@@ -44,7 +45,7 @@ public class ProjectTableModel extends UjoTableModel<Project> {
 
     /** Returns a localized Column Name */
     @Override
-    public String getColumnName(UjoProperty property) {
+    public String getColumnName(Key property) {
         return applContext.getLanguageManager().getTextAllways(property);
     }
 

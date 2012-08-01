@@ -24,6 +24,7 @@ import net.ponec.jworksheet.bo.item.YearMonthDay;
 import org.ujorm.UjoProperty;
 import org.ujorm.implementation.map.MapUjo;
 import net.ponec.jworksheet.bo.Event;
+import org.ujorm.Key;
 
 /**
  * Task Group
@@ -73,7 +74,7 @@ public class TaskGroup extends MapUjo {
     
     /** Read a value */
     @Override
-    public Object readValue(UjoProperty property) {
+    public Object readValue(Key property) {
         if (P_MONTH==property
         ||  P_YEAR==property
         ){

@@ -16,10 +16,10 @@
 
 package net.ponec.jworksheet.bo;
 
+import org.ujorm.Key;
 import java.util.ArrayList;
 import java.util.Date;
 import net.ponec.jworksheet.bo.item.YearMonthDay;
-import net.ponec.jworksheet.core.ApplTools;
 import net.ponec.jworksheet.core.Version;
 import net.ponec.jworksheet.gui.JWorkSheet;
 import org.ujorm.UjoProperty;
@@ -178,7 +178,7 @@ public class WorkSpace extends MapUjo {
     
     /** An authorization of ACTION_XML_EXPORT */
     @Override
-    public boolean readAuthorization(UjoAction action, UjoProperty property, Object value) {
+    public boolean readAuthorization(UjoAction action, Key property, Object value) {
         
         switch (action.getType()) {
             case ACTION_XML_EXPORT:

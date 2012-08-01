@@ -17,6 +17,7 @@
 
 package net.ponec.jworksheet.bo;
 
+import org.ujorm.Key;
 import net.ponec.jworksheet.bo.item.YearMonthDay;
 import org.ujorm.UjoProperty;
 import org.ujorm.extensions.ListProperty;
@@ -40,7 +41,7 @@ public class WorkDay extends MapUjo implements Comparable {
     
     /** Overrided for additional features */
     @Override
-    public boolean readAuthorization(UjoAction action, UjoProperty property, Object value) {
+    public boolean readAuthorization(UjoAction action, Key property, Object value) {
         switch(action.getType()) {
             case ACTION_XML_EXPORT:
                 return property==P_DAYOFF ? (Boolean) value : true ;

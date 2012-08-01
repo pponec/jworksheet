@@ -29,7 +29,7 @@ import java.text.MessageFormat;
 import java.util.*;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import org.ujorm.UjoProperty;
+import org.ujorm.Key;
 
 
 /**
@@ -732,7 +732,7 @@ public class LanguageManager {
      * Does not return null nor empty String!
      * @param key
      * @return Text from properties. */
-    public String getTextAllways(UjoProperty key) {
+    public String getTextAllways(Key key) {
         return getTextAllways("tab." + key.getName());
     }
 

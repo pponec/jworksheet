@@ -17,6 +17,7 @@
 
 package net.ponec.jworksheet.bo;
 
+import org.ujorm.Key;
 import java.awt.Color;
 import java.awt.Rectangle;
 import java.io.File;
@@ -141,7 +142,7 @@ public class Parameters extends ArrayUjo {
     
     /** Overrided for additional features */
     @Override
-    public void writeValue(UjoProperty property, Object value) {
+    public void writeValue(Key property, Object value) {
         
         if (P_SYSTEM_BROWSER_PATH==property
         && !ApplTools.isValid((String)value)) {
@@ -199,7 +200,7 @@ public class Parameters extends ArrayUjo {
     /** An authorization settings. */
     @Override
     @SuppressWarnings("unchecked")
-    public boolean readAuthorization(UjoAction action, UjoProperty property, Object value) {
+    public boolean readAuthorization(UjoAction action, Key property, Object value) {
         switch(action.getType()) {
             case ACTION_RESBUNDLE_EXPORT:
                 return !property.isDefault(this);
@@ -240,7 +241,7 @@ public class Parameters extends ArrayUjo {
     /** WriteValueString */
     @Override
     @SuppressWarnings("unchecked")
-    public void writeValueString(UjoProperty property, String value, Class type, UjoAction action) {
+    public void writeValueString(Key property, String value, Class type, UjoAction action) {
       
         if (P_SYSTRAY_SECOND_CLICK==property) {
             if (ApplTools.isValid(value)) {

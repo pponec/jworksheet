@@ -65,6 +65,7 @@ import net.ponec.jworksheet.gui.models.TaskTableModel;
 import net.ponec.jworksheet.gui.models.UjoComboBoxModel;
 import net.ponec.jworksheet.report.TableReport;
 import net.ponec.jworksheet.resources.ResourceProvider;
+import org.ujorm.Key;
 import org.ujorm.Ujo;
 import org.ujorm.UjoProperty;
 import org.ujorm.swing.UjoTableModel;
@@ -155,7 +156,7 @@ public final class JWorkSheet extends TopFrame {
                 public void tableChanged(TableModelEvent e) {
                     // Display TOTAL TIME:
                     final EventTableModel model = (EventTableModel) eventTable.getModel();
-                    UjoProperty column = e.getColumn()>=0 ? model.getColumn(e.getColumn()) : null ;
+                    Key column = e.getColumn()>=0 ? model.getColumn(e.getColumn()) : null ;
                     if (column==null
                     ||  column==Event.P_PERIOD
                     ||  column==Event.P_TIME ){
@@ -1209,7 +1210,7 @@ public final class JWorkSheet extends TopFrame {
             UjoTableModel model = paramTable.getModel();
             for (int i=model.getRowCount()-1; i>=0; i--) {
                 UjoPropertyRow ujo = (UjoPropertyRow) model.getRowNullable(i);
-                UjoProperty param = ujo.getProperty();
+                Key param = ujo.getProperty();
                 ujo.writeValue(UjoPropertyRow.P_VALUE, param.getDefault());
             }
             model.fireTableAllRowUpdated();
