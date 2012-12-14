@@ -29,7 +29,6 @@ import net.ponec.jworksheet.bo.Project;
 import net.ponec.jworksheet.core.ApplTools;
 import net.ponec.jworksheet.gui.component.*;
 import org.ujorm.Key;
-import org.ujorm.UjoProperty;
 import org.ujorm.swing.UjoTableModel;
 
 /**

@@ -17,12 +17,11 @@
 
 package net.ponec.jworksheet.gui.models;
 
-import net.ponec.jworksheet.core.ApplContext;
 import net.ponec.jworksheet.bo.Parameters;
+import net.ponec.jworksheet.core.ApplContext;
 import org.ujorm.Key;
-import org.ujorm.UjoProperty;
-import org.ujorm.swing.UjoPropertyRow;
 import org.ujorm.swing.SingleUjoTabModel;
+import org.ujorm.swing.UjoPropertyRow;
 
 /**
  * Row of Parameters table.

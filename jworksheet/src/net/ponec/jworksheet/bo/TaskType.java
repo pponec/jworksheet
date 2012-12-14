@@ -18,7 +18,7 @@
 package net.ponec.jworksheet.bo;
 
 import net.ponec.jworksheet.core.ApplTools;
-import org.ujorm.UjoProperty;
+import org.ujorm.Key;
 import org.ujorm.implementation.map.MapUjo;
 
 /**
@@ -28,13 +28,13 @@ import org.ujorm.implementation.map.MapUjo;
 public class TaskType extends MapUjo implements Comparable {
     
     /** Task ID */
-    public static final UjoProperty<TaskType,Integer> P_ID       = newProperty("ID", 0);
+    public static final Key<TaskType,Integer> P_ID       = newKey("ID", 0);
     /** Is the task default? */
-    public static final UjoProperty<TaskType,Boolean> P_DEFAULT  = newProperty("Default", false);
+    public static final Key<TaskType,Boolean> P_DEFAULT  = newKey("Default", false);
     /** Is the task finished? */
-    public static final UjoProperty<TaskType,Boolean> P_FINISHED = newProperty("Finished", false);
+    public static final Key<TaskType,Boolean> P_FINISHED = newKey("Finished", false);
     /** Description of the task. */
-    public static final UjoProperty<TaskType,String>  P_DESCR    = newProperty("Description", "");
+    public static final Key<TaskType,String>  P_DESCR    = newKey("Description", "");
 
     /** Show description */
     @Override
@@ -53,19 +53,19 @@ public class TaskType extends MapUjo implements Comparable {
     }
 
    @SuppressWarnings("unchecked")
-   public <UJO extends TaskType, VALUE> VALUE get(UjoProperty<UJO, VALUE> up) {
+   public <UJO extends TaskType, VALUE> VALUE get(Key<UJO, VALUE> up) {
         return up.of((UJO)this);
     }
 
    @SuppressWarnings("unchecked")
-    public <UJO extends TaskType, VALUE> UJO set(UjoProperty<UJO, VALUE> up, VALUE value) {
+    public <UJO extends TaskType, VALUE> UJO set(Key<UJO, VALUE> up, VALUE value) {
         up.setValue((UJO)this, value);
         return (UJO) this;
     }
 
     @SuppressWarnings("unchecked")
     public void copyFrom(TaskType otherTask) {
-        for (UjoProperty p : readProperties()) {
+        for (Key p : readKeys()) {
             p.copy(otherTask, this);
         }
     }

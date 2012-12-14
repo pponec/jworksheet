@@ -27,7 +27,6 @@ import net.ponec.jworksheet.bo.Project;
 import net.ponec.jworksheet.bo.TaskType;
 import net.ponec.jworksheet.bo.item.Time;
 import org.ujorm.Key;
-import org.ujorm.UjoProperty;
 import org.ujorm.swing.UjoTableModel;
 
 /**

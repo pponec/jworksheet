@@ -21,7 +21,7 @@ import org.ujorm.Key;
 import net.ponec.jworksheet.bo.item.Time;
 import net.ponec.jworksheet.core.ApplTools;
 import org.ujorm.UjoAction;
-import org.ujorm.UjoProperty;
+import org.ujorm.Key;
 import org.ujorm.core.UjoService;
 import org.ujorm.implementation.bean.*;
 import static org.ujorm.UjoAction.*;
@@ -41,19 +41,19 @@ public class Event extends BeanUjo {
     public static final Short  ZERO_SHORT = (short)0;
     
     /** Start time of event */
-    public static final UjoProperty<Event,Time>     P_TIME   = newProperty("Time"     , Time.class);
+    public static final Key<Event,Time>     P_TIME   = newKey("Time");
     /** Period of the event in minutes */
-    public static final UjoProperty<Event,Short>    P_PERIOD = newProperty("Period"   , ZERO_SHORT); // [min]
+    public static final Key<Event,Short>    P_PERIOD = newKey("Period"   , ZERO_SHORT); // [min]
     /** Project (object) */
-    public static final UjoProperty<Event,Project>  P_PROJ   = newProperty("Project"  , Project.class);
+    public static final Key<Event,Project>  P_PROJ   = newKey("Project");
     /** Project ID for the persistence */
-    public static final UjoProperty<Event,Integer>  P_PROJID = newProperty("ProjectID", Integer.class);
+    public static final Key<Event,Integer>  P_PROJID = newKey("ProjectID");
     /** Task (object) */
-    public static final UjoProperty<Event,TaskType> P_TASK   = newProperty("Task"     , TaskType.class);
+    public static final Key<Event,TaskType> P_TASK   = newKey("Task");
     /** Task ID for the persistence */
-    public static final UjoProperty<Event,Integer>  P_TASKID = newProperty("TaskID"   , Integer.class);
+    public static final Key<Event,Integer>  P_TASKID = newKey("TaskID");
     /** Description of the event */
-    public static final UjoProperty<Event,String>   P_DESCR  = newProperty("Description", "");
+    public static final Key<Event,String>   P_DESCR  = newKey("Description", "");
     
     // --- An optional property unique name test ---
     static { init(Event.class,true); }
@@ -208,12 +208,12 @@ public class Event extends BeanUjo {
     }
 
     @SuppressWarnings("unchecked")
-    public <UJO extends Event, VALUE> VALUE get(UjoProperty<UJO, VALUE> up) {
+    public <UJO extends Event, VALUE> VALUE get(Key<UJO, VALUE> up) {
         return up.of((UJO)this);
     }
 
     @SuppressWarnings("unchecked")
-    public <UJO extends Event, VALUE> UJO set(UjoProperty<UJO, VALUE> up, VALUE value) {
+    public <UJO extends Event, VALUE> UJO set(Key<UJO, VALUE> up, VALUE value) {
         up.setValue((UJO)this, value);
         return (UJO) this;
     }

@@ -21,7 +21,7 @@ import net.ponec.jworksheet.bo.Project;
 import net.ponec.jworksheet.bo.TaskType;
 import net.ponec.jworksheet.bo.WorkDay;
 import net.ponec.jworksheet.bo.item.YearMonthDay;
-import org.ujorm.UjoProperty;
+import org.ujorm.Key;
 import org.ujorm.implementation.map.MapUjo;
 import net.ponec.jworksheet.bo.Event;
 import org.ujorm.Key;
@@ -33,11 +33,11 @@ import org.ujorm.Key;
 @SuppressWarnings("unchecked")
 public class TaskGroup extends MapUjo {
     
-    public static final UjoProperty<TaskGroup,Project>     P_PROJ = newProperty(Event.P_PROJ, -3);
-    public static final UjoProperty<TaskGroup,TaskType>    P_TASK = newProperty(Event.P_TASK, -2);
-    public static final UjoProperty<TaskGroup,YearMonthDay> P_DAY = newProperty(WorkDay.P_DATE, -1);
-    public static final UjoProperty<TaskGroup,Integer>    P_MONTH = newProperty("Month", Integer.class);
-    public static final UjoProperty<TaskGroup,Integer>     P_YEAR = newProperty("Year" , Integer.class);
+    public static final Key<TaskGroup,Project>     P_PROJ = newKey(Event.P_PROJ, -3);
+    public static final Key<TaskGroup,TaskType>    P_TASK = newKey(Event.P_TASK, -2);
+    public static final Key<TaskGroup,YearMonthDay> P_DAY = newKey(WorkDay.P_DATE, -1);
+    public static final Key<TaskGroup,Integer>    P_MONTH = newKey("Month");
+    public static final Key<TaskGroup,Integer>     P_YEAR = newKey("Year");
     
     /** A total time in minutes. */
     private int totalTime = 0;
@@ -90,12 +90,12 @@ public class TaskGroup extends MapUjo {
     }
 
     @SuppressWarnings("unchecked")
-    public <UJO extends TaskGroup, VALUE> VALUE get(UjoProperty<UJO, VALUE> up) {
+    public <UJO extends TaskGroup, VALUE> VALUE get(Key<UJO, VALUE> up) {
         return up.of((UJO)this);
     }
 
     @SuppressWarnings("unchecked")
-    public <UJO extends TaskGroup, VALUE> UJO set(UjoProperty<UJO, VALUE> up, VALUE value) {
+    public <UJO extends TaskGroup, VALUE> UJO set(Key<UJO, VALUE> up, VALUE value) {
         up.setValue((UJO)this, value);
         return (UJO) this;
     }

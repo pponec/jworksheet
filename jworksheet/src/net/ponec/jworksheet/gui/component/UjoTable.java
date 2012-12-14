@@ -41,7 +41,7 @@ import net.ponec.jworksheet.gui.models.EventTableModel;
 import net.ponec.jworksheet.resources.ResourceProvider;
 import org.ujorm.Key;
 import org.ujorm.Ujo;
-import org.ujorm.UjoProperty;
+import org.ujorm.Key;
 import org.ujorm.swing.UjoTableModel;
 
 /**
@@ -63,7 +63,7 @@ public class UjoTable extends JTable implements TableCellRenderer {
     protected void init() {
     }
     
-    /** Converts a view column index to UjoProperty. */
+    /** Converts a view column index to Key. */
     public Key convertColumnIndexToProperty(int viewColumnIndex) {
         final int modelColumnIndex = convertColumnIndexToModel(viewColumnIndex);
         final Key result = getModel().getColumn(modelColumnIndex);

@@ -65,9 +65,8 @@ import net.ponec.jworksheet.gui.models.TaskTableModel;
 import net.ponec.jworksheet.gui.models.UjoComboBoxModel;
 import net.ponec.jworksheet.report.TableReport;
 import net.ponec.jworksheet.resources.ResourceProvider;
-import org.ujorm.Key;
 import org.ujorm.Ujo;
-import org.ujorm.UjoProperty;
+import org.ujorm.Key;
 import org.ujorm.swing.UjoTableModel;
 import org.ujorm.swing.UjoPropertyRow;
 
