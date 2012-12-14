@@ -91,7 +91,7 @@ public class TaskGroup extends MapUjo {
 
     @SuppressWarnings("unchecked")
     public <UJO extends TaskGroup, VALUE> VALUE get(UjoProperty<UJO, VALUE> up) {
-        return up.getValue((UJO)this);
+        return up.of((UJO)this);
     }
 
     @SuppressWarnings("unchecked")

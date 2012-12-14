@@ -209,7 +209,7 @@ public class Event extends BeanUjo {
 
     @SuppressWarnings("unchecked")
     public <UJO extends Event, VALUE> VALUE get(UjoProperty<UJO, VALUE> up) {
-        return up.getValue((UJO)this);
+        return up.of((UJO)this);
     }
 
     @SuppressWarnings("unchecked")

@@ -45,7 +45,7 @@ public class EventTest extends TestCase {
         
         Time result = new Time(10);
         Event.P_TIME.setValue(event, result);
-        Time value = Event.P_TIME.getValue(event);
+        Time value = Event.P_TIME.of(event);
         assertEquals(result, value);
     }
     

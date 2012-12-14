@@ -289,7 +289,7 @@ public class Parameters extends ArrayUjo {
 
     @SuppressWarnings("unchecked")
     public <UJO extends Parameters, VALUE> VALUE get(UjoProperty<UJO, VALUE> up) {
-        return up.getValue((UJO)this);
+        return up.of((UJO)this);
     }
 
     @SuppressWarnings("unchecked")
