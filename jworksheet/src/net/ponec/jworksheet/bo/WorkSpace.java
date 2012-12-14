@@ -198,7 +198,7 @@ public class WorkSpace extends MapUjo {
     
    @SuppressWarnings("unchecked")
    public <UJO extends WorkSpace, VALUE> VALUE get(UjoProperty<UJO, VALUE> up) {
-        return up.getValue((UJO)this);
+        return up.of((UJO)this);
     }
 
    @SuppressWarnings("unchecked")

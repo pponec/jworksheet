@@ -54,7 +54,7 @@ public class TaskType extends MapUjo implements Comparable {
 
    @SuppressWarnings("unchecked")
    public <UJO extends TaskType, VALUE> VALUE get(UjoProperty<UJO, VALUE> up) {
-        return up.getValue((UJO)this);
+        return up.of((UJO)this);
     }
 
    @SuppressWarnings("unchecked")
