@@ -16,13 +16,12 @@
 
 package net.ponec.jworksheet.bo;
 
-import org.ujorm.Key;
 import java.util.ArrayList;
 import java.util.Date;
 import net.ponec.jworksheet.bo.item.YearMonthDay;
 import net.ponec.jworksheet.core.Version;
 import net.ponec.jworksheet.gui.JWorkSheet;
-import org.ujorm.UjoProperty;
+import org.ujorm.Key;
 import org.ujorm.extensions.ListProperty;
 import org.ujorm.UjoAction;
 import org.ujorm.implementation.map.MapUjo;
@@ -37,22 +36,27 @@ import static org.ujorm.UjoAction.*;
 public class WorkSpace extends MapUjo {
     
     /** Version of the persistence file format. */
-    public static final UjoProperty<WorkSpace,Version> P_VERSN  = newProperty("Version", new Version("0"));
+    public static final Key<WorkSpace,Version> P_VERSN  = newKey("Version", new Version("0"));
     /** Date of the last file saving. */
-    public static final UjoProperty<WorkSpace,Date> P_CREATED  = newProperty("Created", Date.class);
+    public static final Key<WorkSpace,Date> P_CREATED  = newKey("Created");
     /** Date of the last file archivation. */
-    public static final UjoProperty<WorkSpace,Date> P_ARCHIVED = newProperty("Archived", Date.class);
+    public static final Key<WorkSpace,Date> P_ARCHIVED = newKey("Archived");
     /** Name of user of this workspace. */
-    public static final UjoProperty<WorkSpace,String> P_USERNAME = newProperty("Username", "?");
+    public static final Key<WorkSpace,String> P_USERNAME = newKey("Username", "?");
     /** Minimal date to check new release */
-    public static final UjoProperty<WorkSpace,Date> P_RELEASE_CHECK_DATE = newProperty("CheckReleaseDate", new Date(0L));
+    public static final Key<WorkSpace,Date> P_RELEASE_CHECK_DATE = newKey("CheckReleaseDate", new Date(0L));
     /** Minimal version to new release notification */
-    public static final UjoProperty<WorkSpace,Version> P_RELEASE_CHECK_VERSION = newProperty("CheckReleaseVersion", JWorkSheet.APPL_VERSION);
+    public static final Key<WorkSpace,Version> P_RELEASE_CHECK_VERSION = newKey("CheckReleaseVersion", JWorkSheet.APPL_VERSION);
     
     /** Work day list */
-    public static final ListProperty<WorkSpace,WorkDay> P_DAYS  = newListProperty("Day", WorkDay.class);
+    public static final ListProperty<WorkSpace,WorkDay> P_DAYS  = newListKey("Day");
     /** Code-book of all projects. */
-    public static final ListProperty<WorkSpace,Project> P_PROJS = newListProperty("Project", Project.class);
+    public static final ListProperty<WorkSpace,Project> P_PROJS = newListKey("Project");
+    
+    static {
+        init(WorkSpace.class, true);
+    }
+    
     
     /** Find a workDay or create new. */
     public WorkDay findWorkDay(YearMonthDay dayId) {
@@ -197,12 +201,12 @@ public class WorkSpace extends MapUjo {
     }
     
    @SuppressWarnings("unchecked")
-   public <UJO extends WorkSpace, VALUE> VALUE get(UjoProperty<UJO, VALUE> up) {
+   public <UJO extends WorkSpace, VALUE> VALUE get(Key<UJO, VALUE> up) {
         return up.of((UJO)this);
     }
 
    @SuppressWarnings("unchecked")
-   public <UJO extends WorkSpace, VALUE> UJO set(UjoProperty<UJO, VALUE> up, VALUE value) {
+   public <UJO extends WorkSpace, VALUE> UJO set(Key<UJO, VALUE> up, VALUE value) {
         up.setValue((UJO)this, value);
         return (UJO) this;
    }

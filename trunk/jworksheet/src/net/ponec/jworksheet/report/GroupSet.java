@@ -21,7 +21,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import net.ponec.jworksheet.bo.Event;
 import org.ujorm.Ujo;
-import org.ujorm.UjoProperty;
+import org.ujorm.Key;
 import org.ujorm.core.UjoComparator;
 
 /**
@@ -36,14 +36,14 @@ public class GroupSet {
     /** Task Group Comparator */
     protected UjoComparator<TaskGroup> comparator;
     
-    protected UjoProperty propertyTime;
+    protected Key propertyTime;
     
     protected boolean showEmptyProject = false;
     
     /** Look-up KEY. */
     protected TaskGroup key = new TaskGroup(null);
     
-    public GroupSet(UjoComparator<TaskGroup> comparator, UjoProperty/*<Ujo,Integer>*/ propertyTime) {
+    public GroupSet(UjoComparator<TaskGroup> comparator, Key/*<Ujo,Integer>*/ propertyTime) {
         this.comparator   = comparator;
         this.propertyTime = propertyTime;
     }
@@ -91,7 +91,7 @@ public class GroupSet {
     }
     
     /** Vrac� �as */
-    public UjoProperty getPropertyTime() {
+    public Key getPropertyTime() {
         return propertyTime;
     }
 

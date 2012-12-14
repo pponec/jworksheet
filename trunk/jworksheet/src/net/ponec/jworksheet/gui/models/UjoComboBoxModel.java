@@ -29,7 +29,7 @@ import org.ujorm.Ujo;
 public class UjoComboBoxModel extends DefaultComboBoxModel {
     
     protected List<Ujo> ujos;
-    //final protected UjoProperty property;
+    //final protected Key property;
     
     protected int pointer = -1;
     
@@ -55,8 +55,8 @@ public class UjoComboBoxModel extends DefaultComboBoxModel {
         }
 //        if (anItem instanceof Ujo) {
 //            Ujo ujo = (Ujo) anItem;
-//            UjoProperty[] props = ujo.readProperties();
-//            for(UjoProperty pro : props) {
+//            Key[] props = ujo.readKeys();
+//            for(Key pro : props) {
 //                for (pointer=0; pointer<ujos.size(); pointer++) {
 //                    if (equals(pro.of(ujo), pro.of((Ujo)ujos.get(pointer)))) {
 //                        return;

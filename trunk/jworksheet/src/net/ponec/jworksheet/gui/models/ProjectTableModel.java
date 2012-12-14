@@ -20,7 +20,6 @@ package net.ponec.jworksheet.gui.models;
 import net.ponec.jworksheet.bo.Project;
 import net.ponec.jworksheet.core.ApplContext;
 import org.ujorm.Key;
-import org.ujorm.UjoProperty;
 import org.ujorm.swing.UjoTableModel;
 
 /**
@@ -69,7 +68,7 @@ public class ProjectTableModel extends UjoTableModel<Project> {
     
     /** Set value to cell. */
     @SuppressWarnings("unchecked")
-    public void setValueAt(Object value, int rowIndex, UjoProperty column) {
+    public void setValueAt(Object value, int rowIndex, Key column) {
         if (column==PROPS.P_DEFAULT && (Boolean) value) {
             Project selected = getRow(rowIndex);
             for (Project proj : rows) {

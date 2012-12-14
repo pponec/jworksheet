@@ -20,7 +20,7 @@ package net.ponec.jworksheet.bo;
 import java.util.ArrayList;
 import java.util.List;
 import net.ponec.jworksheet.core.ApplTools;
-import org.ujorm.UjoProperty;
+import org.ujorm.Key;
 import org.ujorm.extensions.ListProperty;
 import org.ujorm.implementation.map.MapUjo;
 
@@ -32,20 +32,24 @@ import org.ujorm.implementation.map.MapUjo;
 public class Project extends MapUjo implements Comparable {
     
     /** Project ID */
-    public static final UjoProperty<Project,Integer> P_ID       = newProperty("ID", 0);
+    public static final Key<Project,Integer> P_ID       = newKey("ID", 0);
     /** Is the project default? */
-    public static final UjoProperty<Project,Boolean> P_DEFAULT  = newProperty("Default", false);
+    public static final Key<Project,Boolean> P_DEFAULT  = newKey("Default", false);
     /** Is the project finished? */
-    public static final UjoProperty<Project,Boolean> P_FINISHED = newProperty("Finished", false);
+    public static final Key<Project,Boolean> P_FINISHED = newKey("Finished", false);
     /** Is the project non business type? */
-    public static final UjoProperty<Project,Boolean> P_PRIVATE  = newProperty("Private", false);
+    public static final Key<Project,Boolean> P_PRIVATE  = newKey("Private", false);
     /** Project descripton */
-    public static final UjoProperty<Project,String>  P_DESCR    = newProperty("Description", "");
+    public static final Key<Project,String>  P_DESCR    = newKey("Description", "");
     /** List of task */
-    public static final ListProperty<Project,TaskType> P_TASKS  = newListProperty("Task", TaskType.class);
+    public static final ListProperty<Project,TaskType> P_TASKS  = newListKey("Task");
+    
+    static {
+        init(Project.class, true);
+    }
     
     /** Table columns. */
-    public static final UjoProperty[] TABLE_COLUMNS
+    public static final Key[] TABLE_COLUMNS
     ={P_ID
     , P_DEFAULT
     , P_FINISHED
@@ -103,19 +107,19 @@ public class Project extends MapUjo implements Comparable {
     }
 
     @SuppressWarnings("unchecked")
-    public <UJO extends Project, VALUE> VALUE get(UjoProperty<UJO, VALUE> up) {
+    public <UJO extends Project, VALUE> VALUE get(Key<UJO, VALUE> up) {
         return up.of((UJO)this);
     }
 
     @SuppressWarnings("unchecked")
-    public <UJO extends Project, VALUE> UJO set(UjoProperty<UJO, VALUE> up, VALUE value) {
+    public <UJO extends Project, VALUE> UJO set(Key<UJO, VALUE> up, VALUE value) {
         up.setValue((UJO)this, value);
         return (UJO) this;
     }
 
     @SuppressWarnings("unchecked")
     public void copyFrom(Project otherProject) {
-        for (UjoProperty p : readProperties()) {
+        for (Key p : readKeys()) {
             if (!p.isTypeOf(List.class)) {
                p.copy(otherProject, this);
             }

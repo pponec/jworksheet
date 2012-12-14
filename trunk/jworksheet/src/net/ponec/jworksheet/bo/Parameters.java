@@ -17,7 +17,6 @@
 
 package net.ponec.jworksheet.bo;
 
-import org.ujorm.Key;
 import java.awt.Color;
 import java.awt.Rectangle;
 import java.io.File;
@@ -28,88 +27,89 @@ import java.util.Calendar;
 import java.util.Locale;
 import net.ponec.jworksheet.core.*;
 import net.ponec.jworksheet.gui.JWorkSheet;
-import org.ujorm.UjoProperty;
+import org.ujorm.Key;
+import org.ujorm.KeyList;
 import org.ujorm.extensions.Property;
 import org.ujorm.UjoAction;
-import org.ujorm.implementation.array.ArrayUjo;
 import static org.ujorm.UjoAction.*;
+import org.ujorm.core.KeyFactory;
+import org.ujorm.extensions.AbstractUjo;
 
 /**
  * Parameters of the application.
  * @author Pavel Ponec
  */
-public class Parameters extends ArrayUjo {
+public class Parameters extends AbstractUjo {
 
     /** A configuration subdirectory of a user home directory. */
     public static final String CONFIG_DIR = ".jWorkSheet";
 
     /** A "Default Value" Label */
     private static final String VALUE_DEFAULT = "<default>";
-
-    /** An Incrementator. Use a new counter for each subclass. */
-    protected static int propertyCount = ArrayUjo.propertyCount;
     
+    private static final KeyFactory<Parameters> f = KeyFactory.CamelBuilder.get(Parameters.class);
+
     /** LocaleText lcalization */
-    public static final UjoProperty<Parameters,Locale> P_LANG = newProperty("Language", Locale.getDefault(), propertyCount++);
+    public static final Key<Parameters,Locale> P_LANG = f.newKey("Language", Locale.getDefault());
     /** Working Hours */
-    public static final UjoProperty<Parameters,Float> P_WORKING_HOURS = newProperty("WorkingHours", 8f, propertyCount++);
+    public static final Key<Parameters,Float> P_WORKING_HOURS = f.newKey("WorkingHours", 8f);
     /** The First Day of the Week Day. */
-    public static final UjoProperty<Parameters,Integer> P_FIRST_DAY_OF_WEEK = newProperty("FirstDayOfWeek", Calendar.getInstance().getFirstDayOfWeek(), propertyCount++);
+    public static final Key<Parameters,Integer> P_FIRST_DAY_OF_WEEK = f.newKey("FirstDayOfWeek", Calendar.getInstance().getFirstDayOfWeek());
     /** Decimal time format. */
-    public static final UjoProperty<Parameters,Boolean> P_DECIMAL_TIME_FORMAT = newProperty("DecimalTimeFormat", true, propertyCount++);
+    public static final Key<Parameters,Boolean> P_DECIMAL_TIME_FORMAT = f.newKey("DecimalTimeFormat", true);
     /** The Main selecton format. */
-    public static final UjoProperty<Parameters,String> P_DATE_MAIN_FORMAT = newProperty("DateMainFormat", "EE, yyyy/MM/dd'  %s: 'ww", propertyCount++);
+    public static final Key<Parameters,String> P_DATE_MAIN_FORMAT = f.newKey("DateMainFormat", "EE, yyyy/MM/dd'  %s: 'ww");
     /** The Export Date Selection. */
-    public static final UjoProperty<Parameters,String> P_DATE_REPORT_FORMAT = newProperty("DateReportFormat", P_DATE_MAIN_FORMAT.getDefault() , propertyCount++);
+    public static final Key<Parameters,String> P_DATE_REPORT_FORMAT = f.newKey("DateReportFormat", P_DATE_MAIN_FORMAT.getDefault() );
     /** The Export Date Selection. */
-    public static final UjoProperty<Parameters,String> P_DATE_REPORT_FORMAT2 = newProperty("DateReportFormat2", "d'<br/><span class=\"smallMonth\">'MMMM'</span>'" , propertyCount++);
+    public static final Key<Parameters,String> P_DATE_REPORT_FORMAT2 = f.newKey("DateReportFormat2", "d'<br/><span class=\"smallMonth\">'MMMM'</span>'" );
     /** The complementary report CSS style. */
-    public static final UjoProperty<Parameters,String> P_REPORT_CSS = newProperty("ReportCSS", "styles/style.css" , propertyCount++);
+    public static final Key<Parameters,String> P_REPORT_CSS = f.newKey("ReportCSS", "styles/style.css" );
     /** The Goto Date format. */
-    public static final UjoProperty<Parameters,String> P_DATE_GOTO_FORMAT = newProperty("DateGotoFormat", "yyyy/MM/dd", propertyCount++);
+    public static final Key<Parameters,String> P_DATE_GOTO_FORMAT = f.newKey("DateGotoFormat", "yyyy/MM/dd");
     /** Nimbus Look & Feel support */
-    public static final UjoProperty<Parameters,Boolean> P_NIMBUS_LAF = newProperty("NimbusL&FSupport", !ApplTools.isWindowsOS(), propertyCount++);
+    public static final Key<Parameters,Boolean> P_NIMBUS_LAF = f.newKey("NimbusL&FSupport", !ApplTools.isWindowsOS());
     /** A Color of a private project. */
-    public static final UjoProperty<Parameters,Color> P_COLOR_PRIVATE = newProperty("ColorOfPrivateProject", new Color(0x5DA158), propertyCount++);
+    public static final Key<Parameters,Color> P_COLOR_PRIVATE = f.newKey("ColorOfPrivateProject", new Color(0x5DA158));
     /** A Color of finished project. */
-    public static final UjoProperty<Parameters,Color> P_COLOR_FINISHED_PROJ = newProperty("ColorOfFinishedProject", new Color(0xA9AC88), propertyCount++);
+    public static final Key<Parameters,Color> P_COLOR_FINISHED_PROJ = f.newKey("ColorOfFinishedProject", new Color(0xA9AC88));
     /** A Color of an editable area. */
-    public static final UjoProperty<Parameters,Color> P_COLOR_EDITABLE = newProperty("ColorOfEditableArea", new Color(0xFFFACD), propertyCount++);
+    public static final Key<Parameters,Color> P_COLOR_EDITABLE = f.newKey("ColorOfEditableArea", new Color(0xFFFACD));
     /** Is a System Tray Enabled? */
-    public static final UjoProperty<Parameters,Boolean> P_SYSTRAY_ENABLED = newProperty("SystemTrayEnabled", ApplTools.isWindowsOS(), propertyCount++);
+    public static final Key<Parameters,Boolean> P_SYSTRAY_ENABLED = f.newKey("SystemTrayEnabled", ApplTools.isWindowsOS());
     /** Action on a second click */
-    public static final UjoProperty<Parameters,SysTray.Action> P_SYSTRAY_SECOND_CLICK = newProperty("SystemTraySecondClick", SysTray.Action.NONE, propertyCount++);
+    public static final Key<Parameters,SysTray.Action> P_SYSTRAY_SECOND_CLICK = f.newKey("SystemTraySecondClick", SysTray.Action.NONE);
     /** Modify value of finished project or task. */
-    public static final UjoProperty<Parameters,Boolean> P_MODIFY_FINESHED_PROJ = newProperty("ModifyFinishedProject", false, propertyCount++);
+    public static final Key<Parameters,Boolean> P_MODIFY_FINESHED_PROJ = f.newKey("ModifyFinishedProject", false);
     /** Create a new Event on an EXIT action. */
-    public static final UjoProperty<Parameters,Boolean> P_EXIT_EVENT_CREATE = newProperty("ExitEventCreating", true, propertyCount++);
+    public static final Key<Parameters,Boolean> P_EXIT_EVENT_CREATE = f.newKey("ExitEventCreating", true);
     /** Description of an EXIT action. */
-    public static final UjoProperty<Parameters,String> P_EXIT_EVENT_DESCR = newProperty("ExitEventDescription", "EXIT", propertyCount++);
+    public static final Key<Parameters,String> P_EXIT_EVENT_DESCR = f.newKey("ExitEventDescription", "EXIT");
     /** Hide Buoon Icon. */
-    public static final UjoProperty<Parameters,Boolean> P_HIDE_ICONS = newProperty("HideButtonIcons", false, propertyCount++);
+    public static final Key<Parameters,Boolean> P_HIDE_ICONS = f.newKey("HideButtonIcons", false);
     /** Last window size and position. */
-    public static final UjoProperty<Parameters,Rectangle> P_WINDOW_SIZE = newProperty("WindowSize", new Rectangle(-1, -1, 622, 405), propertyCount++);
+    public static final Key<Parameters,Rectangle> P_WINDOW_SIZE = f.newKey("WindowSize", new Rectangle(-1, -1, 622, 405));
     /** Restore the last application window size and position. */
-    public static final UjoProperty<Parameters,Boolean> P_WINDOW_SIZE_RESTORATION = newProperty("WindowSizeRestoration", true, propertyCount++);
+    public static final Key<Parameters,Boolean> P_WINDOW_SIZE_RESTORATION = f.newKey("WindowSizeRestoration", true);
     /** Automatic sorting of the events by time. */
-    public static final UjoProperty<Parameters,Boolean> P_AUTOMATIC_SORTING_BY_TIME = newProperty("AutomaticSortingByTime", true, propertyCount++);
+    public static final Key<Parameters,Boolean> P_AUTOMATIC_SORTING_BY_TIME = f.newKey("AutomaticSortingByTime", true);
     /** Check new release on the home page */
-    public static final UjoProperty<Parameters,Boolean> P_CHECK_NEW_RELEASE = newProperty("CheckNewRelease", true, propertyCount++);
+    public static final Key<Parameters,Boolean> P_CHECK_NEW_RELEASE = f.newKey("CheckNewRelease", true);
     /** A full path to a system browser. */
-    public static final UjoProperty<Parameters,String> P_SYSTEM_BROWSER_PATH = newProperty("SystemBrowserPath", VALUE_DEFAULT, propertyCount++);
+    public static final Key<Parameters,String> P_SYSTEM_BROWSER_PATH = f.newKey("SystemBrowserPath", VALUE_DEFAULT);
     /** Close Report Dialog after OK. */
-    // public static final UjoProperty<Parameters,Boolean> P_CLOSE_REPORT_DIALOG = newProperty("CloseReportDialogOK", Boolean.FALSE);
+    // public static final Key<Parameters,Boolean> P_CLOSE_REPORT_DIALOG = newKey("CloseReportDialogOK", Boolean.FALSE);
     /** A full path to a DataFile. */
-    public static final UjoProperty<Parameters,File> P_DATA_FILE_PATH = newProperty("DataFilePath", new File(VALUE_DEFAULT), propertyCount++);
+    public static final Key<Parameters,File> P_DATA_FILE_PATH = f.newKey("DataFilePath", new File(VALUE_DEFAULT));
     /** Project table sorted column */
-    public static final UjoProperty<Parameters,String> P_SORT_PROJ_COLUMN = newProperty("SortProjColumn", Project.P_ID.getName(), propertyCount++);
+    public static final Key<Parameters,String> P_SORT_PROJ_COLUMN = f.newKey("SortProjColumn", Project.P_ID.getName());
     /** A full path to a Shared Projects DataFile. */
-    public static final UjoProperty<Parameters,File> P_PROJECTS_FILE_PATH = newProperty("SharedProjectsFilePath", new File(VALUE_DEFAULT), propertyCount++);
+    public static final Key<Parameters,File> P_PROJECTS_FILE_PATH = f.newKey("SharedProjectsFilePath", new File(VALUE_DEFAULT));
     /** Name of user of this application. */
-    public static final UjoProperty<Parameters,String> P_USERNAME = newProperty("Username", getSystemLogin(), propertyCount++);
+    public static final Key<Parameters,String> P_USERNAME = f.newKey("Username", getSystemLogin());
 
     // --- An optional property unique name test ---
-    static { init(Parameters.class,true); }
+    static { f.lock(); }
 
     /** Decimal Formatter */
     private DecimalFormat decimalFormat = null;
@@ -129,15 +129,15 @@ public class Parameters extends ArrayUjo {
     /** Parameters constructor */
     public Parameters() {
         // Default initialization:
-        for (UjoProperty par : readProperties()) {
+        for (Key par : readKeys()) {
             writeValue(par, par.getDefault());
         }
     }
     
     /** Returns a propertyCount value */
     @Override
-    public int readPropertyCount() {
-        return propertyCount;
+    public KeyList<?> readKeys() {
+        return f.getKeys();
     }
     
     /** Overrided for additional features */
@@ -224,7 +224,7 @@ public class Parameters extends ArrayUjo {
     // --------------------------------
 
     /** Returns a localized date format */
-    public String getDateFormat(UjoProperty<Parameters,String> property, ApplContext context) {
+    public String getDateFormat(Key<Parameters,String> property, ApplContext context) {
         String result = get(property);
         String week   = context.getLanguageManager().getTextAllways("Week");
         result = String.format(result, week);
@@ -288,12 +288,12 @@ public class Parameters extends ArrayUjo {
 
 
     @SuppressWarnings("unchecked")
-    public <UJO extends Parameters, VALUE> VALUE get(UjoProperty<UJO, VALUE> up) {
+    public <UJO extends Parameters, VALUE> VALUE get(Key<UJO, VALUE> up) {
         return up.of((UJO)this);
     }
 
     @SuppressWarnings("unchecked")
-    public <UJO extends Parameters, VALUE> UJO set(UjoProperty<UJO, VALUE> up, VALUE value) {
+    public <UJO extends Parameters, VALUE> UJO set(Key<UJO, VALUE> up, VALUE value) {
         up.setValue((UJO)this, value);
         return (UJO) this;
     }

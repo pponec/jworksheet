@@ -22,7 +22,7 @@ import net.ponec.jworksheet.bo.item.YearMonthDay;
 import net.ponec.jworksheet.core.LanguageManager;
 import net.ponec.jworksheet.gui.JWorkSheet;
 import net.ponec.jworksheet.resources.ResourceProvider;
-import org.ujorm.UjoProperty;
+import org.ujorm.Key;
 
 /**
  * Standard report
@@ -42,11 +42,11 @@ public abstract class SuperReport implements Calculator {
     public SuperReport() {
     }
 
-    /** Translate key pro UjoProperty */
+    /** Translate key pro Key */
     protected String getText(CharSequence key) {
         LanguageManager lm = applContext.getLanguageManager();
-        if (key instanceof UjoProperty) {
-            return lm.getTextAllways((UjoProperty) key);
+        if (key instanceof Key) {
+            return lm.getTextAllways((Key) key);
         } else {
             return lm.getTextAllways(key.toString());
         }
