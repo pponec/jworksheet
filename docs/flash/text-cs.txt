@@ -1,0 +1,223 @@
+NumFrames: 37
+Frame: 1
+Title: 
+NumCallouts: 1
++--->
+Program JWorkSheet slouží pro mìøení
+vašeho èasu stráveného na projektech.
+
+Tato krátká prezentace vás provede 
+základními vlastnostmi programu a jeho použitím.
+
+Prezentaci je možné kdykoli pozastavit tlaèítkem vlevo dole.
+Pro start stisknìte tlaèítko:
+
++--->
+Frame: 2
+Title: 
+NumCallouts: 1
++--->
+Tato tabulka obsahuje seznam všech událostí vybraného dne.
++--->
+Frame: 3
+Title: 
+NumCallouts: 1
++--->
+Pøi prvním spuštìní jWorkSheet je nová událost zapsána automaticky.
++--->
+Frame: 4
+Title: 
+NumCallouts: 1
++--->
+Ubìhl nìjaký èas.
+Nyní je 12:00 hodin,
+a odcházíme na obìd
++--->
+Frame: 5
+Title: 
+NumCallouts: 1
++--->
+Nová událost se zapíše do nového øádku podobnì, jako bychom to zapisovali tužkou 
+na list papíru.
+
++--->
+Frame: 6
+Title: 
+NumCallouts: 1
++--->
+Pøipravíme si nìjaké projekty a úkoly na které chceme práci vykazovat.
++--->
+Frame: 7
+Title: 
+NumCallouts: 1
++--->
+Tato tabulka obsahuje seznam všech projektù
++--->
+Frame: 8
+Title: 
+NumCallouts: 1
++--->
+Tady je zobrazen seznam 
+všech úkolù vybraného projektu
++--->
+Frame: 9
+Title: 
+NumCallouts: 1
++--->
+Upravme si popisy pro svoji vlastní potøebu.
++--->
+Frame: 10
+Title: 
+NumCallouts: 0
++--->
+Frame: 11
+Title: 
+NumCallouts: 1
++--->
+Chceme vytvoøit  ještì jeden úkol k vybranému  projektu
+
++--->
+Frame: 12
+Title: 
+NumCallouts: 0
++--->
+Frame: 13
+Title: 
+NumCallouts: 1
++--->
+Teï vytvoøíme druhý projekt, na který chceme vykazovat
++--->
+Frame: 14
+Title: 
+NumCallouts: 0
++--->
+Frame: 15
+Title: 
+NumCallouts: 1
++--->
+Pokud èas strávený na tomto úkolu nepatøí mezi pracovní  oznaèíme ho volbu  "Private"
++--->
+Frame: 16
+Title: 
+NumCallouts: 0
++--->
+Frame: 17
+Title: 
+NumCallouts: 0
++--->
+Frame: 18
+Title: 
+NumCallouts: 1
++--->
+Po zaškrtnutí se bude tento úkol pøiøazovat automaticky pøi zvolení projektu
++--->
+Frame: 19
+Title: 
+NumCallouts: 1
++--->
+Pokud je úkol dokonèen, 
+lze ho odstranit z nabídky zaškrtnutím FINISHED
++--->
+Frame: 20
+Title: 
+NumCallouts: 0
++--->
+Frame: 21
+Title: 
+NumCallouts: 0
++--->
+Frame: 22
+Title: 
+NumCallouts: 0
++--->
+Frame: 23
+Title: 
+NumCallouts: 1
++--->
+Nyní se vrátíme zpìt, abychom mohli pøiøadit k událostem  nové projekty.
++--->
+Frame: 24
+Title: 
+NumCallouts: 0
++--->
+Frame: 25
+Title: 
+NumCallouts: 1
++--->
+Žádný úkol nemá vybranou volbu "Default"
+a tak úkol je tøeba vybrat ruènì
++--->
+Frame: 26
+Title: 
+NumCallouts: 0
++--->
+Frame: 27
+Title: 
+NumCallouts: 0
++--->
+Frame: 28
+Title: 
+NumCallouts: 1
++--->
+Tady byl zaškrtnutý DEFAULT, tak se úkol vybral automaticky
++--->
+Frame: 29
+Title: 
+NumCallouts: 0
++--->
+Frame: 30
+Title: 
+NumCallouts: 1
++--->
+Èas poslední události je možné editovat.
++--->
+Frame: 31
+Title: 
+NumCallouts: 1
++--->
+Èíslo bez desetinného oddìlovaèe je považováno za èas v minutách.
++--->
+Frame: 32
+Title: 
+NumCallouts: 1
++--->
+Celkový èas. Do nìj se nezapoèítávají projekty typu PRIVATE
++--->
+Frame: 33
+Title: 
+NumCallouts: 1
++--->
+Pro pøepoèítání èasu doporuèuji  kliknout na tlaèítko SORT.
++--->
+Frame: 34
+Title: 
+NumCallouts: 1
++--->
+REPORT seète èasy podle úkolù pro zvolené období 
+a výsledek zobrazí 
+v HTML prohlížeèi.
++--->
+Frame: 35
+Title: 
+NumCallouts: 1
++--->
+Výstupní reporty je možné pøidávat pomocí vlastních šablon XSL.
++--->
+Frame: 36
+Title: 
+NumCallouts: 1
++--->
+Všechna data si program ukládá prùbìžnì.
+K poslednímu uložení dojde nejpozdìji pøi ukonèení programu.
++--->
+Frame: 37
+Title: 
+NumCallouts: 1
++--->
+Konec prezentace.
+
+Domovská stránka programu:
+http://jworksheet.pponec.net
+
+Copyright PPone(c) 2007
++--->

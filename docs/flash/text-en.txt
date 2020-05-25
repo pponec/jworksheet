@@ -1,0 +1,213 @@
+NumFrames: 37
+Frame: 1
+Title: 
+NumCallouts: 1
++--->
+The JWorkSheet a desktop time tracker 
+application for your projects.
+
+This short presentation show to you a basic features and usages of the application. 
+
+You can stop the presentation anytime by a button on left down.
+Press a button to continue:
+
++--->
+Frame: 2
+Title: 
+NumCallouts: 1
++--->
+This table contains a list of events for the selected day.
++--->
+Frame: 3
+Title: 
+NumCallouts: 1
++--->
+A new event is shown in the table like a new row, it looks alike new line of a paper sheet.
++--->
+Frame: 4
+Title: 
+NumCallouts: 1
++--->
+A button for new event.
++--->
+Frame: 5
+Title: 
+NumCallouts: 1
++--->
+The new event
+
++--->
+Frame: 6
+Title: 
+NumCallouts: 1
++--->
+On the tab you can display and  maintain all projects 
+and its tasks.
++--->
+Frame: 7
+Title: 
+NumCallouts: 1
++--->
+The table display a list of the all projects
++--->
+Frame: 8
+Title: 
+NumCallouts: 1
++--->
+There are all tasks of the selected list
++--->
+Frame: 9
+Title: 
+NumCallouts: 1
++--->
+We can modify a description for one's own purpose.
++--->
+Frame: 10
+Title: 
+NumCallouts: 0
++--->
+Frame: 11
+Title: 
+NumCallouts: 1
++--->
+This button creates new Task of the selected Project
+
++--->
+Frame: 12
+Title: 
+NumCallouts: 0
++--->
+Frame: 13
+Title: 
+NumCallouts: 1
++--->
+The button create new Project
++--->
+Frame: 14
+Title: 
+NumCallouts: 0
++--->
+Frame: 15
+Title: 
+NumCallouts: 1
++--->
+Select a check box "Private", if the project is not a business type
++--->
+Frame: 16
+Title: 
+NumCallouts: 0
++--->
+Frame: 17
+Title: 
+NumCallouts: 0
++--->
+Frame: 18
+Title: 
+NumCallouts: 1
++--->
+Check the box, if you can preselect the task after a change of project
++--->
+Frame: 19
+Title: 
+NumCallouts: 1
++--->
+Check a FINISHED box if you can remove the task from a list for all new events.
++--->
+Frame: 20
+Title: 
+NumCallouts: 0
++--->
+Frame: 21
+Title: 
+NumCallouts: 0
++--->
+Frame: 22
+Title: 
+NumCallouts: 0
++--->
+Frame: 23
+Title: 
+NumCallouts: 0
++--->
+Frame: 24
+Title: 
+NumCallouts: 0
++--->
+Frame: 25
+Title: 
+NumCallouts: 1
++--->
+The a DEFAULT is not checked, then we must select a task by a hand
++--->
+Frame: 26
+Title: 
+NumCallouts: 0
++--->
+Frame: 27
+Title: 
+NumCallouts: 0
++--->
+Frame: 28
+Title: 
+NumCallouts: 1
++--->
+The task is selected automatically
++--->
+Frame: 29
+Title: 
+NumCallouts: 0
++--->
+Frame: 30
+Title: 
+NumCallouts: 1
++--->
+A time of the last event is enabled for editing.
++--->
+Frame: 31
+Title: 
+NumCallouts: 1
++--->
+A number without decimal separator is considered for time in a minute unit.
++--->
+Frame: 32
+Title: 
+NumCallouts: 1
++--->
+A total time does not contains time of a PRIVATE projects.
++--->
+Frame: 33
+Title: 
+NumCallouts: 1
++--->
+There is recommended recalculate a total time by a button SORT.
++--->
+Frame: 34
+Title: 
+NumCallouts: 1
++--->
+REPORT show an statistics of your data, result is displayed by a HTML browser.
++--->
+Frame: 35
+Title: 
+NumCallouts: 1
++--->
+There is a possibility to create you own report by a XSL transformation.
++--->
+Frame: 36
+Title: 
+NumCallouts: 1
++--->
+Application save all data by continuously.
+The last saving is done during an exit of the application.
++--->
+Frame: 37
+Title: 
+NumCallouts: 1
++--->
+The end of presentation..
+
+Home Page:
+http://jworksheet.pponec.net
+
+Copyright PPone(c) 2007
++--->

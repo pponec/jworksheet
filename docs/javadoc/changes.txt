@@ -1,0 +1,100 @@
+The jWorkSheet change list
+**************************
+
+release 0.90 (2009-09-13)
++ localization to Russian and Ukrainian thanks to Dmytro Barabash
++ personal data are stored on signal TERM (only on Windows OS)
++ new release of UJO Framework 0.90 is included (minor incompatibilities are fixing)
++ bug fixing: the value of Period Total is changed in case the private state of a project is changed
++ some report styling
+
+release 0.85 (2009-03-15)
++ multilanguage application, supported languages are:
+   - Spanish (es) thanks to Carlos David González Abraham,
+   - German (de) thanks to David Schwarz,
+   - English (en)
+   - Czech (cs)
++ a simple module support
++ all day events are sorted automatically after a change of time value. The original behavior you can set by a user parameter
++ new detail table report grouped by project
++ the UJO Framework release 0.84 is used to faster reading data from a XML file
++ code cleaning
+
+release 0.83 and 0.84 are skipped
+
+release 0.82 (2008-12-12)
++ look and feel called Nimbus (form Java 6) is supported now, it is a defaut look for Linux
++ button Delete calls an action Sort too
++ code cleaning
+- double data saving from a SysTray exit action is fixed
+
+release 0.81 (2008-10-26)
++ the better security of your personal data: if the data.xml file is missing or is empty, the application tries to restore a backup and show an info dialog
++ the first application parameter can specify a data directory (for a portable launching e.g.)
++ the project sorting is allowed by a click on the table header
++ UJO Framework release 0.81 is used
+
+release 0.80 (2008-09-09)
+- application launching for JRE 5.0 was fixed
++ the home was moved to http://jworksheet.ponec.net
++ jWorkSheet is based on the UJO Framework release 0.80 
++ class documentation was improved in a JavaDoc format
+
+release 0.79 (2008-06-18)
++ parameter "DecimalTimeFormat" allows to select a period format (decimal/hour) for display
++ parameter "SystemTraySecondClick" can select an action for the second mouse click on a the systray
++ data file "data.xml" is backuped for better security in the first run per day only
++ parameter report contains default values of each parameter
++ memory consumption was improved
+- tooltip bugfixing
+
+release 0.78.1 (2008-05-16)
+- bug fixing: application release 0.78 reset user parameters to a default value.
+
+release 0.78 (2008-05-14)
++ better performance of data saving thanks to UJO Framework release 0.74.final
++ small different improvements (report, gui, parameter description) was done
+- an exception during "Detail report in a table format" on Java 5.0 was fixed 
+
+release 0.77 (2008-03-18) 
++ new report "Detail report in a table format" is done
++ there is possible to modify a header date format of the new report by new parameter "DateReportFormat2"
++ complementary user CSS definition is supported in application parameters
++ report design was improved by CSS style
++ a new "Report" button is created for an opening the report without close its dialog. An obsolete parameter "CloseReportDialogOK" was removed
++ code cleaning of report classes was done
+
+release 0.76 (2008-02-05)
++ window maximalization bug is fixed
++ the first event of day is saved after start of application
++ data are saved if the application is iconified too
++ all reports are opended in an internet browser
++ parameter ClipboardSaveConfirmation was removed
++ parameter descriptions are assembled
++ a report quick selection "Last year" was added
++ title of the application contains a current project of the current day
+
+release 0.75 (2007-12-09) 
++ new report: Day Preview
++ frame title extension
++ code cleaning
+
+release 0.74 (2007-11-17)
++ System Tray support for Java 6.0
++ "Day of Work" support for that case you are working over the weekend
++ small bug fixing
+
+release 0.72, 0.73
++ internal versions only
+
+release 0.71 (2007-10-28)
++ project id building is fixed
++ task id building is fixed
+
+release 0.70 (2007-10-24)
++ first public version
++ time tracking of different projects
++ time reports are opened in HTML browser
++ user exports by XSL are supported
+
+--
