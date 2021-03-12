@@ -68,7 +68,7 @@ import net.ponec.jworksheet.resources.ResourceProvider;
 import org.ujorm.Ujo;
 import org.ujorm.Key;
 import org.ujorm.swing.UjoTableModel;
-import org.ujorm.swing.KeyRow;
+import org.ujorm.swing.UjoKeyRow;
 
 /**
  * Java Work Sheet
@@ -191,11 +191,11 @@ public final class JWorkSheet extends TopFrame {
             taskTable .getTableColumn(TaskType.P_DEFAULT).setMaxWidth(58);
             taskTable .getTableColumn(TaskType.P_FINISHED).setMaxWidth(58);
             paramTable.setModel(new ParamTableModel(applContext.getParameters(), applContext));
-            paramTable.getTableColumn(KeyRow.P_DEFAULT).setMinWidth(0);
-            paramTable.getTableColumn(KeyRow.P_DEFAULT).setMaxWidth(0);
-            paramTable.getTableColumn(KeyRow.P_INDEX).setMaxWidth(30);
-            paramTable.getTableColumn(KeyRow.P_NAME ).setPreferredWidth(100);
-            paramTable.getTableColumn(KeyRow.P_VALUE).setPreferredWidth(200);
+            paramTable.getTableColumn(UjoKeyRow.P_DEFAULT).setMinWidth(0);
+            paramTable.getTableColumn(UjoKeyRow.P_DEFAULT).setMaxWidth(0);
+            paramTable.getTableColumn(UjoKeyRow.P_INDEX).setMaxWidth(30);
+            paramTable.getTableColumn(UjoKeyRow.P_NAME ).setPreferredWidth(100);
+            paramTable.getTableColumn(UjoKeyRow.P_VALUE).setPreferredWidth(200);
 
             if (ApplTools.isNimbusLAF()) {
                 CheckBoxRenderer checkBoxRenderer = new CheckBoxRenderer();
@@ -1208,9 +1208,9 @@ public final class JWorkSheet extends TopFrame {
         private void bParamDefaultActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_bParamDefaultActionPerformed
             UjoTableModel model = paramTable.getModel();
             for (int i=model.getRowCount()-1; i>=0; i--) {
-                KeyRow ujo = (KeyRow) model.getRowNullable(i);
+                UjoKeyRow ujo = (UjoKeyRow) model.getRowNullable(i);
                 Key param = ujo.getKey();
-                ujo.writeValue(KeyRow.P_VALUE, param.getDefault());
+                ujo.writeValue(UjoKeyRow.P_VALUE, param.getDefault());
             }
             model.fireTableAllRowUpdated();
         }//GEN-LAST:event_bParamDefaultActionPerformed

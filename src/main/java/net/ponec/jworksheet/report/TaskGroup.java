@@ -21,12 +21,10 @@ import net.ponec.jworksheet.bo.Project;
 import net.ponec.jworksheet.bo.TaskType;
 import net.ponec.jworksheet.bo.WorkDay;
 import net.ponec.jworksheet.bo.item.YearMonthDay;
-import org.ujorm.Key;
 import org.ujorm.implementation.map.MapUjo;
 import net.ponec.jworksheet.bo.Event;
 import org.ujorm.Key;
 import org.ujorm.core.KeyFactory;
-import org.ujorm.swing.KeyRow;
 
 /**
  * Task Group

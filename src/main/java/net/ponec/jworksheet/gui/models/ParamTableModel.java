@@ -21,7 +21,7 @@ import net.ponec.jworksheet.bo.Parameters;
 import net.ponec.jworksheet.core.ApplContext;
 import org.ujorm.Key;
 import org.ujorm.swing.SingleUjoTabModel;
-import org.ujorm.swing.KeyRow;
+import org.ujorm.swing.UjoKeyRow;
 
 /**
  * Row of Parameters table.
@@ -30,7 +30,7 @@ import org.ujorm.swing.KeyRow;
 public class ParamTableModel extends SingleUjoTabModel {
 
     /** Properties */
-    public final static KeyRow PROPS = null;
+    public final static UjoKeyRow PROPS = null;
 
     private ApplContext applContext;
 
@@ -60,7 +60,7 @@ public class ParamTableModel extends SingleUjoTabModel {
     public void setValueAt(Object value, int rowIndex, Key column) {
         super.setValueAt(value, rowIndex, column);
 
-        KeyRow row = getRow(rowIndex);
+        final UjoKeyRow row = getRow(rowIndex);
         if (Parameters.P_COLOR_EDITABLE==row.getKey()) {
             // Repaint color background;
             fireTableColumnUpdated(column);

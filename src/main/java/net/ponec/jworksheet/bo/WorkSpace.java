@@ -62,7 +62,6 @@ public class WorkSpace extends MapUjo implements UjoTextable {
         f.lock();
     }
 
-
     /** Find a workDay or create new. */
     public WorkDay findWorkDay(YearMonthDay dayId) {
         for (WorkDay workDay : P_DAYS.getList(this)) {
