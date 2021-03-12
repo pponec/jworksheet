@@ -79,15 +79,15 @@ import org.ujorm.core.RingBuffer;
  * @author Pavel Ponec
  */
 public final class ApplTools {
-    
+
     private static final Logger LOGGER = Logger.getLogger("ApplTools");
-    
+
     /**
      * Get StackTrace from an Exception.
      */
     public static StringBuffer getStackTraceBuf(Throwable anException) {
         StringWriter stringWriter = new StringWriter();
-        
+
         if (anException==null) {
             stringWriter.write("Undefined exception (null).");
         } else {
@@ -98,17 +98,17 @@ public final class ApplTools {
         }
         return stringWriter.getBuffer();
     }
-    
+
     public static DecimalFormat createDecimalFormat(String format) {
         return createDecimalFormat(format, Locale.US);
     }
-    
+
     public static DecimalFormat createDecimalFormat(String format, Locale locale) {
         final DecimalFormat result = (DecimalFormat) DecimalFormat.getNumberInstance(locale);
         result.applyPattern(format);
         return result;
     }
-    
+
     /** Copy a file to a target file. */
     public static void copy(File source, File target) throws IOException {
         InputStream  is = null;
@@ -120,13 +120,13 @@ public final class ApplTools {
             if (is!=null) { is.close(); }
         }
     }
-    
+
     /** Copy a file to a target file. */
     public static void copy(InputStream is, File target) throws IOException {
         OutputStream os = null;
         try {
             os = new BufferedOutputStream(new FileOutputStream(target));
-            
+
             int c;
             while ((c=is.read()) != -1) {
                 os.write(c);
@@ -137,7 +137,7 @@ public final class ApplTools {
             }
         }
     }
-    
+
     /** Reset Time to 12:00:00.000 . */
     public static void resetTime(Calendar calednar) {
         calednar.set(Calendar.HOUR_OF_DAY, 12);
@@ -145,13 +145,13 @@ public final class ApplTools {
         calednar.set(Calendar.SECOND, 0);
         calednar.set(Calendar.MILLISECOND, 0);
     }
-    
+
     /** This method writes a string to the system clipboard, otherwise it returns null.*/
     public static void setClipboard(String str) {
         StringSelection ss = new StringSelection(str);
         Toolkit.getDefaultToolkit().getSystemClipboard().setContents(ss, null);
     }
-    
+
     /** Returns a current year */
     public static int getCurrentYear() {
         String sDate = JWorkSheet.APPL_RELEASED;
@@ -164,7 +164,7 @@ public final class ApplTools {
             return -1;
         }
     }
-    
+
     /** Display an About program message.
      * @param frame The one of types: JFrame, JDialog, Component, String, Object (ClassName)
      * @param version
@@ -195,9 +195,9 @@ public final class ApplTools {
         if (copyrightYear > currentYear+9) {
             copyrightYear = currentYear+9;
         }
-        
+
         String _NEW_LINE_ = "</td></tr><tr><td valign=top>";
-        
+
         String[] msg =
         { "<html>"
           , "<table border=\"0\" cellpadding=\"0\" cellspacing=\"0\"  style=\"font-weight:bold;\">"
@@ -263,7 +263,7 @@ public final class ApplTools {
           , "</td></tr>"
           , "</table></html>"
         } ;
-        
+
         javax.swing.JOptionPane.showOptionDialog
         ( frame instanceof Component ? (Component) frame : null
         , stringCat("", msg)
@@ -274,9 +274,9 @@ public final class ApplTools {
         , new JButton[] {okButton}
         , okButton
         );
-        
+
     }
-    
+
     /**
      * StringConcatenation
      *
@@ -294,25 +294,25 @@ public final class ApplTools {
         lines = null;
         return result.toString();
     }
-    
+
     /** Returns true, if text is not null and not empty. */
     public static final boolean isValid(CharSequence text) {
         final boolean result = text!=null && text.length()>0;
         return result;
     }
-    
+
     /** Returns true, if environment is a Windows OS. */
     public static boolean isWindowsOS() {
         final boolean result = System.getProperty("os.name").startsWith("Windows");
         return result;
     }
-    
+
     /** Returns true, if environment is a Linux OS. */
     public static boolean isLinuxOS() {
         final boolean result = System.getProperty("os.name").startsWith("Linux");
         return result;
     }
-    
+
     /**
      * Factory for creating Date Spinner (unlimited).
      * @param dateFormat
@@ -322,10 +322,10 @@ public final class ApplTools {
         JSpinner result = new JSpinner
         (new javax.swing.SpinnerDateModel());
         result.setLocale(language);
-        
+
         result.setEditor(new javax.swing.JSpinner.DateEditor
         (result, dateFormat));
-        
+
         result.addMouseWheelListener(new java.awt.event.MouseWheelListener() {
             public void mouseWheelMoved(java.awt.event.MouseWheelEvent evt) {
                 valueMouseWheelMoved(evt);
@@ -333,8 +333,8 @@ public final class ApplTools {
         });
         return result;
     }
-    
-    
+
+
     /**
      * Value Weel Moved for JSpinner.
      * @param evt
@@ -354,15 +354,15 @@ public final class ApplTools {
             LOGGER.log(Level.WARNING, "A spinner exception.", e);
         }
     }
-    
+
     /** Align a JSpinner.
      * @see JFormattedTextField#LEFT */
     public static void setAlign(JSpinner spinner, int aligment) {
-        
+
         JFormattedTextField tf = ((JSpinner.DefaultEditor)spinner.getEditor()).getTextField();
         tf.setHorizontalAlignment(aligment);
     }
-    
+
     /** Rename a source to target. */
     public static void rename(File source, File target) throws IOException {
         File tmpFile = null ;
@@ -380,38 +380,38 @@ public final class ApplTools {
             tmpFile.delete();
         }
     }
-    
+
     /** Make a XSL transformation. */
     public static File makeXslTransformation(StreamSource source, StreamSource xsl, ArrayList<String[]> params)
     throws TransformerConfigurationException, TransformerException, IOException {
         // Create transformer factory
         TransformerFactory factory = TransformerFactory.newInstance();
-        
+
         // Use the factory to create a template containing the xsl file
         Templates template = factory.newTemplates(xsl);
-        
+
         // Use the template to create a transformer
         Transformer xformer = template.newTransformer();
         if (params!=null) for (String[] p : params) {
             xformer.setParameter(p[0], p[1]);
         }
-        
+
         //CharArrayWriter writer = new CharArrayWriter(128);
         File file = File.createTempFile("_report.", ".html");
         file.deleteOnExit();
-        
+
         Result result = new StreamResult(file);
-        
+
         // Apply the xsl file to the source file and write the result to the output file
         xformer.transform(source, result);
-        
+
         return file;
     }
-    
+
     /** Creates a new instance of Str */
     public static String getFileContent(File file, Charset enc, int maxLength) throws IOException {
         if (file==null || !file.isFile()) { return ""; }
-        
+
         FileInputStream fis = null;
         try {
             fis = new FileInputStream(file);
@@ -426,22 +426,22 @@ public final class ApplTools {
             }
         }
     }
-    
+
     /** Register Escape Action. */
     public static void registerEscapeAction(JComponent component, Action listener) {
         final String ACTION_ESCAPE = "Cancely";  // Action Escape
         final KeyStroke key = KeyStroke.getKeyStroke(KeyEvent.VK_ESCAPE, 0);
         registerAction(key, ACTION_ESCAPE, component, listener);
     }
-    
+
     /** Register Escape Action. */
     public static void registerAction(KeyStroke key, String action, JComponent component, Action listener) {
         component.getInputMap(JComponent.WHEN_ANCESTOR_OF_FOCUSED_COMPONENT).put(key, action);
         component.getActionMap().put(action, listener);
     }
-    
-    
-    
+
+
+
     /** Window Sizing */
     public static void windowsSizing(java.awt.Window window, Rectangle rect) {
         if (rect.x<0 || rect.y<0) {
@@ -452,7 +452,7 @@ public final class ApplTools {
         }
         window.setBounds(rect);
     }
-    
+
     /**
      * Open uri by system browser
      *
@@ -463,7 +463,7 @@ public final class ApplTools {
      */
     @SuppressWarnings("unchecked")
     public static void browse(URI uri, String sysBrowser) throws IOException, UnsupportedOperationException  {
-        
+
         sysBrowser = sysBrowser!=null ? sysBrowser.trim() : "" ;
         if (isValid(sysBrowser)){
             String quotation = sysBrowser.indexOf(' ')>=0 ? "\"" : "" ;
@@ -491,7 +491,7 @@ public final class ApplTools {
             Process child = Runtime.getRuntime().exec(command);
         }
     }
-    
+
     /**  Change cursor. */
     public static void setCursorWait(boolean aWait, ApplContext context) {
         final int cursor
@@ -501,7 +501,7 @@ public final class ApplTools {
         ;
         context.getTopFrame().setCursor(java.awt.Cursor.getPredefinedCursor(cursor));
     }
-    
+
     /** Sleep */
     public static void sleep(int milis) {
         try {
@@ -510,7 +510,7 @@ public final class ApplTools {
             LOGGER.log(Level.WARNING, "err", e);
         }
     }
-    
+
     /** Create a close button for a JOptionPane. */
     public static JButton createCloseButton(String text) {
         ActionListener action = new ActionListener() {
@@ -521,13 +521,13 @@ public final class ApplTools {
                 dialog.dispose();
             }
         };
-        
+
         JButton ok = new JButton(text, new ResourceProvider().getIcon(ResourceProvider.IMG_TICK));
         ok.setMnemonic(text.charAt(0));
         ok.addActionListener(action);
         return ok;
     }
-    
+
     /** Converts bytes to String on Java 5.0. */
     public static String newString(byte[] bytes, Charset charset) {
         String result;
@@ -538,7 +538,7 @@ public final class ApplTools {
         }
         return result;
     }
-    
+
     /** Converts String to bytes on Java 5.0. */
     public static byte[] getBytes(String text, Charset charset) {
         byte[] result;
@@ -549,16 +549,21 @@ public final class ApplTools {
         }
         return result;
     }
-        
+
     /** Set a default look and feel */
     public static void initLookAndFeel(boolean nimbus) throws UnsupportedLookAndFeelException {
         String property = System.getProperty("swing.defaultlaf");
-        
+
         if (property==null) try {
             if (nimbus) {
-                UIManager.setLookAndFeel("com.sun.java.swing.plaf.nimbus.NimbusLookAndFeel");
+                if (false) {
+                    // Test compile:
+                    Class nimbusClass = javax.swing.plaf.nimbus.NimbusLookAndFeel.class;
+                    LOGGER.log(Level.FINEST, nimbusClass.toString());
+                }
+                UIManager.setLookAndFeel("javax.swing.plaf.nimbus.NimbusLookAndFeel");
             } else {
-                throw new UnsupportedLookAndFeelException(""); 
+                throw new UnsupportedLookAndFeelException("");
             }
         } catch (Exception e1) {
             try {
@@ -570,38 +575,38 @@ public final class ApplTools {
             } catch (Exception e) {
                 LOGGER.log(Level.WARNING, "Look&Feel", e);
             }
-       }     
+       }
     }
-    
+
     /** Is was set a Nimbus L&F ? */
     public static boolean isNimbusLAF()  {
         return "Nimbus".equals(UIManager.getLookAndFeel().getName());
     }
-    
+
     /** Modify a color */
     public static Color modify(Color color, int light) {
-        //        final Color result = dark 
-        //            ? color.darker() 
+        //        final Color result = dark
+        //            ? color.darker()
         //            : color.brighter()
         //            ;
-        //        return result;        
-        
+        //        return result;
+
         final int r = colorLimit(light + color.getRed());
         final int g = colorLimit(light + color.getGreen());
         final int b = colorLimit(light + color.getBlue());
-        
+
         return new Color(r,g,b);
     }
-    
+
     private static int colorLimit(int baseColor) {
         final int result = baseColor>254 ? 254 : Math.max(0, baseColor);
         return result;
     }
-    
+
     /** Call the class from another JAR */
     @SuppressWarnings("unchecked")
     public static final <T> Class<T> getClass(String className, File jar)
-        throws MalformedURLException, ClassNotFoundException 
+        throws MalformedURLException, ClassNotFoundException
     {
         final URL[] urls = new URL[]{ jar.toURI().toURL() };
         final URLClassLoader child = new URLClassLoader(urls, ApplTools.class.getClassLoader());

@@ -1,0 +1,4 @@
+module ml.garba.testeur {
+    requires java.desktop;
+    requires java.logging;
+}
