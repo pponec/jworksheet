@@ -21,7 +21,8 @@ import java.util.ArrayList;
 import java.util.List;
 import net.ponec.jworksheet.core.ApplTools;
 import org.ujorm.Key;
-import org.ujorm.extensions.ListProperty;
+import org.ujorm.ListKey;
+import org.ujorm.core.KeyFactory;
 import org.ujorm.implementation.map.MapUjo;
 
 /**
@@ -30,24 +31,26 @@ import org.ujorm.implementation.map.MapUjo;
  * @composed 1 - * TaskType
  */
 public class Project extends MapUjo implements Comparable {
-    
+
+    private static final KeyFactory<Project> f = KeyFactory.CamelBuilder.get(Project.class);
+
     /** Project ID */
-    public static final Key<Project,Integer> P_ID       = newKey("ID", 0);
+    public static final Key<Project,Integer> P_ID       = f.newKey("ID", 0);
     /** Is the project default? */
-    public static final Key<Project,Boolean> P_DEFAULT  = newKey("Default", false);
+    public static final Key<Project,Boolean> P_DEFAULT  = f.newKey("Default", false);
     /** Is the project finished? */
-    public static final Key<Project,Boolean> P_FINISHED = newKey("Finished", false);
+    public static final Key<Project,Boolean> P_FINISHED = f.newKey("Finished", false);
     /** Is the project non business type? */
-    public static final Key<Project,Boolean> P_PRIVATE  = newKey("Private", false);
+    public static final Key<Project,Boolean> P_PRIVATE  = f.newKey("Private", false);
     /** Project descripton */
-    public static final Key<Project,String>  P_DESCR    = newKey("Description", "");
+    public static final Key<Project,String>  P_DESCR    = f.newKey("Description", "");
     /** List of task */
-    public static final ListProperty<Project,TaskType> P_TASKS  = newListKey("Task");
-    
+    public static final ListKey<Project,TaskType> P_TASKS  = f.newListKey("Task");
+
     static {
-        init(Project.class, true);
+        f.lock();
     }
-    
+
     /** Table columns. */
     public static final Key[] TABLE_COLUMNS
     ={P_ID
@@ -73,7 +76,7 @@ public class Project extends MapUjo implements Comparable {
         }
         return null;
     }
-    
+
     /** Returns the first "default" TaskType, null. */
     public TaskType findDefaultTask() {
         for (TaskType task : P_TASKS.getList(this)) {
@@ -85,7 +88,7 @@ public class Project extends MapUjo implements Comparable {
         }
         return null ;
     }
-    
+
     /** Returns all open tasks. */
     public ArrayList<TaskType> getOpenTasks() {
         ArrayList<TaskType> result = new ArrayList<TaskType>(P_TASKS.getItemCount(this));

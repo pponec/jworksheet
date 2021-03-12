@@ -22,10 +22,12 @@ import net.ponec.jworksheet.bo.item.YearMonthDay;
 import net.ponec.jworksheet.core.Version;
 import net.ponec.jworksheet.gui.JWorkSheet;
 import org.ujorm.Key;
+import org.ujorm.ListKey;
 import org.ujorm.extensions.ListProperty;
 import org.ujorm.UjoAction;
 import org.ujorm.implementation.map.MapUjo;
 import static org.ujorm.UjoAction.*;
+import org.ujorm.core.KeyFactory;
 import org.ujorm.extensions.UjoTextable;
 
 /**
@@ -36,26 +38,28 @@ import org.ujorm.extensions.UjoTextable;
  */
 public class WorkSpace extends MapUjo implements UjoTextable {
 
+    private static final KeyFactory<WorkSpace> f = KeyFactory.CamelBuilder.get(WorkSpace.class);
+
     /** Version of the persistence file format. */
-    public static final Key<WorkSpace,Version> P_VERSN  = newKey("Version", new Version("0"));
+    public static final Key<WorkSpace,Version> P_VERSN  = f.newKey("Version", new Version("0"));
     /** Date of the last file saving. */
-    public static final Key<WorkSpace,Date> P_CREATED  = newKey("Created");
+    public static final Key<WorkSpace,Date> P_CREATED  = f.newKey("Created");
     /** Date of the last file archivation. */
-    public static final Key<WorkSpace,Date> P_ARCHIVED = newKey("Archived");
+    public static final Key<WorkSpace,Date> P_ARCHIVED = f.newKey("Archived");
     /** Name of user of this workspace. */
-    public static final Key<WorkSpace,String> P_USERNAME = newKey("Username", "?");
+    public static final Key<WorkSpace,String> P_USERNAME = f.newKey("Username", "?");
     /** Minimal date to check new release */
-    public static final Key<WorkSpace,Date> P_RELEASE_CHECK_DATE = newKey("CheckReleaseDate", new Date(0L));
+    public static final Key<WorkSpace,Date> P_RELEASE_CHECK_DATE = f.newKey("CheckReleaseDate", new Date(0L));
     /** Minimal version to new release notification */
-    public static final Key<WorkSpace,Version> P_RELEASE_CHECK_VERSION = newKey("CheckReleaseVersion", JWorkSheet.APPL_VERSION);
+    public static final Key<WorkSpace,Version> P_RELEASE_CHECK_VERSION = f.newKey("CheckReleaseVersion", JWorkSheet.APPL_VERSION);
 
     /** Work day list */
-    public static final ListProperty<WorkSpace,WorkDay> P_DAYS  = newListKey("Day");
+    public static final ListKey<WorkSpace,WorkDay> P_DAYS  = f.newListKey("Day");
     /** Code-book of all projects. */
-    public static final ListProperty<WorkSpace,Project> P_PROJS = newListKey("Project");
+    public static final ListKey<WorkSpace,Project> P_PROJS = f.newListKey("Project");
 
     static {
-        init(WorkSpace.class, true);
+        f.lock();
     }
 
 

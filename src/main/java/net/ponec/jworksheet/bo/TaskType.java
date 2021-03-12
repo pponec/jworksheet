@@ -19,6 +19,7 @@ package net.ponec.jworksheet.bo;
 
 import net.ponec.jworksheet.core.ApplTools;
 import org.ujorm.Key;
+import org.ujorm.core.KeyFactory;
 import org.ujorm.implementation.map.MapUjo;
 
 /**
@@ -27,14 +28,18 @@ import org.ujorm.implementation.map.MapUjo;
  */
 public class TaskType extends MapUjo implements Comparable {
 
+    private static final KeyFactory<TaskType> f = KeyFactory.CamelBuilder.get(TaskType.class);
+
     /** Task ID */
-    public static final Key<TaskType,Integer> P_ID       = newKey("ID", 0);
+    public static final Key<TaskType,Integer> P_ID       = f.newKey("ID", 0);
     /** Is the task default? */
-    public static final Key<TaskType,Boolean> P_DEFAULT  = newKey("Default", false);
+    public static final Key<TaskType,Boolean> P_DEFAULT  = f.newKey("Default", false);
     /** Is the task finished? */
-    public static final Key<TaskType,Boolean> P_FINISHED = newKey("Finished", false);
+    public static final Key<TaskType,Boolean> P_FINISHED = f.newKey("Finished", false);
     /** Description of the task. */
-    public static final Key<TaskType,String>  P_DESCR    = newKey("Description", "");
+    public static final Key<TaskType,String>  P_DESCR    = f.newKey("Description", "");
+
+    static { f.lock(); }
 
     /** Show description */
     @Override

@@ -98,6 +98,7 @@ public class UjoTableModel<ROW extends Ujo> extends AbstractTableModel {
     /** Get value from cell.
      * @deprecated Use a method with column type of Key instead of.
      */
+    @Override
     final public Object getValueAt(int rowIndex, int columnIndex) {
         return getValueAt(rowIndex, columns[columnIndex]);
     }
@@ -105,11 +106,13 @@ public class UjoTableModel<ROW extends Ujo> extends AbstractTableModel {
     /** Set value to cell.
      * @deprecated Use a method with column type of Key instead of.
      */
+    @Override
     final public void setValueAt(Object value, int rowIndex, int columnIndex) {
         setValueAt(value, rowIndex, columns[columnIndex]);
     }
 
     /** Column Name */
+    @Override
     final public String getColumnName(int columnIndex) {
         return getColumnName(columns[columnIndex]);
     }
@@ -117,6 +120,7 @@ public class UjoTableModel<ROW extends Ujo> extends AbstractTableModel {
     /** Is the Cell Editable?
      * @deprecated Use a method with column type of Key instead of.
      */
+    @Override
     final public boolean isCellEditable(int rowIndex, int columnIndex) {
         return isCellEditable(rowIndex, columns[columnIndex]);
     }
@@ -126,6 +130,7 @@ public class UjoTableModel<ROW extends Ujo> extends AbstractTableModel {
      * @return the common ancestor class of the object values in the model.
      * @deprecated Use a method with column type of Key instead of.
      */
+    @Override
     final public Class getColumnClass(int columnIndex) {
         return getColumnClass(columns[columnIndex]);
     }
