@@ -6,6 +6,7 @@
 package net.ponec.jworksheet.gui;
 
 import net.ponec.jworksheet.core.ApplTools;
+import sun.misc.Signal;
 import sun.misc.SignalHandler;
 
 /**
@@ -22,7 +23,7 @@ public class JwsHandler implements SignalHandler {
         this.jWorkSheet = jWorkSheet;
     }
 
-    public void handle(sun.misc.Signal signal) {
+    public void handle(Signal signal) {
         if (running) {
             running = false;
             jWorkSheet.closeAppl(null);
@@ -38,10 +39,9 @@ public class JwsHandler implements SignalHandler {
      */
     @SuppressWarnings("all")
     public static void init(final JWorkSheet jWorkSheet) throws Exception {
-
         JwsHandler h = new JwsHandler(jWorkSheet);
         String signal = ApplTools.isWindowsOS() ? "TERM" : "TERM";
-        sun.misc.Signal.handle(new sun.misc.Signal(signal), h);
+        Signal.handle(new Signal(signal), h);
 
     }
 }

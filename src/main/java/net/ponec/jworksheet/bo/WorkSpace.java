@@ -26,6 +26,7 @@ import org.ujorm.extensions.ListProperty;
 import org.ujorm.UjoAction;
 import org.ujorm.implementation.map.MapUjo;
 import static org.ujorm.UjoAction.*;
+import org.ujorm.extensions.UjoTextable;
 
 /**
  * This is a <strong>root</strong> of all persistent business objects.
@@ -33,8 +34,8 @@ import static org.ujorm.UjoAction.*;
  * @composed 1 - * WorkDay
  * @composed 1 - * Project
  */
-public class WorkSpace extends MapUjo {
-    
+public class WorkSpace extends MapUjo implements UjoTextable {
+
     /** Version of the persistence file format. */
     public static final Key<WorkSpace,Version> P_VERSN  = newKey("Version", new Version("0"));
     /** Date of the last file saving. */
@@ -47,17 +48,17 @@ public class WorkSpace extends MapUjo {
     public static final Key<WorkSpace,Date> P_RELEASE_CHECK_DATE = newKey("CheckReleaseDate", new Date(0L));
     /** Minimal version to new release notification */
     public static final Key<WorkSpace,Version> P_RELEASE_CHECK_VERSION = newKey("CheckReleaseVersion", JWorkSheet.APPL_VERSION);
-    
+
     /** Work day list */
     public static final ListProperty<WorkSpace,WorkDay> P_DAYS  = newListKey("Day");
     /** Code-book of all projects. */
     public static final ListProperty<WorkSpace,Project> P_PROJS = newListKey("Project");
-    
+
     static {
         init(WorkSpace.class, true);
     }
-    
-    
+
+
     /** Find a workDay or create new. */
     public WorkDay findWorkDay(YearMonthDay dayId) {
         for (WorkDay workDay : P_DAYS.getList(this)) {
@@ -65,13 +66,13 @@ public class WorkSpace extends MapUjo {
                 return workDay;
             }
         }
-        
+
         WorkDay result = new WorkDay();
         WorkDay.P_DATE.setValue(result, dayId.cloneDay());
         WorkSpace.P_DAYS.addItem(this, result);
         return result;
     }
-    
+
     /** Find a workDay. */
     public Project findProject(Integer id) {
         for (Project project : P_PROJS.getList(this)) {
@@ -81,7 +82,7 @@ public class WorkSpace extends MapUjo {
         }
         return null;
     }
-    
+
     /** Returns the first "default" TaskType, null. */
     public Project findDefaultProject() {
         for (Project proj : P_PROJS.getList(this)) {
@@ -93,7 +94,7 @@ public class WorkSpace extends MapUjo {
         }
         return null ;
     }
-    
+
     /** Returns all open Projects. */
     public ArrayList<Project> getOpenProjects() {
         ArrayList<Project> result = new ArrayList<Project>(P_PROJS.getItemCount(this));
@@ -104,7 +105,7 @@ public class WorkSpace extends MapUjo {
         }
         return result;
     }
-    
+
     /** Assing tasks and projects. Call the method after a data loading. */
     public void assingTasks() {
         for (WorkDay day : P_DAYS.getList(this)) {
@@ -173,33 +174,33 @@ public class WorkSpace extends MapUjo {
         Project.P_TASKS.addItem(project, task);
         WorkSpace.P_PROJS.addItem(this, project);
     }
-    
+
     /** Sort Days by a YearMonthDay */
     @SuppressWarnings("unchecked")
     public void sortDays() {
         ((ListProperty)P_DAYS).sort(this, WorkDay.P_DATE);
     }
-    
+
     /** An authorization of ACTION_XML_EXPORT */
     @Override
     public boolean readAuthorization(UjoAction action, Key property, Object value) {
-        
+
         switch (action.getType()) {
             case ACTION_XML_EXPORT:
                 if (P_ARCHIVED==property) {
                     return value!=null;
-                    
+
                 } else if (P_DAYS==property
                 &&     value instanceof WorkDay
                 ){
                     final WorkDay workDay = (WorkDay) value;
                     return WorkDay.P_EVENTS.getItemCount(workDay)>0;
-                    
+
                 }
         }
         return super.readAuthorization(action, property, value);
     }
-    
+
    @SuppressWarnings("unchecked")
    public <UJO extends WorkSpace, VALUE> VALUE get(Key<UJO, VALUE> up) {
         return up.of((UJO)this);

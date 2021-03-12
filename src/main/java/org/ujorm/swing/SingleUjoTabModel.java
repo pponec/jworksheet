@@ -17,6 +17,7 @@
 package org.ujorm.swing;
 
 import java.util.Iterator;
+import java.util.List;
 import org.ujorm.Ujo;
 import org.ujorm.Key;
 import org.ujorm.core.UjoActionImpl;
@@ -46,7 +47,8 @@ public class SingleUjoTabModel extends UjoTableModel<KeyRow> implements Iterable
      */
     public SingleUjoTabModel(Ujo content, Key ... columns) {
         super(columns);
-        rows = UjoManager.getInstance().createKeyRowList(content, new UjoActionImpl(UjoAction.ACTION_TABLE_SHOW));
+        final Object r =  UjoManager.getInstance().createKeyRowList(content, new UjoActionImpl(UjoAction.ACTION_TABLE_SHOW));
+        rows = (List<KeyRow>) r;
     }
 
     /** Only Value is editable. */

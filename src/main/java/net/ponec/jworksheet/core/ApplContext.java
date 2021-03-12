@@ -60,6 +60,7 @@ import net.ponec.jworksheet.report.MetaReport;
 import net.ponec.jworksheet.resources.ResourceProvider;
 import org.ujorm.core.UjoManagerRBundle;
 import org.ujorm.core.UjoManagerXML;
+import org.ujorm.core.XmlHeader;
 
 /**
  * A Main Application Context
@@ -268,11 +269,13 @@ public class ApplContext implements TableModelListener, Runnable, JwsContext {
             workSpace.set(WorkSpace.P_USERNAME, Parameters.P_USERNAME.of(getParameters()));
 
             String header = false ? null // Default Header
-            : UjoManagerXML.XML_HEADER + "\n<!-- <?xml-stylesheet type=\"text/xsl\" href=\"styles/"+ResourceProvider.REPORT_BASE+"\"?> -->"
-            ;
-            File dataFileTemp = getDataFileTemp();
-            UjoManagerXML.getInstance().saveXML(dataFileTemp, workSpace, header, this);
-            ApplTools.rename(dataFileTemp, getDataFile());
+            : UjoManagerXML.XML_HEADER
+                    + "\n<!-- <?xml-stylesheet type=\"text/xsl\" href=\"styles/"
+                    + ResourceProvider.REPORT_BASE
+                    + "\"?> -->";
+            File dataTempFile = getDataFileTemp();
+            UjoManagerXML.getInstance().saveXML(dataTempFile, workSpace, new XmlHeader(header), this);
+            ApplTools.rename(dataTempFile, getDataFile());
         } catch (IOException e) {
             throw new MessageException("Can't save: " + getDataFile(), e);
         }
