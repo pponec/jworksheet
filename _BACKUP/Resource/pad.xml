@@ -7,9 +7,9 @@
 	</MASTER_PAD_VERSION_INFO>
 	<Company_Info>
 		<Company_Name>Pavel Ponec</Company_Name>
-		<Address_1>Kyjevska 11</Address_1>
+		<Address_1 />
 		<Address_2 />
-		<City_Town>Brno</City_Town>
+		<City_Town />
 		<State_Province />
 		<Zip_Postal_Code />
 		<Country>Czech Republic</Country>
@@ -17,15 +17,15 @@
 		<Contact_Info>
 			<Author_First_Name>Paul</Author_First_Name>
 			<Author_Last_Name>Ponec</Author_Last_Name>
-			<Author_Email>ujoframework@gmail.com</Author_Email>
+			<Author_Email>ponec@ujorm.com</Author_Email>
 			<Contact_First_Name>Paul</Contact_First_Name>
 			<Contact_Last_Name>Ponec</Contact_Last_Name>
-			<Contact_Email>ujoframework@gmail.com</Contact_Email>
+			<Contact_Email>ponec@ujorm.com</Contact_Email>
 		</Contact_Info>
 		<Support_Info>
-			<Sales_Email>ujoframework@gmail.com</Sales_Email>
-			<Support_Email>ujoframework@gmail.com</Support_Email>
-			<General_Email>ujoframework@gmail.com</General_Email>
+			<Sales_Email>ponec@ujorm.com</Sales_Email>
+			<Support_Email>ponec@ujorm.com</Support_Email>
+			<General_Email>ponec@ujorm.com</General_Email>
 			<Sales_Phone />
 			<Support_Phone />
 			<General_Phone />
@@ -34,10 +34,10 @@
 	</Company_Info>
 	<Program_Info>
 		<Program_Name>jWorkSheet</Program_Name>
-		<Program_Version>0.82</Program_Version>
-		<Program_Release_Month>12</Program_Release_Month>
-		<Program_Release_Day>12</Program_Release_Day>
-		<Program_Release_Year>2008</Program_Release_Year>
+		<Program_Version>0.90</Program_Version>
+		<Program_Release_Month>09</Program_Release_Month>
+		<Program_Release_Day>15</Program_Release_Day>
+		<Program_Release_Year>2009</Program_Release_Year>
 		<Program_Cost_Dollars>0</Program_Cost_Dollars>
 		<Program_Cost_Other_Code />
 		<Program_Cost_Other />
@@ -45,7 +45,7 @@
 		<Program_Release_Status>Major Update</Program_Release_Status>
 		<Program_Install_Support>Install and Uninstall</Program_Install_Support>
 		<Program_OS_Support>Win98,WinME,Windows2000,WinXP,Windows2003</Program_OS_Support>
-		<Program_Language>English</Program_Language>
+		<Program_Language>English,Czech,Russian,Spanish</Program_Language>
 		<Program_Change_Info />
 		<Program_Specific_Category>Business</Program_Specific_Category>
 		<Program_Category_Class>Business::PIMS &amp; Calendars</Program_Category_Class>
@@ -113,7 +113,7 @@ The Best Features:
 			<Application_XML_File_URL>http://jworksheet.ponec.net/download/pad.xml</Application_XML_File_URL>
 		</Application_URLs>
 		<Download_URLs>
-			<Primary_Download_URL>http://downloads.sourceforge.net/jworksheet/jWorkSheetSetup.0.85.exe</Primary_Download_URL>
+			<Primary_Download_URL>http://downloads.sourceforge.net/project/jworksheet/jworksheet/0.90/jWorkSheetSetup.0.90.exe</Primary_Download_URL>
 			<Secondary_Download_URL />
 			<Additional_Download_URL_1 />
 			<Additional_Download_URL_2 />

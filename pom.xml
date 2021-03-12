@@ -1,0 +1,204 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+    <groupId>org.ponec.ppsee</groupId>
+    <artifactId>jWorkSheet</artifactId>
+    <version>1.00</version>
+    <packaging>jar</packaging>
+
+    <properties>
+        <project.version>1.31</project.version>
+        <project.jar.name>jWorkSheet</project.jar.name>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <maven.compiler.source>11</maven.compiler.source>
+        <maven.compiler.target>11</maven.compiler.target>
+    </properties>
+
+
+    <dependencies>
+        <!-- Static analyzer support -->
+        <dependency>
+            <groupId>com.google.code.findbugs</groupId>
+            <artifactId>jsr305</artifactId>
+            <version>3.0.2</version>
+            <optional>true</optional>
+        </dependency>
+        <dependency>
+            <groupId>org.ujorm</groupId>
+            <artifactId>ujo-core</artifactId>
+            <version>2.13</version>
+        </dependency>
+        <dependency>
+            <groupId>org.swinglabs</groupId>
+            <artifactId>swing-layout</artifactId>
+            <version>1.0.3</version>
+        </dependency>
+        <dependency>
+            <groupId>net.java.dev.jgoodies</groupId>
+            <artifactId>looks</artifactId>
+            <version>2.1.4</version>
+        </dependency>
+        <dependency>
+            <groupId>net.sf.proguard</groupId>
+            <artifactId>proguard-annotations</artifactId>
+            <version>6.1.1</version>
+        </dependency>
+
+        <!-- jUnit -->
+
+        <dependency>
+            <groupId>junit</groupId>
+            <artifactId>junit</artifactId>
+            <version>4.12</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.hamcrest</groupId>
+            <artifactId>hamcrest-core</artifactId>
+            <version>1.3</version>
+            <scope>test</scope>
+        </dependency>
+    </dependencies>
+
+    <build>
+        <finalName>${project.jar.name}</finalName>
+
+        <resources>
+            <resource>
+                <filtering>false</filtering>
+                <directory>src/main/java</directory>
+                <includes>
+                    <include>**</include>
+                </includes>
+                <excludes>
+                    <exclude>**/*.java</exclude>
+                </excludes>
+            </resource>
+            <!-- Default resources -->
+            <resource>
+                <filtering>false</filtering>
+                <directory>src/main/resources</directory>
+            </resource>
+        </resources>
+
+        <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-javadoc-plugin</artifactId>
+                <version>2.10.4</version>
+                <configuration>
+                    <excludePackageNames>com.*:test.*:cz.ponec._text2Java.*:cz.ponec.charMap.*:cz.ponec.ide4text.*:cz.ponec.peki.*:cz.ponec.piskvor.*:cz.ponec.vytah.*</excludePackageNames>
+                    <!--
+                    <stylesheetfile>${basedir}/src/main/java/org/ppsee/doc-files/stylesheet.css</stylesheetfile>
+                    -->
+                    <javadocDirectory>${basedir}/src/main/resources/javadoc2</javadocDirectory>
+                    <docfilessubdirs>true</docfilessubdirs>
+                    <additionalparam>-Xdoclint:none</additionalparam>
+                    <failOnError>false</failOnError>
+                    <encoding>UTF-8</encoding>
+                    <author>Pavel Ponec</author>
+                    <bottom><![CDATA[Copyright 2019, <a target="_blank" href="http://ponec.net/ppsee/">Pavel Ponec<a>]]></bottom>
+                    <doctitle>PPSee ${project.version} (${project.name})</doctitle>
+                    <windowtitle>PPSee ${project.version} - ${project.name}</windowtitle>
+                    <packagesheader><![CDATA[<a class="PPSee" target="_top" href="http://ponec.net/ppsee/"> PPSee<br>release ${project.version}</a>]]></packagesheader>
+                </configuration>
+            </plugin>
+
+            <!-- Maven Assembly Plugin -->
+            <plugin>
+                <artifactId>maven-assembly-plugin</artifactId>
+                <configuration>
+                    <archive>
+                        <manifest>
+                            <mainClass>net.ponec.jworksheet.gui.JWorkSheet</mainClass>
+                        </manifest>
+                    </archive>
+                    <descriptorRefs>
+                        <descriptorRef>jar-with-dependencies</descriptorRef>
+                    </descriptorRefs>
+                </configuration>
+                <executions>
+                    <execution>
+                        <id>make-assembly</id> <!-- this is used for inheritance merges -->
+                        <phase>package</phase> <!-- bind to the packaging phase -->
+                        <goals>
+                            <goal>single</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+
+            <!-- Configures Proguard obfuscation tool to generate an
+                 obfuscated version of the JAR file that replaces the
+                 default unobfuscated JAR.
+                 Documentation: https://wvengen.github.io/proguard-maven-plugin/proguard-mojo.html
+            -..->
+            <plugin>
+                <groupId>com.github.wvengen</groupId>
+                <artifactId>proguard-maven-plugin</artifactId>
+                <version>2.1.1</version>
+                <executions>
+                    <execution>
+                        <id>obfuscation-packaging</id>
+                        <phase>package</phase>
+                        <goals>
+                            <goal>proguard</goal>
+                        </goals>
+                        <configuration>
+                            <proguardVersion>${tool.proguard.version}</proguardVersion>
+                            <obfuscate>true</obfuscate>
+                            <attach>true</attach>
+                            <appendClassifier>false</appendClassifier>
+                            <addMavenDescriptor>true</addMavenDescriptor>
+                            <injar>${project.jar.name}-jar-with-dependencies.jar</injar>
+                            <injarNotExistsSkip>true</injarNotExistsSkip>
+                            <libs>
+                                <lib>${java.home}/lib/rt.jar</lib>
+                            </libs>
+
+                            <options>
+                                <option>-keepparameternames</option>
+                                <option>-renamesourcefileattribute SourceFile</option>
+                                <option>-keepattributes Exceptions,InnerClasses,Signature,Deprecated,
+                                    SourceFile,LineNumberTable,*Annotation*,EnclosingMethod
+                                </option>
+                                <option>-target 1.8</option>
+                                <option>-keepclassmembers,allowoptimization enum * {
+                                    public static **[] values();
+                                    public static ** valueOf(java.lang.String);
+                                    }
+                                </option>
+                                <option>-keepclassmembers class * implements java.io.Serializable {
+                                    static final long serialVersionUID;
+                                    private static final java.io.ObjectStreamField[] serialPersistentFields;
+                                    private void writeObject(java.io.ObjectOutputStream);
+                                    private void readObject(java.io.ObjectInputStream);
+                                    java.lang.Object writeReplace();
+                                    java.lang.Object readResolve();
+                                    }
+                                </option>
+
+                                <option>-keep public class cz.ponec.tools.IO</option>
+                                <option>-keep public class cz.ponec.tools.Empty</option>
+                                <option>-keep public class cz.ponec.ppSee.api.*</option>
+                                <option>-keep public class cz.ponec.ppSee._licenceGenerator.LicenceGenerator</option>
+                                <option>-keep public class cz.ponec.ppSee.PPSee</option>
+                                <option>-dontwar</option>
+                            </options>
+                        </configuration>
+                    </execution>
+                </executions>
+                <dependencies>
+                    <dependency>
+                        <groupId>net.sf.proguard</groupId>
+                        <artifactId>proguard-base</artifactId>
+                        <version>5.3.3</version>
+                    </dependency>
+                </dependencies>
+            </plugin>
+            -->
+        </plugins>
+    </build>
+
+
+</project>
