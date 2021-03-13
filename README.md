@@ -7,11 +7,11 @@ Application offers some completed work sheet reports, however you can create you
 
 ### Screenshots
 
-![alt Events](https://pponec.github.io/jworksheet/screenshots/1-Events.png "Events")
+![alt Events](docs/screenshots/1-Events.png "Events")
 
-![alt Events](https://pponec.github.io/jworksheet/screenshots/3-Projects.jpg "Projects")
+![alt Events](docs/screenshots/3-Projects.jpg "Projects")
 
-![alt Events](https://pponec.github.io/jworksheet/screenshots/4-Parameters.jpg "Parameters")
+![alt Events](docs/screenshots/4-Parameters.jpg "Parameters")
 
 ### Links
 
