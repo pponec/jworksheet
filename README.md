@@ -15,6 +15,6 @@ Application offers some completed work sheet reports, however you can create you
 
 ### Links
 
-* GigHub Home Page: https://pponec.github.io/jworksheet/
+* GitHub Home Page: https://pponec.github.io/jworksheet/
 * Original Home Page: https://jworksheet.ponec.net/
 * Ujorm framework: https://ujorm.org/
