@@ -15,6 +15,7 @@ Application offers some completed work sheet reports, however you can create you
 
 ### Links
 
+* Video tutorial: [flash/JWorkSheet-en.htm](flash/JWorkSheet-en.htm)
 * GitHub Home Page: https://pponec.github.io/jworksheet/
 * Original Home Page: https://jworksheet.ponec.net/
 * Ujorm framework: https://ujorm.org/
