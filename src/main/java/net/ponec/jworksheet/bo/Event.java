@@ -24,7 +24,6 @@ import org.ujorm.UjoAction;
 import org.ujorm.Key;
 import org.ujorm.implementation.bean.*;
 import static org.ujorm.UjoAction.*;
-import org.ujorm.core.KeyFactory;
 
 /** An Event of the Work Day.
  * I have selected the BeanUjo implementaton for its small memory footprint, two fields are stored in a memory safe data type in addition:
@@ -40,24 +39,20 @@ public class Event extends BeanUjo {
     public static final byte[] ZERO_BYTES = new byte[0];
     public static final Short  ZERO_SHORT = (short)0;
 
-    private static final KeyFactory<Event> f = KeyFactory.CamelBuilder.get(Event.class);
-
     /** Start time of event */
-    public static final Key<Event,Time>     P_TIME   = f.newKey("Time");
+    public static final Key<Event,Time>     P_TIME   = newKey("Time");
     /** Period of the event in minutes */
-    public static final Key<Event,Short>    P_PERIOD = f.newKey("Period"   , ZERO_SHORT); // [min]
+    public static final Key<Event,Short>    P_PERIOD = newKey("Period"   , ZERO_SHORT); // [min]
     /** Project (object) */
-    public static final Key<Event,Project>  P_PROJ   = f.newKey("Project");
+    public static final Key<Event,Project>  P_PROJ   = newKey("Project");
     /** Project ID for the persistence */
-    public static final Key<Event,Integer>  P_PROJID = f.newKey("ProjectID");
+    public static final Key<Event,Integer>  P_PROJID = newKey("ProjectID");
     /** Task (object) */
-    public static final Key<Event,TaskType> P_TASK   = f.newKey("Task");
+    public static final Key<Event,TaskType> P_TASK   = newKey("Task");
     /** Task ID for the persistence */
-    public static final Key<Event,Integer>  P_TASKID = f.newKey("TaskID");
+    public static final Key<Event,Integer>  P_TASKID = newKey("TaskID");
     /** Description of the event */
-    public static final Key<Event,String>   P_DESCR  = f.newKey("Description", "");
-
-    static { f.lock(); }
+    public static final Key<Event,String>   P_DESCR  = newKey("Description", "");
 
     // --- An optional property unique name test ---
     static { init(Event.class,true); }
