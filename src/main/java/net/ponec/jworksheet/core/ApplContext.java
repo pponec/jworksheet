@@ -268,15 +268,9 @@ public class ApplContext implements TableModelListener, Runnable, JwsContext {
             workSpace.set(WorkSpace.P_VERSN  , JWorkSheet.APPL_VERSION);
             workSpace.set(WorkSpace.P_USERNAME, Parameters.P_USERNAME.of(getParameters()));
 
-//            String header = false ? null // Default Header
-//            : UjoManagerXML.XML_HEADER
-//                    + "\n<!-- <?xml-stylesheet type=\"text/xsl\" href=\"styles/"
-//                    + ResourceProvider.REPORT_BASE
-//                    + "\"?> -->";
-            String comment = "\n<!-- <?xml-stylesheet type=\"text/xsl\" href=\"styles/"
+            String comment = " <?xml-stylesheet type=\"text/xsl\" href=\"styles/"
                     + ResourceProvider.REPORT_BASE
-                    + "\"?> -->";
-
+                    + "\"?> ";
             XmlHeader xmlHeader = new XmlHeader();
             xmlHeader.setComment(comment);
             File dataTempFile = getDataFileTemp();
