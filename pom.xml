@@ -204,6 +204,5 @@
             </plugin>
         </plugins>
     </build>
-
-
+    <name>jWorkSheet</name>
 </project>
