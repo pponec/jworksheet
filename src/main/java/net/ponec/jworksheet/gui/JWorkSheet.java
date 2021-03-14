@@ -77,12 +77,12 @@ import org.ujorm.swing.UjoKeyRow;
 @SuppressWarnings("unchecked")
 public final class JWorkSheet extends TopFrame {
 
-    public static final Version APPL_VERSION  = new Version("1.00") ;
-    public static final String APPL_RELEASED = "2021/03/13";
+    public static final Version APPL_VERSION = new Version("1.00") ;
+    public static final String APPL_RELEASED = "2021-03-14";
 
     public static final String APPL_NAME     = "jWorkSheet";
     public static final String APPL_HOMEPAGE = "https://pponec.github.io/jworksheet/";
-    public static final String APPL_JNLP     = APPL_HOMEPAGE + "file2.jnlp";
+    public static final String APPL_JNLP     = APPL_HOMEPAGE + "file.jnlp";
 
     private final UjoTable eventTable;
     private final UjoTable projTable;

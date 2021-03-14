@@ -7,8 +7,8 @@
     <title>jWorkSheet</title>
     <vendor>Pavel Ponec</vendor>
     <homepage href="."/>
-    <description>...</description>
-    <description kind="short">...</description>
+    <description>Release: 1.00</description>
+    <description kind="short">A time tracker</description>
     <icon href="logo.png"/>
     <icon kind="splash" href="logo.png"/>
     <offline-allowed/>
