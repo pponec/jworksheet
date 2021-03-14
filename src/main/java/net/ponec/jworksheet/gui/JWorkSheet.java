@@ -90,7 +90,8 @@ public final class JWorkSheet extends TopFrame {
     private final UjoTable paramTable;
     private final UjoTable[] tables;
 
-    private boolean visibleLock = false;
+    private volatile boolean visibleLock = false;
+    private volatile boolean running = false;
 
     private final Color COLOR_OFF  = new Color(0xDC5555);
     private final Color COLOR_WORK = new Color(0x405881);
@@ -252,8 +253,17 @@ public final class JWorkSheet extends TopFrame {
                     closeAppl(null);
                 }
             });
+
+            // Set a terminate hook (https://www.baeldung.com/jvm-shutdown-hooks):
+            running = true;
             try {
-                JwsHandler.init(this);
+                Runtime.getRuntime().addShutdownHook(new Thread(() -> {
+                    if (running) {
+                        running = false;
+                        closeAppl(null);
+                    }
+                    System.exit(0);
+                }));
             } catch (Throwable e) {}
 
             // Window sizing:
