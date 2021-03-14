@@ -1,30 +1,29 @@
-<?xml version="1.0" encoding="utf-8"?> 
-<jnlp 
-  spec="1.0+" 
-  codebase="http://jworksheet.ponec.net/" 
-  href="file.jnlp"> 
-  <information> 
-    <title>jWorkSheet</title> 
-    <vendor>Pavel Ponec</vendor> 
-    <homepage href="."/> 
-    <description>...</description> 
-    <description kind="short">...</description> 
+<?xml version="1.0" encoding="utf-8"?>
+<jnlp
+  spec="1.0+"
+  codebase="https://pponec.github.io/jworksheet/"
+  href="file.jnlp">
+  <information>
+    <title>jWorkSheet</title>
+    <vendor>Pavel Ponec</vendor>
+    <homepage href="."/>
+    <description>...</description>
+    <description kind="short">...</description>
     <icon href="logo.png"/>
-    <icon kind="splash" href="logo.png"/> 
-    <offline-allowed/> 
+    <icon kind="splash" href="logo.png"/>
+    <offline-allowed/>
   </information>
-  
+
   <security>
-      <all-permissions/> 
+      <all-permissions/>
   </security>
-  
-  <resources> 
-    <j2se version="1.5+" max-heap-size="32m"/> 
+
+  <resources>
+    <j2se version="11+" max-heap-size="32m"/>
     <jar href="jWorkSheet.jar"/>
-    <jar href="lib/UJO.jar" />
-  </resources> 
-  <application-desc 
-      main-class="net.ponec.jworksheet.gui.JWorkSheet"> 
-  </application-desc> 
-</jnlp> 
+  </resources>
+  <application-desc
+      main-class="net.ponec.jworksheet.gui.JWorkSheet">
+  </application-desc>
+</jnlp>
 

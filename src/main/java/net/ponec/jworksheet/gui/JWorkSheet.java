@@ -81,7 +81,7 @@ public final class JWorkSheet extends TopFrame {
     public static final String APPL_RELEASED = "2021/03/13";
 
     public static final String APPL_NAME     = "jWorkSheet";
-    public static final String APPL_HOMEPAGE = "http://jworksheet.ponec.net/";
+    public static final String APPL_HOMEPAGE = "https://pponec.github.io/jworksheet/";
     public static final String APPL_JNLP     = APPL_HOMEPAGE + "file2.jnlp";
 
     private final UjoTable eventTable;

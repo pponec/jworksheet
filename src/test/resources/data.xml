@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Demo-Data -.- <?xml-stylesheet type="text/xsl" href="styles/ReportBase.xsl"?>  -->
+<body>
+  <Version>1.00</Version>
+  <Created>2021-03-14T11:51:31.634</Created>
+  <Archived>2021-03-14T11:42:58.496</Archived>
+  <Username>Pavel</Username>
+  <CheckReleaseDate>1970-01-01T01:00:00.000</CheckReleaseDate>
+  <CheckReleaseVersion>1.00</CheckReleaseVersion>
+  <Day>
+    <Date>2021-03-14</Date>
+    <Event>
+      <Time>08:00</Time>
+      <Period>240</Period>
+      <ProjectID>0</ProjectID>
+      <TaskID>1</TaskID>
+      <Description></Description>
+    </Event>
+    <Event>
+      <Time>12:00</Time>
+      <Period>0</Period>
+      <ProjectID>3</ProjectID>
+      <Description></Description>
+    </Event>
+  </Day>
+  <Project>
+    <ID>0</ID>
+    <Default>false</Default>
+    <Finished>false</Finished>
+    <Private>false</Private>
+    <Description>Water the garden</Description>
+    <Task>
+      <ID>1</ID>
+      <Default>false</Default>
+      <Finished>false</Finished>
+      <Description>Roses</Description>
+    </Task>
+    <Task>
+      <ID>2</ID>
+      <Default>false</Default>
+      <Finished>false</Finished>
+      <Description>Tulips</Description>
+    </Task>
+  </Project>
+  <Project>
+    <ID>1</ID>
+    <Default>false</Default>
+    <Finished>false</Finished>
+    <Private>false</Private>
+    <Description>Washing dishes</Description>
+    <Task>
+      <ID>0</ID>
+      <Default>false</Default>
+      <Finished>false</Finished>
+      <Description>Task of the 1st Project</Description>
+    </Task>
+  </Project>
+  <Project>
+    <ID>2</ID>
+    <Default>false</Default>
+    <Finished>false</Finished>
+    <Private>false</Private>
+    <Description>Shopoping</Description>
+  </Project>
+  <Project>
+    <ID>3</ID>
+    <Default>false</Default>
+    <Finished>false</Finished>
+    <Private>true</Private>
+    <Description>Dinner</Description>
+    <Task>
+      <ID>1</ID>
+      <Default>true</Default>
+      <Finished>false</Finished>
+      <Description>No comment</Description>
+    </Task>
+  </Project>
+  <Project>
+    <ID>4</ID>
+    <Default>false</Default>
+    <Finished>false</Finished>
+    <Private>false</Private>
+    <Description>Secret project</Description>
+  </Project>
+  <Project>
+    <ID>5</ID>
+    <Default>false</Default>
+    <Finished>false</Finished>
+    <Private>true</Private>
+    <Description>Exit</Description>
+  </Project>
+</body>
