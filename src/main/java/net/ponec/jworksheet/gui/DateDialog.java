@@ -34,41 +34,41 @@ import net.ponec.jworksheet.resources.ResourceProvider;
  * @author  Pavel Ponec
  */
 public class DateDialog extends TopDialog implements java.awt.event.ActionListener, javax.swing.event.ChangeListener {
-    
+
     private static final Logger LOGGER = Logger.getLogger(DateDialog.class.getName());
-    
+
     /** A spinner format */
     final private String gotoFormat;
-    
+
     /** A spinner format */
     final private String mainFormat;
-    
+
     /** A select daty */
     private Date result = null;
-    
+
     /**
      * Creates new form ReportDialog
      */
     public DateDialog(ApplContext aContext) {
         super(aContext);
         setLocale(aContext.getLanguage());
-        
+
         mainFormat = applContext.getParameters().getDateFormat(Parameters.P_DATE_MAIN_FORMAT, aContext);
         gotoFormat = applContext.getParameters().getDateFormat(Parameters.P_DATE_GOTO_FORMAT, aContext);
-        
+
         initComponents();
         tDate.setValue(applContext.getSelectedDay().getTime());
-        
+
         setTitle("Go to the day");
         setSize(300, 130);
         getRootPane().setDefaultButton(bOK);
-        
-        
+
+
         if (gotoFormat.startsWith("EEEE")) {
             // If format starts EEEE:
             ApplTools.setAlign(tDate, JFormattedTextField.RIGHT);
         }
-        
+
         if (!applContext.getParameters().get(Parameters.P_HIDE_ICONS)) {
             ResourceProvider rp = new ResourceProvider();
             bOK.setIcon    (rp.getIcon(ResourceProvider.IMG_OK));
@@ -81,12 +81,12 @@ public class DateDialog extends TopDialog implements java.awt.event.ActionListen
         languageManager.setFirstRunTexts(this);
 
     }
-    
+
     /** Create a date spinner */
     private JSpinner createDateSpinner() {
         return ApplTools.createSpinnerDate(gotoFormat, getLocale());
     }
-    
+
     /** Return result */
     public Date getResult() {
         setVisible(true);
@@ -97,8 +97,8 @@ public class DateDialog extends TopDialog implements java.awt.event.ActionListen
     final public void escapeAction(ActionEvent e) {
         bCancelActionPerformed(e);
     }
-    
-    
+
+
     /** This method is called from within the constructor to
      * initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is
@@ -157,7 +157,7 @@ public class DateDialog extends TopDialog implements java.awt.event.ActionListen
         jPanel2.add(pButtons, gridBagConstraints);
 
         tDate.setFont(new java.awt.Font("Lucida Sans", 0, 11)); // NOI18N
-        tDate.setPreferredSize(new java.awt.Dimension(160, 18));
+        tDate.setPreferredSize(new java.awt.Dimension(160, 22));
         tDate.addChangeListener(this);
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 2;
@@ -195,29 +195,29 @@ public class DateDialog extends TopDialog implements java.awt.event.ActionListen
             DateDialog.this.tDateStateChanged(evt);
         }
     }// </editor-fold>//GEN-END:initComponents
-    
+
     private void tDateStateChanged(javax.swing.event.ChangeEvent evt) {//GEN-FIRST:event_tDateStateChanged
         Date date = (Date) tDate.getValue();
         SimpleDateFormat df = new SimpleDateFormat(mainFormat, applContext.getLanguage());
         setTitle(df.format(date));
     }//GEN-LAST:event_tDateStateChanged
-    
+
     private void bTodayActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_bTodayActionPerformed
         tDate.setValue(new Date());
     }//GEN-LAST:event_bTodayActionPerformed
-    
+
     private void bOKActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_bOKActionPerformed
         result = (Date) tDate.getValue();
         bCancelActionPerformed(evt);
-        
-        
+
+
     }//GEN-LAST:event_bOKActionPerformed
-    
+
     private void bCancelActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_bCancelActionPerformed
         setVisible(false);
         dispose();
     }//GEN-LAST:event_bCancelActionPerformed
-    
+
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton bCancel;
     private javax.swing.JButton bOK;
@@ -229,5 +229,5 @@ public class DateDialog extends TopDialog implements java.awt.event.ActionListen
     private javax.swing.ButtonGroup reportTypeGroup;
     private javax.swing.JSpinner tDate;
     // End of variables declaration//GEN-END:variables
-    
+
 }
