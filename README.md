@@ -9,7 +9,7 @@ Application offers some completed work sheet reports, however you can create you
 
 ![alt Events](docs/screenshots/1-Events.png "Events")
 
-See the [link](screenshots) for more screenshots.
+See the [link](docs/screenshots/) for more screenshots.
 
 
 ### Links
