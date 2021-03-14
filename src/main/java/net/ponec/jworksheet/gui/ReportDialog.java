@@ -52,55 +52,55 @@ import org.ujorm.core.UjoActionImpl;
  * @author  Pavel Ponec
  */
 public class ReportDialog extends TopDialog implements java.awt.event.ActionListener, javax.swing.event.ChangeListener, java.awt.event.MouseListener {
-    
+
     protected static final Logger LOGGER = Logger.getLogger(ReportDialog.class.getName());
-    
+
     /** A spinner format */
     private String spinnerFormat;
-    
+
     /** General selected date. */
     private long originalDay;
-    
+
     /** An result of report: */
     private Boolean result = false;
-    
+
     /** Enable a synchronization of Date. */
     private boolean dateSynchroEnabled = true;
-    
+
     /** Are workdays sorted? */
     private boolean sorted = false;
-    
+
     /**
      * Creates new form ReportDialog
      */
     public ReportDialog(java.awt.Frame parent, ApplContext aContext) {
         super(aContext);
         originalDay = aContext.getSelectedDay().getCalendar().getTimeInMillis();
-        
+
         setLocale(aContext.getLanguage());
         spinnerFormat = applContext.getParameters().getDateFormat(Parameters.P_DATE_REPORT_FORMAT, aContext);
         initComponents();
         selectDayAction(new java.awt.event.ActionEvent(rbDay, -1, ""));
-        
+
         setTitle("Report parameters");
         //setSize(410, 500);
         getRootPane().setDefaultButton(bOK);
-        
+
         currentDayGroup.setSelected(rbDay.getModel(), true);
-        
+
         if (!spinnerFormat.startsWith("EEEE")) {
             // If format starts EEEE:
             ApplTools.setAlign(tDateFrom, JFormattedTextField.LEFT);
             ApplTools.setAlign(tDateTo  , JFormattedTextField.LEFT);
         }
-        
+
         if (!applContext.getParameters().get(Parameters.P_HIDE_ICONS)) {
             ResourceProvider rp = new ResourceProvider();
             bOK.setIcon    (rp.getIcon(ResourceProvider.IMG_OK));
             bReport.setIcon(rp.getIcon(ResourceProvider.IMG_EMPTY));
             bCancel.setIcon(rp.getIcon(ResourceProvider.IMG_CANCEL));
         }
-        
+
         reportList.setModel(createReportModel());
         reportList.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
         reportList.setSelectedIndex(0);
@@ -124,7 +124,7 @@ public class ReportDialog extends TopDialog implements java.awt.event.ActionList
         return applContext.getLanguageManager().getTextAllways(key);
     }
 
-    
+
     /** Create a List of Reports. */
     private ListModel createReportModel() {
         DefaultListModel model = new DefaultListModel();
@@ -134,21 +134,21 @@ public class ReportDialog extends TopDialog implements java.awt.event.ActionList
         model.addElement(new MetaReport(getTitle("ProjectSummary"       ), ReportB.class));
         model.addElement(new MetaReport(getTitle("DetailDayReports"     ), ReportC.class));
  // TODO:       model.addElement(new MetaReport(getTitle("AttendanceReport"     ), ReportAttendance.class));
-        
+
         for (MetaReport report : applContext.getMetaReports()) {
             String title = report.getTitle();
             report.setTitle(getTitle(title));
             model.addElement(report);
         }
-        
+
         return model;
     }
-    
+
     /** Create a date spinner */
     private JSpinner createDateSpinner() {
         return ApplTools.createSpinnerDate(spinnerFormat, getLocale());
     }
-    
+
     /** Returns a YearMonthDay from a JSpinner component. */
     private YearMonthDay getYearMonthDay(JSpinner spinner) {
         YearMonthDay result = new YearMonthDay();
@@ -158,16 +158,16 @@ public class ReportDialog extends TopDialog implements java.awt.event.ActionList
         result.setYearMonthDay(cal);
         return result;
     }
-    
+
     public Boolean getResult() {
         return result;
     }
-    
+
     @Override
     final public void escapeAction(ActionEvent e) {
         bCancelActionPerformed(e);
     }
-    
+
     /** Returns XSL Parameters: */
     private ArrayList<String[]> getXslParams(MetaReport metaReport) {
         ArrayList<String[]> result = new ArrayList<String[]>(16);
@@ -208,7 +208,7 @@ public class ReportDialog extends TopDialog implements java.awt.event.ActionList
 
         return result;
     }
-    
+
     /** Returns XSL Parameters: */
     private String[] getXslParamItem(Key param) {
         final String[] result = new String[]
@@ -217,7 +217,7 @@ public class ReportDialog extends TopDialog implements java.awt.event.ActionList
         } ;
         return result;
     }
-    
+
     /** Returns XSL Labels: */
     private String[] getXslLabelItem(Key param) {
         final String[] result = new String[]
@@ -227,7 +227,7 @@ public class ReportDialog extends TopDialog implements java.awt.event.ActionList
         return result;
     }
 
-    
+
     /** This method is called from within the constructor to
      * initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is
@@ -287,8 +287,8 @@ public class ReportDialog extends TopDialog implements java.awt.event.ActionList
         gridBagConstraints.insets = new java.awt.Insets(0, 0, 0, 7);
         jPanel2.add(lDateTo, gridBagConstraints);
 
-        tDateFrom.setFont(new java.awt.Font("Lucida Sans", 0, 11));
-        tDateFrom.setPreferredSize(new java.awt.Dimension(220, 18));
+        tDateFrom.setFont(new java.awt.Font("Lucida Sans", 0, 11)); // NOI18N
+        tDateFrom.setPreferredSize(new java.awt.Dimension(220, 22));
         tDateFrom.addChangeListener(this);
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 2;
@@ -298,8 +298,8 @@ public class ReportDialog extends TopDialog implements java.awt.event.ActionList
         gridBagConstraints.weightx = 1.0;
         jPanel2.add(tDateFrom, gridBagConstraints);
 
-        tDateTo.setFont(new java.awt.Font("Lucida Sans", 0, 11));
-        tDateTo.setPreferredSize(new java.awt.Dimension(220, 18));
+        tDateTo.setFont(new java.awt.Font("Lucida Sans", 0, 11)); // NOI18N
+        tDateTo.setPreferredSize(new java.awt.Dimension(220, 22));
         tDateTo.addChangeListener(this);
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 2;
@@ -527,8 +527,8 @@ public class ReportDialog extends TopDialog implements java.awt.event.ActionList
         gridBagConstraints.insets = new java.awt.Insets(15, 15, 15, 15);
         getContentPane().add(jPanel2, gridBagConstraints);
 
-        java.awt.Dimension screenSize = java.awt.Toolkit.getDefaultToolkit().getScreenSize();
-        setBounds((screenSize.width-563)/2, (screenSize.height-404)/2, 563, 404);
+        setSize(new java.awt.Dimension(563, 404));
+        setLocationRelativeTo(null);
     }
 
     // Code for dispatching events from components to event handlers.
@@ -601,7 +601,7 @@ public class ReportDialog extends TopDialog implements java.awt.event.ActionList
             ReportDialog.this.tDateFromStateChanged(evt);
         }
     }// </editor-fold>//GEN-END:initComponents
-    
+
     private void reportListMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_reportListMouseClicked
         if (evt.getButton()==MouseEvent.BUTTON1
         &&  evt.getClickCount()==2
@@ -610,9 +610,9 @@ public class ReportDialog extends TopDialog implements java.awt.event.ActionList
             bOKActionPerformed(null);
         }
     }//GEN-LAST:event_reportListMouseClicked
-    
+
     private void tDateFromStateChanged(javax.swing.event.ChangeEvent evt) {//GEN-FIRST:event_tDateFromStateChanged
-        
+
         if (dateSynchroEnabled && isVisible()) {
             JSpinner s1 = (JSpinner) evt.getSource();
             JSpinner s2  = s1==tDateFrom ? tDateTo : tDateFrom;
@@ -625,23 +625,23 @@ public class ReportDialog extends TopDialog implements java.awt.event.ActionList
                 dateSynchroEnabled = true;
             }
         }
-        
+
     }//GEN-LAST:event_tDateFromStateChanged
-    
+
     private void bTodayToActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_bTodayToActionPerformed
         tDateTo.setValue(new Date());
     }//GEN-LAST:event_bTodayToActionPerformed
-    
+
     private void bTodayFromActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_bTodayFromActionPerformed
         tDateFrom.setValue(new Date());
-        
+
     }//GEN-LAST:event_bTodayFromActionPerformed
-    
+
     private void bOKActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_bOKActionPerformed
-        
+
         bOK.setEnabled(false);
         ApplTools.setCursorWait(true, applContext);
-        
+
         MetaReport metaReport = (MetaReport) reportList.getSelectedValue();
         if (metaReport!=null) try {
             if (!sorted) {
@@ -651,10 +651,10 @@ public class ReportDialog extends TopDialog implements java.awt.event.ActionList
             if (metaReport.getXSL()!=null) {
                 result = null;
                 applContext.showReport(null, metaReport.getXSL(), getXslParams(metaReport));
-                
+
             } else {
                 Calculator cal = (Calculator) metaReport.getTypeClass().newInstance();
-                
+
                 cal.init
                 ( applContext
                 , getYearMonthDay(tDateFrom)
@@ -662,43 +662,43 @@ public class ReportDialog extends TopDialog implements java.awt.event.ActionList
                 , metaReport.getTitle()
                 );
                 String report = cal.print();
-                
+
                 applContext.showReport(report);
                 result = null;
             }
-            
+
         } catch (Throwable e) {
             applContext.getTopFrame().showMessage("Report failed", e);
         }
-        
+
         bOK.setEnabled(true);
         ApplTools.setCursorWait(false, applContext);
         //bCancelActionPerformed(evt);
-        
+
         if (evt==null
         ||  evt.getSource()==bOK
         /* Parameters.P_CLOSE_REPORT_DIALOG.of(applContext.getParameters())*/
         ){
             bCancelActionPerformed(null);
         }
-        
-        
+
+
     }//GEN-LAST:event_bOKActionPerformed
-    
+
     private void bCancelActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_bCancelActionPerformed
         setVisible(false);
         dispose();
     }//GEN-LAST:event_bCancelActionPerformed
-    
+
     private void selectDayAction(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_selectDayAction
         Calendar c1 = Calendar.getInstance();
         Calendar c2 = Calendar.getInstance();
         c1.setTimeInMillis(originalDay);
         c2.setTimeInMillis(originalDay);
-        
+
         int firstDay = applContext.getParameters().get(Parameters.P_FIRST_DAY_OF_WEEK);
         Object sourceComp = evt.getSource();
-        
+
         if (rbDayPrev==sourceComp) {
             c1.add(Calendar.DAY_OF_YEAR, -1);
         } else if (rbWeekPrev==sourceComp) {
@@ -708,9 +708,9 @@ public class ReportDialog extends TopDialog implements java.awt.event.ActionList
         } else if (rbYearPrev==sourceComp) {
             c1.add(Calendar.YEAR, -1);
         }
-        
+
         // -------
-        
+
         if (sourceComp==rbDayPrev) {
             c2.setTimeInMillis(c1.getTimeInMillis());
         } else if (sourceComp==rbWeek
@@ -737,14 +737,14 @@ public class ReportDialog extends TopDialog implements java.awt.event.ActionList
             c2.add(Calendar.YEAR, 1);
             c2.add(Calendar.DAY_OF_YEAR, -1);
         }
-        
+
         dateSynchroEnabled = false;
         tDateFrom.setValue(c1.getTime());
         tDateTo.setValue  (c2.getTime());
         dateSynchroEnabled = true;
-        
+
     }//GEN-LAST:event_selectDayAction
-    
+
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton bCancel;
     private javax.swing.JButton bOK;
@@ -775,5 +775,5 @@ public class ReportDialog extends TopDialog implements java.awt.event.ActionList
     private javax.swing.JSpinner tDateFrom;
     private javax.swing.JSpinner tDateTo;
     // End of variables declaration//GEN-END:variables
-    
+
 }
