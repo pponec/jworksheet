@@ -28,6 +28,7 @@ import java.io.InputStream;
 import java.io.OutputStreamWriter;
 import java.io.Writer;
 import java.nio.charset.Charset;
+import static java.nio.charset.StandardCharsets.UTF_8;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -218,7 +219,7 @@ public class ApplContext implements TableModelListener, Runnable, JwsContext {
                     ByteArrayOutputStream os = new ByteArrayOutputStream(64);
                     int c;
                     while ((c=is.read())!=-1) { os.write(c); }
-                    String content = os.toString("UTF-8");
+                    String content = os.toString(UTF_8);
                     int i = 1+content.indexOf(':');
                     String className = content.substring(i).trim();
                     if (ApplTools.isValid(content)) {
@@ -618,7 +619,7 @@ public class ApplContext implements TableModelListener, Runnable, JwsContext {
     /** Returns a tag content. */
     public String getTagContent(final File file, final String tagName) throws IOException {
 
-        String data = ApplTools.getFileContent(file, Charset.forName("UTF-8"), 300);
+        String data = ApplTools.getFileContent(file, UTF_8, 300);
         String tag1 = "<"  + tagName + ">";
         String tag2 = "</" + tagName + ">";
         int i1 = data.indexOf(tag1);
@@ -739,7 +740,7 @@ public class ApplContext implements TableModelListener, Runnable, JwsContext {
             File tempFile = File.createTempFile("_report.", ".html");
             tempFile.deleteOnExit();
             FileOutputStream os = new FileOutputStream(tempFile);
-            writer = new OutputStreamWriter(os, "utf-8");
+            writer = new OutputStreamWriter(os, UTF_8);
             writer.write(report);
             writer.close();
             getTopFrame().browse(tempFile.toURI().toString());
@@ -767,7 +768,7 @@ public class ApplContext implements TableModelListener, Runnable, JwsContext {
     private void makeDataConversion(float oldVersion) {
         FileOutputStream os = null;
         try {
-            String data = ApplTools.getFileContent(getDataFile(), Charset.forName("UTF-8"), Integer.MAX_VALUE);
+            String data = ApplTools.getFileContent(getDataFile(), UTF_8, Integer.MAX_VALUE);
             data = data.replaceAll("<Time javaClass=\"java.lang.String\">", "<Time>" );
 
             //data = data.replaceAll("<item>"  , " " );
@@ -777,7 +778,7 @@ public class ApplContext implements TableModelListener, Runnable, JwsContext {
             File dataFileTarget = getDataFile();
 
             os = new FileOutputStream(dataFileTemp);
-            os.write(data.getBytes("UTF-8"));
+            os.write(data.getBytes(UTF_8));
             os.close();
             ApplTools.rename(dataFileTemp, dataFileTarget);
 

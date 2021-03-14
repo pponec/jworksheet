@@ -45,6 +45,7 @@ import java.net.URI;
 import java.net.URL;
 import java.net.URLClassLoader;
 import java.nio.charset.Charset;
+import static java.nio.charset.StandardCharsets.UTF_8;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -619,7 +620,7 @@ public final class ApplTools {
         InputStream is = null;
         try {
             is = new URL(url).openStream();
-            Reader reader = new InputStreamReader(new BufferedInputStream(is), "UTF-8");
+            Reader reader = new InputStreamReader(new BufferedInputStream(is), UTF_8);
 
             String word = findWord(reader, "<description>Release:", "</description>").trim();
             if (!isValid(word)) {
