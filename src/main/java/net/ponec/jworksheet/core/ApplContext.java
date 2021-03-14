@@ -62,6 +62,7 @@ import net.ponec.jworksheet.resources.ResourceProvider;
 import org.ujorm.core.UjoManagerRBundle;
 import org.ujorm.core.UjoManagerXML;
 import org.ujorm.core.XmlHeader;
+import org.ujorm.tools.Check;
 
 /**
  * A Main Application Context
@@ -222,7 +223,7 @@ public class ApplContext implements TableModelListener, Runnable, JwsContext {
                     String content = os.toString(UTF_8);
                     int i = 1+content.indexOf(':');
                     String className = content.substring(i).trim();
-                    if (ApplTools.isValid(content)) {
+                    if (Check.hasLength(content)) {
                         Class<ModuleApi> mod = ApplTools.getClass(className, file);
                         ModuleApi mapi = mod.newInstance();
                         mapi.setJwsContext(this);

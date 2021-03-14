@@ -34,6 +34,7 @@ import org.ujorm.UjoAction;
 import static org.ujorm.UjoAction.*;
 import org.ujorm.core.KeyFactory;
 import org.ujorm.extensions.AbstractUjo;
+import org.ujorm.tools.Check;
 
 /**
  * Parameters of the application.
@@ -46,7 +47,7 @@ public class Parameters extends AbstractUjo {
 
     /** A "Default Value" Label */
     private static final String VALUE_DEFAULT = "<default>";
-    
+
     private static final KeyFactory<Parameters> f = KeyFactory.CamelBuilder.get(Parameters.class);
 
     /** LocaleText lcalization */
@@ -120,12 +121,12 @@ public class Parameters extends AbstractUjo {
     /** Returns an operation system login */
     public static String getSystemLogin() {
         String result = System.getProperty("user.name");
-        return ApplTools.isValid(result)
+        return Check.hasLength(result)
              ? Character.toUpperCase(result.charAt(0)) + result.substring(1)
              : "?"
              ;
     }
-    
+
     /** Parameters constructor */
     public Parameters() {
         // Default initialization:
@@ -133,19 +134,19 @@ public class Parameters extends AbstractUjo {
             writeValue(par, par.getDefault());
         }
     }
-    
+
     /** Returns a propertyCount value */
     @Override
     public KeyList<?> readKeys() {
         return f.getKeys();
     }
-    
+
     /** Overrided for additional features */
     @Override
     public void writeValue(Key property, Object value) {
-        
+
         if (P_SYSTEM_BROWSER_PATH==property
-        && !ApplTools.isValid((String)value)) {
+        && Check.isEmpty((String)value)) {
             value = P_SYSTEM_BROWSER_PATH.getDefault();
         } else if (P_DATA_FILE_PATH==property) {
             String name
@@ -163,9 +164,9 @@ public class Parameters extends AbstractUjo {
                 throw new MessageException("Can't write data to " + value);
             }
         }
-        
+
         super.writeValue(property, value);
-        
+
         if (P_LANG==property) {
             setDecimalFormat();
         } else if (P_DATE_MAIN_FORMAT  ==property
@@ -182,7 +183,7 @@ public class Parameters extends AbstractUjo {
             }
         }
     }
-    
+
     /** Enables the file writing or creating changes? */
     private boolean canWrite(File file) {
         try {
@@ -196,7 +197,7 @@ public class Parameters extends AbstractUjo {
             throw new RuntimeException(e);
         }
     }
-    
+
     /** An authorization settings. */
     @Override
     @SuppressWarnings("unchecked")
@@ -214,13 +215,13 @@ public class Parameters extends AbstractUjo {
                 && value   != null)
                 :  property!=P_WINDOW_SIZE
                 ;
-                
+
                 return result;
             default:
                 return super.readAuthorization(action, property, value);
         }
     }
-    
+
     // --------------------------------
 
     /** Returns a localized date format */
@@ -231,20 +232,20 @@ public class Parameters extends AbstractUjo {
         return result;
     }
 
-    
+
     /** Set new Decimal FormatsetLocale  */
     private void setDecimalFormat() {
         Locale locale = get(P_LANG);
         decimalFormat = ApplTools.createDecimalFormat("0.00", locale);
     }
-    
+
     /** WriteValueString */
     @Override
     @SuppressWarnings("unchecked")
     public void writeValueString(Key property, String value, Class type, UjoAction action) {
-      
+
         if (P_SYSTRAY_SECOND_CLICK==property) {
-            if (ApplTools.isValid(value)) {
+            if (Check.hasLength(value)) {
                super.writeValueString(property, value.toUpperCase(), type, action);
             } else {
                ((Property) property).setValueFromDefault(this);
@@ -257,7 +258,7 @@ public class Parameters extends AbstractUjo {
     /** Returns a format time. */
     public String formatTime(int minutes) {
        final boolean deci = get(P_DECIMAL_TIME_FORMAT);
-       
+
        if (deci) {
             // Numeric format: 1.50
             final DecimalFormat NUM_FORMAT = decimalFormat;
@@ -299,5 +300,5 @@ public class Parameters extends AbstractUjo {
     }
 
 
-    
+
 }

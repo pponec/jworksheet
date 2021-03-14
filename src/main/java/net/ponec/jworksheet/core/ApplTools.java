@@ -74,6 +74,7 @@ import javax.xml.transform.stream.StreamSource;
 import net.ponec.jworksheet.gui.JWorkSheet;
 import net.ponec.jworksheet.resources.ResourceProvider;
 import org.ujorm.core.RingBuffer;
+import org.ujorm.tools.Check;
 
 /**
  * Static methods.
@@ -296,12 +297,6 @@ public final class ApplTools {
         return result.toString();
     }
 
-    /** Returns true, if text is not null and not empty. */
-    public static final boolean isValid(CharSequence text) {
-        final boolean result = text!=null && text.length()>0;
-        return result;
-    }
-
     /** Returns true, if environment is a Windows OS. */
     public static boolean isWindowsOS() {
         final boolean result = System.getProperty("os.name").startsWith("Windows");
@@ -466,7 +461,7 @@ public final class ApplTools {
     public static void browse(URI uri, String sysBrowser) throws IOException, UnsupportedOperationException  {
 
         sysBrowser = sysBrowser!=null ? sysBrowser.trim() : "" ;
-        if (isValid(sysBrowser)){
+        if (Check.hasLength(sysBrowser)){
             String quotation = sysBrowser.indexOf(' ')>=0 ? "\"" : "" ;
             String command = quotation + sysBrowser + quotation + " " + uri.toString();
             Process child = Runtime.getRuntime().exec(command);
@@ -623,7 +618,7 @@ public final class ApplTools {
             Reader reader = new InputStreamReader(new BufferedInputStream(is), UTF_8);
 
             String word = findWord(reader, "<description>Release:", "</description>").trim();
-            if (!isValid(word)) {
+            if (Check.isEmpty(word)) {
                 word = "0";
             }
 

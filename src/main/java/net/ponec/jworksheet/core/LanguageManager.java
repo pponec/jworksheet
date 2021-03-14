@@ -30,6 +30,7 @@ import java.util.*;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import org.ujorm.Key;
+import org.ujorm.tools.Check;
 
 
 /**
@@ -62,21 +63,21 @@ public class LanguageManager {
 
     /** A key word to skipping a generic translation for marked component.  */
     public static final String STOP_TRANSLATION = "~STOP~TRANSLATION";
-    
+
     // --- Konstants ----
-    
+
     /** A Locale for default property: */
     public static final Locale DEFAULT_LOCALE = new Locale("");
 
     /** Swing class prefix */
     private final String SWING_PREFIX = "javax.swing.J";
     private final String DOT  = ".";
-    
+
     /** Debug Mode */
     public static final boolean DEBUG_MODE = false;
-    
+
     // --- Other ----
-    
+
     /** Attribute for enable timing (outupt to console). */
     public static final boolean enableTiming = false;
     /** Top level container. */
@@ -103,17 +104,17 @@ public class LanguageManager {
     private static final Class[] parameterTypes2 = {String.class};
     /** New line. */
     private static final String nl = "\n";
-    
+
     /** New solution for Creating Key Method. */
     private final boolean newSolution4Key = true;
     /** Buffer for store properties content. */
     private StringBuilder properties;
     /** Buffer for store warnings content. */
     private StringBuilder warnings;
-    
+
     // ---------- Constructor -------------------
-    
-   
+
+
     /** Creates new LanguageManager class.
      * @param basicContainer Parameter is default Root. It is used alse for PROPERTY file name.
      * @param bundlePattern A bundlePattern class determine a bundle name.
@@ -129,10 +130,10 @@ public class LanguageManager {
             properties = new StringBuilder();
             warnings   = new StringBuilder();
         }
-    }    
-    
+    }
+
     // ----------- Methods --------------------
-    
+
     /**
      * Create an key Name for the <b>param</b> container
      * and their subcomponents for the first run.
@@ -141,7 +142,7 @@ public class LanguageManager {
     public void setFirstRunTexts(java.awt.Container topContainer) {
         setFirstRunTexts(topContainer, locale);
     }
-    
+
     /**
      * Create an key Name for the <b>param</b> container
      * and their subcomponents for the first run.
@@ -152,8 +153,8 @@ public class LanguageManager {
         //setTexts(aLocale, topContainer);
         setTexts(null, topContainer);
     }
-    
-   
+
+
     /**
      * Set new locale and change texts in GUI on
      * the top container and his subcomponents.
@@ -181,7 +182,7 @@ public class LanguageManager {
 
         return locale;
     }
-    
+
     /** Find a bundle or return null. */
     private boolean findPropertyBundle(Locale locale) {
         String myBundle  = "/" + bundleName.replace('.','/');
@@ -207,7 +208,7 @@ public class LanguageManager {
     public void setLocale(java.util.Locale locale, boolean changeGuiText) {
         setTexts(locale, changeGuiText ? basicContainer : null);
     }
-    
+
     /**
      * Create an key Name for the <b>top</b> container and their subcomponents.
      * @param locale
@@ -216,18 +217,18 @@ public class LanguageManager {
         if (locale!=null) {
            setLocale(locale, true);
         }
-        
+
         // Text Change:
         if (topContainer==null) { return; }
-        
+
         // TimeStore:
         long timeStore = 0L;
-        
+
         // Initial:
         if (this.show) {
             properties.setLength(0);
             warnings.setLength(0);
-            
+
             properties.append("# Properties for "
             + bundleName
             + " object ("
@@ -235,7 +236,7 @@ public class LanguageManager {
             + ") :"
             + nl + nl
             );
-            
+
             warnings.append("# Warnings for "
             + bundleName
             + " object ("
@@ -244,11 +245,11 @@ public class LanguageManager {
             + nl + nl
             );
         }
-        
+
         if (enableTiming){
             timeStore = System.currentTimeMillis();
         }
-        
+
         // Conversion:
         keyConvertorBuffer = new StringBuilder(50);
         try {
@@ -257,19 +258,19 @@ public class LanguageManager {
             LOGGER.log(Level.WARNING, "Language", e);
         }
         keyConvertorBuffer = null;
-        
-        
+
+
         // Show a Result:
         if (show && firstRuning) show();
         if (enableTiming){
             timeStore = System.currentTimeMillis() - timeStore;
             java.lang.System.err.println(">>> Time: " + timeStore + " [ms] <<<");
         }
-        
+
         // take off attribute:
         firstRuning = false;
     }
-    
+
     /** Show GUI Dialog. */
     private void show() {
         new LanguageManagerDialog
@@ -278,11 +279,11 @@ public class LanguageManager {
         , warnings.toString()
         );
     }
-    
+
     /** Returns a Class Type and insert a dot (.) character on first position. */
     private String getClassType(java.awt.Container aCont) {
         String result;
-        
+
         result = aCont.getClass().getName(); // Sample Class: "javax.swing.JPanel"
         int i = result.lastIndexOf(DOT);
         if (i>=0 ) {
@@ -293,32 +294,32 @@ public class LanguageManager {
         }
         return result;
     }
-    
+
     /**
      * Create an key Name for an container "aCont" and their subcomponents.
      */
     private void createName2(java.awt.Container aCont) {
-        
+
         if (DEBUG_MODE) {
             showDebugData(aCont);
         }
-        
+
         java.lang.reflect.Method me;
         String text;
         String name;
-        
+
         int i;
         String clas = null;
-        
+
         // ---- Null Test -------------------
-        
+
         if (aCont==null || STOP_TRANSLATION.equals(aCont.getName())) {
             return;
         }
-     
-        
+
+
         // --- Recursion: ---------------------
-        
+
         // For all Standard Components ---
         if (aCont instanceof javax.swing.JToolBar) {
             javax.swing.JToolBar tp = (javax.swing.JToolBar) aCont;
@@ -352,11 +353,11 @@ public class LanguageManager {
             createName2(((javax.swing.JDialog)aCont).getJMenuBar());
             createName2(((javax.swing.JDialog)aCont).getContentPane());
         }
-        
+
         // DEBUG: System.err.println("aCont.getName() : " + aCont.getClass().getName() + "\t" + aCont.getName() );
-        
+
         // --- Don't continue: -------------------------------
-        
+
         if (aCont instanceof javax.swing.text.JTextComponent
         ||  aCont instanceof javax.swing.JTable
         ||  aCont instanceof javax.swing.JTree
@@ -364,23 +365,23 @@ public class LanguageManager {
             aCont.setLocale(locale);
             return;
         }
-        
+
         // --- Get ClassType: ----------------------------
-        
+
         clas = getClassType(aCont);
         name = aCont.getName();
-        
+
         // --- JTabbedPane: -------------------------------
-        
+
         if (aCont instanceof javax.swing.JTabbedPane) {
             javax.swing.JTabbedPane tp = (javax.swing.JTabbedPane) aCont;
             // SetName:
-            if (firstRuning && isEmptyName(name) && tp.getTabCount()>0) {
-                
+            if (firstRuning && Check.isEmpty(name) && tp.getTabCount()>0) {
+
                 tp.setName("~TabbedPane");
                 for (i=0; i<tp.getTabCount(); i++) {
                     Component subComp = tp.getComponentAt(i);
-                    if (subComp!=null && isEmptyName(subComp.getName())) {
+                    if (subComp!=null && Check.isEmpty(subComp.getName())) {
 
                         text = tp.getTitleAt(i);
                         name = text2key(text);
@@ -399,7 +400,7 @@ public class LanguageManager {
                     }
                 }
             }
-            
+
             // SetText:
             if (isDefinedName(tp.getName())) {
                 for (i=0; i<tp.getTabCount(); i++) {
@@ -422,20 +423,20 @@ public class LanguageManager {
             aCont.setLocale(locale);
             return;
         }
-        
+
         // --- TitledBorder --------------
-        
+
         if(aCont instanceof javax.swing.JComponent) {
             javax.swing.border.Border border_ = ((javax.swing.JComponent)aCont).getBorder();
             if (border_ instanceof javax.swing.border.TitledBorder) {
                 javax.swing.border.TitledBorder border = (javax.swing.border.TitledBorder) border_;
-                
+
                 // SetName:
-                if (firstRuning && isEmptyName(name)) {
+                if (firstRuning && Check.isEmpty(name)) {
                     text = border.getTitle();
                     name = "~" + text2key(text);
                     aCont.setName(name);
-                    
+
                     if (show) {
                         properties.append
                         ( clas
@@ -447,7 +448,7 @@ public class LanguageManager {
                         ) ;
                     }
                 }
-                
+
                 // SetText:
                 if (isDefinedName(name)) {
                     text = name.startsWith("~")
@@ -467,18 +468,18 @@ public class LanguageManager {
                 return;
             }
         }
-        
-        
+
+
         // --- GetText: ------------------------------------------
-        
-        
+
+
         if (aCont.getClass().equals(javax.swing.JPanel.class)
         ||  aCont.getClass().equals(javax.swing.JSplitPane.class)
         ||  aCont.getClass().equals(javax.swing.JScrollPane.class)
         ) {
             // Do nothing;
         } else try {
-            
+
             // Prepare params:
             String[] mt // Name of the Method:
             =  (aCont instanceof javax.swing.JFrame
@@ -486,16 +487,16 @@ public class LanguageManager {
             ? mTitle
             : mText
             ;
-           
+
             // SetName:
-            if (firstRuning && isEmptyName(name)) {
+            if (firstRuning && Check.isEmpty(name)) {
                 me   = aCont.getClass().getMethod(mt[0], parameterTypes1);
                 text = (String) me.invoke(aCont, new Object[0]);
-                
-                if (ApplTools.isValid(text)) {
+
+                if (Check.hasLength(text)) {
                     name = "~" + text2key(text);
                     aCont.setName(name);
-                    
+
                     if (show) {
                         properties.append
                         ( clas
@@ -508,7 +509,7 @@ public class LanguageManager {
                     }
                 }
             }
-            
+
             // SetText:
             if (isDefinedName(name)) {
                 me   = aCont.getClass().getMethod(mt[1], parameterTypes2);
@@ -518,7 +519,7 @@ public class LanguageManager {
                 + name.substring(1)
                 : name
                 ;
-                
+
                 // Set Tooltilp text:
                 if (aCont instanceof JButton
                 ||  aCont instanceof JToggleButton
@@ -531,22 +532,22 @@ public class LanguageManager {
                         }
                     } catch (java.util.MissingResourceException e) {}
                 }
-                
+
                 // Set Normal Text:
                 String theText = getText(text);
                 me.invoke( aCont, new Object[] {theText} );
-                
+
                 // Set Mnemonic Keys (Buttons & MenuItem):
                 if (aCont instanceof AbstractButton && theText!=null) {
-                    
+
 //                    if (theText.startsWith("&")) {
 //                        int DELETE_DEBUG = 0;
 //                    }
-                    
+
                     AbstractButton btn = (AbstractButton) aCont;
                     i = theText.indexOf('&');
-                    if (i>=0 
-                    && (i+1)<theText.length() 
+                    if (i>=0
+                    && (i+1)<theText.length()
                     && theText.charAt(i+1)!='&') {
                         StringBuilder sb = new StringBuilder(theText);
                         sb.deleteCharAt(i);
@@ -569,32 +570,26 @@ public class LanguageManager {
             + ")"
             );
         }
-        
+
         aCont.setLocale(locale);
         return;
     }
-    
+
     /** Name attribute of the component is already defined. */
-    private final boolean isDefinedName(String name) {
-        return ApplTools.isValid(name)
+    private boolean isDefinedName(String name) {
+        return Check.hasLength(name)
         && "~.".indexOf(name.charAt(0))>=0
         ;
     }
-    
-    /** Name attribute of the Cotainer is allready defined. */
-    private final boolean isEmptyName(String name) {
-        return !ApplTools.isValid(name);
-    }
-    
-    
+
     /**
      * Conditional call createName2 method.
      */
-    private final void createName3(Object aObj) {
+    private void createName3(Object aObj) {
         if (aObj instanceof java.awt.Container)
             createName2((java.awt.Container) aObj);
     }
-    
+
     /** Show error */
     private void err(java.awt.Container aCont, String msg) {
         if (show) warnings.append
@@ -605,15 +600,15 @@ public class LanguageManager {
         + nl
         );
     }
-    
+
     /** Modification from text to key properties. */
     private String text2key(String key) {
-        
+
         keyConvertorBuffer.setLength(0);
         char    ch;
         boolean isBlank1 = false;
         boolean isBlank2 = isBlank1;
-        
+
         for (int i=0; i<key.length(); i++) {
             ch     = key.charAt(i);
             isBlank2
@@ -621,11 +616,11 @@ public class LanguageManager {
             || (!Character.isLetterOrDigit(ch)
             &&  ".=+&".indexOf(ch)<0 ) // Exception characters
             ;
-            
+
             if (ch=='=') keyConvertorBuffer.append("\\=");
             else if (ch==':' || isBlank2) ; // Empty Statement;
             else if (isBlank1) {            // The New Word Case:
-                
+
                 if (newSolution4Key) {
                     /** New Solution: */
                     if (bufferEndsUpperChar(keyConvertorBuffer)) {
@@ -645,15 +640,15 @@ public class LanguageManager {
             else keyConvertorBuffer.append(ch);
             isBlank1 = isBlank2;
         }
-        
+
         // DEBUG ONLY: java.lang.System.err.println(">> " + key + "\t" + keyConvertorBuffer.toString());
         return keyConvertorBuffer.toString();
     }
-    
+
     /** Modification from text to key properties. */
     private boolean bufferEndsUpperChar(StringBuilder key) {
         boolean result;
-        
+
         if (key.length()==0) {
             result = false;
         } else {
@@ -662,8 +657,8 @@ public class LanguageManager {
         }
         return result;
     }
-    
-    
+
+
     /** Language Sensitive Text. Throws an exception, if appears any mistake!
      * @param key
      * @return Text from properties. */
@@ -674,14 +669,14 @@ public class LanguageManager {
         .getString(key);
         return result;
     }
-    
+
     /** Language Sensitive Text. Throws an exception, if appears any mistake!
      * @param key
      * @return Text from properties. */
     public String getTextAllways(Class anOwnerClass, String key, Locale aLocale) {
         return getTextAllways(anOwnerClass, key, null, aLocale);
     }
-    
+
     /** Language Sensitive Text. Throws an exception, if appears any mistake!
      * @param key
      * @return Text from properties. */
@@ -697,7 +692,7 @@ public class LanguageManager {
         }
         return result;
     }
-    
+
     /** Language Sensitive Text. Throws an exception, if exists any mistake!
      * @param key
      * @return Text from properties. */
@@ -713,7 +708,7 @@ public class LanguageManager {
             }
         }
     }
-    
+
     /** Language Sensitive Text. Throws an exception, if exists any mistake!
      * @param key
      * @return Text from properties. */
@@ -742,27 +737,27 @@ public class LanguageManager {
      * @return Text from properties. */
     public String getTextAllways(String key) {
         String result;
-        
+
         // Test 1:
         if (key==null) {
             key=""+key;
         }
-        
+
         // Reading:
         try {
             result = getText(key);
         } catch (Throwable e) {
             result = key;
         }
-        
+
         // Test 2:
         if (result==null || result.length()==0) {
             result = key;
         }
-        
+
         return result;
     }
-    
+
     /** Language Sensitive Text. Throws an exception, if exists any mistake!
      * @param key
      * @param parameters Any parameters of the message.
@@ -772,7 +767,7 @@ public class LanguageManager {
         result = MessageFormat.format(result, parameters);
         return result;
     }
-    
+
     /** Language Sensitive Text. Throws an exception, if exists any mistake!
      * @param key
      * @param parameter The one parameter of the message.
@@ -785,22 +780,22 @@ public class LanguageManager {
         ;
         return result;
     }
-    
+
     /** Return current locale:
      * @return  */
     public Locale getLocale() {
         return locale;
     }
-    
+
     /** Only for DEBUG: !!! */
     private void showDebugData(java.awt.Container aCont) {
         if (DEBUG_MODE) {
-            
+
             if (aCont==null ) { return; }
-            
+
             java.lang.reflect.Method me;
             String text;
-            
+
             // Prepare params:
             String[] mt // Name of the Method:
             =  (aCont instanceof javax.swing.JFrame
@@ -808,17 +803,17 @@ public class LanguageManager {
             ? mTitle
             : mText
             ;
-            
+
             try {
                 me   = aCont.getClass().getMethod(mt[0], parameterTypes1);
                 text = (String) me.invoke(aCont, new Object[0]);
             } catch (Throwable e) { text = "<???>"; }
-            
+
             java.lang.System.err.println("Container: "
             + aCont.getClass().getName() + "\t" + text);
-            
-        }
-    }    
 
-    
+        }
+    }
+
+
 }

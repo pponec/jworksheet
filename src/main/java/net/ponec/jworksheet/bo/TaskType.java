@@ -17,10 +17,10 @@
 
 package net.ponec.jworksheet.bo;
 
-import net.ponec.jworksheet.core.ApplTools;
 import org.ujorm.Key;
 import org.ujorm.core.KeyFactory;
 import org.ujorm.implementation.map.MapUjo;
+import org.ujorm.tools.Check;
 
 /**
  * A Task of Project
@@ -45,7 +45,7 @@ public class TaskType extends MapUjo implements Comparable {
     @Override
     public String toString() {
         String result = P_DESCR.of(this);
-        return ApplTools.isValid(result) ? result : String.valueOf(P_ID.of(this)) ;
+        return Check.hasLength(result) ? result : String.valueOf(P_ID.of(this)) ;
     }
 
     /** Compare to another TaskType by ID. */

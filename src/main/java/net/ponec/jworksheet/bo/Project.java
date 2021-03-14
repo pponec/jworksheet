@@ -19,11 +19,11 @@ package net.ponec.jworksheet.bo;
 
 import java.util.ArrayList;
 import java.util.List;
-import net.ponec.jworksheet.core.ApplTools;
 import org.ujorm.Key;
 import org.ujorm.ListKey;
 import org.ujorm.core.KeyFactory;
 import org.ujorm.implementation.map.MapUjo;
+import org.ujorm.tools.Check;
 
 /**
  * Project
@@ -64,7 +64,7 @@ public class Project extends MapUjo implements Comparable {
     @Override
     public String toString() {
         String result = get(P_DESCR);
-        return ApplTools.isValid(result) ? result : String.valueOf(get(P_ID)) ;
+        return Check.hasLength(result) ? result : String.valueOf(get(P_ID)) ;
     }
 
     /** Find a TaskType by its id */

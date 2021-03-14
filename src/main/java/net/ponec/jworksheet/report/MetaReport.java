@@ -18,44 +18,44 @@
 package net.ponec.jworksheet.report;
 
 import java.io.File;
-import net.ponec.jworksheet.core.ApplTools;
 import net.ponec.jworksheet.core.Calculator;
+import org.ujorm.tools.Check;
 
 /**
  * Report Description
  * @author Pavel Ponec
  */
 public class MetaReport implements Comparable<MetaReport> {
-    
+
     /** Name or key */
     private String title;
-    
+
     /** Report class */
     private Class<? extends Calculator>  typeClass;
-    
+
     /** XSL transformer */
     private File xsl;
-    
+
     /** XML data source */
     private String dataFile;
-    
+
     /** Creates a new instance of MetaReport */
     public MetaReport(String title, Class<? extends Calculator> type) {
         setTitle(title);
         setTypeClass(type);
     }
-    
+
     /** Creates a new instance of MetaReport */
     public MetaReport(String title, File xsl, String dataType) {
-        if (!ApplTools.isValid(title)) {
+        if (Check.isEmpty(title)) {
             title = xsl.getName();
         }
-        
+
         setTitle(title);
         setXSL(xsl);
         setDataType(dataType);
     }
-    
+
     /** Report Title */
     public String getTitle() {
         return title;
@@ -76,7 +76,7 @@ public class MetaReport implements Comparable<MetaReport> {
     public File getXSL() {
         return xsl;
     }
-    
+
     /** Returns a not null value. */
     private String getXslName() {
         return xsl!=null ? xsl.getName() : "" ;
@@ -94,7 +94,7 @@ public class MetaReport implements Comparable<MetaReport> {
     public void setDataType(String dataFile) {
         this.dataFile = dataFile;
     }
-    
+
     /** Returns title */
     public String toString() {
         return title;

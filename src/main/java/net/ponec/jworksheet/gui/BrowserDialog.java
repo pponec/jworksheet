@@ -22,10 +22,10 @@ import java.io.File;
 import java.util.logging.Logger;
 import javax.swing.JFileChooser;
 import net.ponec.jworksheet.core.ApplContext;
-import net.ponec.jworksheet.core.ApplTools;
 import net.ponec.jworksheet.bo.Parameters;
 import net.ponec.jworksheet.core.LanguageManager;
 import net.ponec.jworksheet.resources.ResourceProvider;
+import org.ujorm.tools.Check;
 
 /**
  * Browser Dialog
@@ -192,7 +192,7 @@ public class BrowserDialog extends TopDialog {
     private void bBrowserActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_bBrowserActionPerformed
 
         String value = bBrowser.getText().trim();
-        File result = ApplTools.isValid(value) ? new File(value) : null ;
+        File result = Check.hasLength(value) ? new File(value) : null ;
 
         result = selectFile(getTitle(), result);
         if (result!=null) {

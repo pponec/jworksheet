@@ -30,43 +30,44 @@ import net.ponec.jworksheet.core.ApplContext;
 import net.ponec.jworksheet.core.ApplTools;
 import net.ponec.jworksheet.core.MessageException;
 import net.ponec.jworksheet.bo.Parameters;
+import org.ujorm.tools.Check;
 
 /**
  * A TopFrame.
  * @author Pavel Ponec
  */
 public class TopFrame extends JFrame {
-    
+
     /** Logger */
     private static final Logger LOGGER = Logger.getLogger(TopFrame.class.getName());
-    
+
     final protected ApplContext applContext;
-    
-    
+
+
     /** Creates a new instance of TopFrame */
     public TopFrame(final ApplContext applContext) {
         this.applContext = applContext;
     }
-    
+
     /** Set Visible the frame */
     public void setVisible() {
         setVisible(true);
     }
-    
+
     /** Show an error message. */
     public int showMessage(String message, Throwable exception) {
         return showMessage(message, JOptionPane.ERROR_MESSAGE, (Icon)null, exception, (Object[])null );
     }
-    
+
     /** Show Message */
     public int showMessage(String message, int messageType, Icon icon, Throwable exception, Object ... params) {
         return showMessage(message, messageType, icon, exception, params, (String[])null);
     }
-    
+
     /** Show Message */
     public int showMessage(String message, int messageType, Icon icon, Throwable exception, Object[] params, String ... aButtons) {
         Object[] buttons = aButtons;
-        
+
         String $message = exception instanceof MessageException
         ? ((MessageException)exception).getMessage(getLocale())
         : message
@@ -74,7 +75,7 @@ public class TopFrame extends JFrame {
         if (params!=null) {
             $message = MessageFormat.format($message, params);
         }
-        
+
         if (exception!=null) {
             Level level
             = messageType==JOptionPane.ERROR_MESSAGE   ? Level.SEVERE
@@ -83,7 +84,7 @@ public class TopFrame extends JFrame {
             ;
             LOGGER.log(level, $message, exception);
         }
-        
+
         String $title = null;
         if ($title == null) {
             $title
@@ -93,16 +94,16 @@ public class TopFrame extends JFrame {
             : "Information"
             ;
         }
-        
+
         if (buttons==null) {
             JButton ok = ApplTools.createCloseButton("OK");
-            
+
             buttons = exception!=null
             ? new Object[] {ok, "More informations"}
             : new Object[] {ok }
             ;
         }
-        
+
         int result = JOptionPane.showOptionDialog
         ( this
         , $message
@@ -113,21 +114,21 @@ public class TopFrame extends JFrame {
         , buttons
         , buttons[0]
         );
-        
+
         if (result==1 && exception!=null) {
             // MoreInformations:
             $message = ApplTools.getStackTraceBuf(exception).toString();
             JOptionPane.showMessageDialog(this, $message, "Stack Trace", JOptionPane.INFORMATION_MESSAGE);
         }
-        
+
         return result;
     }
-    
+
     /** Open an URL by a (system) browser. */
     public void browse(String url) {
         String browser = null;
         URI uri = null;
-        
+
         try {
             try {
                 uri = new URI(url);
@@ -138,7 +139,7 @@ public class TopFrame extends JFrame {
                 ApplTools.browse(uri, browser);
             } catch (IOException e) {
                 browser = new BrowserDialog(applContext, browser).getResult();
-                if (ApplTools.isValid(browser)) {
+                if (Check.hasLength(browser)) {
                     Parameters.P_SYSTEM_BROWSER_PATH.setValue(applContext.getParameters(), browser);
                     ApplTools.browse(uri, browser);
                 } else {
@@ -151,7 +152,7 @@ public class TopFrame extends JFrame {
             ;
             showMessage(msg, e);
         }
-        
+
     }
-    
+
 }

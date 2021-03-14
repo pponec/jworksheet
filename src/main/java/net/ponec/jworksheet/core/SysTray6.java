@@ -25,6 +25,7 @@ import net.ponec.jworksheet.bo.Parameters;
 import net.ponec.jworksheet.gui.JWorkSheet;
 import net.ponec.jworksheet.resources.ResourceProvider;
 import static net.ponec.jworksheet.core.SysTray.Action.*;
+import org.ujorm.tools.Check;
 
 /**
  * System Tray management for Java version 6.0 .
@@ -230,7 +231,7 @@ public class SysTray6 extends SysTray implements MouseListener, ActionListener {
     @Override
     public void setTooltip(String message) {
         if (trayIcon!=null) {
-            trayIcon.setToolTip(ApplTools.isValid(message) ? message : JWorkSheet.APPL_NAME);
+            trayIcon.setToolTip(Check.hasLength(message) ? message : JWorkSheet.APPL_NAME);
         }
     }
 
