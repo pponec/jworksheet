@@ -1,6 +1,12 @@
 The jWorkSheet change list
 **************************
 
+release 1.00 (2021-03-14)
++ Java 11 or higher is required to run
++ Upgrade the Ujorm library to 2.14
++ Notification of new versions is implemented
++ Code cleaning
+
 release 0.90 (2009-09-13)
 + localization to Russian and Ukrainian thanks to Dmytro Barabash
 + personal data are stored on signal TERM (only on Windows OS)
@@ -10,7 +16,7 @@ release 0.90 (2009-09-13)
 
 release 0.85 (2009-03-15)
 + multilanguage application, supported languages are:
-   - Spanish (es) thanks to Carlos David Gonz·lez Abraham,
+   - Spanish (es) thanks to Carlos David Gonz√°lez Abraham,
    - German (de) thanks to David Schwarz,
    - English (en)
    - Czech (cs)
@@ -37,7 +43,7 @@ release 0.81 (2008-10-26)
 release 0.80 (2008-09-09)
 - application launching for JRE 5.0 was fixed
 + the home was moved to http://jworksheet.ponec.net
-+ jWorkSheet is based on the UJO Framework release 0.80 
++ jWorkSheet is based on the UJO Framework release 0.80
 + class documentation was improved in a JavaDoc format
 
 release 0.79 (2008-06-18)
@@ -54,9 +60,9 @@ release 0.78.1 (2008-05-16)
 release 0.78 (2008-05-14)
 + better performance of data saving thanks to UJO Framework release 0.74.final
 + small different improvements (report, gui, parameter description) was done
-- an exception during "Detail report in a table format" on Java 5.0 was fixed 
+- an exception during "Detail report in a table format" on Java 5.0 was fixed
 
-release 0.77 (2008-03-18) 
+release 0.77 (2008-03-18)
 + new report "Detail report in a table format" is done
 + there is possible to modify a header date format of the new report by new parameter "DateReportFormat2"
 + complementary user CSS definition is supported in application parameters
@@ -74,7 +80,7 @@ release 0.76 (2008-02-05)
 + a report quick selection "Last year" was added
 + title of the application contains a current project of the current day
 
-release 0.75 (2007-12-09) 
+release 0.75 (2007-12-09)
 + new report: Day Preview
 + frame title extension
 + code cleaning

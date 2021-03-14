@@ -16,5 +16,6 @@ See the [link](https://pponec.github.io/jworksheet/screenshots/) for more screen
 
 * Video tutorial: [JWorkSheet-en.htm](https://pponec.github.io/jworksheet/flash/JWorkSheet-en.htm)
 * GitHub Home Page: https://pponec.github.io/jworksheet/
+* Release notes: https://pponec.github.io/jworksheet/javadoc/changes.txt
 * Original Home Page: https://jworksheet.ponec.net/
 * Ujorm framework: https://ujorm.org/
