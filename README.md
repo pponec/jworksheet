@@ -9,9 +9,11 @@ Application offers some completed work sheet reports, however you can create you
 
 ![alt Events](docs/screenshots/1-Events.png "Events")
 
+<!---
 ![alt Events](docs/screenshots/3-Projects.jpg "Projects")
 
 ![alt Events](docs/screenshots/4-Parameters.jpg "Parameters")
+-->
 
 ### Links
 
