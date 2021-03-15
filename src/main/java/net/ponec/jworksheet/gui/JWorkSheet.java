@@ -228,7 +228,10 @@ public final class JWorkSheet extends TopFrame {
             this.addWindowListener(new WindowAdapter() {
                 @Override
                 public void windowClosing(WindowEvent e) {
-                    // closeAppl(e); // See addShutdownHook
+                    //super.windowClosing(e);
+                    closeAppl(e);
+                    setVisible(false);
+                    System.exit(0);
                 }
                 @Override
                 public void windowIconified(WindowEvent e) {
