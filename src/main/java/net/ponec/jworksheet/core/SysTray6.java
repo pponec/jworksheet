@@ -63,14 +63,11 @@ public class SysTray6 extends SysTray implements MouseListener, ActionListener {
             boolean exist = false;
             for (TrayIcon icon : tray.getTrayIcons() ){
                 if(icon.getImage().equals(trayIcon.getImage())
-                        && icon.getToolTip().equals(trayIcon.getToolTip())){
-                    exist = true;
+                && icon.getToolTip().equals(trayIcon.getToolTip())){
+                    tray.remove(trayIcon);
                     break;
                 }
             }
-            if(exist){
-                tray.remove(trayIcon);
-                                }
         } catch (Throwable e) {
             e.printStackTrace();
         }
