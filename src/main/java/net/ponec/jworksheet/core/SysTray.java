@@ -39,6 +39,10 @@ public class SysTray {
         return false;
     }
 
+    /** Close the Systray */
+    public void close() {
+    }
+
     /** Set a tooltip to a main icon. */
     public void setTooltip(String message) {
     }

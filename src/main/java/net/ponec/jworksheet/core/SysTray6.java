@@ -55,6 +55,27 @@ public class SysTray6 extends SysTray implements MouseListener, ActionListener {
         this.applContext = applContext;
     }
 
+    /** Close the Systray */
+    @Override
+    public void close() {
+        final SystemTray tray = SystemTray.getSystemTray();
+        try {
+            boolean exist = false;
+            for (TrayIcon icon : tray.getTrayIcons() ){
+                if(icon.getImage().equals(trayIcon.getImage())
+                        && icon.getToolTip().equals(trayIcon.getToolTip())){
+                    exist = true;
+                    break;
+                }
+            }
+            if(exist){
+                tray.remove(trayIcon);
+                                }
+        } catch (Throwable e) {
+            e.printStackTrace();
+        }
+    }
+
     @Override
     public boolean isSupported() {
         if (systemTraySupport==null) {

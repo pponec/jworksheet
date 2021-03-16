@@ -312,6 +312,7 @@ public class ApplContext implements TableModelListener, Runnable, JwsContext {
             lock.delete();
         }
 
+        systray.close();
         fireModuleEvent();
 
     }

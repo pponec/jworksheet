@@ -32,6 +32,7 @@ import javax.swing.DefaultCellEditor;
 import javax.swing.Icon;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
+import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 import javax.swing.JTabbedPane;
 import javax.swing.JTextField;
@@ -228,10 +229,13 @@ public final class JWorkSheet extends TopFrame {
             this.addWindowListener(new WindowAdapter() {
                 @Override
                 public void windowClosing(WindowEvent e) {
-                    //super.windowClosing(e);
                     closeAppl(e);
-                    setVisible(false);
-                    System.exit(0);
+
+                    //setVisible(false);
+
+                    JWorkSheet.this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+                    super.windowClosing(e);
+                    //System.exit(0);
                 }
                 @Override
                 public void windowIconified(WindowEvent e) {
@@ -372,7 +376,7 @@ public final class JWorkSheet extends TopFrame {
     public void closeAppl(WindowEvent e) {
         try {
             Parameters.P_SORT_PROJ_COLUMN.setValue(applContext.getParameters(), projTable.getSortedColumn().getName());
-            applContext.closeAppl(false);
+            applContext.closeAppl(true);
         } catch (Throwable ex) {
             showMessage("Can't save data.", ex);
         }
