@@ -27,7 +27,6 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStreamWriter;
 import java.io.Writer;
-import java.nio.charset.Charset;
 import static java.nio.charset.StandardCharsets.UTF_8;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
@@ -40,6 +39,7 @@ import java.util.jar.JarEntry;
 import java.util.jar.JarFile;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.annotation.Nonnull;
 import javax.swing.JTabbedPane;
 import javax.swing.SwingUtilities;
 import javax.swing.event.TableModelEvent;
@@ -103,6 +103,7 @@ public class ApplContext implements TableModelListener, Runnable, JwsContext {
     protected LanguageManager languageManager;
 
     /** SysTray */
+    @Nonnull
     private SysTray systray;
 
     /** The User config dir (from an application parameter) */
@@ -351,8 +352,8 @@ public class ApplContext implements TableModelListener, Runnable, JwsContext {
         }
     }
 
-
     /** Configuration Directory */
+    @Override
     public File getConfigDir() {
         File result;
         if (userConfigDir!=null) {
@@ -372,6 +373,7 @@ public class ApplContext implements TableModelListener, Runnable, JwsContext {
     }
 
     /** Style Directory */
+    @Override
     public File getStyleDir() {
         final File result = new File(getConfigDir(), FILE_STYLES);
         return result;
@@ -394,6 +396,7 @@ public class ApplContext implements TableModelListener, Runnable, JwsContext {
     }
 
     /** Data File */
+    @Override
     public File getDataFile() {
         File result = Parameters.P_DATA_FILE_PATH.of(getParameters());
         if (result==Parameters.P_DATA_FILE_PATH.getDefault()) {
@@ -412,6 +415,7 @@ public class ApplContext implements TableModelListener, Runnable, JwsContext {
     }
 
     /** Data File for a temporarry usage. */
+    @Override
     public File getDataFileTemp() throws IOException {
         final File result = File.createTempFile("data", EXTENSION_TMP, getConfigFile().getParentFile());
         return result;
@@ -429,19 +433,21 @@ public class ApplContext implements TableModelListener, Runnable, JwsContext {
     }
 
     /** Data File Backup */
+    @Override
     public File getDataFileBackup() {
         final File result = new File(getConfigDir(), "data.backup.xml");
         return result;
     }
 
     /** Get a style file */
+    @Override
     public File getStyleFile(String fileName) {
         final File result = new File(getConfigDir(), FILE_STYLES+"/"+fileName);
         return result;
     }
 
-
     /** Get "Selected Day" - don't modify it! */
+    @Override
     public YearMonthDay getSelectedDay() {
         return WorkDay.P_DATE.of(currentDay);
     }
@@ -452,11 +458,13 @@ public class ApplContext implements TableModelListener, Runnable, JwsContext {
     }
 
     /** Is selected time Today? */
+    @Override
     public boolean isToday() {
         return new YearMonthDay().equals(getSelectedDay());
     }
 
     /** Current Language */
+    @Override
     public Locale getLanguage() {
         return Parameters.P_LANG.of(parameters);
     }
@@ -470,11 +478,13 @@ public class ApplContext implements TableModelListener, Runnable, JwsContext {
     }
 
     /** Get Work Day */
+    @Override
     public WorkDay getWorkDay() {
         return currentDay;
     }
 
     /** Save a data in a special thread, if data is changed (TableModelListener). */
+    @Override
     public void tableChanged(TableModelEvent e) {
         if (initialized
         &&  timeSaveExpected<System.currentTimeMillis()
@@ -509,6 +519,7 @@ public class ApplContext implements TableModelListener, Runnable, JwsContext {
     }
 
     /** Parameters of the application. */
+    @Override
     public Parameters getParameters() {
         return parameters;
     }
@@ -593,6 +604,7 @@ public class ApplContext implements TableModelListener, Runnable, JwsContext {
         this.initialized = true;
     }
 
+    @Override
     public boolean isStarting() {
         return !this.initialized;
     }
@@ -635,6 +647,7 @@ public class ApplContext implements TableModelListener, Runnable, JwsContext {
     }
 
     /** Get JWorkSheet */
+    @Override
     public JWorkSheet getTopFrame() {
         return topFrame;
     }
@@ -693,6 +706,7 @@ public class ApplContext implements TableModelListener, Runnable, JwsContext {
     }
 
     /** Systray is enabled in case a parameter is supported AND system is supported too */
+    @Override
     public boolean isSystrayEnabled() {
         boolean result
         = Parameters.P_SYSTRAY_ENABLED.of(getParameters())
@@ -802,6 +816,7 @@ public class ApplContext implements TableModelListener, Runnable, JwsContext {
     }
 
     /** Get a main Tabbed pane of the application */
+    @Override
     public JTabbedPane getTabbedPane() {
         return getTopFrame().getTabbedPane();
     }

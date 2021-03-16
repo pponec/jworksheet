@@ -16,33 +16,35 @@
 
 package net.ponec.jworksheet.core;
 
+import javax.annotation.Nonnull;
+
 /**
  * Dummu System Tray management.
  * @author Pavel Ponec
  */
 public class SysTray {
-  
+
     /** SysTray Acton on a second mouse click. */
     public enum Action {
         NONE, EVENT, HIDE;
     }
-    
+
     protected SysTray() {
     }
-    
+
     public void init(ApplContext applContext) {
     }
-    
+
     public boolean isSupported() {
         return false;
     }
-    
-    /** Set a tooltip to main icon. */
+
+    /** Set a tooltip to a main icon. */
     public void setTooltip(String message) {
     }
-    
-    
+
     /** Returns an instance or null. */
+    @Nonnull
     public static SysTray getInstance(ApplContext applContext) {
         SysTray result;
         try {
@@ -53,5 +55,5 @@ public class SysTray {
         result.init(applContext);
         return result;
     }
-    
+
 }
