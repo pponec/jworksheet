@@ -60,7 +60,6 @@ public class SysTray6 extends SysTray implements MouseListener, ActionListener {
     public void close() {
         final SystemTray tray = SystemTray.getSystemTray();
         try {
-            boolean exist = false;
             for (TrayIcon icon : tray.getTrayIcons() ){
                 if(icon.getImage().equals(trayIcon.getImage())
                 && icon.getToolTip().equals(trayIcon.getToolTip())){
