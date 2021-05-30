@@ -192,11 +192,7 @@ public class SysTray6 extends SysTray implements MouseListener, ActionListener {
         Object source  = e.getSource();
         if (source==miExit) {
             try {
-                // applContext.closeAppl(true);
-
-                // Data will be saved by a ShutdownHook:
-                applContext.getTopFrame().dispose();
-                System.exit(0);
+                applContext.closeAppl(true);
             } catch (Throwable ex) {
                 String msg = ex.getMessage() + '\n' + ex.getClass().getName();
                 showMessage(msg, null);

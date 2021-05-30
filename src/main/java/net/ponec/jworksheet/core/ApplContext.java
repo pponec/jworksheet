@@ -35,6 +35,7 @@ import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 import java.util.Locale;
+import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.jar.JarEntry;
 import java.util.jar.JarFile;
 import java.util.logging.Level;
@@ -101,6 +102,9 @@ public class ApplContext implements TableModelListener, Runnable, JwsContext {
 
     /** LanguageMananer */
     protected LanguageManager languageManager;
+
+    /** Application is running */
+    private final AtomicBoolean running = new AtomicBoolean(true);
 
     /** SysTray */
     @Nonnull
@@ -297,24 +301,25 @@ public class ApplContext implements TableModelListener, Runnable, JwsContext {
 
     /** Close The Application (no exit) */
     public void closeAppl(boolean closeWindow) {
+        if (running.getAndSet(false)) {
 
-        createExitEvent();
-        saveData(true);
+            createExitEvent();
+            saveData(true);
 
-        if (closeWindow) {
-            getTopFrame().setVisible(false);
-            getTopFrame().dispose();
+            if (closeWindow) {
+                getTopFrame().setVisible(false);
+                getTopFrame().dispose();
+            }
+
+            // Unlock the application:
+            final File lock = new File(getConfigDir(), FILE_LOCK);
+            if (lock.exists()) {
+                lock.delete();
+            }
+
+            systray.close();
+            fireModuleEvent();
         }
-
-        // Unlock the application:
-        final File lock = new File(getConfigDir(), FILE_LOCK);
-        if (lock.exists()) {
-            lock.delete();
-        }
-
-        systray.close();
-        fireModuleEvent();
-
     }
 
     /** Create an Exit row, if it is enabled. */

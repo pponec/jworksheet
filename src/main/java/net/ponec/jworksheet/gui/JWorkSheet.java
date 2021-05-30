@@ -79,7 +79,7 @@ import org.ujorm.swing.UjoKeyRow;
 public final class JWorkSheet extends TopFrame {
 
     public static final Version APPL_VERSION = new Version("1.00") ;
-    public static final String APPL_RELEASED = "2021-03-14";
+    public static final String APPL_RELEASED = "2021-05-30";
 
     public static final String APPL_NAME     = "jWorkSheet";
     public static final String APPL_HOMEPAGE = "https://pponec.github.io/jworksheet/";
@@ -92,11 +92,9 @@ public final class JWorkSheet extends TopFrame {
     private final UjoTable[] tables;
 
     private volatile boolean visibleLock = false;
-    private volatile boolean running = false;
 
     private final Color COLOR_OFF  = new Color(0xDC5555);
     private final Color COLOR_WORK = new Color(0x405881);
-
 
     /**
      * Creates new form JWorkSheet
@@ -253,25 +251,10 @@ public final class JWorkSheet extends TopFrame {
                 }
             });
 
-            // Exit application:
-            Runtime.getRuntime().addShutdownHook(new Thread(){
-                @Override
-                public void run() {
-                    closeAppl(null);
-                }
-            });
-
             // Set a terminate hook (https://www.baeldung.com/jvm-shutdown-hooks):
-            running = true;
-            try {
-                Runtime.getRuntime().addShutdownHook(new Thread(() -> {
-                    if (running) {
-                        running = false;
-                        closeAppl(null);
-                    }
-                    System.exit(0);
-                }));
-            } catch (Throwable e) {}
+            Runtime.getRuntime().addShutdownHook(new Thread(() -> {
+                closeAppl(null);
+            }));
 
             // Window sizing:
             ApplTools.windowsSizing(this, applContext.getParameters().get(Parameters.P_WINDOW_SIZE));
