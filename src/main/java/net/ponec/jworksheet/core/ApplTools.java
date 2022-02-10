@@ -47,6 +47,7 @@ import java.net.URLClassLoader;
 import java.nio.charset.Charset;
 import static java.nio.charset.StandardCharsets.UTF_8;
 import java.text.DecimalFormat;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Locale;
@@ -157,7 +158,7 @@ public final class ApplTools {
     /** Returns a current year */
     public static int getCurrentYear() {
         String sDate = JWorkSheet.APPL_RELEASED;
-        int i = sDate.indexOf('/');
+        int i = sDate.indexOf('-');
         try {
             sDate = sDate.substring(0, i);
             return Integer.parseInt(sDate);
@@ -193,7 +194,7 @@ public final class ApplTools {
     ) {
 
         int currentYear = getCurrentYear();
-        int copyrightYear = Math.max(currentYear, Calendar.getInstance().get(Calendar.YEAR));
+        int copyrightYear = Math.max(currentYear, LocalDate.now().getYear());
         if (copyrightYear > currentYear+9) {
             copyrightYear = currentYear+9;
         }
