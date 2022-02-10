@@ -1,4 +1,5 @@
-module ml.garba.testeur {
+module net.ponec.jworksheet {
     requires java.desktop;
     requires java.logging;
+    requires ujo-core-2.20/org.ujorm;
 }
