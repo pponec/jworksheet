@@ -1,6 +1,5 @@
 /**
- *
- * Copyright (C) 2007-9, Pavel Ponec, contact: http://ponec.net/
+ * Copyright (C) 2007-2022, Pavel Ponec, contact: https://ponec.net/
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -78,8 +77,8 @@ import org.ujorm.swing.UjoKeyRow;
 @SuppressWarnings("unchecked")
 public final class JWorkSheet extends TopFrame {
 
-    public static final Version APPL_VERSION = new Version("1.00") ;
-    public static final String APPL_RELEASED = "2021-05-30";
+    public static final Version APPL_VERSION = new Version("1.01") ;
+    public static final String APPL_RELEASED = "2022-02-10";
 
     public static final String APPL_NAME     = "jWorkSheet";
     public static final String APPL_HOMEPAGE = "https://pponec.github.io/jworksheet/";

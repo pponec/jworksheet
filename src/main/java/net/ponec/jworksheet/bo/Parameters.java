@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2007-2021, Pavel Ponec, contact: http://ponec.net/
+ * Copyright (C) 2007-2022, Pavel Ponec, contact: https://ponec.net/
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -57,9 +57,9 @@ public class Parameters extends AbstractUjo {
     /** The First Day of the Week Day. */
     public static final Key<Parameters,Integer> P_FIRST_DAY_OF_WEEK = f.newKey("FirstDayOfWeek", Calendar.getInstance().getFirstDayOfWeek());
     /** Decimal time format. */
-    public static final Key<Parameters,Boolean> P_DECIMAL_TIME_FORMAT = f.newKey("DecimalTimeFormat", true);
+    public static final Key<Parameters,Boolean> P_DECIMAL_TIME_FORMAT = f.newKey("DecimalTimeFormat", false);
     /** The Main selecton format. */
-    public static final Key<Parameters,String> P_DATE_MAIN_FORMAT = f.newKey("DateMainFormat", "EE, yyyy/MM/dd'  %s: 'ww");
+    public static final Key<Parameters,String> P_DATE_MAIN_FORMAT = f.newKey("DateMainFormat", "EE, yyyy-MM-dd' %s: 'ww");
     /** The Export Date Selection. */
     public static final Key<Parameters,String> P_DATE_REPORT_FORMAT = f.newKey("DateReportFormat", P_DATE_MAIN_FORMAT.getDefault() );
     /** The Export Date Selection. */
@@ -67,7 +67,7 @@ public class Parameters extends AbstractUjo {
     /** The complementary report CSS style. */
     public static final Key<Parameters,String> P_REPORT_CSS = f.newKey("ReportCSS", "styles/style.css" );
     /** The Goto Date format. */
-    public static final Key<Parameters,String> P_DATE_GOTO_FORMAT = f.newKey("DateGotoFormat", "yyyy/MM/dd");
+    public static final Key<Parameters,String> P_DATE_GOTO_FORMAT = f.newKey("DateGotoFormat", "yyyy-MM-dd");
     /** Nimbus Look & Feel support */
     public static final Key<Parameters,Boolean> P_NIMBUS_LAF = f.newKey("NimbusL&FSupport", !ApplTools.isWindowsOS());
     /** A Color of a private project. */
@@ -77,9 +77,9 @@ public class Parameters extends AbstractUjo {
     /** A Color of an editable area. */
     public static final Key<Parameters,Color> P_COLOR_EDITABLE = f.newKey("ColorOfEditableArea", new Color(0xFFFACD));
     /** Is a System Tray Enabled? */
-    public static final Key<Parameters,Boolean> P_SYSTRAY_ENABLED = f.newKey("SystemTrayEnabled", ApplTools.isWindowsOS());
+    public static final Key<Parameters,Boolean> P_SYSTRAY_ENABLED = f.newKey("SystemTrayEnabled", true);
     /** Action on a second click */
-    public static final Key<Parameters,SysTray.Action> P_SYSTRAY_SECOND_CLICK = f.newKey("SystemTraySecondClick", SysTray.Action.NONE);
+    public static final Key<Parameters,SysTray.Action> P_SYSTRAY_SECOND_CLICK = f.newKey("SystemTraySecondClick", SysTray.Action.HIDE);
     /** Modify value of finished project or task. */
     public static final Key<Parameters,Boolean> P_MODIFY_FINESHED_PROJ = f.newKey("ModifyFinishedProject", false);
     /** Create a new Event on an EXIT action. */

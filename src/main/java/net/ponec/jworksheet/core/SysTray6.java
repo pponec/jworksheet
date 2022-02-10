@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2007-2021, Pavel Ponec, contact: http://ponec.net/
+ * Copyright (C) 2007-2022, Pavel Ponec, contact: https://ponec.net/
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -247,6 +247,5 @@ public class SysTray6 extends SysTray implements MouseListener, ActionListener {
             trayIcon.setToolTip(Check.hasLength(message) ? message : JWorkSheet.APPL_NAME);
         }
     }
-
 
 }
