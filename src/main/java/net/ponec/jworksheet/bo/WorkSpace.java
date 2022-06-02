@@ -1,5 +1,5 @@
 /**
-  * Copyright (C) 2007-2021, Pavel Ponec, contact: http://ponec.net/
+  * Copyright (C) 2007-2022, Pavel Ponec, contact: http://ponec.net/
   *
   * This program is free software; you can redistribute it and/or modify
   * it under the terms of the GNU General Public License as published by
@@ -100,7 +100,7 @@ public class WorkSpace extends MapUjo implements UjoTextable {
 
     /** Returns all open Projects. */
     public ArrayList<Project> getOpenProjects() {
-        ArrayList<Project> result = new ArrayList<Project>(P_PROJS.getItemCount(this));
+        ArrayList<Project> result = new ArrayList<>(P_PROJS.getItemCount(this));
         for (Project task : P_PROJS.getList(this)) {
             if (!task.get(Project.P_FINISHED)) {
                 result.add(task);
@@ -129,7 +129,7 @@ public class WorkSpace extends MapUjo implements UjoTextable {
 
     /**Sync projects with other WorkSpace. */
     public void syncProjects(WorkSpace otherSpace) {
-        ArrayList<Project> newProjects = new ArrayList<Project>();
+        ArrayList<Project> newProjects = new ArrayList<>();
         for (Project otherProject : P_PROJS.getList(otherSpace)) {
             boolean found = false;
             for (Project thisProject : P_PROJS.getList(this)) {
@@ -194,9 +194,8 @@ public class WorkSpace extends MapUjo implements UjoTextable {
                     return value!=null;
 
                 } else if (P_DAYS==property
-                &&     value instanceof WorkDay
+                && value instanceof final WorkDay workDay
                 ){
-                    final WorkDay workDay = (WorkDay) value;
                     return WorkDay.P_EVENTS.getItemCount(workDay)>0;
 
                 }

@@ -1,5 +1,5 @@
 /**
-  * Copyright (C) 2007-2021, Pavel Ponec, contact: http://ponec.net/
+  * Copyright (C) 2007-2022, Pavel Ponec, contact: http://ponec.net/
   *
   * This program is free software; you can redistribute it and/or modify
   * it under the terms of the GNU General Public License as published by
@@ -31,8 +31,6 @@ import static org.ujorm.UjoAction.*;
  * <li>time - primitive short</li>
  * <li>description - byte array in a UTF format</li>
  * <ul>
- * @composed 1 - * Project
- * @composed 1 - * TaskType
  */
 public class Event extends BeanUjo {
 

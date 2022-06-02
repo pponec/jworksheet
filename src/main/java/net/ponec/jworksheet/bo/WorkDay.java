@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2007-2021, Pavel Ponec, contact: http://ponec.net/
+ * Copyright (C) 2007-2022, Pavel Ponec, contact: http://ponec.net/
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -33,7 +33,7 @@ import org.ujorm.extensions.AbstractUjo;
  * @author Pavel Ponec
  * @composed 1 - * Event
  */
-public class WorkDay extends AbstractUjo implements Comparable {
+public class WorkDay extends AbstractUjo implements Comparable<WorkDay> {
 
     /** KeyFactory */
     private static final KeyFactory f = KeyFactory.CamelBuilder.get(WorkDay.class);
@@ -62,9 +62,9 @@ public class WorkDay extends AbstractUjo implements Comparable {
 
     /** Compare to another WorkDay by a P_DATE. */
     @Override
-    public int compareTo(Object o) {
+    public int compareTo(WorkDay o) {
         final YearMonthDay d1 = get(P_DATE);
-        final YearMonthDay d2 = ((WorkDay) o).get(P_DATE);
+        final YearMonthDay d2 = o.get(P_DATE);
         final int result = d1.compareTo(d2);
         return result;
     }

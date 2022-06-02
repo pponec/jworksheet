@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2007-9, Pavel Ponec, contact: http://ponec.net/
+ * Copyright (C) 2007-2022, Pavel Ponec, contact: http://ponec.net/
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -321,8 +321,7 @@ public class LanguageManager {
         // --- Recursion: ---------------------
 
         // For all Standard Components ---
-        if (aCont instanceof javax.swing.JToolBar) {
-            javax.swing.JToolBar tp = (javax.swing.JToolBar) aCont;
+        if (aCont instanceof JToolBar tp) {
             try {
                 for (i=0; i<1000; i++) createName3(tp.getComponentAtIndex(i));
             } catch (Throwable e) {
@@ -535,7 +534,7 @@ public class LanguageManager {
 
                 // Set Normal Text:
                 String theText = getText(text);
-                me.invoke( aCont, new Object[] {theText} );
+                me.invoke( aCont, theText);
 
                 // Set Mnemonic Keys (Buttons & MenuItem):
                 if (aCont instanceof AbstractButton && theText!=null) {

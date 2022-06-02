@@ -1,5 +1,5 @@
 /**
-  * Copyright (C) 2007-2021, Pavel Ponec, contact: http://ponec.net/
+  * Copyright (C) 2007-2022, Pavel Ponec, contact: http://ponec.net/
   *
   * This program is free software; you can redistribute it and/or modify
   * it under the terms of the GNU General Public License as published by
@@ -21,6 +21,7 @@ import java.io.Serializable;
 import java.util.Calendar;
 import java.util.StringTokenizer;
 import net.ponec.jworksheet.core.*;
+import org.jetbrains.annotations.NotNull;
 import org.ujorm.extensions.ValueTextable;
 import org.ujorm.extensions.UjoCloneable;
 
@@ -28,7 +29,7 @@ import org.ujorm.extensions.UjoCloneable;
  * Time
  * @author Pavel Ponec
  */
-public class Time implements Comparable, ValueTextable, UjoCloneable, Serializable {
+public class Time implements Comparable<Time>, ValueTextable, UjoCloneable, Serializable {
 
     /** Separator */
     public static final String SEPARATOR = ":";
@@ -52,7 +53,7 @@ public class Time implements Comparable, ValueTextable, UjoCloneable, Serializab
         if (separIndex<0 && timeLength>=2) {
             StringBuilder sb = new StringBuilder(5);
             sb.append('0');
-            sb.append(time.substring(0, timeLength-2));
+            sb.append(time, 0, timeLength-2);
             sb.append(SEPARATOR);
             sb.append(time.substring(timeLength-2));
             time = sb.toString();
@@ -151,15 +152,14 @@ public class Time implements Comparable, ValueTextable, UjoCloneable, Serializab
 
     @Override
     public boolean equals(Object obj) {
-        final boolean result = this.minutes == ((Time)obj).minutes;
-        return  result ;
+        return this.minutes == ((Time)obj).minutes;
     }
 
     @Override
-    public int compareTo(Object obj) {
+    public int compareTo(@NotNull Time obj) {
         final int result
-        = this.minutes < ((Time)obj).minutes ? -1
-        : this.minutes > ((Time)obj).minutes ? +1
+        = this.minutes < obj.minutes ? -1
+        : this.minutes > obj.minutes ? +1
         : 0
         ;
         return result;

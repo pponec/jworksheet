@@ -1,5 +1,5 @@
 /**
-  * Copyright (C) 2007-2021, Pavel Ponec, contact: http://ponec.net/
+  * Copyright (C) 2007-2022, Pavel Ponec, contact: http://ponec.net/
   *
   * This program is free software; you can redistribute it and/or modify
   * it under the terms of the GNU General Public License as published by
@@ -118,8 +118,7 @@ public class EventTableRenderer extends DefaultTableCellRenderer {
     
     /** Get Color of a private project. */
     protected Color getColorOfPrivateProject() {
-        final Color result = context.getParameters().get(Parameters.P_COLOR_PRIVATE);
-        return result;
+        return context.getParameters().get(Parameters.P_COLOR_PRIVATE);
     }
     
     /** Get a Color of an editable area. */

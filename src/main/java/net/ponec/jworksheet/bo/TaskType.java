@@ -1,5 +1,5 @@
 /**
-  * Copyright (C) 2007-2021, Pavel Ponec, contact: http://ponec.net/
+  * Copyright (C) 2007-2022, Pavel Ponec, contact: http://ponec.net/
   *
   * This program is free software; you can redistribute it and/or modify
   * it under the terms of the GNU General Public License as published by
@@ -26,7 +26,7 @@ import org.ujorm.tools.Check;
  * A Task of Project
  * @author Pavel Ponec
  */
-public class TaskType extends MapUjo implements Comparable {
+public class TaskType extends MapUjo implements Comparable<TaskType> {
 
     private static final KeyFactory<TaskType> f = KeyFactory.CamelBuilder.get(TaskType.class);
 
@@ -50,9 +50,9 @@ public class TaskType extends MapUjo implements Comparable {
 
     /** Compare to another TaskType by ID. */
     @Override
-    public int compareTo(Object o) {
+    public int compareTo(TaskType o) {
         int id1 = P_ID.of(this);
-        int id2 = o!=null ? P_ID.of((TaskType)o) : Integer.MAX_VALUE;
+        int id2 = o!=null ? P_ID.of(o) : Integer.MAX_VALUE;
         final int result = id1<id2 ? -1 : id1>id2 ? +1 : 0 ;
         return result;
     }

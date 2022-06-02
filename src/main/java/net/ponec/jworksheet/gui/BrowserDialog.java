@@ -1,5 +1,5 @@
 /**
-  * Copyright (C) 2007-2021, Pavel Ponec, contact: http://ponec.net/
+  * Copyright (C) 2007-2022, Pavel Ponec, contact: http://ponec.net/
   *
   * This program is free software; you can redistribute it and/or modify
   * it under the terms of the GNU General Public License as published by
@@ -202,7 +202,7 @@ public class BrowserDialog extends TopDialog {
 
     private void bOKActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_bOKActionPerformed
 
-        result = (String) tBrowser.getText();
+        result = tBrowser.getText();
         bCancelActionPerformed(evt);
 
 

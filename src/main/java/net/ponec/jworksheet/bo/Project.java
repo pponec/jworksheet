@@ -1,5 +1,5 @@
 /**
-  * Copyright (C) 2007-2021, Pavel Ponec, contact: http://ponec.net/
+  * Copyright (C) 2007-2022, Pavel Ponec, contact: http://ponec.net/
   *
   * This program is free software; you can redistribute it and/or modify
   * it under the terms of the GNU General Public License as published by
@@ -30,7 +30,7 @@ import org.ujorm.tools.Check;
  * @author Pavel Ponec
  * @composed 1 - * TaskType
  */
-public class Project extends MapUjo implements Comparable {
+public class Project extends MapUjo implements Comparable<Project> {
 
     private static final KeyFactory<Project> f = KeyFactory.CamelBuilder.get(Project.class);
 
@@ -52,8 +52,8 @@ public class Project extends MapUjo implements Comparable {
     }
 
     /** Table columns. */
-    public static final Key[] TABLE_COLUMNS
-    ={P_ID
+    public static final Key[] TABLE_COLUMNS =
+    { P_ID
     , P_DEFAULT
     , P_FINISHED
     , P_PRIVATE
@@ -91,7 +91,7 @@ public class Project extends MapUjo implements Comparable {
 
     /** Returns all open tasks. */
     public ArrayList<TaskType> getOpenTasks() {
-        ArrayList<TaskType> result = new ArrayList<TaskType>(P_TASKS.getItemCount(this));
+        ArrayList<TaskType> result = new ArrayList<>(P_TASKS.getItemCount(this));
         for (TaskType task : P_TASKS.getList(this)) {
             if (!task.get(TaskType.P_FINISHED)) {
                 result.add(task);
@@ -102,9 +102,9 @@ public class Project extends MapUjo implements Comparable {
 
     /** Compare to another Project by ID. */
     @Override
-    public int compareTo(Object o) {
+    public int compareTo(Project o) {
           int id1 = get(P_ID);
-          int id2 = o!=null ? ((Project)o).get(P_ID) : Integer.MAX_VALUE;
+          int id2 = o!=null ? o.get(P_ID) : Integer.MAX_VALUE;
           final int result = id1<id2 ? -1 : id1>id2 ? +1 : 0 ;
           return result;
     }

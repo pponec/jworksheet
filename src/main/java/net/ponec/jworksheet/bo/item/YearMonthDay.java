@@ -1,5 +1,5 @@
 /**
-  * Copyright (C) 2007-2021, Pavel Ponec, contact: http://ponec.net/
+  * Copyright (C) 2007-2022, Pavel Ponec, contact: http://ponec.net/
   *
   * This program is free software; you can redistribute it and/or modify
   * it under the terms of the GNU General Public License as published by
@@ -17,6 +17,7 @@
 
 package net.ponec.jworksheet.bo.item;
 
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
@@ -31,7 +32,7 @@ import org.ujorm.extensions.UjoCloneable;
  * Year, month and day
  * @author Pavel Ponec
  */
-public class YearMonthDay implements Comparable, ValueTextable, UjoCloneable {
+public class YearMonthDay implements Comparable<YearMonthDay>, ValueTextable, UjoCloneable {
     
     public static final int TYPE_DAY   = 0;
     public static final int TYPE_MONTH = 1;
@@ -57,7 +58,7 @@ public class YearMonthDay implements Comparable, ValueTextable, UjoCloneable {
         try {
             Date date = exportDateFormat.parse(yearMonthDay);
             setYearMonthDay(date);
-        } catch (Throwable ex) {
+        } catch (RuntimeException | ParseException ex) {
             new IllegalArgumentException("Bad parameter: " + yearMonthDay, ex);
         }
     }
@@ -141,8 +142,7 @@ public class YearMonthDay implements Comparable, ValueTextable, UjoCloneable {
     @Override
     public String toString() {
         Calendar cal = getCalendar();
-        String result = exportDateFormat.format(cal.getTime());
-        return result;
+        return exportDateFormat.format(cal.getTime());
     }
     
     /** Get Localized String to GUI. */
@@ -151,15 +151,13 @@ public class YearMonthDay implements Comparable, ValueTextable, UjoCloneable {
         String sFormat = context.getParameters().getDateFormat(Parameters.P_DATE_MAIN_FORMAT, context);
         
         SimpleDateFormat format = new SimpleDateFormat(sFormat, language);
-        String result = format.format(getTime());
-        return result;
+        return format.format(getTime());
     }
     
     /** Equals to another YearMonthDay ? */
     @Override
     public boolean equals(Object obj) {
-        final boolean result = obj!=null && ((YearMonthDay) obj).yearMonthDay==this.yearMonthDay;
-        return result ;
+        return obj!=null && ((YearMonthDay) obj).yearMonthDay== this.yearMonthDay;
     }
     
 //    /** HashCode */
@@ -172,10 +170,10 @@ public class YearMonthDay implements Comparable, ValueTextable, UjoCloneable {
         return new YearMonthDay(yearMonthDay);
     }
     
-    public int compareTo(Object obj) {
+    public int compareTo(YearMonthDay obj) {
         final int result
-        = this.yearMonthDay < ((YearMonthDay) obj).yearMonthDay ? -1
-        : this.yearMonthDay > ((YearMonthDay) obj).yearMonthDay ? +1
+        = this.yearMonthDay < obj.yearMonthDay ? -1
+        : this.yearMonthDay > obj.yearMonthDay ? +1
         : 0
         ;
         return result;
