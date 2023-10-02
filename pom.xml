@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
-    <groupId>org.ponec.ppsee</groupId>
+    <groupId>net.ponec</groupId>
     <artifactId>jWorkSheet</artifactId>
     <version>1.00</version>
     <packaging>jar</packaging>
@@ -84,27 +84,6 @@
         </resources>
 
         <plugins>
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-javadoc-plugin</artifactId>
-                <version>2.10.4</version>
-                <configuration>
-                    <excludePackageNames>com.*:test.*:cz.ponec._text2Java.*:cz.ponec.charMap.*:cz.ponec.ide4text.*:cz.ponec.peki.*:cz.ponec.piskvor.*:cz.ponec.vytah.*</excludePackageNames>
-                    <!--
-                    <stylesheetfile>${basedir}/src/main/java/org/ppsee/doc-files/stylesheet.css</stylesheetfile>
-                    -->
-                    <javadocDirectory>${basedir}/src/main/resources/javadoc2</javadocDirectory>
-                    <docfilessubdirs>true</docfilessubdirs>
-                    <additionalparam>-Xdoclint:none</additionalparam>
-                    <failOnError>false</failOnError>
-                    <encoding>UTF-8</encoding>
-                    <author>Pavel Ponec</author>
-                    <bottom><![CDATA[Copyright 2019, <a target="_blank" href="http://ponec.net/ppsee/">Pavel Ponec<a>]]></bottom>
-                    <doctitle>PPSee ${project.version} (${project.name})</doctitle>
-                    <windowtitle>PPSee ${project.version} - ${project.name}</windowtitle>
-                    <packagesheader><![CDATA[<a target="_top" href="https://jworksheet.ponec.net"> jWorkSheet<br>release ${project.version}</a>]]></packagesheader>
-                </configuration>
-            </plugin>
 
             <!-- Maven Assembly Plugin -->
             <plugin>
@@ -130,75 +109,6 @@
                 </executions>
             </plugin>
 
-            <!-- Configures Proguard obfuscation tool to generate an
-                 obfuscated version of the JAR file that replaces the
-                 default unobfuscated JAR.
-                 Documentation: https://wvengen.github.io/proguard-maven-plugin/proguard-mojo.html
-            -..->
-            <plugin>
-                <groupId>com.github.wvengen</groupId>
-                <artifactId>proguard-maven-plugin</artifactId>
-                <version>2.1.1</version>
-                <executions>
-                    <execution>
-                        <id>obfuscation-packaging</id>
-                        <phase>package</phase>
-                        <goals>
-                            <goal>proguard</goal>
-                        </goals>
-                        <configuration>
-                            <proguardVersion>${tool.proguard.version}</proguardVersion>
-                            <obfuscate>true</obfuscate>
-                            <attach>true</attach>
-                            <appendClassifier>false</appendClassifier>
-                            <addMavenDescriptor>true</addMavenDescriptor>
-                            <injar>${project.jar.name}-jar-with-dependencies.jar</injar>
-                            <injarNotExistsSkip>true</injarNotExistsSkip>
-                            <libs>
-                                <lib>${java.home}/lib/rt.jar</lib>
-                            </libs>
-
-                            <options>
-                                <option>-keepparameternames</option>
-                                <option>-renamesourcefileattribute SourceFile</option>
-                                <option>-keepattributes Exceptions,InnerClasses,Signature,Deprecated,
-                                    SourceFile,LineNumberTable,*Annotation*,EnclosingMethod
-                                </option>
-                                <option>-target 1.8</option>
-                                <option>-keepclassmembers,allowoptimization enum * {
-                                    public static **[] values();
-                                    public static ** valueOf(java.lang.String);
-                                    }
-                                </option>
-                                <option>-keepclassmembers class * implements java.io.Serializable {
-                                    static final long serialVersionUID;
-                                    private static final java.io.ObjectStreamField[] serialPersistentFields;
-                                    private void writeObject(java.io.ObjectOutputStream);
-                                    private void readObject(java.io.ObjectInputStream);
-                                    java.lang.Object writeReplace();
-                                    java.lang.Object readResolve();
-                                    }
-                                </option>
-
-                                <option>-keep public class cz.ponec.tools.IO</option>
-                                <option>-keep public class cz.ponec.tools.Empty</option>
-                                <option>-keep public class cz.ponec.ppSee.api.*</option>
-                                <option>-keep public class cz.ponec.ppSee._licenceGenerator.LicenceGenerator</option>
-                                <option>-keep public class cz.ponec.ppSee.PPSee</option>
-                                <option>-dontwar</option>
-                            </options>
-                        </configuration>
-                    </execution>
-                </executions>
-                <dependencies>
-                    <dependency>
-                        <groupId>net.sf.proguard</groupId>
-                        <artifactId>proguard-base</artifactId>
-                        <version>5.3.3</version>
-                    </dependency>
-                </dependencies>
-            </plugin>
-            -->
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-compiler-plugin</artifactId>
