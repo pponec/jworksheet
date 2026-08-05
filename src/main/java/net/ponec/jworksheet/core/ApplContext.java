@@ -17,6 +17,15 @@
 
 package net.ponec.jworksheet.core;
 
+import net.ponec.jworksheet.core.ujo.Keys;
+
+import net.ponec.jworksheet.bo.meta.MetaEvent;
+import net.ponec.jworksheet.bo.meta.MetaParameters;
+import net.ponec.jworksheet.bo.meta.MetaProject;
+import net.ponec.jworksheet.bo.meta.MetaTaskType;
+import net.ponec.jworksheet.bo.meta.MetaWorkDay;
+import net.ponec.jworksheet.bo.meta.MetaWorkSpace;
+
 import net.ponec.jworksheet.module.JwsContext;
 import java.awt.Rectangle;
 import java.io.BufferedInputStream;
@@ -202,7 +211,7 @@ public class ApplContext implements TableModelListener, Runnable, JwsContext {
         // Backup an Original File, if parsing and loading was successful.
         if (isTimeToBackup() && dataFile.exists()) try {
             ApplTools.copy(dataFile, backupFile);
-            WorkSpace.P_ARCHIVED.setValue(workSpace, new Date());
+            MetaWorkSpace.archived.setValue(workSpace, new Date());
         } catch (Throwable e) {
             LOGGER.log(Level.WARNING, "Can't create backup", e);
         }
@@ -244,15 +253,15 @@ public class ApplContext implements TableModelListener, Runnable, JwsContext {
     /** Is the time to backup data?
      *  If the archived timestamp is undefined, then method setup the timestamp to current date only
      *  however it does not overwrite the previous backup file by reason of  better security.
-     * <br>WARNING: The method must be called allways, because it can initialize a WorkSpace.P_ARCHIVED property.
+     * <br>WARNING: The method must be called allways, because it can initialize a MetaWorkSpace.archived property.
      */
     private boolean isTimeToBackup() {
         Calendar cal = Calendar.getInstance();
         long day2 = getDayCount(cal);
-        Date date = WorkSpace.P_ARCHIVED.of(workSpace);
+        Date date = MetaWorkSpace.archived.getValue(workSpace);
 
         if (date==null) {
-            WorkSpace.P_ARCHIVED.setValue(workSpace, cal.getTime());
+            MetaWorkSpace.archived.setValue(workSpace, cal.getTime());
             return false;
         } else {
             cal.setTime(date);
@@ -270,9 +279,9 @@ public class ApplContext implements TableModelListener, Runnable, JwsContext {
     public synchronized void saveData(boolean includeParams) {
         try {
             // WorkSpace attributes
-            workSpace.set(WorkSpace.P_CREATED, new Date());
-            workSpace.set(WorkSpace.P_VERSN  , JWorkSheet.APPL_VERSION);
-            workSpace.set(WorkSpace.P_USERNAME, Parameters.P_USERNAME.of(getParameters()));
+            workSpace.set(MetaWorkSpace.created, new Date());
+            workSpace.set(MetaWorkSpace.version  , JWorkSheet.APPL_VERSION);
+            workSpace.set(MetaWorkSpace.username, MetaParameters.username.getValue(getParameters()));
 
             String comment = " <?xml-stylesheet type=\"text/xsl\" href=\"styles/"
                     + ResourceProvider.REPORT_BASE
@@ -287,10 +296,10 @@ public class ApplContext implements TableModelListener, Runnable, JwsContext {
         if (includeParams) {
             // Window Sizing:
             Rectangle rect
-            = Parameters.P_WINDOW_SIZE_RESTORATION.of(parameters)
+            = MetaParameters.windowSizeRestoration.getValue(parameters)
             ? topFrame.getBounds()
-            : Parameters.P_WINDOW_SIZE.getDefault() ;
-            Parameters.P_WINDOW_SIZE.setValue(parameters,rect);
+            : Keys.defaultOf(MetaParameters.windowSize) ;
+            MetaParameters.windowSize.setValue(parameters,rect);
 
             saveParameters();
         }
@@ -322,9 +331,9 @@ public class ApplContext implements TableModelListener, Runnable, JwsContext {
     /** Create an Exit row, if it is enabled. */
     public void createExitEvent() {
 
-        if (Parameters.P_EXIT_EVENT_CREATE.of(parameters) ) {
+        if (MetaParameters.exitEventCreating.getValue(parameters) ) {
             WorkDay today = workSpace.findWorkDay(new YearMonthDay());
-            List<Event> events = WorkDay.P_EVENTS.getList(today);
+            List<Event> events = today.getEvents();
 
             if (events.size()>=1) {
                 Event lastEvent   = events.get(events.size()-1);
@@ -332,12 +341,12 @@ public class ApplContext implements TableModelListener, Runnable, JwsContext {
                 Time currentTime  = new Time(true);
 
                 if (currentTime.compareTo(finishedTime)>=0) {
-                    String exitDescr = Parameters.P_EXIT_EVENT_DESCR.of(parameters);
+                    String exitDescr = MetaParameters.exitEventDescription.getValue(parameters);
                     Event exitEvent;
 
-                    if (Event.P_PROJ.of(lastEvent)==null
-                    &&  Event.P_TASK.of(lastEvent)==null
-                    &&  Event.P_DESCR.equals(lastEvent, exitDescr)
+                    if (MetaEvent.project.getValue(lastEvent)==null
+                    &&  MetaEvent.task.getValue(lastEvent)==null
+                    &&  MetaEvent.descr.equals(lastEvent, exitDescr)
                     &&  events.size()>=2
                     ){
                         exitEvent = lastEvent;
@@ -347,9 +356,9 @@ public class ApplContext implements TableModelListener, Runnable, JwsContext {
                         events.add(exitEvent);
                     }
 
-                    Event.P_TIME .setValue(exitEvent, currentTime);
-                    Event.P_DESCR.setValue(exitEvent, exitDescr);
-                    Event.P_PERIOD.setValue(lastEvent, currentTime.substract( Event.P_TIME.of(lastEvent) ));
+                    exitEvent.setStartTime(currentTime);
+                    MetaEvent.descr.setValue(exitEvent, exitDescr);
+                    MetaEvent.period.setValue(lastEvent, currentTime.substract(lastEvent.getStartTime()));
                 }
             }
         }
@@ -401,8 +410,8 @@ public class ApplContext implements TableModelListener, Runnable, JwsContext {
     /** Data File */
     @Override
     public File getDataFile() {
-        File result = Parameters.P_DATA_FILE_PATH.of(getParameters());
-        if (result==Parameters.P_DATA_FILE_PATH.getDefault()) {
+        File result = MetaParameters.dataFilePath.getValue(getParameters());
+        if (result==Keys.defaultOf(MetaParameters.dataFilePath)) {
             result = new File(getConfigDir(), FILE_DATA);
         }
         return result;
@@ -410,8 +419,8 @@ public class ApplContext implements TableModelListener, Runnable, JwsContext {
 
     /** Shared Projects Data File */
     public File getProjectsFile() {
-        File result = Parameters.P_PROJECTS_FILE_PATH.of(getParameters());
-        if (result==Parameters.P_PROJECTS_FILE_PATH.getDefault()) {
+        File result = MetaParameters.sharedProjectsFilePath.getValue(getParameters());
+        if (result==Keys.defaultOf(MetaParameters.sharedProjectsFilePath)) {
             result = new File(getConfigDir(), PROJECTS_DATA);
         }
         return result;
@@ -452,7 +461,7 @@ public class ApplContext implements TableModelListener, Runnable, JwsContext {
     /** Get "Selected Day" - don't modify it! */
     @Override
     public YearMonthDay getSelectedDay() {
-        return WorkDay.P_DATE.of(currentDay);
+        return MetaWorkDay.date.getValue(currentDay);
     }
 
     /** GetCurrentDay */
@@ -469,7 +478,7 @@ public class ApplContext implements TableModelListener, Runnable, JwsContext {
     /** Current Language */
     @Override
     public Locale getLanguage() {
-        return Parameters.P_LANG.of(parameters);
+        return MetaParameters.language.getValue(parameters);
     }
 
     /**
@@ -600,7 +609,7 @@ public class ApplContext implements TableModelListener, Runnable, JwsContext {
         }
         if (LANGUAGE_MANAGER_ENABLED) {
            // translate the application:
-           languageManager.setLocaleAndTranslate(Parameters.P_LANG.of(parameters), true);
+           languageManager.setLocaleAndTranslate(MetaParameters.language.getValue(parameters), true);
         }
 
         fireModuleEvent();
@@ -624,7 +633,7 @@ public class ApplContext implements TableModelListener, Runnable, JwsContext {
     public float getDataVersion() {
         try {
             DecimalFormat form = ApplTools.createDecimalFormat("0.0");
-            String tagContent = getTagContent(getDataFile(), WorkSpace.P_VERSN.getName());
+            String tagContent = getTagContent(getDataFile(), Keys.nameOf(MetaWorkSpace.version));
             float result = tagContent!=null ? form.parse(tagContent).floatValue() : -1 ;
             return result;
         } catch (Throwable ex) {
@@ -661,7 +670,7 @@ public class ApplContext implements TableModelListener, Runnable, JwsContext {
 
         if (LANGUAGE_MANAGER_ENABLED) {
             this.languageManager = new LanguageManager(topFrame, ResourceProvider.class, showDebugWindow);
-            this.languageManager.setLocaleAndTranslate(Parameters.P_LANG.of(parameters), false);
+            this.languageManager.setLocaleAndTranslate(MetaParameters.language.getValue(parameters), false);
         }
     }
 
@@ -712,7 +721,7 @@ public class ApplContext implements TableModelListener, Runnable, JwsContext {
     @Override
     public boolean isSystrayEnabled() {
         boolean result
-        = Parameters.P_SYSTRAY_ENABLED.of(getParameters())
+        = MetaParameters.systemTrayEnabled.getValue(getParameters())
         && systray.isSupported()
         ;
         return result;
@@ -725,7 +734,7 @@ public class ApplContext implements TableModelListener, Runnable, JwsContext {
 
         //WorkDay workDay = getWorkSpace().findWorkDay(getSelectedDay()); // YearMonthDay
         WorkDay workDay = getWorkSpace().findWorkDay(new YearMonthDay());
-        List<Event> events = WorkDay.P_EVENTS.getList(workDay);
+        List<Event> events = workDay.getEvents();
         int lastIndex = events.size()-1;
         return lastIndex>=0 ? events.get(lastIndex) : null;
     }
@@ -736,14 +745,14 @@ public class ApplContext implements TableModelListener, Runnable, JwsContext {
         //
         Event event = findLastEventToday();
         if (event!=null) {
-            Project  proj = Event.P_PROJ.of(event);
+            Project  proj = MetaEvent.project.getValue(event);
             if (proj!=null) {
-                message.append(Project.P_DESCR.of(proj));
+                message.append(MetaProject.descr.getValue(proj));
                 //
-                TaskType task = Event.P_TASK.of(event);
+                TaskType task = MetaEvent.task.getValue(event);
                 if (task!=null) {
                     message.append(" / ");
-                    message.append(TaskType.P_DESCR.of(task));
+                    message.append(MetaTaskType.descr.getValue(task));
                 }
             }
         }

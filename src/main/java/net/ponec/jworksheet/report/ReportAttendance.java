@@ -17,6 +17,10 @@
 
 package net.ponec.jworksheet.report;
 
+import net.ponec.jworksheet.bo.meta.MetaEvent;
+import net.ponec.jworksheet.bo.meta.MetaProject;
+import net.ponec.jworksheet.bo.meta.MetaWorkDay;
+
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
@@ -73,22 +77,22 @@ public class ReportAttendance extends SuperReport {
 
         } else {
 
-            if (event.get(Event.P_PROJ).get(Project.P_PRIVATE)) {
-                breakTime += event.get(Event.P_PERIOD);
+            if (event.get(MetaEvent.project).get(MetaProject.privateProject)) {
+                breakTime += event.get(MetaEvent.period);
             } else {
-                workTime  += event.get(Event.P_PERIOD);
+                workTime  += event.get(MetaEvent.period);
 
-                String descr = event.get(Event.P_DESCR);
+                String descr = event.get(MetaEvent.descr);
                 if (!descrs.contains(descr)) {
                     descrs.add(descr);
                 }
             }
 
-            int startTime = event.get(Event.P_TIME).getMinutes();
+            int startTime = event.getStartTime().getMinutes();
             if (arrival > startTime) {
                 arrival = startTime;
             }
-            int endTime = startTime + event.get(Event.P_PERIOD);
+            int endTime = startTime + event.get(MetaEvent.period);
             if (departure < endTime) {
                 departure = endTime;
             }
@@ -102,7 +106,7 @@ public class ReportAttendance extends SuperReport {
         Appendable sb = repBody;
 
         sb.append("<tr>");
-        sb.append("<th align=\"left\">").append(getText(WorkDay.P_DATE)).append("</th>");
+        sb.append("<th align=\"left\">").append(getText(MetaWorkDay.date)).append("</th>");
         sb.append("<th align=\"left\">").append(escape(arrival)).append("</th>");
         sb.append("<th align=\"left\">").append(escape(departure)).append("</th>");
         sb.append("<th align=\"left\">").append(escape(breakTime)).append("</th>");
@@ -132,7 +136,7 @@ public class ReportAttendance extends SuperReport {
     public void printHeader(StringBuilder sb) throws IOException {
 
         sb.append("<tr>");
-        sb.append("<th align=\"left\">").append(getText(WorkDay.P_DATE)).append("</th>");
+        sb.append("<th align=\"left\">").append(getText(MetaWorkDay.date)).append("</th>");
         sb.append("<th align=\"left\">").append(getText("Arrival")).append("</th>");
         sb.append("<th align=\"left\">").append(getText("Departure")).append("</th>");
         sb.append("<th align=\"left\">").append(getText("Break")).append("</th>");

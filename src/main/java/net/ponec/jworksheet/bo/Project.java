@@ -20,10 +20,9 @@ package net.ponec.jworksheet.bo;
 import jakarta.persistence.Column;
 import java.util.ArrayList;
 import java.util.List;
-import net.ponec.jworksheet.bo.meta.MetaProject;
-import net.ponec.jworksheet.core.ujo.JKey;
-import net.ponec.jworksheet.core.ujo.JListKey;
+import net.ponec.jworksheet.core.ujo.Keys;
 import org.ujorm.annotation.Domain;
+import org.ujorm.core.Key;
 import org.ujorm.tools.Check;
 
 /**
@@ -33,28 +32,6 @@ import org.ujorm.tools.Check;
  */
 @Domain
 public class Project implements Comparable<Project> {
-
-    /** Project ID */
-    public static final JKey<Project,Integer> P_ID       = JKey.of(MetaProject.id);
-    /** Is the project default? */
-    public static final JKey<Project,Boolean> P_DEFAULT  = JKey.of(MetaProject.defaultProject);
-    /** Is the project finished? */
-    public static final JKey<Project,Boolean> P_FINISHED = JKey.of(MetaProject.finished);
-    /** Is the project non business type? */
-    public static final JKey<Project,Boolean> P_PRIVATE  = JKey.of(MetaProject.privateProject);
-    /** Project descripton */
-    public static final JKey<Project,String>  P_DESCR    = JKey.of(MetaProject.descr);
-    /** List of task */
-    public static final JListKey<Project,TaskType> P_TASKS = JListKey.of(MetaProject.tasks, TaskType.class);
-
-    /** Table columns. */
-    public static final JKey[] TABLE_COLUMNS =
-    { P_ID
-    , P_DEFAULT
-    , P_FINISHED
-    , P_PRIVATE
-    , P_DESCR
-    };
 
     @Column(name = "ID")
     private int id = 0;
@@ -137,7 +114,7 @@ public class Project implements Comparable<Project> {
     /** Find a TaskType by its id. An undefined identifier has got no task. */
     public TaskType findTaskType(final Integer taskId) {
         if (taskId != null) {
-            for (TaskType task : P_TASKS.getList(this)) {
+            for (TaskType task : tasks) {
                 if (task.getId() == taskId.intValue()) {
                     return task;
                 }
@@ -148,10 +125,8 @@ public class Project implements Comparable<Project> {
 
     /** Returns the first "default" TaskType, null. */
     public TaskType findDefaultTask() {
-        for (TaskType task : P_TASKS.getList(this)) {
-            if (task.get(TaskType.P_DEFAULT)
-            && !task.get(TaskType.P_FINISHED)
-            ){
+        for (TaskType task : tasks) {
+            if (task.isDefaultTask() && !task.isFinished()) {
                 return task;
             }
         }
@@ -160,9 +135,9 @@ public class Project implements Comparable<Project> {
 
     /** Returns all open tasks. */
     public ArrayList<TaskType> getOpenTasks() {
-        final ArrayList<TaskType> result = new ArrayList<>(P_TASKS.getItemCount(this));
-        for (TaskType task : P_TASKS.getList(this)) {
-            if (!task.get(TaskType.P_FINISHED)) {
+        final ArrayList<TaskType> result = new ArrayList<>(tasks.size());
+        for (TaskType task : tasks) {
+            if (!task.isFinished()) {
                 result.add(task);
             }
         }
@@ -179,9 +154,9 @@ public class Project implements Comparable<Project> {
 
     /** Copy all the scalar attributes from another project. The list of the tasks is skipped. */
     public void copyFrom(final Project otherProject) {
-        for (JKey<Project,?> key : JKey.keysOf(Project.class)) {
-            if (!key.isTypeOf(List.class)) {
-                key.copy(otherProject, this);
+        for (Key<Project,?> key : Keys.keysOf(Project.class)) {
+            if (!Keys.isList(key)) {
+                Keys.copy(key, otherProject, this);
             }
         }
     }
@@ -189,11 +164,11 @@ public class Project implements Comparable<Project> {
     /** Sync tasks with other Project. */
     public void syncTasks(final Project otherProject) {
         final ArrayList<TaskType> newTasks = new ArrayList<>();
-        for (TaskType otherTask : P_TASKS.getList(otherProject)) {
+        for (TaskType otherTask : otherProject.getTasks()) {
             boolean found = false;
-            for (TaskType thisTask : P_TASKS.getList(this)) {
-                if (TaskType.P_ID.equals(otherTask, thisTask.get(TaskType.P_ID))) {
-                    if (TaskType.P_DESCR.equals(otherTask, thisTask.get(TaskType.P_DESCR))) {
+            for (TaskType thisTask : tasks) {
+                if (otherTask.getId() == thisTask.getId()) {
+                    if (otherTask.getDescr().equals(thisTask.getDescr())) {
                         // only update tasks with same description, otherwise
                         // old non-synced tasks may change description
                         thisTask.copyFrom(otherTask);
@@ -206,33 +181,33 @@ public class Project implements Comparable<Project> {
                 newTasks.add(otherTask);
             }
         }
-        for (TaskType thisTask : P_TASKS.getList(this)) {
+        for (TaskType thisTask : tasks) {
             boolean found = false;
-            for (TaskType otherTask : P_TASKS.getList(otherProject)) {
-                if (TaskType.P_ID.equals(otherTask, thisTask.get(TaskType.P_ID))) {
+            for (TaskType otherTask : otherProject.getTasks()) {
+                if (otherTask.getId() == thisTask.getId()) {
                     found = true;
                     break;
                 }
             }
             if (!found) {
-                thisTask.set(TaskType.P_FINISHED, true);
+                thisTask.setFinished(true);
             }
         }
         for (TaskType otherTask : newTasks) {
             final TaskType task = new TaskType();
             task.copyFrom(otherTask);
-            Project.P_TASKS.addItem(this, task);
+            tasks.add(task);
         }
     }
 
     // ------------------------ KEY ACCESS ------------------------
 
-    public <V> V get(final JKey<Project,V> key) {
+    public <V> V get(final Key<Project,V> key) {
         return key.getValue(this);
     }
 
-    public <V> Project set(final JKey<Project,V> key, final V value) {
-        key.setValue(this, value);
+    public <V> Project set(final Key<Project,V> key, final V value) {
+        Keys.write(key, this, value);
         return this;
     }
 }

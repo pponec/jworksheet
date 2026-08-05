@@ -17,6 +17,8 @@
 
 package net.ponec.jworksheet.bo.item;
 
+import net.ponec.jworksheet.bo.meta.MetaParameters;
+
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
@@ -147,8 +149,8 @@ public class YearMonthDay implements Comparable<YearMonthDay> {
     
     /** Get Localized String to GUI. */
     public String toString(ApplContext context) {
-        Locale language = context.getParameters().get(Parameters.P_LANG);
-        String sFormat = context.getParameters().getDateFormat(Parameters.P_DATE_MAIN_FORMAT, context);
+        Locale language = context.getParameters().get(MetaParameters.language);
+        String sFormat = context.getParameters().getDateFormat(MetaParameters.dateMainFormat, context);
         
         SimpleDateFormat format = new SimpleDateFormat(sFormat, language);
         return format.format(getTime());

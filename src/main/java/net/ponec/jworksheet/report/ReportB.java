@@ -17,6 +17,10 @@
 
 package net.ponec.jworksheet.report;
 
+import net.ponec.jworksheet.bo.meta.MetaEvent;
+import net.ponec.jworksheet.bo.meta.MetaProject;
+import net.ponec.jworksheet.report.meta.MetaTaskGroup;
+
 import java.io.IOException;
 import net.ponec.jworksheet.bo.Event;
 import net.ponec.jworksheet.bo.Project;
@@ -32,7 +36,7 @@ public class ReportB extends ReportA {
     /** Create Comparator */
     @Override
     protected UjoComparator createUjoComparator() {
-        return UjoComparator.<TaskGroup>newInstance(TaskGroup.P_PROJ);
+        return UjoComparator.<TaskGroup>newInstance(MetaTaskGroup.project);
     }
     
     /** Print the result. */
@@ -41,15 +45,15 @@ public class ReportB extends ReportA {
         int total = 0;
         
         sb.append("<tr>");
-        sb.append("<th>").append(getText(Event.P_PROJ)).append("</th>");
+        sb.append("<th>").append(getText(MetaEvent.project)).append("</th>");
         sb.append("<th align=\"right\">").append(getText("Time[hours]")).append("</th>");
         sb.append("</tr>");
         
         for(TaskGroup group : groupSet.getGroups()) {
-            Project  proj = group.get(TaskGroup.P_PROJ);
-            TaskType task = group.get(TaskGroup.P_TASK);
+            Project  proj = group.get(MetaTaskGroup.project);
+            TaskType task = group.get(MetaTaskGroup.task);
             
-            if (proj==null || !proj.get(Project.P_PRIVATE)) {
+            if (proj==null || !proj.get(MetaProject.privateProject)) {
                 sb.append("<tr>");
                 sb.append("<td>").append(escape(proj)).append("</td>");
                 sb.append("<td class=\"num\">").append(formatTime(group.getTime())).append("</td>");

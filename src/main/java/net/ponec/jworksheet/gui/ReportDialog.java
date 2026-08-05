@@ -17,6 +17,10 @@
 
 package net.ponec.jworksheet.gui;
 
+import net.ponec.jworksheet.bo.meta.MetaEvent;
+import net.ponec.jworksheet.bo.meta.MetaParameters;
+import net.ponec.jworksheet.bo.meta.MetaProject;
+
 import java.awt.event.ActionEvent;
 import java.awt.event.MouseEvent;
 import java.util.ArrayList;
@@ -44,7 +48,8 @@ import net.ponec.jworksheet.report.ReportC;
 import net.ponec.jworksheet.report.ReportTab;
 import net.ponec.jworksheet.report.ReportTabProj;
 import net.ponec.jworksheet.resources.ResourceProvider;
-import net.ponec.jworksheet.core.ujo.JKey;
+import net.ponec.jworksheet.core.ujo.Keys;
+import org.ujorm.core.Key;
 
 /**
  * Report Dialog
@@ -77,7 +82,7 @@ public class ReportDialog extends TopDialog implements java.awt.event.ActionList
         originalDay = aContext.getSelectedDay().getCalendar().getTimeInMillis();
 
         setLocale(aContext.getLanguage());
-        spinnerFormat = applContext.getParameters().getDateFormat(Parameters.P_DATE_REPORT_FORMAT, aContext);
+        spinnerFormat = applContext.getParameters().getDateFormat(MetaParameters.dateReportFormat, aContext);
         initComponents();
         selectDayAction(new java.awt.event.ActionEvent(rbDay, -1, ""));
 
@@ -93,7 +98,7 @@ public class ReportDialog extends TopDialog implements java.awt.event.ActionList
             ApplTools.setAlign(tDateTo  , JFormattedTextField.LEFT);
         }
 
-        if (!applContext.getParameters().get(Parameters.P_HIDE_ICONS)) {
+        if (!applContext.getParameters().get(MetaParameters.hideButtonIcons)) {
             ResourceProvider rp = new ResourceProvider();
             bOK.setIcon    (rp.getIcon(ResourceProvider.IMG_OK));
             bReport.setIcon(rp.getIcon(ResourceProvider.IMG_EMPTY));
@@ -177,10 +182,10 @@ public class ReportDialog extends TopDialog implements java.awt.event.ActionList
         result.add(new String[] {"JWSName"    , JWorkSheet.APPL_NAME});
         result.add(new String[] {"JWSHomePage", JWorkSheet.APPL_HOMEPAGE});
         result.add(new String[] {"Title"      , metaReport.getTitle()});
-        result.add(getXslParamItem(Parameters.P_WORKING_HOURS));
-        result.add(getXslParamItem(Parameters.P_COLOR_PRIVATE));
-        result.add(getXslParamItem(Parameters.P_COLOR_FINISHED_PROJ));
-        result.add(getXslParamItem(Parameters.P_REPORT_CSS));
+        result.add(getXslParamItem(MetaParameters.workingHours));
+        result.add(getXslParamItem(MetaParameters.colorOfPrivateProject));
+        result.add(getXslParamItem(MetaParameters.colorOfFinishedProject));
+        result.add(getXslParamItem(MetaParameters.reportCss));
 
         // Labels:
         result.add(new String[] {"labelCreated" , getText("Created")});
@@ -189,19 +194,19 @@ public class ReportDialog extends TopDialog implements java.awt.event.ActionList
         result.add(new String[] {"labelDateTo"  , getText("DateTo")});
         result.add(new String[] {"labelTasks"   , getText("Tasks")});
 
-        JKey[] properties = new JKey[]
-        { Event.P_DESCR
-        , Event.P_PERIOD
-        , Event.P_PROJ
-        , Event.P_TASK
-        , Event.P_TIME
-        , Project.P_ID
-        , Project.P_DEFAULT
-        , Project.P_FINISHED
-        , Project.P_PRIVATE
-        , Project.P_TASKS
+        Key[] properties = new Key[]
+        { MetaEvent.descr
+        , MetaEvent.period
+        , MetaEvent.project
+        , MetaEvent.task
+        , MetaEvent.time
+        , MetaProject.id
+        , MetaProject.defaultProject
+        , MetaProject.finished
+        , MetaProject.privateProject
+        , MetaProject.tasks
         };
-        for (JKey p : properties) {
+        for (Key p : properties) {
            result.add(getXslLabelItem(p));
         }
 
@@ -209,18 +214,18 @@ public class ReportDialog extends TopDialog implements java.awt.event.ActionList
     }
 
     /** Returns XSL Parameters: */
-    private String[] getXslParamItem(JKey param) {
+    private String[] getXslParamItem(Key param) {
         final String[] result = new String[]
-        { param.getName()
+        { Keys.nameOf(param)
         , applContext.getParameters().readValueString(param)
         } ;
         return result;
     }
 
     /** Returns XSL Labels: */
-    private String[] getXslLabelItem(JKey param) {
+    private String[] getXslLabelItem(Key param) {
         final String[] result = new String[]
-        { "label" + param.getName()
+        { "label" + Keys.nameOf(param)
         , applContext.getLanguageManager().getTextAllways(param)
         } ;
         return result;
@@ -676,7 +681,7 @@ public class ReportDialog extends TopDialog implements java.awt.event.ActionList
 
         if (evt==null
         ||  evt.getSource()==bOK
-        /* Parameters.P_CLOSE_REPORT_DIALOG.of(applContext.getParameters())*/
+        /* A closing of the dialog is not configurable */
         ){
             bCancelActionPerformed(null);
         }
@@ -695,7 +700,7 @@ public class ReportDialog extends TopDialog implements java.awt.event.ActionList
         c1.setTimeInMillis(originalDay);
         c2.setTimeInMillis(originalDay);
 
-        int firstDay = applContext.getParameters().get(Parameters.P_FIRST_DAY_OF_WEEK);
+        int firstDay = applContext.getParameters().get(MetaParameters.firstDayOfWeek);
         Object sourceComp = evt.getSource();
 
         if (rbDayPrev==sourceComp) {

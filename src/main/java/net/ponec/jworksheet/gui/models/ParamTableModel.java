@@ -17,11 +17,14 @@
 
 package net.ponec.jworksheet.gui.models;
 
+import net.ponec.jworksheet.gui.models.meta.MetaUjoKeyRow;
+
+import net.ponec.jworksheet.bo.meta.MetaParameters;
+
 import net.ponec.jworksheet.bo.Parameters;
 import net.ponec.jworksheet.core.ApplContext;
-import net.ponec.jworksheet.core.ujo.JKey;
-import net.ponec.jworksheet.gui.models.SingleUjoTabModel;
-import net.ponec.jworksheet.gui.models.UjoKeyRow;
+import net.ponec.jworksheet.core.ujo.Keys;
+import org.ujorm.core.Key;
 
 /**
  * Row of Parameters table.
@@ -29,43 +32,40 @@ import net.ponec.jworksheet.gui.models.UjoKeyRow;
  */
 public class ParamTableModel extends SingleUjoTabModel {
 
-    /** Properties */
-    public final static UjoKeyRow PROPS = null;
 
     private ApplContext applContext;
 
     /** Creates a new instance of ParamTableModel */
-    @SuppressWarnings("static-access")
     public ParamTableModel(Parameters params, ApplContext applContext) {
         super
         ( params
-        , PROPS.P_INDEX
-        , PROPS.P_NAME
-        , PROPS.P_TYPENAME
-        , PROPS.P_VALUE
-        //, PROPS.P_TEXT
-        , PROPS.P_DEFAULT
+        , MetaUjoKeyRow.index
+        , MetaUjoKeyRow.name
+        , MetaUjoKeyRow.typeName
+        , MetaUjoKeyRow.value
+        //, MetaUjoKeyRow.value
+        , MetaUjoKeyRow.defaultValue
         );
         this.applContext = applContext;
     }
 
     /** Returns a localized Column Name */
     @Override
-    public String getColumnName(JKey property) {
+    public String getColumnName(Key property) {
         return applContext.getLanguageManager().getTextAllways(property);
     }
 
     /** Set a value to a cell of table model. */
     @Override
-    public void setValueAt(Object value, int rowIndex, JKey column) {
+    public void setValueAt(Object value, int rowIndex, Key column) {
         super.setValueAt(value, rowIndex, column);
 
         final UjoKeyRow row = getRow(rowIndex);
-        if (Parameters.P_COLOR_EDITABLE==row.getKey()) {
+        if (MetaParameters.colorOfEditableArea==row.getKey()) {
             // Repaint color background;
             fireTableColumnUpdated(column);
-        } else if (Parameters.P_HIDE_ICONS==row.getKey()
-        ||         Parameters.P_AUTOMATIC_SORTING_BY_TIME==row.getKey()) {
+        } else if (MetaParameters.hideButtonIcons==row.getKey()
+        ||         MetaParameters.automaticSortingByTime==row.getKey()) {
             applContext.getTopFrame().initIcons();
         }
     }

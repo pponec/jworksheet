@@ -16,6 +16,8 @@
 
 package net.ponec.jworksheet.core.ujo;
 
+import org.ujorm.core.Key;
+
 /**
  * A domain object which filters its own keys on an export.
  * The interface replaces the {@code Ujo.readAuthorization()} method of the original
@@ -33,7 +35,7 @@ public interface Exportable {
      * @param value A value of the key, or an item of a list.
      * @return The {@code false} value skips the key (or the list item) on the export.
      */
-    default boolean isExportable(final ExportAction action, final JKey<?, ?> key, final Object value) {
+    default boolean isExportable(final ExportAction action, final Key<?, ?> key, final Object value) {
         return true;
     }
 }

@@ -17,6 +17,11 @@
 
 package net.ponec.jworksheet.report;
 
+import net.ponec.jworksheet.bo.meta.MetaEvent;
+import net.ponec.jworksheet.bo.meta.MetaParameters;
+import net.ponec.jworksheet.bo.meta.MetaProject;
+import net.ponec.jworksheet.report.meta.MetaTaskGroup;
+
 import java.io.IOException;
 import net.ponec.jworksheet.bo.Parameters;
 import net.ponec.jworksheet.bo.Event;
@@ -39,13 +44,13 @@ public class ReportA extends SuperReport {
     protected void init() {
         if (groupSet==null) {
             UjoComparator<TaskGroup> comparator = createUjoComparator();
-            groupSet = new GroupSet(comparator, Event.P_PERIOD);
+            groupSet = new GroupSet(comparator, MetaEvent.period);
         }
     }
     
     /** Create Comparator */
     protected UjoComparator<TaskGroup> createUjoComparator() {
-        return UjoComparator.<TaskGroup>newInstance(TaskGroup.P_PROJ, TaskGroup.P_TASK);
+        return UjoComparator.<TaskGroup>newInstance(MetaTaskGroup.project, MetaTaskGroup.task);
     }
     
     /** Create report */
@@ -78,16 +83,16 @@ public class ReportA extends SuperReport {
         int total = 0;
         
         sb.append("<tr>");
-        sb.append("<th align=\"left\">").append(getText(Event.P_PROJ)).append("</th>");
-        sb.append("<th align=\"left\">").append(getText(Event.P_TASK)).append("</th>");
+        sb.append("<th align=\"left\">").append(getText(MetaEvent.project)).append("</th>");
+        sb.append("<th align=\"left\">").append(getText(MetaEvent.task)).append("</th>");
         sb.append("<th align=\"right\">").append(getText("Time[hours]")).append("</th>");
         sb.append("</tr>");
         
         for(TaskGroup group : groupSet.getGroups()) {
-            Project  proj = group.get(TaskGroup.P_PROJ);
-            TaskType task = group.get(TaskGroup.P_TASK);
+            Project  proj = group.get(MetaTaskGroup.project);
+            TaskType task = group.get(MetaTaskGroup.task);
             
-            if (proj==null || !proj.get(Project.P_PRIVATE)) {
+            if (proj==null || !proj.get(MetaProject.privateProject)) {
                 sb.append("<tr>");
                 sb.append("<td>").append( escape(proj) ).append("</td>");
                 sb.append("<td>").append( escape(task) ).append("</td>");
@@ -112,7 +117,7 @@ public class ReportA extends SuperReport {
         sb.append("</tr>");
         
         // Overtime:
-        float requiredTime = getWorkDayCount()*applContext.getParameters().get(Parameters.P_WORKING_HOURS);
+        float requiredTime = getWorkDayCount()*applContext.getParameters().get(MetaParameters.workingHours);
         sb.append("<tr class=\"total\">");
         sb.append("<td class=\"alignLeft\">").append(getText("Overtime")).append("</td>");
         if (tasks) {

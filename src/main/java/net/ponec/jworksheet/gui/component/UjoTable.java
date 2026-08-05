@@ -39,8 +39,10 @@ import javax.swing.table.TableModel;
 import net.ponec.jworksheet.core.ApplContext;
 import net.ponec.jworksheet.gui.models.EventTableModel;
 import net.ponec.jworksheet.resources.ResourceProvider;
-import net.ponec.jworksheet.core.ujo.JKey;
-import net.ponec.jworksheet.core.ujo.JKey;
+import net.ponec.jworksheet.core.ujo.Keys;
+import org.ujorm.core.Key;
+import net.ponec.jworksheet.core.ujo.Keys;
+import org.ujorm.core.Key;
 import net.ponec.jworksheet.gui.models.UjoTableModel;
 
 /**
@@ -51,7 +53,7 @@ public class UjoTable extends JTable implements TableCellRenderer {
     
     private TableCellRenderer superRenderer = null;
     private ImageIcon sortIcon = null;
-    private JKey sortedColumn = null;
+    private Key sortedColumn = null;
     
     /** Creates a new instance of UjoTable */
     public UjoTable() {
@@ -63,22 +65,22 @@ public class UjoTable extends JTable implements TableCellRenderer {
     }
     
     /** Converts a view column index to Key. */
-    public JKey convertColumnIndexToProperty(int viewColumnIndex) {
+    public Key convertColumnIndexToProperty(int viewColumnIndex) {
         final int modelColumnIndex = convertColumnIndexToModel(viewColumnIndex);
-        final JKey result = getModel().getColumn(modelColumnIndex);
+        final Key result = getModel().getColumn(modelColumnIndex);
         return result;
     }
     
     /**
      * Return an Ujo column of table model.
      */
-    public JKey getColumn(int tableColumnIndex) {
-        final JKey result = getModel().getColumn(convertColumnIndexToModel(tableColumnIndex));
+    public Key getColumn(int tableColumnIndex) {
+        final Key result = getModel().getColumn(convertColumnIndexToModel(tableColumnIndex));
         return result;
     }
     
     /** Return a TableColumn */
-    public TableColumn getTableColumn(JKey column) {
+    public TableColumn getTableColumn(Key column) {
         final int index = getModel().getColumnIndex(column);
         final TableColumn result = getColumnModel().getColumn(index);
         return result;
@@ -163,7 +165,7 @@ public class UjoTable extends JTable implements TableCellRenderer {
             arrayRow = new ArrayList<String>();
             result.add(arrayRow);
             for (int col=0; col<model.getColumnCount(); col++) {
-                JKey column = getColumn(col);
+                Key column = getColumn(col);
                 TableCellRenderer renderer = getTableColumn(column).getHeaderRenderer();
                 String cell = model.getColumnName(column);
                 if (renderer!=null) {
@@ -180,7 +182,7 @@ public class UjoTable extends JTable implements TableCellRenderer {
             arrayRow = new ArrayList<String>();
             result.add(arrayRow);
             for (int col=0; col<model.getColumnCount(); col++) {
-                JKey column = getColumn(col);
+                Key column = getColumn(col);
                 TableCellRenderer renderer = getTableColumn(column).getCellRenderer();
                 Object value = model.getValueAt(row, column);
                 String cell = String.valueOf(value);
@@ -294,7 +296,7 @@ public class UjoTable extends JTable implements TableCellRenderer {
             label.setHorizontalTextPosition(javax.swing.SwingConstants.LEADING);
             
             final int columnModel = table.convertColumnIndexToModel(column);
-            final JKey colProperty = ((UjoTable)table).getModel().getColumn(columnModel);
+            final Key colProperty = ((UjoTable)table).getModel().getColumn(columnModel);
             label.setIcon(colProperty==sortedColumn ? sortIcon : null );
         }
 
@@ -302,19 +304,19 @@ public class UjoTable extends JTable implements TableCellRenderer {
     }
     
     /** Show selected column */
-    public void showSortedColumn(final JKey property) {
+    public void showSortedColumn(final Key property) {
         sortedColumn = property;
         getTableHeader().repaint();
     } 
 
     /** Show selected column */
     public void showSortedColumn(final String property) {
-        final JKey pro = getColumn(Math.max(0, getModel().findColumn(property)));
+        final Key pro = getColumn(Math.max(0, getModel().findColumn(property)));
         showSortedColumn(pro);
     }
 
     /** Get Sorted Column */
-    public JKey getSortedColumn() {
+    public Key getSortedColumn() {
         return sortedColumn;
     }
 

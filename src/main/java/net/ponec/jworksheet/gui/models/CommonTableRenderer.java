@@ -17,6 +17,8 @@
 
 package net.ponec.jworksheet.gui.models;
 
+import net.ponec.jworksheet.bo.meta.MetaParameters;
+
 import java.awt.Color;
 import java.awt.Component;
 import javax.swing.JLabel;
@@ -78,10 +80,10 @@ public class CommonTableRenderer extends DefaultTableCellRenderer {
         
         Color result;
         if (row%2==0) {
-            result = context.getParameters().get(Parameters.P_COLOR_EDITABLE);
+            result = context.getParameters().get(MetaParameters.colorOfEditableArea);
         } else {
             if (colorAlt==null) {
-                colorAlt = context.getParameters().get(Parameters.P_COLOR_EDITABLE);
+                colorAlt = context.getParameters().get(MetaParameters.colorOfEditableArea);
                 colorAlt = ApplTools.modify(colorAlt, 30);
             }
             result = colorAlt;

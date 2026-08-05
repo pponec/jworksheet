@@ -18,6 +18,7 @@ package net.ponec.jworksheet.core.ujo;
 
 import java.util.Comparator;
 import java.util.List;
+import org.ujorm.core.Key;
 
 /**
  * A comparator of the domain objects by a list of the keys.
@@ -31,23 +32,23 @@ import java.util.List;
 public class UjoComparator<T> implements Comparator<T> {
 
     /** The keys are compared in this order. */
-    private final JKey<T,?>[] keys;
+    private final Key<T,?>[] keys;
 
     @SafeVarargs
-    protected UjoComparator(final JKey<T,?>... keys) {
+    protected UjoComparator(final Key<T,?>... keys) {
         this.keys = keys;
     }
 
     /** Creates a comparator by a list of the keys. */
     @SuppressWarnings({"unchecked", "rawtypes"})
-    public static <T> UjoComparator<T> newInstance(final JKey... keys) {
+    public static <T> UjoComparator<T> newInstance(final Key... keys) {
         return new UjoComparator<>(keys);
     }
 
     @Override
     @SuppressWarnings({"unchecked", "rawtypes"})
     public int compare(final T o1, final T o2) {
-        for (JKey<T,?> key : keys) {
+        for (Key<T,?> key : keys) {
             final Object v1 = key.getValue(o1);
             final Object v2 = key.getValue(o2);
 

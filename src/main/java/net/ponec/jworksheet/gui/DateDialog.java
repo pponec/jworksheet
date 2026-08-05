@@ -17,6 +17,8 @@
 
 package net.ponec.jworksheet.gui;
 
+import net.ponec.jworksheet.bo.meta.MetaParameters;
+
 import java.awt.event.ActionEvent;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -53,8 +55,8 @@ public class DateDialog extends TopDialog implements java.awt.event.ActionListen
         super(aContext);
         setLocale(aContext.getLanguage());
 
-        mainFormat = applContext.getParameters().getDateFormat(Parameters.P_DATE_MAIN_FORMAT, aContext);
-        gotoFormat = applContext.getParameters().getDateFormat(Parameters.P_DATE_GOTO_FORMAT, aContext);
+        mainFormat = applContext.getParameters().getDateFormat(MetaParameters.dateMainFormat, aContext);
+        gotoFormat = applContext.getParameters().getDateFormat(MetaParameters.dateGotoFormat, aContext);
 
         initComponents();
         tDate.setValue(applContext.getSelectedDay().getTime());
@@ -69,7 +71,7 @@ public class DateDialog extends TopDialog implements java.awt.event.ActionListen
             ApplTools.setAlign(tDate, JFormattedTextField.RIGHT);
         }
 
-        if (!applContext.getParameters().get(Parameters.P_HIDE_ICONS)) {
+        if (!applContext.getParameters().get(MetaParameters.hideButtonIcons)) {
             ResourceProvider rp = new ResourceProvider();
             bOK.setIcon    (rp.getIcon(ResourceProvider.IMG_OK));
             bCancel.setIcon(rp.getIcon(ResourceProvider.IMG_CANCEL));

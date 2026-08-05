@@ -16,12 +16,15 @@
 
 package net.ponec.jworksheet.gui.models;
 
+import net.ponec.jworksheet.gui.models.meta.MetaUjoKeyRow;
+
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 import net.ponec.jworksheet.core.ujo.ExportAction;
 import net.ponec.jworksheet.core.ujo.Exportable;
-import net.ponec.jworksheet.core.ujo.JKey;
+import net.ponec.jworksheet.core.ujo.Keys;
+import org.ujorm.core.Key;
 import net.ponec.jworksheet.core.ujo.ValueCoder;
 
 /**
@@ -37,11 +40,11 @@ public class SingleUjoTabModel extends UjoTableModel<UjoKeyRow> {
 
     /** Creates a model of all the visible keys of the domain object. */
     public SingleUjoTabModel(final Object content) {
-        this(content, JKey.keysOf(UjoKeyRow.class).toArray(new JKey[0]));
+        this(content, Keys.keysOf(UjoKeyRow.class).toArray(new Key[0]));
     }
 
     /** Creates a model of all the visible keys of the domain object. */
-    public SingleUjoTabModel(final Object content, final JKey... columns) {
+    public SingleUjoTabModel(final Object content, final Key... columns) {
         super(columns);
         rows = createKeyRows(content);
     }
@@ -51,7 +54,7 @@ public class SingleUjoTabModel extends UjoTableModel<UjoKeyRow> {
         final Exportable filter = content instanceof final Exportable e ? e : null;
         final List<UjoKeyRow> result = new ArrayList<>();
 
-        for (JKey key : JKey.keysOf(content.getClass())) {
+        for (Key key : Keys.keysOf(content.getClass())) {
             if (filter == null
             ||  filter.isExportable(ExportAction.TABLE_SHOW, key, key.getValue(content))) {
                 result.add(new UjoKeyRow(content, key));
@@ -62,16 +65,16 @@ public class SingleUjoTabModel extends UjoTableModel<UjoKeyRow> {
 
     /** Only the value is editable. */
     @Override
-    public boolean isCellEditable(final int rowIndex, final JKey column) {
-        return column == UjoKeyRow.P_VALUE;
+    public boolean isCellEditable(final int rowIndex, final Key column) {
+        return column == MetaUjoKeyRow.value;
     }
 
     /** Set a value to a cell of table model. A text is decoded to the type of the presented key. */
     @Override
-    public void setValueAt(final Object value, final int rowIndex, final JKey column) {
-        if (column == UjoKeyRow.P_VALUE && value instanceof final String text) {
+    public void setValueAt(final Object value, final int rowIndex, final Key column) {
+        if (column == MetaUjoKeyRow.value && value instanceof final String text) {
             final UjoKeyRow row = getRow(rowIndex);
-            row.setValue(ValueCoder.decode(row.getKey().getType(), text));
+            row.setValue(ValueCoder.decode(row.getKey(), text));
             fireTableCellUpdated(rowIndex, getColumnIndex(column));
         } else {
             super.setValueAt(value, rowIndex, column);
@@ -80,9 +83,10 @@ public class SingleUjoTabModel extends UjoTableModel<UjoKeyRow> {
 
     /** The value and the default value are presented in a text format. */
     @Override
-    public Object getValueAt(final int rowIndex, final JKey column) {
-        if (column == UjoKeyRow.P_VALUE || column == UjoKeyRow.P_DEFAULT) {
-            return ValueCoder.encode(super.getValueAt(rowIndex, column));
+    public Object getValueAt(final int rowIndex, final Key column) {
+        if (column == MetaUjoKeyRow.value || column == MetaUjoKeyRow.defaultValue) {
+            final UjoKeyRow row = getRow(rowIndex);
+            return ValueCoder.encode(row.getKey(), super.getValueAt(rowIndex, column));
         }
         return super.getValueAt(rowIndex, column);
     }

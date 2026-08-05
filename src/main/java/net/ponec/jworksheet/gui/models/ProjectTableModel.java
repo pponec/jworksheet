@@ -17,19 +17,28 @@
 
 package net.ponec.jworksheet.gui.models;
 
+import net.ponec.jworksheet.bo.meta.MetaProject;
+
 import net.ponec.jworksheet.bo.Project;
 import net.ponec.jworksheet.core.ApplContext;
-import net.ponec.jworksheet.core.ujo.JKey;
-import net.ponec.jworksheet.gui.models.UjoTableModel;
+import net.ponec.jworksheet.core.ujo.Keys;
+import org.ujorm.core.Key;
 
 /**
  * Project Table Model
  * @author Pavel Ponec
  */
 public class ProjectTableModel extends UjoTableModel<Project> {
+
+    /** Table columns. */
+    private static final Key[] TABLE_COLUMNS =
+    { MetaProject.id
+    , MetaProject.defaultProject
+    , MetaProject.finished
+    , MetaProject.privateProject
+    , MetaProject.descr
+    };
     
-    /** Properties */
-    public final static Project PROPS = null;
 
     /** Application context */
     private final ApplContext applContext;
@@ -38,13 +47,13 @@ public class ProjectTableModel extends UjoTableModel<Project> {
      * Creates a new instance of UjoTableModel
      */
     public ProjectTableModel(final ApplContext applContext) {
-        super(Project.TABLE_COLUMNS);
+        super(TABLE_COLUMNS);
         this.applContext = applContext;
     }
 
     /** Returns a localized Column Name */
     @Override
-    public String getColumnName(JKey property) {
+    public String getColumnName(Key property) {
         return applContext.getLanguageManager().getTextAllways(property);
     }
 
@@ -52,7 +61,7 @@ public class ProjectTableModel extends UjoTableModel<Project> {
     protected Integer nextProjectId() {
         Integer result = 0;
         for (Project proj : super.rows) {
-            Integer id = proj.get(Project.P_ID);
+            Integer id = proj.get(MetaProject.id);
             if (result.compareTo(id)<0) {
                 result = id;
             }
@@ -62,24 +71,24 @@ public class ProjectTableModel extends UjoTableModel<Project> {
     
     @Override
     public void addRow(Project proj) {
-        Project.P_ID.setValue(proj, nextProjectId());
+        MetaProject.id.setValue(proj, nextProjectId());
         super.addRow(proj);
     }
     
     /** Set value to cell. */
     @SuppressWarnings("unchecked")
-    public void setValueAt(Object value, int rowIndex, JKey column) {
-        if (column==PROPS.P_DEFAULT && (Boolean) value) {
+    public void setValueAt(Object value, int rowIndex, Key column) {
+        if (column==MetaProject.defaultProject && (Boolean) value) {
             Project selected = getRow(rowIndex);
             for (Project proj : rows) {
                 column.setValue(proj, Boolean.valueOf(proj==selected));
             }
-            super.setValueAt(Boolean.FALSE, rowIndex, PROPS.P_FINISHED);
+            super.setValueAt(Boolean.FALSE, rowIndex, MetaProject.finished);
             super.fireTableColumnUpdated(column);
             return;
         }
-        if (column==PROPS.P_FINISHED && (Boolean) value) {
-            super.setValueAt(Boolean.FALSE, rowIndex, PROPS.P_DEFAULT);
+        if (column==MetaProject.finished && (Boolean) value) {
+            super.setValueAt(Boolean.FALSE, rowIndex, MetaProject.defaultProject);
         }
         
         super.setValueAt(value, rowIndex, column);

@@ -16,6 +16,8 @@
 
 package net.ponec.jworksheet.core;
 
+import net.ponec.jworksheet.bo.meta.MetaParameters;
+
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -165,7 +167,7 @@ public class SysTray6 extends SysTray implements MouseListener, ActionListener {
         switch(e.getButton()) {
             case MouseEvent.BUTTON1:
                 final boolean doubleClick = e.getClickCount()==2;
-                Enum mode = Parameters.P_SYSTRAY_SECOND_CLICK.of(applContext.getParameters());
+                Enum mode = MetaParameters.systemTraySecondClick.getValue(applContext.getParameters());
                 if (EVENT==mode) {
                     if (doubleClick) {
                         frame.createWorkEvent(true);

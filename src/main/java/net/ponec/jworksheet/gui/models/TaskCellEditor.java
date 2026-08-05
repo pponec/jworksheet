@@ -17,6 +17,8 @@
 
 package net.ponec.jworksheet.gui.models;
 
+import net.ponec.jworksheet.bo.meta.MetaEvent;
+
 import java.awt.Component;
 import java.util.ArrayList;
 import javax.swing.DefaultCellEditor;
@@ -27,7 +29,6 @@ import javax.swing.table.TableCellEditor;
 import net.ponec.jworksheet.bo.Event;
 import net.ponec.jworksheet.bo.Project;
 import net.ponec.jworksheet.bo.TaskType;
-import net.ponec.jworksheet.gui.models.UjoTableModel;
 
 /**
  * A JComboBox cell editor
@@ -49,7 +50,7 @@ public class TaskCellEditor extends DefaultCellEditor implements TableCellEditor
 
         UjoTableModel tableModel = (UjoTableModel) table.getModel();
         final Event event = (Event) tableModel.getRow(row);
-        final Project project = event.get(Event.P_PROJ);
+        final Project project = event.get(MetaEvent.project);
         final ArrayList<TaskType> tasks = project!=null ? project.getOpenTasks() : null;
 
         if (tasks!=null && tasks.size()>0) {

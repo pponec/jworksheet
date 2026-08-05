@@ -18,9 +18,9 @@
 package net.ponec.jworksheet.bo;
 
 import jakarta.persistence.Column;
-import net.ponec.jworksheet.bo.meta.MetaTaskType;
-import net.ponec.jworksheet.core.ujo.JKey;
+import net.ponec.jworksheet.core.ujo.Keys;
 import org.ujorm.annotation.Domain;
+import org.ujorm.core.Key;
 import org.ujorm.tools.Check;
 
 /**
@@ -29,15 +29,6 @@ import org.ujorm.tools.Check;
  */
 @Domain
 public class TaskType implements Comparable<TaskType> {
-
-    /** Task ID */
-    public static final JKey<TaskType,Integer> P_ID       = JKey.of(MetaTaskType.id);
-    /** Is the task default? */
-    public static final JKey<TaskType,Boolean> P_DEFAULT  = JKey.of(MetaTaskType.defaultTask);
-    /** Is the task finished? */
-    public static final JKey<TaskType,Boolean> P_FINISHED = JKey.of(MetaTaskType.finished);
-    /** Description of the task. */
-    public static final JKey<TaskType,String>  P_DESCR    = JKey.of(MetaTaskType.descr);
 
     @Column(name = "ID")
     private int id = 0;
@@ -105,19 +96,19 @@ public class TaskType implements Comparable<TaskType> {
 
     /** Copy all the attributes from another task. */
     public void copyFrom(final TaskType otherTask) {
-        for (JKey<TaskType,?> key : JKey.keysOf(TaskType.class)) {
-            key.copy(otherTask, this);
+        for (Key<TaskType,?> key : Keys.keysOf(TaskType.class)) {
+            Keys.copy(key, otherTask, this);
         }
     }
 
     // ------------------------ KEY ACCESS ------------------------
 
-    public <V> V get(final JKey<TaskType,V> key) {
+    public <V> V get(final Key<TaskType,V> key) {
         return key.getValue(this);
     }
 
-    public <V> TaskType set(final JKey<TaskType,V> key, final V value) {
-        key.setValue(this, value);
+    public <V> TaskType set(final Key<TaskType,V> key, final V value) {
+        Keys.write(key, this, value);
         return this;
     }
 }

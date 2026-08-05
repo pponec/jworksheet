@@ -17,6 +17,10 @@
 
 package net.ponec.jworksheet.gui.models;
 
+import net.ponec.jworksheet.bo.meta.MetaEvent;
+import net.ponec.jworksheet.bo.meta.MetaParameters;
+import net.ponec.jworksheet.bo.meta.MetaProject;
+
 import java.awt.Color;
 import java.awt.Component;
 import javax.swing.JLabel;
@@ -28,8 +32,8 @@ import net.ponec.jworksheet.bo.Event;
 import net.ponec.jworksheet.bo.Project;
 import net.ponec.jworksheet.core.ApplTools;
 import net.ponec.jworksheet.gui.component.*;
-import net.ponec.jworksheet.core.ujo.JKey;
-import net.ponec.jworksheet.gui.models.UjoTableModel;
+import net.ponec.jworksheet.core.ujo.Keys;
+import org.ujorm.core.Key;
 
 /**
  * EventTableRenderer.
@@ -72,19 +76,19 @@ public class EventTableRenderer extends DefaultTableCellRenderer {
         
         final UjoTable table = (UjoTable) aTable;
         final UjoTableModel model = table.getModel();
-        JKey column = table.getColumn(viewColumn);
+        Key column = table.getColumn(viewColumn);
         Event event = (Event) model.getRow(rowIndex);
         //
-        boolean projOrTask = column==Event.P_PROJ || column==Event.P_TASK ;
+        boolean projOrTask = column==MetaEvent.project || column==MetaEvent.task ;
         boolean editable = (nimbus
-            ? (column==Event.P_TIME || column==Event.P_PERIOD)
+            ? (column==MetaEvent.time || column==MetaEvent.period)
             : !projOrTask  )
             && model.isCellEditable(rowIndex, column)
             ;
         
-        Project project = event.get(Event.P_PROJ);
+        Project project = event.get(MetaEvent.project);
         boolean finishedProj = project!=null && projOrTask && event.isFinished(column);
-        boolean privateProj  = project!=null && project.get(Project.P_PRIVATE);
+        boolean privateProj  = project!=null && project.get(MetaProject.privateProject);
         
         result.setForeground
         ( isSelected   ? aTable.getSelectionForeground()
@@ -94,13 +98,13 @@ public class EventTableRenderer extends DefaultTableCellRenderer {
         );
         result.setBackground
         ( isSelected             ? aTable.getSelectionBackground()
-        : (column==Event.P_TIME) ? getColorOfEditableArea(rowIndex)
+        : (column==MetaEvent.time) ? getColorOfEditableArea(rowIndex)
         : editable               ? getColorOfEditableArea()
         : table.getBackground()
         );
         result.setHorizontalAlignment(isNumericalType(column) ? JLabel.RIGHT : JLabel.LEFT );
         
-        if (column==Event.P_PERIOD) {
+        if (column==MetaEvent.period) {
             /** Num Formatter */
             final String time = context.getParameters().formatTime((Short)value);
             result.setText(time);
@@ -110,27 +114,27 @@ public class EventTableRenderer extends DefaultTableCellRenderer {
     }
     
     /** Return true, it column is nuberical type. */
-    public boolean isNumericalType(JKey property) {
-        if (property==Event.P_TIME  ) return true;
-        if (property==Event.P_PERIOD) return true;
+    public boolean isNumericalType(Key property) {
+        if (property==MetaEvent.time  ) return true;
+        if (property==MetaEvent.period) return true;
         return false;
     }
     
     /** Get Color of a private project. */
     protected Color getColorOfPrivateProject() {
-        return context.getParameters().get(Parameters.P_COLOR_PRIVATE);
+        return context.getParameters().get(MetaParameters.colorOfPrivateProject);
     }
     
     /** Get a Color of an editable area. */
     protected Color getColorOfFihishedProject() {
-        final Color result = context.getParameters().get(Parameters.P_COLOR_FINISHED_PROJ);
+        final Color result = context.getParameters().get(MetaParameters.colorOfFinishedProject);
         return result;
     }
 
     
     /** Get a Color of an editable area. */
     protected Color getColorOfEditableArea() {
-        return context.getParameters().get(Parameters.P_COLOR_EDITABLE);
+        return context.getParameters().get(MetaParameters.colorOfEditableArea);
     }
     
     /** Get a Color of an editable area. */

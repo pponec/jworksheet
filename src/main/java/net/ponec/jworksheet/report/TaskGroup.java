@@ -21,9 +21,10 @@ import net.ponec.jworksheet.bo.Event;
 import net.ponec.jworksheet.bo.Project;
 import net.ponec.jworksheet.bo.TaskType;
 import net.ponec.jworksheet.bo.item.YearMonthDay;
-import net.ponec.jworksheet.core.ujo.JKey;
+import net.ponec.jworksheet.core.ujo.Keys;
 import net.ponec.jworksheet.report.meta.MetaTaskGroup;
 import org.ujorm.annotation.Domain;
+import org.ujorm.core.Key;
 
 /**
  * Task Group
@@ -31,12 +32,6 @@ import org.ujorm.annotation.Domain;
  */
 @Domain
 public class TaskGroup {
-
-    public static final JKey<TaskGroup,Project>      P_PROJ  = JKey.of(MetaTaskGroup.project);
-    public static final JKey<TaskGroup,TaskType>     P_TASK  = JKey.of(MetaTaskGroup.task);
-    public static final JKey<TaskGroup,YearMonthDay> P_DAY   = JKey.of(MetaTaskGroup.day);
-    public static final JKey<TaskGroup,Integer>      P_MONTH = JKey.of(MetaTaskGroup.month);
-    public static final JKey<TaskGroup,Integer>      P_YEAR  = JKey.of(MetaTaskGroup.year);
 
     @Column(name = "Project")
     private Project project;
@@ -71,8 +66,8 @@ public class TaskGroup {
 
     /** Initialize the TaskGroup by an Event */
     void init(final Event event) {
-        this.project = event.get(Event.P_PROJ);
-        this.task = event.get(Event.P_TASK);
+        this.project = event.getProject();
+        this.task = event.getTask();
     }
 
     // ------------------------ JAVABEAN ------------------------
@@ -107,7 +102,7 @@ public class TaskGroup {
     }
 
     public void setMonth(final Integer month) {
-        throw new UnsupportedOperationException("Read only: " + P_MONTH);
+        throw new UnsupportedOperationException("Read only: " + MetaTaskGroup.month);
     }
 
     /** A year of the day. The value is derived, so it has got no setter behaviour. */
@@ -116,7 +111,7 @@ public class TaskGroup {
     }
 
     public void setYear(final Integer year) {
-        throw new UnsupportedOperationException("Read only: " + P_YEAR);
+        throw new UnsupportedOperationException("Read only: " + MetaTaskGroup.year);
     }
 
     // ------------------------ BUSINESS ------------------------
@@ -133,18 +128,17 @@ public class TaskGroup {
 
     /** Get business time. */
     public int getBusinessTime() {
-        final Project proj = get(P_PROJ);
-        return proj != null && proj.get(Project.P_PRIVATE) ? 0 : totalTime;
+        return project != null && project.isPrivateProject() ? 0 : totalTime;
     }
 
     // ------------------------ KEY ACCESS ------------------------
 
-    public <V> V get(final JKey<TaskGroup,V> key) {
+    public <V> V get(final Key<TaskGroup,V> key) {
         return key.getValue(this);
     }
 
-    public <V> TaskGroup set(final JKey<TaskGroup,V> key, final V value) {
-        key.setValue(this, value);
+    public <V> TaskGroup set(final Key<TaskGroup,V> key, final V value) {
+        Keys.write(key, this, value);
         return this;
     }
 }
