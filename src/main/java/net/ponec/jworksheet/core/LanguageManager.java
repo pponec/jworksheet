@@ -29,7 +29,7 @@ import java.text.MessageFormat;
 import java.util.*;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import org.ujorm.Key;
+import net.ponec.jworksheet.core.ujo.JKey;
 import org.ujorm.tools.Check;
 
 
@@ -726,7 +726,7 @@ public class LanguageManager {
      * Does not return null nor empty String!
      * @param key
      * @return Text from properties. */
-    public String getTextAllways(Key key) {
+    public String getTextAllways(JKey key) {
         return getTextAllways("tab." + key.getName());
     }
 

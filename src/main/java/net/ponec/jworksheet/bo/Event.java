@@ -17,112 +17,129 @@
 
 package net.ponec.jworksheet.bo;
 
-import static java.nio.charset.StandardCharsets.*;
+import jakarta.persistence.Column;
 import net.ponec.jworksheet.bo.item.Time;
-import net.ponec.jworksheet.core.ApplTools;
-import org.ujorm.UjoAction;
-import org.ujorm.Key;
-import org.ujorm.implementation.bean.*;
-import static org.ujorm.UjoAction.*;
+import net.ponec.jworksheet.bo.meta.MetaEvent;
+import net.ponec.jworksheet.core.ujo.ExportAction;
+import net.ponec.jworksheet.core.ujo.Exportable;
+import net.ponec.jworksheet.core.ujo.JKey;
+import org.ujorm.annotation.Domain;
 
 /** An Event of the Work Day.
- * I have selected the BeanUjo implementaton for its small memory footprint, two fields are stored in a memory safe data type in addition:
- * <ul>
- * <li>time - primitive short</li>
- * <li>description - byte array in a UTF format</li>
- * <ul>
+ * <p>The start time is stored in a memory safe {@code short} field, however the key
+ * publishes it as a {@link Time} object - see the converter of the {@link #P_TIME} key.
+ * <p>The identifiers {@link #P_PROJID} and {@link #P_TASKID} are persistent references
+ * to the code-book. They are kept in sync by the {@link #setProject(net.ponec.jworksheet.bo.Project)}
+ * and the {@link #setTask(net.ponec.jworksheet.bo.TaskType)} setters, so a saved document
+ * always contains the identifiers of the currently assigned objects.
  */
-public class Event extends BeanUjo {
+@Domain
+public class Event implements Exportable {
 
-    public static final byte[] ZERO_BYTES = new byte[0];
-    public static final Short  ZERO_SHORT = (short)0;
+    public static final Short ZERO_SHORT = (short) 0;
 
     /** Start time of event */
-    public static final Key<Event,Time>     P_TIME   = newKey("Time");
+    public static final JKey<Event,Time>     P_TIME
+            = JKey.of(MetaEvent.time, Time.class, Time::getTimeMinutes, minutes -> new Time(minutes.intValue()));
     /** Period of the event in minutes */
-    public static final Key<Event,Short>    P_PERIOD = newKey("Period"   , ZERO_SHORT); // [min]
+    public static final JKey<Event,Short>    P_PERIOD = JKey.of(MetaEvent.period); // [min]
     /** Project (object) */
-    public static final Key<Event,Project>  P_PROJ   = newKey("Project");
+    public static final JKey<Event,Project>  P_PROJ   = JKey.of(MetaEvent.project);
     /** Project ID for the persistence */
-    public static final Key<Event,Integer>  P_PROJID = newKey("ProjectID");
+    public static final JKey<Event,Integer>  P_PROJID = JKey.of(MetaEvent.projectId);
     /** Task (object) */
-    public static final Key<Event,TaskType> P_TASK   = newKey("Task");
+    public static final JKey<Event,TaskType> P_TASK   = JKey.of(MetaEvent.task);
     /** Task ID for the persistence */
-    public static final Key<Event,Integer>  P_TASKID = newKey("TaskID");
+    public static final JKey<Event,Integer>  P_TASKID = JKey.of(MetaEvent.taskId);
     /** Description of the event */
-    public static final Key<Event,String>   P_DESCR  = newKey("Description", "");
+    public static final JKey<Event,String>   P_DESCR  = JKey.of(MetaEvent.descr);
 
-    // --- An optional property unique name test ---
-    static { init(Event.class,true); }
+    @Column(name = "Time")
+    private short time;
 
-    // ------------------------ JAVABEAN BEG ------------------------
+    @Column(name = "Period")
+    private short period; // [min]
 
-    private short    time;
-    private short    period;    // [min]
-    private Project  project;
-    private Integer  projectID;
+    @Column(name = "Project")
+    private Project project;
+
+    @Column(name = "ProjectID")
+    private Integer projectId;
+
+    @Column(name = "Task")
     private TaskType task;
-    private Integer  taskID;
-    private byte[]   descr = ZERO_BYTES;
 
-    /** @deprecated This is a JavaBean method however the method is deprecated because the jWorkSheet application want to use an UJO access only. */ @Deprecated
-    public Time getTime() {
-        return new Time(time);
+    @Column(name = "TaskID")
+    private Integer taskId;
+
+    @Column(name = "Description")
+    private String descr = "";
+
+    // ------------------------ JAVABEAN ------------------------
+
+    public short getTime() {
+        return time;
     }
-    /** @deprecated This is a JavaBean method however the method is deprecated because the jWorkSheet application want to use an UJO access only. */ @Deprecated
-    public void setTime(Time time) {
-        this.time = time.getTimeMinutes();
+
+    public void setTime(final short time) {
+        this.time = time;
     }
-    /** @deprecated This is a JavaBean method however the method is deprecated because the jWorkSheet application want to use an UJO access only. */ @Deprecated
+
     public short getPeriod() {
         return period;
     }
-    /** @deprecated This is a JavaBean method however the method is deprecated because the jWorkSheet application want to use an UJO access only. */ @Deprecated
-    public void setPeriod(short period) {
-        this.period = period;
+
+    /** A negative period is normalized to the zero. */
+    public void setPeriod(final short period) {
+        this.period = period > 0 ? period : 0;
     }
-    /** @deprecated This is a JavaBean method however the method is deprecated because the jWorkSheet application want to use an UJO access only. */ @Deprecated
+
     public Project getProject() {
         return project;
     }
-    /** @deprecated This is a JavaBean method however the method is deprecated because the jWorkSheet application want to use an UJO access only. */ @Deprecated
-    public void setProject(Project project) {
+
+    /** Assigning a project keeps its identifier in sync. */
+    public void setProject(final Project project) {
         this.project = project;
+        this.projectId = project != null ? project.getId() : null;
     }
-    /** @deprecated This is a JavaBean method however the method is deprecated because the jWorkSheet application want to use an UJO access only. */ @Deprecated
-    public Integer getProjectID() {
-        return projectID;
+
+    public Integer getProjectId() {
+        return projectId;
     }
-    /** @deprecated This is a JavaBean method however the method is deprecated because the jWorkSheet application want to use an UJO access only. */ @Deprecated
-    public void setProjectID(Integer projectID) {
-        this.projectID = projectID;
+
+    public void setProjectId(final Integer projectId) {
+        this.projectId = projectId;
     }
-    /** @deprecated This is a JavaBean method however the method is deprecated because the jWorkSheet application want to use an UJO access only. */ @Deprecated
+
     public TaskType getTask() {
         return task;
     }
-    /** @deprecated This is a JavaBean method however the method is deprecated because the jWorkSheet application want to use an UJO access only. */ @Deprecated
-    public void setTask(TaskType task) {
+
+    /** Assigning a task keeps its identifier in sync. */
+    public void setTask(final TaskType task) {
         this.task = task;
-    }
-    /** @deprecated This is a JavaBean method however the method is deprecated because the jWorkSheet application want to use an UJO access only. */ @Deprecated
-    public Integer getTaskID() {
-        return taskID;
-    }
-    /** @deprecated This is a JavaBean method however the method is deprecated because the jWorkSheet application want to use an UJO access only. */ @Deprecated
-    public void setTaskID(Integer taskID) {
-        this.taskID = taskID;
-    }
-    /** @deprecated This is a JavaBean method however the method is deprecated because the jWorkSheet application want to use an UJO access only. */ @Deprecated
-    public String getDescription() {
-        return ApplTools.newString(descr, UTF_8);
-    }
-    /** @deprecated This is a JavaBean method however the method is deprecated because the jWorkSheet application want to use an UJO access only. */ @Deprecated
-    public void setDescription(String description) {
-        this.descr = description!=null ? ApplTools.getBytes(description, UTF_8) : ZERO_BYTES;
+        this.taskId = task != null ? task.getId() : null;
     }
 
-    // ------------------------ JAVABEAN END ------------------------
+    public Integer getTaskId() {
+        return taskId;
+    }
+
+    public void setTaskId(final Integer taskId) {
+        this.taskId = taskId;
+    }
+
+    public String getDescr() {
+        return descr;
+    }
+
+    /** An undefined description is replaced by an empty text. */
+    public void setDescr(final String descr) {
+        this.descr = descr != null ? descr : "";
+    }
+
+    // ------------------------ BUSINESS ------------------------
 
     /** Init time */
     public Event initTime() {
@@ -131,88 +148,53 @@ public class Event extends BeanUjo {
     }
 
     /** Set a time period */
-    public void setPeriod(Time time) {
-        final short period = time.substract(get(P_TIME));
-        P_PERIOD.setValue(this, period);
+    public void setPeriod(final Time time) {
+        final short newPeriod = time.substract(get(P_TIME));
+        P_PERIOD.setValue(this, newPeriod);
     }
 
     /** Is the event from a private project? */
     public boolean isPrivate() {
-        Project project = get(Event.P_PROJ);
-        final boolean result = project!=null && project.get(Project.P_PRIVATE);
-        return result;
+        final Project proj = get(P_PROJ);
+        return proj != null && proj.get(Project.P_PRIVATE);
     }
 
-    /** Read Visibility: */
-    @Override
-    public boolean readAuthorization(UjoAction action, Key property, Object value) {
-        switch(action.getType()) {
-            case ACTION_XML_EXPORT: {
-                final boolean enabled
-                =  property!=P_PROJ
-                && property!=P_TASK
-                ;
-                return enabled;
-            }
+    /** Is the project or the task of the key finished? */
+    public boolean isFinished(final JKey<Event,?> key) {
+        if (P_PROJ == key) {
+            final Project proj = get(P_PROJ);
+            return proj != null && proj.get(Project.P_FINISHED);
         }
-        return super.readAuthorization(action, property, value);
-    }
-
-    /** Overrided for additional features */
-    @Override
-    public Object readValue(Key property) {
-        Object result;
-        if (property==P_PROJID) {
-            Project proj = get(P_PROJ);
-            result = proj!=null ? proj.get(Project.P_ID) : super.readValue(property);
-        } else if (property==P_TASKID) {
-            TaskType task = get(P_TASK);
-            result = task!=null ? task.get(TaskType.P_ID) : super.readValue(property);
-        } else {
-            result = super.readValue(property);
-        }
-        return result;
-    }
-
-    /** Overrided for additional features */
-    @Override
-    public void writeValue(Key property, Object value) {
-        if (P_PERIOD==property
-        && (value==null || ((Short)value)<=0)
-        ){
-            value = ZERO_SHORT;
-        }
-        super.writeValue(property, value);
-    }
-
-    /** Is property finished? */
-    public boolean isFinished(Key property) {
-        if (P_PROJ==property) {
-            Project proj = get(P_PROJ);
-            return proj!=null && proj.get(Project.P_FINISHED);
-        }
-        if (P_TASK==property) {
-            TaskType task = get(P_TASK);
-            return isFinished(P_PROJ) || task!=null && task.get(TaskType.P_FINISHED);
+        if (P_TASK == key) {
+            final TaskType tsk = get(P_TASK);
+            return isFinished(P_PROJ) || tsk != null && tsk.get(TaskType.P_FINISHED);
         }
         return false;
     }
 
     /** Returns a Finished time */
     public Time getTimeFinished() {
-        final Time result = get(P_TIME).cloneAdd(get(P_PERIOD));
-        return result;
+        return get(P_TIME).cloneAdd(get(P_PERIOD));
     }
 
-    @SuppressWarnings("unchecked")
-    public <UJO extends Event, VALUE> VALUE get(Key<UJO, VALUE> up) {
-        return up.of((UJO)this);
+    /** The related objects are not exported, the document keeps their identifiers only. */
+    @Override
+    public boolean isExportable(final ExportAction action, final JKey<?,?> key, final Object value) {
+        if (action == ExportAction.XML) {
+            return key != P_PROJ
+                && key != P_TASK;
+        }
+        return true;
     }
 
-    @SuppressWarnings("unchecked")
-    public <UJO extends Event, VALUE> UJO set(Key<UJO, VALUE> up, VALUE value) {
-        up.setValue((UJO)this, value);
-        return (UJO) this;
+    // ------------------------ KEY ACCESS ------------------------
+
+    public <V> V get(final JKey<Event,V> key) {
+        return key.getValue(this);
     }
 
+    public <V> Event set(final JKey<Event,V> key, final V value) {
+        key.setValue(this, value);
+        return this;
+    }
 }

@@ -65,10 +65,9 @@ import net.ponec.jworksheet.gui.models.TaskTableModel;
 import net.ponec.jworksheet.gui.models.UjoComboBoxModel;
 import net.ponec.jworksheet.report.TableReport;
 import net.ponec.jworksheet.resources.ResourceProvider;
-import org.ujorm.Ujo;
-import org.ujorm.Key;
-import org.ujorm.swing.UjoTableModel;
-import org.ujorm.swing.UjoKeyRow;
+import net.ponec.jworksheet.core.ujo.JKey;
+import net.ponec.jworksheet.gui.models.UjoTableModel;
+import net.ponec.jworksheet.gui.models.UjoKeyRow;
 
 /**
  * Java Work Sheet
@@ -154,7 +153,7 @@ public final class JWorkSheet extends TopFrame {
                 public void tableChanged(TableModelEvent e) {
                     // Display TOTAL TIME:
                     final EventTableModel model = (EventTableModel) eventTable.getModel();
-                    Key column = e.getColumn()>=0 ? model.getColumn(e.getColumn()) : null ;
+                    JKey column = e.getColumn()>=0 ? model.getColumn(e.getColumn()) : null ;
                     if (column==null
                             ||  column==Event.P_PERIOD
                             ||  column==Event.P_TIME ){
@@ -1212,8 +1211,8 @@ public final class JWorkSheet extends TopFrame {
         UjoTableModel model = paramTable.getModel();
         for (int i=model.getRowCount()-1; i>=0; i--) {
             UjoKeyRow ujo = (UjoKeyRow) model.getRowNullable(i);
-            Key param = ujo.getKey();
-            ujo.writeValue(UjoKeyRow.P_VALUE, param.getDefault());
+            JKey param = ujo.getKey();
+            ujo.setValue(param.getDefault());
         }
         model.fireTableAllRowUpdated();
     }//GEN-LAST:event_bParamDefaultActionPerformed
@@ -1259,7 +1258,7 @@ public final class JWorkSheet extends TopFrame {
 
     private void bAboutActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_bAboutActionPerformed
 
-        final Package ujo  = Ujo.class.getPackage();
+        final Package ujo  = org.ujorm.core.Key.class.getPackage();
 
         eventTable.submitEditMode(true);
         ApplTools.aboutApplication
@@ -1329,7 +1328,7 @@ public final class JWorkSheet extends TopFrame {
 
         int rowIndex = taskTable.getSelectedRow();
         if (rowIndex>=0) {
-            taskTable.getModel().cloneRow(rowIndex, 2, this);
+            taskTable.getModel().cloneRow(rowIndex, 2);
         }
         taskTable.selectRow(Integer.MAX_VALUE);
     }//GEN-LAST:event_bTaskCloneActionPerformed
@@ -1358,7 +1357,7 @@ public final class JWorkSheet extends TopFrame {
         projTable.submitEditMode(true);
         int rowIndex = projTable.getSelectedRow();
         if (rowIndex>=0) {
-            projTable.getModel().cloneRow(rowIndex, 3, this); // CLONE ???
+            projTable.getModel().cloneRow(rowIndex, 3);
         }
         projTable.selectRow(Integer.MAX_VALUE);
     }//GEN-LAST:event_bProjCloneActionPerformed
@@ -1414,7 +1413,7 @@ public final class JWorkSheet extends TopFrame {
             Time  time2 = applContext.isToday() ? new Time(true) : ((Event)model.getRowLast()).getTimeFinished();
             Short period = time2.substract(time1);
             //
-            model.cloneRow(rowIndex, 2, this);
+            model.cloneRow(rowIndex, 2);
             model.setValueAt( period                , lastRow-1, Event.P_PERIOD);
             model.setValueAt( time2                 , lastRow  , Event.P_TIME);
             model.setValueAt(Event.ZERO_SHORT, lastRow  , Event.P_PERIOD);
@@ -1572,6 +1571,8 @@ public final class JWorkSheet extends TopFrame {
     /** Main */
     public static void main(String args[]) {
 
+        checkJavaCompiler();
+
         ApplContext applContext = new ApplContext();
         Throwable error = null;
 
@@ -1588,5 +1589,29 @@ public final class JWorkSheet extends TopFrame {
         // otherwise the AWT thread may start processing layout/paint events
         // on the still partially constructed frame (race condition).
         SwingUtilities.invokeLater(() -> new JWorkSheet(applContext, finalError).setVisible());
+    }
+
+    /** The Ujorm builds the metamodel of the business objects at the run time by the Java
+     * compiler, so the application requires a JDK. Without the compiler the first access
+     * to a key fails by an unclear error, so the state is reported here instead.
+     * <p>The check is a reflective one on purpose: a plain JRE offers no {@code javax.tools}
+     * package at all, so a direct reference would fail before this message is printed. */
+    private static void checkJavaCompiler() {
+        Object compiler = null;
+        try {
+            compiler = Class.forName("javax.tools.ToolProvider")
+                    .getMethod("getSystemJavaCompiler")
+                    .invoke(null);
+        } catch (ReflectiveOperationException | LinkageError e) {
+            // The compiler is unavailable, see the message below.
+        }
+        if (compiler == null) {
+            System.err.println(APPL_NAME + " requires a JDK 17 or newer to run,"
+                    + " a plain JRE is not enough."
+                    + "\nThe application builds its data metamodel at the run time"
+                    + " using the Java compiler."
+                    + "\nThe current Java is: " + System.getProperty("java.home"));
+            System.exit(1);
+        }
     }
 }

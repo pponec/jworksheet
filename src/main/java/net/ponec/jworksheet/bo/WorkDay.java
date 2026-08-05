@@ -17,66 +17,92 @@
 
 package net.ponec.jworksheet.bo;
 
-import org.ujorm.Key;
+import jakarta.persistence.Column;
+import java.util.ArrayList;
+import java.util.List;
 import net.ponec.jworksheet.bo.item.YearMonthDay;
-import org.ujorm.Key;
-import org.ujorm.ListKey;
-import org.ujorm.extensions.ListProperty;
-import org.ujorm.UjoAction;
-import org.ujorm.implementation.map.MapUjo;
-import static org.ujorm.UjoAction.*;
-import org.ujorm.core.KeyFactory;
-import org.ujorm.extensions.AbstractUjo;
+import net.ponec.jworksheet.bo.meta.MetaWorkDay;
+import net.ponec.jworksheet.core.ujo.ExportAction;
+import net.ponec.jworksheet.core.ujo.Exportable;
+import net.ponec.jworksheet.core.ujo.JKey;
+import net.ponec.jworksheet.core.ujo.JListKey;
+import org.ujorm.annotation.Domain;
 
 /**
  * One Work Day
  * @author Pavel Ponec
  * @composed 1 - * Event
  */
-public class WorkDay extends AbstractUjo implements Comparable<WorkDay> {
-
-    /** KeyFactory */
-    private static final KeyFactory f = KeyFactory.CamelBuilder.get(WorkDay.class);
+@Domain
+public class WorkDay implements Comparable<WorkDay>, Exportable {
 
     /** A work day */
-    public static final Key<WorkDay,YearMonthDay> P_DATE = f.newKey("Date");
+    public static final JKey<WorkDay,YearMonthDay> P_DATE   = JKey.of(MetaWorkDay.date);
     /** A day off work */
-    public static final Key<WorkDay,Boolean>    P_DAYOFF = f.newKey("DayOff", false);
+    public static final JKey<WorkDay,Boolean>      P_DAYOFF = JKey.of(MetaWorkDay.dayOff);
     /** List of events */
-    public static final ListKey<WorkDay,Event> P_EVENTS = f.newListKey("Event");
+    public static final JListKey<WorkDay,Event>    P_EVENTS = JListKey.of(MetaWorkDay.events, Event.class);
 
-    static {
-        f.lock();
+    @Column(name = "Date")
+    private YearMonthDay date;
+
+    @Column(name = "DayOff")
+    private boolean dayOff = false;
+
+    @Column(name = "Event")
+    private List<Event> events = new ArrayList<>();
+
+    // ------------------------ JAVABEAN ------------------------
+
+    public YearMonthDay getDate() {
+        return date;
     }
 
-    /** Overrided for additional features */
+    public void setDate(final YearMonthDay date) {
+        this.date = date;
+    }
+
+    public boolean isDayOff() {
+        return dayOff;
+    }
+
+    public void setDayOff(final boolean dayOff) {
+        this.dayOff = dayOff;
+    }
+
+    public List<Event> getEvents() {
+        return events;
+    }
+
+    public void setEvents(final List<Event> events) {
+        this.events = events != null ? events : new ArrayList<>();
+    }
+
+    // ------------------------ BUSINESS ------------------------
+
+    /** A day off flag is exported for a true value only. */
     @Override
-    public boolean readAuthorization(UjoAction action, Key property, Object value) {
-        switch(action.getType()) {
-            case ACTION_XML_EXPORT:
-                return property==P_DAYOFF ? (Boolean) value : true ;
-            default:
-                return super.readAuthorization(action, property, value);
+    public boolean isExportable(final ExportAction action, final JKey<?,?> key, final Object value) {
+        if (action == ExportAction.XML && key == P_DAYOFF) {
+            return Boolean.TRUE.equals(value);
         }
+        return true;
     }
 
     /** Compare to another WorkDay by a P_DATE. */
     @Override
-    public int compareTo(WorkDay o) {
-        final YearMonthDay d1 = get(P_DATE);
-        final YearMonthDay d2 = o.get(P_DATE);
-        final int result = d1.compareTo(d2);
-        return result;
+    public int compareTo(final WorkDay o) {
+        return get(P_DATE).compareTo(o.get(P_DATE));
     }
 
-   @SuppressWarnings("unchecked")
-   public <UJO extends WorkDay, VALUE> VALUE get(Key<UJO, VALUE> up) {
-        return up.of((UJO)this);
+    // ------------------------ KEY ACCESS ------------------------
+
+    public <V> V get(final JKey<WorkDay,V> key) {
+        return key.getValue(this);
     }
 
-    @SuppressWarnings("unchecked")
-    public <UJO extends WorkDay, VALUE> UJO set(Key<UJO, VALUE> up, VALUE value) {
-        up.setValue((UJO)this, value);
-        return (UJO) this;
+    public <V> WorkDay set(final JKey<WorkDay,V> key, final V value) {
+        key.setValue(this, value);
+        return this;
     }
 }

@@ -26,8 +26,9 @@ import net.ponec.jworksheet.bo.Event;
 import net.ponec.jworksheet.bo.Project;
 import net.ponec.jworksheet.bo.TaskType;
 import net.ponec.jworksheet.bo.item.Time;
-import org.ujorm.Key;
-import org.ujorm.swing.UjoTableModel;
+import net.ponec.jworksheet.core.ujo.DomainTools;
+import net.ponec.jworksheet.core.ujo.JKey;
+import net.ponec.jworksheet.gui.models.UjoTableModel;
 
 /**
  * Event Table Model
@@ -64,7 +65,7 @@ public class EventTableModel extends UjoTableModel<Event> {
     
     /** Is the cell editable? */
     @Override
-    public boolean isCellEditable(int rowIndex, Key column) {
+    public boolean isCellEditable(int rowIndex, JKey column) {
         if (Event.P_PERIOD==column) {
             return rowIndex==(getRowCount()-1);
         } else {
@@ -76,7 +77,7 @@ public class EventTableModel extends UjoTableModel<Event> {
 
     /** Returns a localized Column Name */
     @Override
-    public String getColumnName(Key property) {
+    public String getColumnName(JKey property) {
         return applContext.getLanguageManager().getTextAllways(property);
     }
     
@@ -132,7 +133,7 @@ public class EventTableModel extends UjoTableModel<Event> {
             final Time time2 = getRow(index+1).get(Event.P_TIME);
             int realPeriod = time2.substract(time1);
             if (realPeriod > requPeriod) {
-                Event nextEvent = (Event) getRow(index-1).clone(2, this);
+                Event nextEvent = DomainTools.deepCopy(getRow(index-1), 2);
                 Event.P_TIME.setValue(nextEvent, time1.cloneAdd(requPeriod));
                 rows.add(index+1, nextEvent);
             }
@@ -184,7 +185,7 @@ public class EventTableModel extends UjoTableModel<Event> {
     
     
     @Override
-    public Class getColumnClass(Key column) {
+    public Class getColumnClass(JKey column) {
         @SuppressWarnings("static-access")
         final Class result
         = PROPS.P_PERIOD==column
@@ -197,7 +198,7 @@ public class EventTableModel extends UjoTableModel<Event> {
     /** Set value to cell. */
     @Override
     @SuppressWarnings("static-access")
-    public void setValueAt(Object value, int rowIndex, Key column) {
+    public void setValueAt(Object value, int rowIndex, JKey column) {
         
         // Convert a decimal value to minutes:
         if (PROPS.P_PERIOD==column) {

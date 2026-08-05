@@ -14,53 +14,115 @@
  * http://www.gnu.org/licenses/gpl-2.0.txt
  */
 
-
 package net.ponec.jworksheet.report;
 
+import jakarta.persistence.Column;
+import net.ponec.jworksheet.bo.Event;
 import net.ponec.jworksheet.bo.Project;
 import net.ponec.jworksheet.bo.TaskType;
-import net.ponec.jworksheet.bo.WorkDay;
 import net.ponec.jworksheet.bo.item.YearMonthDay;
-import org.ujorm.implementation.map.MapUjo;
-import net.ponec.jworksheet.bo.Event;
-import org.ujorm.Key;
-import org.ujorm.core.KeyFactory;
+import net.ponec.jworksheet.core.ujo.JKey;
+import net.ponec.jworksheet.report.meta.MetaTaskGroup;
+import org.ujorm.annotation.Domain;
 
 /**
  * Task Group
  * @author Pavel Ponec
  */
-@SuppressWarnings("unchecked")
-public class TaskGroup extends MapUjo {
+@Domain
+public class TaskGroup {
 
-private static final KeyFactory<TaskGroup> f = KeyFactory.CamelBuilder.get(TaskGroup.class);
+    public static final JKey<TaskGroup,Project>      P_PROJ  = JKey.of(MetaTaskGroup.project);
+    public static final JKey<TaskGroup,TaskType>     P_TASK  = JKey.of(MetaTaskGroup.task);
+    public static final JKey<TaskGroup,YearMonthDay> P_DAY   = JKey.of(MetaTaskGroup.day);
+    public static final JKey<TaskGroup,Integer>      P_MONTH = JKey.of(MetaTaskGroup.month);
+    public static final JKey<TaskGroup,Integer>      P_YEAR  = JKey.of(MetaTaskGroup.year);
 
-    public static final Key<TaskGroup,Project>     P_PROJ = f.newKey(Event.P_PROJ.getName()); // , -3
-    public static final Key<TaskGroup,TaskType>    P_TASK = f.newKey(Event.P_TASK.getName()); // , -2
-    public static final Key<TaskGroup,YearMonthDay> P_DAY = f.newKey(WorkDay.P_DATE.getName()); // , -1
-    public static final Key<TaskGroup,Integer>    P_MONTH = f.newKey("Month");
-    public static final Key<TaskGroup,Integer>     P_YEAR = f.newKey("Year");
+    @Column(name = "Project")
+    private Project project;
 
-    static { f.lock(); }
+    @Column(name = "Task")
+    private TaskType task;
+
+    @Column(name = "Date")
+    private YearMonthDay day;
+
+    /** A declaration of the derived column, see the {@link #getMonth()} method. */
+    @Column(name = "Month")
+    private Integer month;
+
+    /** A declaration of the derived column, see the {@link #getYear()} method. */
+    @Column(name = "Year")
+    private Integer year;
 
     /** A total time in minutes. */
-    private int totalTime = 0;
+    private transient int totalTime = 0;
+
+    /** A constructor required by the metamodel. */
+    public TaskGroup() {
+    }
 
     /** Creates a new instance of TaskGroup */
-    public TaskGroup(Event event) {
-        if (event!=null) {
+    public TaskGroup(final Event event) {
+        if (event != null) {
             init(event);
         }
     }
 
-    /** Initializa TaskGroup by Event */
-    /*public*/ void init(Event event) {
-        writeValue(P_PROJ, event.readValue(Event.P_PROJ));
-        writeValue(P_TASK, event.readValue(Event.P_TASK));
+    /** Initialize the TaskGroup by an Event */
+    void init(final Event event) {
+        this.project = event.get(Event.P_PROJ);
+        this.task = event.get(Event.P_TASK);
     }
 
+    // ------------------------ JAVABEAN ------------------------
+
+    public Project getProject() {
+        return project;
+    }
+
+    public void setProject(final Project project) {
+        this.project = project;
+    }
+
+    public TaskType getTask() {
+        return task;
+    }
+
+    public void setTask(final TaskType task) {
+        this.task = task;
+    }
+
+    public YearMonthDay getDay() {
+        return day;
+    }
+
+    public void setDay(final YearMonthDay day) {
+        this.day = day;
+    }
+
+    /** A month of the day. The value is derived, so it has got no setter behaviour. */
+    public Integer getMonth() {
+        return day != null ? day.get(YearMonthDay.TYPE_MONTH) : null;
+    }
+
+    public void setMonth(final Integer month) {
+        throw new UnsupportedOperationException("Read only: " + P_MONTH);
+    }
+
+    /** A year of the day. The value is derived, so it has got no setter behaviour. */
+    public Integer getYear() {
+        return day != null ? day.get(YearMonthDay.TYPE_YEAR) : null;
+    }
+
+    public void setYear(final Integer year) {
+        throw new UnsupportedOperationException("Read only: " + P_YEAR);
+    }
+
+    // ------------------------ BUSINESS ------------------------
+
     /** Add a new time. */
-    public void addTime(short time) {
+    public void addTime(final short time) {
         totalTime += time;
     }
 
@@ -71,36 +133,18 @@ private static final KeyFactory<TaskGroup> f = KeyFactory.CamelBuilder.get(TaskG
 
     /** Get business time. */
     public int getBusinessTime() {
-        Project proj = get(P_PROJ);
-        return (proj!=null && proj.get(Project.P_PRIVATE)) ? 0 : totalTime;
+        final Project proj = get(P_PROJ);
+        return proj != null && proj.get(Project.P_PRIVATE) ? 0 : totalTime;
     }
 
+    // ------------------------ KEY ACCESS ------------------------
 
-    /** Read a value */
-    @Override
-    public Object readValue(Key property) {
-        if (P_MONTH==property
-        ||  P_YEAR==property
-        ){
-            YearMonthDay day = get(P_DAY);
-            int type = P_MONTH==property
-            ? YearMonthDay.TYPE_MONTH
-            : YearMonthDay.TYPE_YEAR
-            ;
-            return day!=null ? day.get(type) : null ;
-        }
-
-        return super.readValue(property);
+    public <V> V get(final JKey<TaskGroup,V> key) {
+        return key.getValue(this);
     }
 
-    @SuppressWarnings("unchecked")
-    public <UJO extends TaskGroup, VALUE> VALUE get(Key<UJO, VALUE> up) {
-        return up.of((UJO)this);
-    }
-
-    @SuppressWarnings("unchecked")
-    public <UJO extends TaskGroup, VALUE> UJO set(Key<UJO, VALUE> up, VALUE value) {
-        up.setValue((UJO)this, value);
-        return (UJO) this;
+    public <V> TaskGroup set(final JKey<TaskGroup,V> key, final V value) {
+        key.setValue(this, value);
+        return this;
     }
 }

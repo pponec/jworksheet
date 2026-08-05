@@ -44,8 +44,7 @@ import net.ponec.jworksheet.report.ReportC;
 import net.ponec.jworksheet.report.ReportTab;
 import net.ponec.jworksheet.report.ReportTabProj;
 import net.ponec.jworksheet.resources.ResourceProvider;
-import org.ujorm.Key;
-import org.ujorm.core.UjoActionImpl;
+import net.ponec.jworksheet.core.ujo.JKey;
 
 /**
  * Report Dialog
@@ -190,7 +189,7 @@ public class ReportDialog extends TopDialog implements java.awt.event.ActionList
         result.add(new String[] {"labelDateTo"  , getText("DateTo")});
         result.add(new String[] {"labelTasks"   , getText("Tasks")});
 
-        Key[] properties = new Key[]
+        JKey[] properties = new JKey[]
         { Event.P_DESCR
         , Event.P_PERIOD
         , Event.P_PROJ
@@ -202,7 +201,7 @@ public class ReportDialog extends TopDialog implements java.awt.event.ActionList
         , Project.P_PRIVATE
         , Project.P_TASKS
         };
-        for (Key p : properties) {
+        for (JKey p : properties) {
            result.add(getXslLabelItem(p));
         }
 
@@ -210,16 +209,16 @@ public class ReportDialog extends TopDialog implements java.awt.event.ActionList
     }
 
     /** Returns XSL Parameters: */
-    private String[] getXslParamItem(Key param) {
+    private String[] getXslParamItem(JKey param) {
         final String[] result = new String[]
         { param.getName()
-        , applContext.getParameters().readValueString(param, new UjoActionImpl(this))
+        , applContext.getParameters().readValueString(param)
         } ;
         return result;
     }
 
     /** Returns XSL Labels: */
-    private String[] getXslLabelItem(Key param) {
+    private String[] getXslLabelItem(JKey param) {
         final String[] result = new String[]
         { "label" + param.getName()
         , applContext.getLanguageManager().getTextAllways(param)

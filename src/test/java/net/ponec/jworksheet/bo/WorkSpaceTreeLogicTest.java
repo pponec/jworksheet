@@ -50,8 +50,7 @@ public class WorkSpaceTreeLogicTest extends XmlTestSupport {
     // ------------------------ E1) THE REFERENCE ASSIGNMENT ------------------------
 
     @Test
-    @DisplayName("E1) The assingTasks() assigns the references and clears the identifiers")
-    @SuppressWarnings("deprecation")
+    @DisplayName("E1) The assingTasks() assigns the references and syncs the identifiers")
     public void assingTasks() {
         final WorkSpace workSpace = newCodeBook();
         final Event event = new Event()
@@ -70,9 +69,9 @@ public class WorkSpaceTreeLogicTest extends XmlTestSupport {
         assertSame(workSpace.findProject(0), event.get(Event.P_PROJ));
         assertSame(workSpace.findProject(0).findTaskType(2), event.get(Event.P_TASK));
 
-        // The temporary identifier attributes are cleared, see the plain JavaBean getters:
-        assertNull(event.getProjectID());
-        assertNull(event.getTaskID());
+        // The identifier attributes are kept in sync with the assigned objects:
+        assertEquals(Integer.valueOf(0), event.getProjectId());
+        assertEquals(Integer.valueOf(2), event.getTaskId());
     }
 
     // ------------------------ E2) THE WORK DAY LOOKUP ------------------------

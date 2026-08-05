@@ -20,9 +20,8 @@ package net.ponec.jworksheet.report;
 import java.util.ArrayList;
 import java.util.Collections;
 import net.ponec.jworksheet.bo.Event;
-import org.ujorm.Ujo;
-import org.ujorm.Key;
-import org.ujorm.core.UjoComparator;
+import net.ponec.jworksheet.core.ujo.JKey;
+import net.ponec.jworksheet.core.ujo.UjoComparator;
 
 /**
  * Report Set
@@ -36,21 +35,21 @@ public class GroupSet {
     /** Task Group Comparator */
     protected UjoComparator<TaskGroup> comparator;
 
-    protected Key propertyTime;
+    protected JKey<Event,Short> propertyTime;
 
     protected boolean showEmptyProject = false;
 
     /** Look-up KEY. */
     protected TaskGroup key = new TaskGroup(null);
 
-    public GroupSet(UjoComparator<TaskGroup> comparator, Key/*<Ujo,Integer>*/ propertyTime) {
+    public GroupSet(UjoComparator<TaskGroup> comparator, JKey<Event,Short> propertyTime) {
         this.comparator   = comparator;
         this.propertyTime = propertyTime;
     }
 
     /** Insert or create an task group. */
     public TaskGroup addTime(Event event) {
-        short period = (Short) event.readValue(propertyTime);
+        short period = event.get(propertyTime);
         if (showEmptyProject || period>0) {
             TaskGroup taskGroup = findTaskGroup(event);
             taskGroup.addTime( period );
@@ -91,7 +90,7 @@ public class GroupSet {
     }
 
     /** Returns a time */
-    public Key getPropertyTime() {
+    public JKey<Event,Short> getPropertyTime() {
         return propertyTime;
     }
 
