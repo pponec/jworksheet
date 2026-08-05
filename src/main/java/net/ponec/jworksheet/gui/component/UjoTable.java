@@ -39,10 +39,9 @@ import javax.swing.table.TableModel;
 import net.ponec.jworksheet.core.ApplContext;
 import net.ponec.jworksheet.gui.models.EventTableModel;
 import net.ponec.jworksheet.resources.ResourceProvider;
-import org.ujorm.Key;
-import org.ujorm.Ujo;
-import org.ujorm.Key;
-import org.ujorm.swing.UjoTableModel;
+import net.ponec.jworksheet.core.ujo.JKey;
+import net.ponec.jworksheet.core.ujo.JKey;
+import net.ponec.jworksheet.gui.models.UjoTableModel;
 
 /**
  * UjoTable for an Ujo objects.
@@ -52,7 +51,7 @@ public class UjoTable extends JTable implements TableCellRenderer {
     
     private TableCellRenderer superRenderer = null;
     private ImageIcon sortIcon = null;
-    private Key sortedColumn = null;
+    private JKey sortedColumn = null;
     
     /** Creates a new instance of UjoTable */
     public UjoTable() {
@@ -64,22 +63,22 @@ public class UjoTable extends JTable implements TableCellRenderer {
     }
     
     /** Converts a view column index to Key. */
-    public Key convertColumnIndexToProperty(int viewColumnIndex) {
+    public JKey convertColumnIndexToProperty(int viewColumnIndex) {
         final int modelColumnIndex = convertColumnIndexToModel(viewColumnIndex);
-        final Key result = getModel().getColumn(modelColumnIndex);
+        final JKey result = getModel().getColumn(modelColumnIndex);
         return result;
     }
     
     /**
      * Return an Ujo column of table model.
      */
-    public Key getColumn(int tableColumnIndex) {
-        final Key result = getModel().getColumn(convertColumnIndexToModel(tableColumnIndex));
+    public JKey getColumn(int tableColumnIndex) {
+        final JKey result = getModel().getColumn(convertColumnIndexToModel(tableColumnIndex));
         return result;
     }
     
     /** Return a TableColumn */
-    public TableColumn getTableColumn(Key column) {
+    public TableColumn getTableColumn(JKey column) {
         final int index = getModel().getColumnIndex(column);
         final TableColumn result = getColumnModel().getColumn(index);
         return result;
@@ -101,7 +100,7 @@ public class UjoTable extends JTable implements TableCellRenderer {
     /**
      * Select an Ujo
      */
-    public int selectRow(Ujo row) {
+    public int selectRow(Object row) {
         UjoTableModel model = getModel();
         if (row!=null) for (int i=0; i<model.getRowCount(); i++) {
             if (row==model.getRow(i)) {
@@ -164,7 +163,7 @@ public class UjoTable extends JTable implements TableCellRenderer {
             arrayRow = new ArrayList<String>();
             result.add(arrayRow);
             for (int col=0; col<model.getColumnCount(); col++) {
-                Key column = getColumn(col);
+                JKey column = getColumn(col);
                 TableCellRenderer renderer = getTableColumn(column).getHeaderRenderer();
                 String cell = model.getColumnName(column);
                 if (renderer!=null) {
@@ -181,7 +180,7 @@ public class UjoTable extends JTable implements TableCellRenderer {
             arrayRow = new ArrayList<String>();
             result.add(arrayRow);
             for (int col=0; col<model.getColumnCount(); col++) {
-                Key column = getColumn(col);
+                JKey column = getColumn(col);
                 TableCellRenderer renderer = getTableColumn(column).getCellRenderer();
                 Object value = model.getValueAt(row, column);
                 String cell = String.valueOf(value);
@@ -264,7 +263,7 @@ public class UjoTable extends JTable implements TableCellRenderer {
                 &&  UjoTable.this.isEnabled()
                 ){
                     int row = getSelectedRow();
-                    Ujo selected = getRowSelectionAllowed() && row>=0
+                    Object selected = getRowSelectionAllowed() && row>=0
                     ? getModel().getRow(row) : null ;
                     
                     getModel().sort(sortedColumn);
@@ -295,7 +294,7 @@ public class UjoTable extends JTable implements TableCellRenderer {
             label.setHorizontalTextPosition(javax.swing.SwingConstants.LEADING);
             
             final int columnModel = table.convertColumnIndexToModel(column);
-            final Key colProperty = ((UjoTable)table).getModel().getColumn(columnModel);
+            final JKey colProperty = ((UjoTable)table).getModel().getColumn(columnModel);
             label.setIcon(colProperty==sortedColumn ? sortIcon : null );
         }
 
@@ -303,19 +302,19 @@ public class UjoTable extends JTable implements TableCellRenderer {
     }
     
     /** Show selected column */
-    public void showSortedColumn(final Key property) {
+    public void showSortedColumn(final JKey property) {
         sortedColumn = property;
         getTableHeader().repaint();
     } 
 
     /** Show selected column */
     public void showSortedColumn(final String property) {
-        final Key pro = getColumn(Math.max(0, getModel().findColumn(property)));
+        final JKey pro = getColumn(Math.max(0, getModel().findColumn(property)));
         showSortedColumn(pro);
     }
 
     /** Get Sorted Column */
-    public Key getSortedColumn() {
+    public JKey getSortedColumn() {
         return sortedColumn;
     }
 

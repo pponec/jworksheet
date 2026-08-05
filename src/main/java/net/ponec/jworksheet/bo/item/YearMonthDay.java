@@ -25,14 +25,14 @@ import java.util.Locale;
 import net.ponec.jworksheet.core.ApplTools;
 import net.ponec.jworksheet.bo.Parameters;
 import net.ponec.jworksheet.core.ApplContext;
-import org.ujorm.extensions.ValueTextable;
-import org.ujorm.extensions.UjoCloneable;
 
 /**
  * Year, month and day
+ * <p>The value is serialized by the {@code toString()} method and restored by the
+ * constructor with a single {@link String} argument, see the {@code ValueCoder} class.
  * @author Pavel Ponec
  */
-public class YearMonthDay implements Comparable<YearMonthDay>, ValueTextable, UjoCloneable {
+public class YearMonthDay implements Comparable<YearMonthDay> {
     
     public static final int TYPE_DAY   = 0;
     public static final int TYPE_MONTH = 1;
@@ -179,8 +179,4 @@ public class YearMonthDay implements Comparable<YearMonthDay>, ValueTextable, Uj
         return result;
     }
 
-    public Object clone(int depth, final Object context) {
-        return depth<=0 ? this : new YearMonthDay(yearMonthDay);
-    }
-    
 }

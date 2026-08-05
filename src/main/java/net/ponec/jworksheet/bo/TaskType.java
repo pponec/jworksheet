@@ -17,61 +17,107 @@
 
 package net.ponec.jworksheet.bo;
 
-import org.ujorm.Key;
-import org.ujorm.core.KeyFactory;
-import org.ujorm.implementation.map.MapUjo;
+import jakarta.persistence.Column;
+import net.ponec.jworksheet.bo.meta.MetaTaskType;
+import net.ponec.jworksheet.core.ujo.JKey;
+import org.ujorm.annotation.Domain;
 import org.ujorm.tools.Check;
 
 /**
  * A Task of Project
  * @author Pavel Ponec
  */
-public class TaskType extends MapUjo implements Comparable<TaskType> {
-
-    private static final KeyFactory<TaskType> f = KeyFactory.CamelBuilder.get(TaskType.class);
+@Domain
+public class TaskType implements Comparable<TaskType> {
 
     /** Task ID */
-    public static final Key<TaskType,Integer> P_ID       = f.newKey("ID", 0);
+    public static final JKey<TaskType,Integer> P_ID       = JKey.of(MetaTaskType.id);
     /** Is the task default? */
-    public static final Key<TaskType,Boolean> P_DEFAULT  = f.newKey("Default", false);
+    public static final JKey<TaskType,Boolean> P_DEFAULT  = JKey.of(MetaTaskType.defaultTask);
     /** Is the task finished? */
-    public static final Key<TaskType,Boolean> P_FINISHED = f.newKey("Finished", false);
+    public static final JKey<TaskType,Boolean> P_FINISHED = JKey.of(MetaTaskType.finished);
     /** Description of the task. */
-    public static final Key<TaskType,String>  P_DESCR    = f.newKey("Description", "");
+    public static final JKey<TaskType,String>  P_DESCR    = JKey.of(MetaTaskType.descr);
 
-    static { f.lock(); }
+    @Column(name = "ID")
+    private int id = 0;
+
+    @Column(name = "Default")
+    private boolean defaultTask = false;
+
+    @Column(name = "Finished")
+    private boolean finished = false;
+
+    @Column(name = "Description")
+    private String descr = "";
+
+    // ------------------------ JAVABEAN ------------------------
+
+    public int getId() {
+        return id;
+    }
+
+    public void setId(final int id) {
+        this.id = id;
+    }
+
+    public boolean isDefaultTask() {
+        return defaultTask;
+    }
+
+    public void setDefaultTask(final boolean defaultTask) {
+        this.defaultTask = defaultTask;
+    }
+
+    public boolean isFinished() {
+        return finished;
+    }
+
+    public void setFinished(final boolean finished) {
+        this.finished = finished;
+    }
+
+    public String getDescr() {
+        return descr;
+    }
+
+    /** An undefined description is replaced by an empty text. */
+    public void setDescr(final String descr) {
+        this.descr = descr != null ? descr : "";
+    }
+
+    // ------------------------ BUSINESS ------------------------
 
     /** Show description */
     @Override
     public String toString() {
-        String result = P_DESCR.of(this);
-        return Check.hasLength(result) ? result : String.valueOf(P_ID.of(this)) ;
+        final String result = getDescr();
+        return Check.hasLength(result) ? result : String.valueOf(getId());
     }
 
     /** Compare to another TaskType by ID. */
     @Override
-    public int compareTo(TaskType o) {
-        int id1 = P_ID.of(this);
-        int id2 = o!=null ? P_ID.of(o) : Integer.MAX_VALUE;
-        final int result = id1<id2 ? -1 : id1>id2 ? +1 : 0 ;
-        return result;
+    public int compareTo(final TaskType o) {
+        final int id1 = getId();
+        final int id2 = o != null ? o.getId() : Integer.MAX_VALUE;
+        return Integer.compare(id1, id2);
     }
 
-   @SuppressWarnings("unchecked")
-   public <UJO extends TaskType, VALUE> VALUE get(Key<UJO, VALUE> up) {
-        return up.of((UJO)this);
-    }
-
-   @SuppressWarnings("unchecked")
-    public <UJO extends TaskType, VALUE> UJO set(Key<UJO, VALUE> up, VALUE value) {
-        up.setValue((UJO)this, value);
-        return (UJO) this;
-    }
-
-    @SuppressWarnings("unchecked")
-    public void copyFrom(TaskType otherTask) {
-        for (Key p : readKeys()) {
-            p.copy(otherTask, this);
+    /** Copy all the attributes from another task. */
+    public void copyFrom(final TaskType otherTask) {
+        for (JKey<TaskType,?> key : JKey.keysOf(TaskType.class)) {
+            key.copy(otherTask, this);
         }
+    }
+
+    // ------------------------ KEY ACCESS ------------------------
+
+    public <V> V get(final JKey<TaskType,V> key) {
+        return key.getValue(this);
+    }
+
+    public <V> TaskType set(final JKey<TaskType,V> key, final V value) {
+        key.setValue(this, value);
+        return this;
     }
 }

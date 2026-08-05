@@ -17,12 +17,13 @@
 
 package net.ponec.jworksheet.bo;
 
+import jakarta.persistence.Column;
 import java.util.ArrayList;
 import java.util.List;
-import org.ujorm.Key;
-import org.ujorm.ListKey;
-import org.ujorm.core.KeyFactory;
-import org.ujorm.implementation.map.MapUjo;
+import net.ponec.jworksheet.bo.meta.MetaProject;
+import net.ponec.jworksheet.core.ujo.JKey;
+import net.ponec.jworksheet.core.ujo.JListKey;
+import org.ujorm.annotation.Domain;
 import org.ujorm.tools.Check;
 
 /**
@@ -30,29 +31,24 @@ import org.ujorm.tools.Check;
  * @author Pavel Ponec
  * @composed 1 - * TaskType
  */
-public class Project extends MapUjo implements Comparable<Project> {
-
-    private static final KeyFactory<Project> f = KeyFactory.CamelBuilder.get(Project.class);
+@Domain
+public class Project implements Comparable<Project> {
 
     /** Project ID */
-    public static final Key<Project,Integer> P_ID       = f.newKey("ID", 0);
+    public static final JKey<Project,Integer> P_ID       = JKey.of(MetaProject.id);
     /** Is the project default? */
-    public static final Key<Project,Boolean> P_DEFAULT  = f.newKey("Default", false);
+    public static final JKey<Project,Boolean> P_DEFAULT  = JKey.of(MetaProject.defaultProject);
     /** Is the project finished? */
-    public static final Key<Project,Boolean> P_FINISHED = f.newKey("Finished", false);
+    public static final JKey<Project,Boolean> P_FINISHED = JKey.of(MetaProject.finished);
     /** Is the project non business type? */
-    public static final Key<Project,Boolean> P_PRIVATE  = f.newKey("Private", false);
+    public static final JKey<Project,Boolean> P_PRIVATE  = JKey.of(MetaProject.privateProject);
     /** Project descripton */
-    public static final Key<Project,String>  P_DESCR    = f.newKey("Description", "");
+    public static final JKey<Project,String>  P_DESCR    = JKey.of(MetaProject.descr);
     /** List of task */
-    public static final ListKey<Project,TaskType> P_TASKS  = f.newListKey("Task");
-
-    static {
-        f.lock();
-    }
+    public static final JListKey<Project,TaskType> P_TASKS = JListKey.of(MetaProject.tasks, TaskType.class);
 
     /** Table columns. */
-    public static final Key[] TABLE_COLUMNS =
+    public static final JKey[] TABLE_COLUMNS =
     { P_ID
     , P_DEFAULT
     , P_FINISHED
@@ -60,18 +56,91 @@ public class Project extends MapUjo implements Comparable<Project> {
     , P_DESCR
     };
 
+    @Column(name = "ID")
+    private int id = 0;
+
+    @Column(name = "Default")
+    private boolean defaultProject = false;
+
+    @Column(name = "Finished")
+    private boolean finished = false;
+
+    @Column(name = "Private")
+    private boolean privateProject = false;
+
+    @Column(name = "Description")
+    private String descr = "";
+
+    @Column(name = "Task")
+    private List<TaskType> tasks = new ArrayList<>();
+
+    // ------------------------ JAVABEAN ------------------------
+
+    public int getId() {
+        return id;
+    }
+
+    public void setId(final int id) {
+        this.id = id;
+    }
+
+    public boolean isDefaultProject() {
+        return defaultProject;
+    }
+
+    public void setDefaultProject(final boolean defaultProject) {
+        this.defaultProject = defaultProject;
+    }
+
+    public boolean isFinished() {
+        return finished;
+    }
+
+    public void setFinished(final boolean finished) {
+        this.finished = finished;
+    }
+
+    public boolean isPrivateProject() {
+        return privateProject;
+    }
+
+    public void setPrivateProject(final boolean privateProject) {
+        this.privateProject = privateProject;
+    }
+
+    public String getDescr() {
+        return descr;
+    }
+
+    /** An undefined description is replaced by an empty text. */
+    public void setDescr(final String descr) {
+        this.descr = descr != null ? descr : "";
+    }
+
+    public List<TaskType> getTasks() {
+        return tasks;
+    }
+
+    public void setTasks(final List<TaskType> tasks) {
+        this.tasks = tasks != null ? tasks : new ArrayList<>();
+    }
+
+    // ------------------------ BUSINESS ------------------------
+
     /** Show description */
     @Override
     public String toString() {
-        String result = get(P_DESCR);
-        return Check.hasLength(result) ? result : String.valueOf(get(P_ID)) ;
+        final String result = getDescr();
+        return Check.hasLength(result) ? result : String.valueOf(getId());
     }
 
-    /** Find a TaskType by its id */
-    public TaskType findTaskType(Integer taskId) {
-        for (TaskType task : P_TASKS.getList(this)) {
-            if (TaskType.P_ID.equals(task, taskId)) {
-                return task;
+    /** Find a TaskType by its id. An undefined identifier has got no task. */
+    public TaskType findTaskType(final Integer taskId) {
+        if (taskId != null) {
+            for (TaskType task : P_TASKS.getList(this)) {
+                if (task.getId() == taskId.intValue()) {
+                    return task;
+                }
             }
         }
         return null;
@@ -91,7 +160,7 @@ public class Project extends MapUjo implements Comparable<Project> {
 
     /** Returns all open tasks. */
     public ArrayList<TaskType> getOpenTasks() {
-        ArrayList<TaskType> result = new ArrayList<>(P_TASKS.getItemCount(this));
+        final ArrayList<TaskType> result = new ArrayList<>(P_TASKS.getItemCount(this));
         for (TaskType task : P_TASKS.getList(this)) {
             if (!task.get(TaskType.P_FINISHED)) {
                 result.add(task);
@@ -102,36 +171,24 @@ public class Project extends MapUjo implements Comparable<Project> {
 
     /** Compare to another Project by ID. */
     @Override
-    public int compareTo(Project o) {
-          int id1 = get(P_ID);
-          int id2 = o!=null ? o.get(P_ID) : Integer.MAX_VALUE;
-          final int result = id1<id2 ? -1 : id1>id2 ? +1 : 0 ;
-          return result;
+    public int compareTo(final Project o) {
+        final int id1 = getId();
+        final int id2 = o != null ? o.getId() : Integer.MAX_VALUE;
+        return Integer.compare(id1, id2);
     }
 
-    @SuppressWarnings("unchecked")
-    public <UJO extends Project, VALUE> VALUE get(Key<UJO, VALUE> up) {
-        return up.of((UJO)this);
-    }
-
-    @SuppressWarnings("unchecked")
-    public <UJO extends Project, VALUE> UJO set(Key<UJO, VALUE> up, VALUE value) {
-        up.setValue((UJO)this, value);
-        return (UJO) this;
-    }
-
-    @SuppressWarnings("unchecked")
-    public void copyFrom(Project otherProject) {
-        for (Key p : readKeys()) {
-            if (!p.isTypeOf(List.class)) {
-               p.copy(otherProject, this);
+    /** Copy all the scalar attributes from another project. The list of the tasks is skipped. */
+    public void copyFrom(final Project otherProject) {
+        for (JKey<Project,?> key : JKey.keysOf(Project.class)) {
+            if (!key.isTypeOf(List.class)) {
+                key.copy(otherProject, this);
             }
         }
     }
 
     /** Sync tasks with other Project. */
-    public void syncTasks(Project otherProject) {
-        ArrayList<TaskType> newTasks = new ArrayList<TaskType>();
+    public void syncTasks(final Project otherProject) {
+        final ArrayList<TaskType> newTasks = new ArrayList<>();
         for (TaskType otherTask : P_TASKS.getList(otherProject)) {
             boolean found = false;
             for (TaskType thisTask : P_TASKS.getList(this)) {
@@ -162,10 +219,20 @@ public class Project extends MapUjo implements Comparable<Project> {
             }
         }
         for (TaskType otherTask : newTasks) {
-            TaskType task = new TaskType();
+            final TaskType task = new TaskType();
             task.copyFrom(otherTask);
             Project.P_TASKS.addItem(this, task);
         }
     }
 
+    // ------------------------ KEY ACCESS ------------------------
+
+    public <V> V get(final JKey<Project,V> key) {
+        return key.getValue(this);
+    }
+
+    public <V> Project set(final JKey<Project,V> key, final V value) {
+        key.setValue(this, value);
+        return this;
+    }
 }

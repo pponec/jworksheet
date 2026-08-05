@@ -62,33 +62,35 @@ public class WorkSpaceXmlFilterTest extends XmlTestSupport {
     }
 
     @Test
-    @DisplayName("The identifiers are read from the assigned objects, not from the ID attributes")
-    @SuppressWarnings("deprecation")
-    public void identifiersAreReadFromTheObjects() {
+    @DisplayName("The identifiers are kept in sync with the assigned objects")
+    public void identifiersFollowTheObjects() {
         final Event event = WorkDay.P_EVENTS.getItem(WorkSpace.P_DAYS.getItem(workSpace, 0), 0);
 
-        // The plain JavaBean attributes are empty (the getters read the fields directly):
-        assertNull(event.getProjectID(), "The identifier attribute is empty");
-        assertNull(event.getTaskID(), "The identifier attribute is empty");
+        // Assigning a project or a task assigns its identifier too:
+        assertEquals(Integer.valueOf(3), event.getProjectId(), "The identifier of the project");
+        assertEquals(Integer.valueOf(1), event.getTaskId(), "The identifier of the task");
 
-        // ... however the keys are virtual ones, they read the related objects:
+        // ... and the keys provide the same values:
         assertEquals(Integer.valueOf(3), event.get(Event.P_PROJID));
         assertEquals(Integer.valueOf(1), event.get(Event.P_TASKID));
+
+        // A cleared reference clears its identifier as well:
+        event.set(Event.P_TASK, null);
+        assertNull(event.getTaskId());
     }
 
     @Test
-    @DisplayName("The assingTasks() method clears the identifier attributes after a loading")
-    @SuppressWarnings("deprecation")
-    public void identifiersAreClearedAfterLoading() {
+    @DisplayName("The assingTasks() method restores the references after a loading")
+    public void identifiersAreSyncedAfterLoading() {
         final WorkSpace result = reload(workSpace);
         final Event event = WorkDay.P_EVENTS.getItem(WorkSpace.P_DAYS.getItem(result, 0), 0);
 
-        assertNull(event.getProjectID(), "The temporary attribute is cleared");
-        assertNull(event.getTaskID(), "The temporary attribute is cleared");
         assertNotNull(event.get(Event.P_PROJ));
         assertNotNull(event.get(Event.P_TASK));
 
-        // The virtual keys provide the identifiers of the assigned objects again:
+        // The identifiers of the assigned objects are available again:
+        assertEquals(Integer.valueOf(3), event.getProjectId());
+        assertEquals(Integer.valueOf(1), event.getTaskId());
         assertEquals(Integer.valueOf(3), event.get(Event.P_PROJID));
         assertEquals(Integer.valueOf(1), event.get(Event.P_TASKID));
     }

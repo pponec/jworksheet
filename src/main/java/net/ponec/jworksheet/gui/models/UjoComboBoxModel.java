@@ -20,7 +20,6 @@ package net.ponec.jworksheet.gui.models;
 import java.util.ArrayList;
 import java.util.List;
 import javax.swing.DefaultComboBoxModel;
-import org.ujorm.Ujo;
 
 /**
  * UjoComboBox Model
@@ -28,7 +27,7 @@ import org.ujorm.Ujo;
  */
 public class UjoComboBoxModel extends DefaultComboBoxModel {
     
-    protected List<Ujo> ujos;
+    protected List<Object> ujos;
     //final protected Key property;
     
     protected int pointer = -1;
@@ -37,7 +36,7 @@ public class UjoComboBoxModel extends DefaultComboBoxModel {
      * Creates a new instance of UjoComboBoxModel
      */
     public UjoComboBoxModel() {
-        this(new ArrayList<Ujo>(0));
+        this(new ArrayList<>(0));
     }
     
     /** Creates a new instance of UjoComboBoxModel */
@@ -90,7 +89,7 @@ public class UjoComboBoxModel extends DefaultComboBoxModel {
     }
     
     /** Set Ujo Data */
-    public void setData(List<Ujo> data) {
+    public void setData(List<Object> data) {
         this.ujos = data;
     }
     

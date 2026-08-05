@@ -11,6 +11,7 @@
         <project.jar.name>jWorkSheet</project.jar.name>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <java.version>17</java.version>
+        <ujorm.version>3.0.4</ujorm.version>
         <maven.compiler.source>${java.version}</maven.compiler.source>
         <maven.compiler.target>${java.version}</maven.compiler.target>
     </properties>
@@ -26,7 +27,21 @@
         <dependency>
             <groupId>org.ujorm</groupId>
             <artifactId>ujo-core</artifactId>
-            <version>2.20</version>
+            <version>${ujorm.version}</version>
+        </dependency>
+        <!-- The ujo-core declares the API as 'provided', however the runtime
+             metamodel generator needs it on the application classpath. -->
+        <dependency>
+            <groupId>jakarta.persistence</groupId>
+            <artifactId>jakarta.persistence-api</artifactId>
+            <version>3.1.0</version>
+        </dependency>
+        <!-- An APT generator of the Meta* key classes, see the maven-compiler-plugin -->
+        <dependency>
+            <groupId>org.ujorm</groupId>
+            <artifactId>ujorm-meta-processor</artifactId>
+            <version>${ujorm.version}</version>
+            <scope>provided</scope>
         </dependency>
         <dependency>
             <groupId>org.swinglabs</groupId>
@@ -106,10 +121,24 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-compiler-plugin</artifactId>
-                <version>3.8.1</version>
+                <version>3.14.1</version>
                 <configuration>
                     <source>${java.version}</source>
                     <target>${java.version}</target>
+                    <!-- Generates the Meta* classes with the type-safe keys
+                         into target/generated-sources/annotations -->
+                    <annotationProcessorPaths>
+                        <path>
+                            <groupId>org.ujorm</groupId>
+                            <artifactId>ujorm-meta-processor</artifactId>
+                            <version>${ujorm.version}</version>
+                        </path>
+                    </annotationProcessorPaths>
+                    <compilerArgs>
+                        <arg>-Aujorm.prefix=Meta</arg>
+                        <arg>-Aujorm.suffix=</arg>
+                        <arg>-Aujorm.metaPackage=meta</arg>
+                    </compilerArgs>
                 </configuration>
             </plugin>
         </plugins>

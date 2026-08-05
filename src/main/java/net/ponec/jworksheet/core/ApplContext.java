@@ -60,9 +60,8 @@ import net.ponec.jworksheet.gui.JWorkSheet;
 import net.ponec.jworksheet.module.ModuleApi;
 import net.ponec.jworksheet.report.MetaReport;
 import net.ponec.jworksheet.resources.ResourceProvider;
-import org.ujorm.core.UjoManagerRBundle;
-import org.ujorm.core.UjoManagerXML;
-import org.ujorm.core.XmlHeader;
+import net.ponec.jworksheet.core.ujo.BundleManager;
+import net.ponec.jworksheet.core.ujo.XmlManager;
 import org.ujorm.tools.Check;
 
 /**
@@ -182,8 +181,8 @@ public class ApplContext implements TableModelListener, Runnable, JwsContext {
         }
 
         if (dataFileExists) try {
-            WorkSpace result = UjoManagerXML.getInstance().parseXML(getDataFile(), WorkSpace.class, "Data Loading");
-            workSpace = (WorkSpace) result;
+            WorkSpace result = XmlManager.parseXML(getDataFile(), WorkSpace.class);
+            workSpace = result;
             workSpace.assingTasks();
         } catch (Throwable e) {
             throw new MessageException("Can't load file: " + dataFile, e);
@@ -194,7 +193,7 @@ public class ApplContext implements TableModelListener, Runnable, JwsContext {
 
         // sync projects from shared list
         if (projectsFileExists) try {
-            WorkSpace result = UjoManagerXML.getInstance().parseXML(getProjectsFile(), WorkSpace.class, "Shared Projects Loading");
+            WorkSpace result = XmlManager.parseXML(getProjectsFile(), WorkSpace.class);
             workSpace.syncProjects(result);
         } catch (Throwable e) {
             throw new MessageException("Can't load file: " + projectsFile, e);
@@ -278,10 +277,8 @@ public class ApplContext implements TableModelListener, Runnable, JwsContext {
             String comment = " <?xml-stylesheet type=\"text/xsl\" href=\"styles/"
                     + ResourceProvider.REPORT_BASE
                     + "\"?> ";
-            XmlHeader xmlHeader = new XmlHeader();
-            xmlHeader.setComment(comment);
             File dataTempFile = getDataFileTemp();
-            UjoManagerXML.getInstance().saveXML(dataTempFile, workSpace, xmlHeader, this);
+            XmlManager.saveXML(dataTempFile, workSpace, comment);
             ApplTools.rename(dataTempFile, getDataFile());
         } catch (IOException e) {
             throw new MessageException("Can't save: " + getDataFile(), e);
@@ -534,7 +531,7 @@ public class ApplContext implements TableModelListener, Runnable, JwsContext {
     protected void loadParameters() {
         File dataFile = getConfigFile();
         if (dataFile.exists() && dataFile.canRead()) try {
-            parameters = UjoManagerRBundle.of(Parameters.class).loadResourceBundle(dataFile, false, "props");
+            parameters = BundleManager.load(dataFile, Parameters.class);
         } catch (Throwable e) {
             LOGGER.log(Level.WARNING, "Can't load Parameters to " + dataFile, e);
         }
@@ -583,7 +580,7 @@ public class ApplContext implements TableModelListener, Runnable, JwsContext {
     public void saveParameters() {
         try {
             final String msg = "A " + JWorkSheet.APPL_NAME + " configuration file:";
-            UjoManagerRBundle.getInstance(Parameters.class).saveResourceBundle(getConfigFile(), parameters, msg, this);
+            BundleManager.save(getConfigFile(), parameters, msg);
         } catch (Throwable e) {
             LOGGER.log(Level.WARNING, "Can't save Parameters to " + getConfigFile(), e);
         }

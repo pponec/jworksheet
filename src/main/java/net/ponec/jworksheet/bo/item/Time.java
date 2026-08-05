@@ -22,14 +22,14 @@ import java.util.Calendar;
 import java.util.StringTokenizer;
 import net.ponec.jworksheet.core.*;
 import org.jetbrains.annotations.NotNull;
-import org.ujorm.extensions.ValueTextable;
-import org.ujorm.extensions.UjoCloneable;
 
 /**
  * Time
+ * <p>The value is serialized by the {@code toString()} method and restored by the
+ * constructor with a single {@link String} argument, see the {@code ValueCoder} class.
  * @author Pavel Ponec
  */
-public class Time implements Comparable<Time>, ValueTextable, UjoCloneable, Serializable {
+public class Time implements Comparable<Time>, Serializable {
 
     /** Separator */
     public static final String SEPARATOR = ":";
@@ -170,11 +170,6 @@ public class Time implements Comparable<Time>, ValueTextable, UjoCloneable, Seri
      */
     public Time cloneAdd(int period) {
         return new Time(minutes + period);
-    }
-
-    /** Returns a clone */
-    public Object clone(int depth, final Object context) {
-        return depth<=0 ? this : new Time(minutes);
     }
 
 }

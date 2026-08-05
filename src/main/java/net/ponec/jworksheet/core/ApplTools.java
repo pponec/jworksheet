@@ -74,7 +74,6 @@ import javax.xml.transform.stream.StreamResult;
 import javax.xml.transform.stream.StreamSource;
 import net.ponec.jworksheet.gui.JWorkSheet;
 import net.ponec.jworksheet.resources.ResourceProvider;
-import org.ujorm.core.RingBuffer;
 import org.ujorm.tools.Check;
 
 /**
@@ -639,9 +638,61 @@ public final class ApplTools {
         return null;
     }
 
-    /** Find word betveen beg and end text */
-    private static String findWord(Reader reader, String beg, String end) throws IOException {
-        return RingBuffer.findWord(reader, beg, end);
+    /** Find a word between the {@code beg} and the {@code end} tag and trim the result.
+     * <p>The method replaces the {@code RingBuffer} of the original Ujorm implementation.
+     * The reader is read by a single character, so a large data source is supported.
+     * @param reader A data source.
+     * @param beg A start tag. An empty value reads from the current cursor.
+     * @param end An end tag. The value must not be empty.
+     * @return A text between the tags. The result is never {@code null},
+     *         an unfinished search provides an empty text.
+     */
+    private static String findWord(final Reader reader, final String beg, final String end) throws IOException {
+        if (!skipTo(reader, beg)) {
+            return "";
+        }
+        final StringBuilder result = new StringBuilder(64);
+        for (int c = reader.read(); c >= 0; c = reader.read()) {
+            result.append((char) c);
+            if (endsWith(result, end)) {
+                result.setLength(result.length() - end.length());
+                return result.toString().trim();
+            }
+        }
+        return "";
+    }
+
+    /** Moves the cursor of the reader behind the required tag.
+     * @return Was the tag found? An empty tag is always found. */
+    private static boolean skipTo(final Reader reader, final String tag) throws IOException {
+        if (tag.isEmpty()) {
+            return true;
+        }
+        final StringBuilder window = new StringBuilder(tag.length());
+        for (int c = reader.read(); c >= 0; c = reader.read()) {
+            if (window.length() == tag.length()) {
+                window.deleteCharAt(0);
+            }
+            window.append((char) c);
+            if (endsWith(window, tag)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    /** Does the text end by the required tag? */
+    private static boolean endsWith(final CharSequence text, final String tag) {
+        final int offset = text.length() - tag.length();
+        if (offset < 0) {
+            return false;
+        }
+        for (int i = tag.length() - 1; i >= 0; i--) {
+            if (text.charAt(offset + i) != tag.charAt(i)) {
+                return false;
+            }
+        }
+        return true;
     }
 
 

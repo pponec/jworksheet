@@ -28,8 +28,8 @@ import net.ponec.jworksheet.bo.Event;
 import net.ponec.jworksheet.bo.Project;
 import net.ponec.jworksheet.core.ApplTools;
 import net.ponec.jworksheet.gui.component.*;
-import org.ujorm.Key;
-import org.ujorm.swing.UjoTableModel;
+import net.ponec.jworksheet.core.ujo.JKey;
+import net.ponec.jworksheet.gui.models.UjoTableModel;
 
 /**
  * EventTableRenderer.
@@ -72,7 +72,7 @@ public class EventTableRenderer extends DefaultTableCellRenderer {
         
         final UjoTable table = (UjoTable) aTable;
         final UjoTableModel model = table.getModel();
-        Key column = table.getColumn(viewColumn);
+        JKey column = table.getColumn(viewColumn);
         Event event = (Event) model.getRow(rowIndex);
         //
         boolean projOrTask = column==Event.P_PROJ || column==Event.P_TASK ;
@@ -110,7 +110,7 @@ public class EventTableRenderer extends DefaultTableCellRenderer {
     }
     
     /** Return true, it column is nuberical type. */
-    public boolean isNumericalType(Key property) {
+    public boolean isNumericalType(JKey property) {
         if (property==Event.P_TIME  ) return true;
         if (property==Event.P_PERIOD) return true;
         return false;

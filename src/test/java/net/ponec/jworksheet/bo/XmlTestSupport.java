@@ -23,8 +23,7 @@ import java.util.Calendar;
 import java.util.Date;
 import net.ponec.jworksheet.bo.item.Time;
 import net.ponec.jworksheet.bo.item.YearMonthDay;
-import org.ujorm.core.UjoManagerXML;
-import org.ujorm.core.XmlHeader;
+import net.ponec.jworksheet.core.ujo.XmlManager;
 
 import static java.nio.charset.StandardCharsets.UTF_8;
 
@@ -35,17 +34,13 @@ import static java.nio.charset.StandardCharsets.UTF_8;
  */
 public abstract class XmlTestSupport {
 
-    /** A context of the UjoAction. The production code sends an ApplContext instance,
-     * however the object is used as an action marker only. */
-    protected static final String CONTEXT = "jUnit";
-
     // ------------------------ SERIALIZATION ------------------------
 
     /** Export the WorkSpace to an XML document. */
     protected static String toXml(final WorkSpace workSpace) {
         final StringBuilder result = new StringBuilder(256);
         try {
-            UjoManagerXML.getInstance().saveXML(result, workSpace, new XmlHeader(), CONTEXT);
+            XmlManager.saveXML(result, workSpace);
         } catch (IOException e) {
             throw new IllegalStateException("Can't export the WorkSpace", e);
         }
@@ -55,7 +50,7 @@ public abstract class XmlTestSupport {
     /** Import a WorkSpace from an XML document. No reference is assigned. */
     protected static WorkSpace fromXml(final String xml) {
         final InputStream is = new ByteArrayInputStream(xml.getBytes(UTF_8));
-        return UjoManagerXML.getInstance().parseXML(is, WorkSpace.class, CONTEXT);
+        return XmlManager.parseXML(is, WorkSpace.class);
     }
 
     /** Import a WorkSpace from an XML document including the reference assignment.
