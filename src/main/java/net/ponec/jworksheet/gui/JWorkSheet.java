@@ -107,7 +107,7 @@ public final class JWorkSheet extends TopFrame {
         paramTable = new UjoTable();
         tables     = new UjoTable[] {eventTable, projTable, taskTable, paramTable};
 
-          try {
+        try {
             if (error!=null) { throw error; }
 
             final boolean SHOW_LANGUAGE_WINDOW = false;
@@ -168,6 +168,11 @@ public final class JWorkSheet extends TopFrame {
 
             initHotKeys();
 
+            // The param table model must be assigned before initData(), because
+            // initData() may show a modal dialog that validates the whole frame
+            // (including paramTable) while it would otherwise still have no model.
+            paramTable.setModel(new ParamTableModel(applContext.getParameters(), applContext));
+
             // ======= LOAD DATA =========
             initData();
             initIcons();
@@ -189,7 +194,6 @@ public final class JWorkSheet extends TopFrame {
             taskTable .getTableColumn(TaskType.P_ID    ).setMaxWidth(48);
             taskTable .getTableColumn(TaskType.P_DEFAULT).setMaxWidth(58);
             taskTable .getTableColumn(TaskType.P_FINISHED).setMaxWidth(58);
-            paramTable.setModel(new ParamTableModel(applContext.getParameters(), applContext));
             paramTable.getTableColumn(UjoKeyRow.P_DEFAULT).setMinWidth(0);
             paramTable.getTableColumn(UjoKeyRow.P_DEFAULT).setMaxWidth(0);
             paramTable.getTableColumn(UjoKeyRow.P_INDEX).setMaxWidth(30);
@@ -338,9 +342,9 @@ public final class JWorkSheet extends TopFrame {
 
         if (applContext.isDataRestored()) {
             String msg = "There is the serious error:"
-                + "\na personal data of the application can not be found!"
-                + "\nThe jWorkSheet tried to restore data from a backup."
-                ;
+                    + "\na personal data of the application can not be found!"
+                    + "\nThe jWorkSheet tried to restore data from a backup."
+                    ;
             final String[] buttons = null;
             Icon icon = new ResourceProvider().getIcon(ResourceProvider.LOGO);
             showMessage(msg, JOptionPane.OK_OPTION, icon, null, new Object[] {APPL_NAME}, buttons);
@@ -1204,21 +1208,21 @@ public final class JWorkSheet extends TopFrame {
         }
     }//GEN-LAST:event_bGotoActionPerformed
 
-        private void bParamDefaultActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_bParamDefaultActionPerformed
-            UjoTableModel model = paramTable.getModel();
-            for (int i=model.getRowCount()-1; i>=0; i--) {
-                UjoKeyRow ujo = (UjoKeyRow) model.getRowNullable(i);
-                Key param = ujo.getKey();
-                ujo.writeValue(UjoKeyRow.P_VALUE, param.getDefault());
-            }
-            model.fireTableAllRowUpdated();
-        }//GEN-LAST:event_bParamDefaultActionPerformed
+    private void bParamDefaultActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_bParamDefaultActionPerformed
+        UjoTableModel model = paramTable.getModel();
+        for (int i=model.getRowCount()-1; i>=0; i--) {
+            UjoKeyRow ujo = (UjoKeyRow) model.getRowNullable(i);
+            Key param = ujo.getKey();
+            ujo.writeValue(UjoKeyRow.P_VALUE, param.getDefault());
+        }
+        model.fireTableAllRowUpdated();
+    }//GEN-LAST:event_bParamDefaultActionPerformed
 
-        private void bParamReportActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_bParamReportActionPerformed
+    private void bParamReportActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_bParamReportActionPerformed
         paramTable.submitEditMode(true);
         //ApplTools.setClipboard("Parameters:\n" + paramTable.getStringModel());
         showTableReport(paramTable, "Parameter Report");
-        }//GEN-LAST:event_bParamReportActionPerformed
+    }//GEN-LAST:event_bParamReportActionPerformed
 
     private void tabbedPaneStateChanged(javax.swing.event.ChangeEvent evt) {//GEN-FIRST:event_tabbedPaneStateChanged
 
@@ -1579,6 +1583,10 @@ public final class JWorkSheet extends TopFrame {
             error = e;
         }
 
-        new JWorkSheet(applContext, error).setVisible();
+        final Throwable finalError = error;
+        // Build and show the Swing UI on the Event Dispatch Thread only,
+        // otherwise the AWT thread may start processing layout/paint events
+        // on the still partially constructed frame (race condition).
+        SwingUtilities.invokeLater(() -> new JWorkSheet(applContext, finalError).setVisible());
     }
 }
