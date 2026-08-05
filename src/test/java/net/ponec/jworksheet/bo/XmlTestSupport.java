@@ -16,6 +16,12 @@
 
 package net.ponec.jworksheet.bo;
 
+import net.ponec.jworksheet.bo.meta.MetaEvent;
+import net.ponec.jworksheet.bo.meta.MetaProject;
+import net.ponec.jworksheet.bo.meta.MetaTaskType;
+import net.ponec.jworksheet.bo.meta.MetaWorkDay;
+import net.ponec.jworksheet.bo.meta.MetaWorkSpace;
+
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -110,18 +116,18 @@ public abstract class XmlTestSupport {
             , final boolean defaultTask
             , final boolean finished) {
         return new TaskType()
-                .set(TaskType.P_ID, id)
-                .set(TaskType.P_DESCR, description)
-                .set(TaskType.P_DEFAULT, defaultTask)
-                .set(TaskType.P_FINISHED, finished);
+                .set(MetaTaskType.id, id)
+                .set(MetaTaskType.descr, description)
+                .set(MetaTaskType.defaultTask, defaultTask)
+                .set(MetaTaskType.finished, finished);
     }
 
     protected static Project newProject(final int id, final String description, final TaskType... tasks) {
         final Project result = new Project()
-                .set(Project.P_ID, id)
-                .set(Project.P_DESCR, description);
+                .set(MetaProject.id, id)
+                .set(MetaProject.descr, description);
         for (TaskType task : tasks) {
-            Project.P_TASKS.addItem(result, task);
+            result.getTasks().add(task);
         }
         return result;
     }
@@ -132,25 +138,26 @@ public abstract class XmlTestSupport {
             , final Project project
             , final TaskType task
             , final String description) {
-        return new Event()
-                .set(Event.P_TIME, new Time(time))
-                .set(Event.P_PERIOD, (short) period)
-                .set(Event.P_PROJ, project)
-                .set(Event.P_TASK, task)
-                .set(Event.P_DESCR, description);
+        final Event result = new Event()
+                .set(MetaEvent.period, (short) period)
+                .set(MetaEvent.project, project)
+                .set(MetaEvent.task, task)
+                .set(MetaEvent.descr, description);
+        result.setStartTime(new Time(time));
+        return result;
     }
 
     protected static WorkDay newDay(final String date, final Event... events) {
-        final WorkDay result = new WorkDay().set(WorkDay.P_DATE, new YearMonthDay(date));
+        final WorkDay result = new WorkDay().set(MetaWorkDay.date, new YearMonthDay(date));
         for (Event event : events) {
-            WorkDay.P_EVENTS.addItem(result, event);
+            result.getEvents().add(event);
         }
         return result;
     }
 
     /** A minimal WorkSpace with the mandatory attributes assigned. */
     protected static WorkSpace newWorkSpace() {
-        return new WorkSpace().set(WorkSpace.P_ARCHIVED, newDate(2021, Calendar.MARCH, 14, 11, 42, 58));
+        return new WorkSpace().set(MetaWorkSpace.archived, newDate(2021, Calendar.MARCH, 14, 11, 42, 58));
     }
 
     /** A time zone independent date without milliseconds. */

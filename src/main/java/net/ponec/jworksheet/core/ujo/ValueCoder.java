@@ -25,8 +25,11 @@ import java.math.BigDecimal;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.Locale;
+import java.util.Map;
 import java.util.StringTokenizer;
+import org.ujorm.core.Key;
 
 /**
  * A converter between a value and its text representation.
@@ -52,7 +55,58 @@ public final class ValueCoder {
     private static final ThreadLocal<SimpleDateFormat> DATE_FORMAT = ThreadLocal.withInitial
             (() -> new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS", Locale.ENGLISH));
 
+    /** A cache of the codecs of the annotated fields. The {@link #NO_CODEC} marks a key
+     * without any annotation. */
+    private static final Map<Key<?, ?>, TextCodec<?>> CODECS = new HashMap<>();
+
+    /** A marker of a key which requires no codec. */
+    private static final TextCodec<Object> NO_CODEC = new TextCodec<>() {
+        @Override public String encode(final Object value) { throw new UnsupportedOperationException(); }
+        @Override public Object decode(final String text) { throw new UnsupportedOperationException(); }
+    };
+
     private ValueCoder() {
+    }
+
+    // ------------------------ THE KEY API ------------------------
+
+    /** Converts a value of the key to its text representation.
+     * <p>A field annotated by the {@link TextValue} is converted by its codec, so a memory
+     * optimized field can be published in a different format - see the start time
+     * of an {@code Event}. */
+    @SuppressWarnings("unchecked")
+    public static String encode(final Key<?, ?> key, final Object value) {
+        if (value == null) {
+            return null;
+        }
+        final TextCodec<Object> codec = (TextCodec<Object>) codecOf(key);
+        return codec != null ? codec.encode(value) : encode(value);
+    }
+
+    /** Converts a text to a value of the key.
+     * @return The {@code null} value for an undefined text, or for an empty text
+     *         where the type of the key is not a {@link String}. */
+    public static Object decode(final Key<?, ?> key, final String text) {
+        final TextCodec<?> codec = codecOf(key);
+        if (codec == null) {
+            return decode(Keys.typeOf(key), text);
+        }
+        return text != null && !text.isEmpty() ? codec.decode(text) : null;
+    }
+
+    /** Returns a codec of the key, or the {@code null} value for a plain field. */
+    private static TextCodec<?> codecOf(final Key<?, ?> key) {
+        synchronized (CODECS) {
+            TextCodec<?> result = CODECS.get(key);
+            if (result == null) {
+                final TextValue annotation = Keys.fieldOf(key).getAnnotation(TextValue.class);
+                result = annotation != null
+                        ? (TextCodec<?>) Keys.newInstance(annotation.value())
+                        : NO_CODEC;
+                CODECS.put(key, result);
+            }
+            return result != NO_CODEC ? result : null;
+        }
     }
 
     // ------------------------ ENCODING ------------------------

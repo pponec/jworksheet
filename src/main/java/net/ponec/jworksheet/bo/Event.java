@@ -19,16 +19,19 @@ package net.ponec.jworksheet.bo;
 
 import jakarta.persistence.Column;
 import net.ponec.jworksheet.bo.item.Time;
+import net.ponec.jworksheet.bo.item.TimeCodec;
 import net.ponec.jworksheet.bo.meta.MetaEvent;
 import net.ponec.jworksheet.core.ujo.ExportAction;
 import net.ponec.jworksheet.core.ujo.Exportable;
-import net.ponec.jworksheet.core.ujo.JKey;
+import net.ponec.jworksheet.core.ujo.Keys;
+import net.ponec.jworksheet.core.ujo.TextValue;
 import org.ujorm.annotation.Domain;
+import org.ujorm.core.Key;
 
 /** An Event of the Work Day.
- * <p>The start time is stored in a memory safe {@code short} field, however the key
- * publishes it as a {@link Time} object - see the converter of the {@link #P_TIME} key.
- * <p>The identifiers {@link #P_PROJID} and {@link #P_TASKID} are persistent references
+ * <p>The start time is stored in a memory safe {@code short} field of the minutes, however
+ * the documents publish it as a {@code Time} text - see the {@link TimeCodec} class.
+ * <p>The identifiers {@code projectId} and {@code taskId} are persistent references
  * to the code-book. They are kept in sync by the {@link #setProject(net.ponec.jworksheet.bo.Project)}
  * and the {@link #setTask(net.ponec.jworksheet.bo.TaskType)} setters, so a saved document
  * always contains the identifiers of the currently assigned objects.
@@ -38,23 +41,8 @@ public class Event implements Exportable {
 
     public static final Short ZERO_SHORT = (short) 0;
 
-    /** Start time of event */
-    public static final JKey<Event,Time>     P_TIME
-            = JKey.of(MetaEvent.time, Time.class, Time::getTimeMinutes, minutes -> new Time(minutes.intValue()));
-    /** Period of the event in minutes */
-    public static final JKey<Event,Short>    P_PERIOD = JKey.of(MetaEvent.period); // [min]
-    /** Project (object) */
-    public static final JKey<Event,Project>  P_PROJ   = JKey.of(MetaEvent.project);
-    /** Project ID for the persistence */
-    public static final JKey<Event,Integer>  P_PROJID = JKey.of(MetaEvent.projectId);
-    /** Task (object) */
-    public static final JKey<Event,TaskType> P_TASK   = JKey.of(MetaEvent.task);
-    /** Task ID for the persistence */
-    public static final JKey<Event,Integer>  P_TASKID = JKey.of(MetaEvent.taskId);
-    /** Description of the event */
-    public static final JKey<Event,String>   P_DESCR  = JKey.of(MetaEvent.descr);
-
     @Column(name = "Time")
+    @TextValue(TimeCodec.class)
     private short time;
 
     @Column(name = "Period")
@@ -139,62 +127,70 @@ public class Event implements Exportable {
         this.descr = descr != null ? descr : "";
     }
 
-    // ------------------------ BUSINESS ------------------------
+    // ------------------------ THE START TIME ------------------------
+
+    /** Returns the start time of the event. */
+    public Time getStartTime() {
+        return new Time(time);
+    }
+
+    /** Assigns the start time of the event. */
+    public void setStartTime(final Time startTime) {
+        this.time = startTime.getTimeMinutes();
+    }
 
     /** Init time */
     public Event initTime() {
-        P_TIME.setValue(this, new Time(true));
+        setStartTime(new Time(true));
         return this;
-    }
-
-    /** Set a time period */
-    public void setPeriod(final Time time) {
-        final short newPeriod = time.substract(get(P_TIME));
-        P_PERIOD.setValue(this, newPeriod);
-    }
-
-    /** Is the event from a private project? */
-    public boolean isPrivate() {
-        final Project proj = get(P_PROJ);
-        return proj != null && proj.get(Project.P_PRIVATE);
-    }
-
-    /** Is the project or the task of the key finished? */
-    public boolean isFinished(final JKey<Event,?> key) {
-        if (P_PROJ == key) {
-            final Project proj = get(P_PROJ);
-            return proj != null && proj.get(Project.P_FINISHED);
-        }
-        if (P_TASK == key) {
-            final TaskType tsk = get(P_TASK);
-            return isFinished(P_PROJ) || tsk != null && tsk.get(TaskType.P_FINISHED);
-        }
-        return false;
     }
 
     /** Returns a Finished time */
     public Time getTimeFinished() {
-        return get(P_TIME).cloneAdd(get(P_PERIOD));
+        return getStartTime().cloneAdd(period);
+    }
+
+    /** Set a time period */
+    public void setPeriod(final Time finishedTime) {
+        setPeriod(finishedTime.substract(getStartTime()));
+    }
+
+    // ------------------------ BUSINESS ------------------------
+
+    /** Is the event from a private project? */
+    public boolean isPrivate() {
+        return project != null && project.isPrivateProject();
+    }
+
+    /** Is the project or the task of the key finished? */
+    public boolean isFinished(final Key<Event,?> key) {
+        if (MetaEvent.project == key) {
+            return project != null && project.isFinished();
+        }
+        if (MetaEvent.task == key) {
+            return isFinished(MetaEvent.project) || task != null && task.isFinished();
+        }
+        return false;
     }
 
     /** The related objects are not exported, the document keeps their identifiers only. */
     @Override
-    public boolean isExportable(final ExportAction action, final JKey<?,?> key, final Object value) {
+    public boolean isExportable(final ExportAction action, final Key<?,?> key, final Object value) {
         if (action == ExportAction.XML) {
-            return key != P_PROJ
-                && key != P_TASK;
+            return key != MetaEvent.project
+                && key != MetaEvent.task;
         }
         return true;
     }
 
     // ------------------------ KEY ACCESS ------------------------
 
-    public <V> V get(final JKey<Event,V> key) {
+    public <V> V get(final Key<Event,V> key) {
         return key.getValue(this);
     }
 
-    public <V> Event set(final JKey<Event,V> key, final V value) {
-        key.setValue(this, value);
+    public <V> Event set(final Key<Event,V> key, final V value) {
+        Keys.write(key, this, value);
         return this;
     }
 }

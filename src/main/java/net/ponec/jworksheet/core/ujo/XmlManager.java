@@ -33,6 +33,7 @@ import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.parsers.SAXParser;
 import javax.xml.parsers.SAXParserFactory;
 import org.ujorm.annotation.Domain;
+import org.ujorm.core.Key;
 import org.xml.sax.Attributes;
 import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
@@ -73,7 +74,7 @@ public final class XmlManager {
     private static final String NEW_LINE = "\n";
 
     /** A cache of the element name to the key mapping. */
-    private static final Map<Class<?>, Map<String, JKey<?, ?>>> ELEMENT_MAPS = new HashMap<>();
+    private static final Map<Class<?>, Map<String, Key<?, ?>>> ELEMENT_MAPS = new HashMap<>();
 
     private XmlManager() {
     }
@@ -118,25 +119,25 @@ public final class XmlManager {
         indent(out, level).append('<').append(name).append('>').append(NEW_LINE);
 
         final Exportable filter = domain instanceof final Exportable e ? e : null;
-        for (JKey<?, ?> key : keysOf(domain.getClass())) {
+        for (Key<?, ?> key : keysOf(domain.getClass())) {
             final Object value = readValue(key, domain);
             if (value == null) {
                 continue;
             }
-            if (key instanceof final JListKey<?, ?> listKey) {
+            final String element = Keys.nameOf(key);
+            if (Keys.isList(key)) {
                 for (Object item : (List<?>) value) {
                     if (item != null && isExportable(filter, key, item)) {
-                        writeElement(out, key.getName(), item, level + 1);
+                        writeElement(out, element, item, level + 1);
                     }
                 }
             } else if (isExportable(filter, key, value)) {
                 if (isDomain(value.getClass())) {
-                    writeElement(out, key.getName(), value, level + 1);
+                    writeElement(out, element, value, level + 1);
                 } else {
-                    indent(out, level + 1)
-                            .append('<').append(key.getName()).append('>');
-                    escape(out, ValueCoder.encode(value));
-                    out.append("</").append(key.getName()).append('>').append(NEW_LINE);
+                    indent(out, level + 1).append('<').append(element).append('>');
+                    escape(out, ValueCoder.encode(key, value));
+                    out.append("</").append(element).append('>').append(NEW_LINE);
                 }
             }
         }
@@ -148,7 +149,7 @@ public final class XmlManager {
         }
     }
 
-    private static boolean isExportable(final Exportable filter, final JKey<?, ?> key, final Object value) {
+    private static boolean isExportable(final Exportable filter, final Key<?, ?> key, final Object value) {
         return filter == null || filter.isExportable(ExportAction.XML, key, value);
     }
 
@@ -221,7 +222,7 @@ public final class XmlManager {
         }
 
         T getRoot() {
-            return root != null ? root : newInstance(rootType);
+            return root != null ? root : Keys.newInstance(rootType);
         }
 
         @Override
@@ -232,21 +233,21 @@ public final class XmlManager {
                 return;
             }
             if (domains.isEmpty()) {
-                root = newInstance(rootType);
+                root = Keys.newInstance(rootType);
                 domains.push(root);
                 return;
             }
             final Object parent = domains.peek();
-            final JKey<?, ?> key = elementMapOf(parent.getClass()).get(name);
+            final Key<?, ?> key = elementMapOf(parent.getClass()).get(name);
             if (key == null) {
                 // An element of an unknown name is skipped including its children:
                 skipped = 1;
                 return;
             }
-            if (key instanceof final JListKey<?, ?> listKey) {
-                domains.push(newInstance(listKey.getItemType()));
-            } else if (isDomain(key.getType())) {
-                domains.push(newInstance(key.getType()));
+            if (Keys.isList(key)) {
+                domains.push(Keys.newInstance(Keys.itemTypeOf(key)));
+            } else if (isDomain(key.type())) {
+                domains.push(Keys.newInstance(key.type()));
             } else {
                 text = new StringBuilder();
             }
@@ -268,8 +269,8 @@ public final class XmlManager {
             }
             if (text != null) {
                 final Object parent = domains.peek();
-                final JKey key = elementMapOf(parent.getClass()).get(name);
-                key.setValue(parent, ValueCoder.decode(key.getType(), text.toString()));
+                final Key key = elementMapOf(parent.getClass()).get(name);
+                Keys.write(key, parent, ValueCoder.decode(key, text.toString()));
                 text = null;
                 return;
             }
@@ -278,9 +279,9 @@ public final class XmlManager {
                 return; // The root element is closed
             }
             final Object parent = domains.peek();
-            final JKey key = elementMapOf(parent.getClass()).get(name);
-            if (key instanceof final JListKey listKey) {
-                listKey.addItem(parent, child);
+            final Key key = elementMapOf(parent.getClass()).get(name);
+            if (Keys.isList(key)) {
+                ((List<Object>) key.getValue(parent)).add(child);
             } else {
                 key.setValue(parent, child);
             }
@@ -290,23 +291,23 @@ public final class XmlManager {
     // ------------------------ TOOLS ------------------------
 
     @SuppressWarnings({"unchecked", "rawtypes"})
-    private static Object readValue(final JKey<?, ?> key, final Object domain) {
-        return ((JKey) key).getValue(domain);
+    private static Object readValue(final Key<?, ?> key, final Object domain) {
+        return ((Key) key).getValue(domain);
     }
 
     @SuppressWarnings({"unchecked", "rawtypes"})
-    private static List<JKey<?, ?>> keysOf(final Class<?> domainClass) {
-        return (List) JKey.keysOf((Class) domainClass);
+    private static List<Key<?, ?>> keysOf(final Class<?> domainClass) {
+        return (List) Keys.keysOf((Class) domainClass);
     }
 
     /** Returns a mapping of the element name to the key of a domain class. */
-    private static Map<String, JKey<?, ?>> elementMapOf(final Class<?> domainClass) {
+    private static Map<String, Key<?, ?>> elementMapOf(final Class<?> domainClass) {
         synchronized (ELEMENT_MAPS) {
-            Map<String, JKey<?, ?>> result = ELEMENT_MAPS.get(domainClass);
+            Map<String, Key<?, ?>> result = ELEMENT_MAPS.get(domainClass);
             if (result == null) {
                 result = new HashMap<>();
-                for (JKey<?, ?> key : keysOf(domainClass)) {
-                    result.put(key.getName(), key);
+                for (Key<?, ?> key : keysOf(domainClass)) {
+                    result.put(Keys.nameOf(key), key);
                 }
                 ELEMENT_MAPS.put(domainClass, result);
             }
@@ -319,12 +320,4 @@ public final class XmlManager {
         return type.isAnnotationPresent(Domain.class);
     }
 
-    private static <T> T newInstance(final Class<T> type) {
-        try {
-            return type.getDeclaredConstructor().newInstance();
-        } catch (ReflectiveOperationException e) {
-            throw new IllegalStateException("A domain class requires a public constructor"
-                    + " without arguments: " + type.getName(), e);
-        }
-    }
 }

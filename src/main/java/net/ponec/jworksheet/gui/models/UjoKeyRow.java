@@ -17,9 +17,10 @@
 package net.ponec.jworksheet.gui.models;
 
 import jakarta.persistence.Column;
-import net.ponec.jworksheet.core.ujo.JKey;
+import net.ponec.jworksheet.core.ujo.Keys;
 import net.ponec.jworksheet.gui.models.meta.MetaUjoKeyRow;
 import org.ujorm.annotation.Domain;
+import org.ujorm.core.Key;
 
 /**
  * A single row of a table which presents the keys of one domain object including their values.
@@ -32,19 +33,6 @@ import org.ujorm.annotation.Domain;
 @Domain
 @SuppressWarnings({"unchecked", "rawtypes"})
 public class UjoKeyRow {
-
-    /** Index of key */
-    public static final JKey<UjoKeyRow,Integer> P_INDEX   = JKey.of(MetaUjoKeyRow.index);
-    /** Name of key */
-    public static final JKey<UjoKeyRow,String> P_NAME     = JKey.of(MetaUjoKeyRow.name);
-    /** Type of key */
-    public static final JKey<UjoKeyRow,Class> P_TYPE      = JKey.of(MetaUjoKeyRow.type);
-    /** Class name without packages */
-    public static final JKey<UjoKeyRow,String> P_TYPENAME = JKey.of(MetaUjoKeyRow.typeName);
-    /** Value */
-    public static final JKey<UjoKeyRow,Object> P_VALUE    = JKey.of(MetaUjoKeyRow.value);
-    /** Default Value */
-    public static final JKey<UjoKeyRow,Object> P_DEFAULT  = JKey.of(MetaUjoKeyRow.defaultValue);
 
     @Column(name = "Index")
     private Integer index;
@@ -68,14 +56,14 @@ public class UjoKeyRow {
     private final transient Object content;
 
     /** A presented key of the domain object. */
-    private final transient JKey key;
+    private final transient Key key;
 
     /** A constructor required by the metamodel. The instance presents no key. */
     public UjoKeyRow() {
         this(null, null);
     }
 
-    public UjoKeyRow(final Object content, final JKey key) {
+    public UjoKeyRow(final Object content, final Key key) {
         this.content = content;
         this.key = key;
     }
@@ -83,27 +71,27 @@ public class UjoKeyRow {
     // ------------------------ THE COMPUTED ACCESSORS ------------------------
 
     public Integer getIndex() {
-        return key != null ? key.getIndex() : null;
+        return key != null ? (int) key.index() : null;
     }
 
     public void setIndex(final Integer index) {
-        throw new UnsupportedOperationException("Read only: " + P_INDEX);
+        throw new UnsupportedOperationException("Read only: " + MetaUjoKeyRow.index);
     }
 
     public String getName() {
-        return key != null ? key.getName() : null;
+        return key != null ? Keys.nameOf(key) : null;
     }
 
     public void setName(final String name) {
-        throw new UnsupportedOperationException("Read only: " + P_NAME);
+        throw new UnsupportedOperationException("Read only: " + MetaUjoKeyRow.name);
     }
 
     public Class getType() {
-        return key != null ? key.getType() : null;
+        return key != null ? Keys.typeOf(key) : null;
     }
 
     public void setType(final Class type) {
-        throw new UnsupportedOperationException("Read only: " + P_TYPE);
+        throw new UnsupportedOperationException("Read only: " + MetaUjoKeyRow.type);
     }
 
     /** A simple name of the value type. */
@@ -111,12 +99,12 @@ public class UjoKeyRow {
         if (key == null) {
             return null;
         }
-        final String result = key.getType().getName();
+        final String result = Keys.typeOf(key).getName();
         return result.substring(1 + result.lastIndexOf('.'));
     }
 
     public void setTypeName(final String typeName) {
-        throw new UnsupportedOperationException("Read only: " + P_TYPENAME);
+        throw new UnsupportedOperationException("Read only: " + MetaUjoKeyRow.typeName);
     }
 
     /** Reads the value of the key from the domain object. */
@@ -126,21 +114,21 @@ public class UjoKeyRow {
 
     /** Writes the value of the key to the domain object. */
     public void setValue(final Object value) {
-        key.setValue(content, value);
+        Keys.write(key, content, value);
     }
 
     public Object getDefaultValue() {
-        return key != null ? key.getDefault() : null;
+        return key != null ? Keys.defaultOf(key) : null;
     }
 
     public void setDefaultValue(final Object defaultValue) {
-        throw new UnsupportedOperationException("Read only: " + P_DEFAULT);
+        throw new UnsupportedOperationException("Read only: " + MetaUjoKeyRow.defaultValue);
     }
 
     // ------------------------ TOOLS ------------------------
 
     /** Returns an assigned key (a parameter e.g.) */
-    public JKey getKey() {
+    public Key getKey() {
         return key;
     }
 
@@ -151,6 +139,6 @@ public class UjoKeyRow {
 
     @Override
     public String toString() {
-        return key != null ? key.getName() + ":" + getValue() : "?";
+        return key != null ? Keys.nameOf(key) + ":" + getValue() : "?";
     }
 }

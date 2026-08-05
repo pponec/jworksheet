@@ -18,6 +18,7 @@ package net.ponec.jworksheet.core.ujo;
 
 import java.util.ArrayList;
 import java.util.List;
+import org.ujorm.core.Key;
 
 /**
  * Common operations above the domain objects.
@@ -44,28 +45,19 @@ public final class DomainTools {
             return source;
         }
         final Class<T> domainClass = (Class<T>) source.getClass();
-        final T result = newInstance(domainClass);
+        final T result = Keys.newInstance(domainClass);
 
-        for (JKey<T,?> key : JKey.keysOf(domainClass)) {
-            if (key instanceof final JListKey listKey) {
+        for (Key<T,?> key : Keys.keysOf(domainClass)) {
+            if (Keys.isList(key)) {
                 final List<Object> items = new ArrayList<>();
-                for (Object item : listKey.getList(source)) {
+                for (Object item : (List<?>) key.getValue(source)) {
                     items.add(deepCopy(item, depth - 1));
                 }
-                listKey.setValue(result, items);
+                ((Key) key).setValue(result, items);
             } else {
-                ((JKey) key).setValue(result, key.getValue(source));
+                Keys.copy((Key) key, source, result);
             }
         }
         return result;
-    }
-
-    private static <T> T newInstance(final Class<T> domainClass) {
-        try {
-            return domainClass.getDeclaredConstructor().newInstance();
-        } catch (ReflectiveOperationException e) {
-            throw new IllegalStateException("A domain class requires a public constructor"
-                    + " without arguments: " + domainClass.getName(), e);
-        }
     }
 }

@@ -17,6 +17,10 @@
 
 package net.ponec.jworksheet.gui;
 
+import net.ponec.jworksheet.core.ujo.Keys;
+
+import net.ponec.jworksheet.bo.meta.MetaParameters;
+
 import java.io.IOException;
 import java.net.URI;
 import java.text.MessageFormat;
@@ -132,15 +136,15 @@ public class TopFrame extends JFrame {
         try {
             try {
                 uri = new URI(url);
-                browser = applContext.getParameters().get(Parameters.P_SYSTEM_BROWSER_PATH);
-                if (Parameters.P_SYSTEM_BROWSER_PATH.getDefault().equals(browser)) {
+                browser = applContext.getParameters().get(MetaParameters.systemBrowserPath);
+                if (Keys.defaultOf(MetaParameters.systemBrowserPath).equals(browser)) {
                     browser = "";
                 }
                 ApplTools.browse(uri, browser);
             } catch (IOException e) {
                 browser = new BrowserDialog(applContext, browser).getResult();
                 if (Check.hasLength(browser)) {
-                    Parameters.P_SYSTEM_BROWSER_PATH.setValue(applContext.getParameters(), browser);
+                    MetaParameters.systemBrowserPath.setValue(applContext.getParameters(), browser);
                     ApplTools.browse(uri, browser);
                 } else {
                     throw e;
@@ -148,7 +152,7 @@ public class TopFrame extends JFrame {
             }
         } catch (Throwable e) {
             String msg = "<html>Can't open link: " + url
-            + "<br>Try to modify a parameter: " + Parameters.P_SYSTEM_BROWSER_PATH + "</html>"
+            + "<br>Try to modify a parameter: " + MetaParameters.systemBrowserPath + "</html>"
             ;
             showMessage(msg, e);
         }

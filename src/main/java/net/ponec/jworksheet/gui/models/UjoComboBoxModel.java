@@ -17,6 +17,8 @@
 
 package net.ponec.jworksheet.gui.models;
 
+import org.ujorm.core.Key;
+
 import java.util.ArrayList;
 import java.util.List;
 import javax.swing.DefaultComboBoxModel;

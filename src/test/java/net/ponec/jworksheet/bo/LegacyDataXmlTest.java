@@ -16,6 +16,12 @@
 
 package net.ponec.jworksheet.bo;
 
+import net.ponec.jworksheet.bo.meta.MetaEvent;
+import net.ponec.jworksheet.bo.meta.MetaProject;
+import net.ponec.jworksheet.bo.meta.MetaTaskType;
+import net.ponec.jworksheet.bo.meta.MetaWorkDay;
+import net.ponec.jworksheet.bo.meta.MetaWorkSpace;
+
 import java.io.IOException;
 import java.io.InputStream;
 import java.nio.charset.StandardCharsets;
@@ -45,11 +51,11 @@ public class LegacyDataXmlTest extends XmlTestSupport {
     public void workSpaceAttributes() throws IOException {
         final WorkSpace workSpace = loadXml(readDataFile());
 
-        assertEquals("1.00", workSpace.get(WorkSpace.P_VERSN).toString());
-        assertEquals("Pavel", workSpace.get(WorkSpace.P_USERNAME));
-        assertNotNull(workSpace.get(WorkSpace.P_CREATED));
-        assertNotNull(workSpace.get(WorkSpace.P_ARCHIVED));
-        assertEquals("1.00", workSpace.get(WorkSpace.P_RELEASE_CHECK_VERSION).toString());
+        assertEquals("1.00", workSpace.get(MetaWorkSpace.version).toString());
+        assertEquals("Pavel", workSpace.get(MetaWorkSpace.username));
+        assertNotNull(workSpace.get(MetaWorkSpace.created));
+        assertNotNull(workSpace.get(MetaWorkSpace.archived));
+        assertEquals("1.00", workSpace.get(MetaWorkSpace.checkReleaseVersion).toString());
     }
 
     @Test
@@ -57,26 +63,26 @@ public class LegacyDataXmlTest extends XmlTestSupport {
     public void workDayAndEvents() throws IOException {
         final WorkSpace workSpace = loadXml(readDataFile());
 
-        assertEquals(1, WorkSpace.P_DAYS.getItemCount(workSpace));
-        final WorkDay day = WorkSpace.P_DAYS.getItem(workSpace, 0);
-        assertEquals("2021-03-14", day.get(WorkDay.P_DATE).toString());
-        assertFalse(day.get(WorkDay.P_DAYOFF));
-        assertEquals(2, WorkDay.P_EVENTS.getItemCount(day));
+        assertEquals(1, workSpace.getDays().size());
+        final WorkDay day = workSpace.getDays().get(0);
+        assertEquals("2021-03-14", day.get(MetaWorkDay.date).toString());
+        assertFalse(day.get(MetaWorkDay.dayOff));
+        assertEquals(2, day.getEvents().size());
 
-        final Event first = WorkDay.P_EVENTS.getItem(day, 0);
-        assertEquals("08:00", first.get(Event.P_TIME).toString());
-        assertEquals(Short.valueOf((short) 240), first.get(Event.P_PERIOD));
+        final Event first = day.getEvents().get(0);
+        assertEquals("08:00", first.getStartTime().toString());
+        assertEquals(Short.valueOf((short) 240), first.get(MetaEvent.period));
         assertEquals("12:00", first.getTimeFinished().toString());
-        assertEquals("Water the garden", first.get(Event.P_PROJ).get(Project.P_DESCR));
-        assertEquals("Roses", first.get(Event.P_TASK).get(TaskType.P_DESCR));
-        assertEquals("", first.get(Event.P_DESCR));
+        assertEquals("Water the garden", first.get(MetaEvent.project).get(MetaProject.descr));
+        assertEquals("Roses", first.get(MetaEvent.task).get(MetaTaskType.descr));
+        assertEquals("", first.get(MetaEvent.descr));
         assertFalse(first.isPrivate());
 
-        final Event second = WorkDay.P_EVENTS.getItem(day, 1);
-        assertEquals("12:00", second.get(Event.P_TIME).toString());
-        assertEquals(Short.valueOf((short) 0), second.get(Event.P_PERIOD));
-        assertEquals("Dinner", second.get(Event.P_PROJ).get(Project.P_DESCR));
-        assertNull(second.get(Event.P_TASK), "The event has no TaskID element");
+        final Event second = day.getEvents().get(1);
+        assertEquals("12:00", second.getStartTime().toString());
+        assertEquals(Short.valueOf((short) 0), second.get(MetaEvent.period));
+        assertEquals("Dinner", second.get(MetaEvent.project).get(MetaProject.descr));
+        assertNull(second.get(MetaEvent.task), "The event has no TaskID element");
         assertTrue(second.isPrivate(), "The project 'Dinner' is a private one");
     }
 
@@ -85,19 +91,19 @@ public class LegacyDataXmlTest extends XmlTestSupport {
     public void projectCodeBook() throws IOException {
         final WorkSpace workSpace = loadXml(readDataFile());
 
-        assertEquals(6, WorkSpace.P_PROJS.getItemCount(workSpace));
+        assertEquals(6, workSpace.getProjects().size());
         assertEquals(6, workSpace.getOpenProjects().size(), "No project is finished");
         assertNull(workSpace.findDefaultProject(), "No project is a default one");
 
-        assertEquals(2, Project.P_TASKS.getItemCount(workSpace.findProject(0)));
-        assertEquals(1, Project.P_TASKS.getItemCount(workSpace.findProject(1)));
-        assertEquals(0, Project.P_TASKS.getItemCount(workSpace.findProject(2)));
+        assertEquals(2, workSpace.findProject(0).getTasks().size());
+        assertEquals(1, workSpace.findProject(1).getTasks().size());
+        assertEquals(0, workSpace.findProject(2).getTasks().size());
 
-        assertTrue(workSpace.findProject(3).get(Project.P_PRIVATE));
-        assertTrue(workSpace.findProject(5).get(Project.P_PRIVATE));
-        assertFalse(workSpace.findProject(4).get(Project.P_PRIVATE));
+        assertTrue(workSpace.findProject(3).get(MetaProject.privateProject));
+        assertTrue(workSpace.findProject(5).get(MetaProject.privateProject));
+        assertFalse(workSpace.findProject(4).get(MetaProject.privateProject));
 
-        assertEquals("No comment", workSpace.findProject(3).findDefaultTask().get(TaskType.P_DESCR));
+        assertEquals("No comment", workSpace.findProject(3).findDefaultTask().get(MetaTaskType.descr));
     }
 
     @Test

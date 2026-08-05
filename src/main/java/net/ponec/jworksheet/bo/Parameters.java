@@ -31,10 +31,11 @@ import net.ponec.jworksheet.bo.meta.MetaParameters;
 import net.ponec.jworksheet.core.*;
 import net.ponec.jworksheet.core.ujo.ExportAction;
 import net.ponec.jworksheet.core.ujo.Exportable;
-import net.ponec.jworksheet.core.ujo.JKey;
+import net.ponec.jworksheet.core.ujo.Keys;
 import net.ponec.jworksheet.core.ujo.ValueCoder;
 import net.ponec.jworksheet.gui.JWorkSheet;
 import org.ujorm.annotation.Domain;
+import org.ujorm.core.Key;
 import org.ujorm.tools.Check;
 
 /**
@@ -52,63 +53,6 @@ public class Parameters implements Exportable {
 
     /** A default format of the main date selection. It is shared by the report format. */
     private static final String DATE_FORMAT_DEFAULT = "EE, yyyy-MM-dd' %s: 'ww";
-
-    /** LocaleText lcalization */
-    public static final JKey<Parameters,Locale> P_LANG = JKey.of(MetaParameters.language);
-    /** Working Hours */
-    public static final JKey<Parameters,Float> P_WORKING_HOURS = JKey.of(MetaParameters.workingHours);
-    /** The First Day of the Week Day. */
-    public static final JKey<Parameters,Integer> P_FIRST_DAY_OF_WEEK = JKey.of(MetaParameters.firstDayOfWeek);
-    /** Decimal time format. */
-    public static final JKey<Parameters,Boolean> P_DECIMAL_TIME_FORMAT = JKey.of(MetaParameters.decimalTimeFormat);
-    /** The Main selecton format. */
-    public static final JKey<Parameters,String> P_DATE_MAIN_FORMAT = JKey.of(MetaParameters.dateMainFormat);
-    /** The Export Date Selection. */
-    public static final JKey<Parameters,String> P_DATE_REPORT_FORMAT = JKey.of(MetaParameters.dateReportFormat);
-    /** The Export Date Selection. */
-    public static final JKey<Parameters,String> P_DATE_REPORT_FORMAT2 = JKey.of(MetaParameters.dateReportFormat2);
-    /** The complementary report CSS style. */
-    public static final JKey<Parameters,String> P_REPORT_CSS = JKey.of(MetaParameters.reportCss);
-    /** The Goto Date format. */
-    public static final JKey<Parameters,String> P_DATE_GOTO_FORMAT = JKey.of(MetaParameters.dateGotoFormat);
-    /** Nimbus Look &amp; Feel support */
-    public static final JKey<Parameters,Boolean> P_NIMBUS_LAF = JKey.of(MetaParameters.nimbusLaf);
-    /** A Color of a private project. */
-    public static final JKey<Parameters,Color> P_COLOR_PRIVATE = JKey.of(MetaParameters.colorOfPrivateProject);
-    /** A Color of finished project. */
-    public static final JKey<Parameters,Color> P_COLOR_FINISHED_PROJ = JKey.of(MetaParameters.colorOfFinishedProject);
-    /** A Color of an editable area. */
-    public static final JKey<Parameters,Color> P_COLOR_EDITABLE = JKey.of(MetaParameters.colorOfEditableArea);
-    /** Is a System Tray Enabled? */
-    public static final JKey<Parameters,Boolean> P_SYSTRAY_ENABLED = JKey.of(MetaParameters.systemTrayEnabled);
-    /** Action on a second click */
-    public static final JKey<Parameters,SysTray.Action> P_SYSTRAY_SECOND_CLICK = JKey.of(MetaParameters.systemTraySecondClick);
-    /** Modify value of finished project or task. */
-    public static final JKey<Parameters,Boolean> P_MODIFY_FINESHED_PROJ = JKey.of(MetaParameters.modifyFinishedProject);
-    /** Create a new Event on an EXIT action. */
-    public static final JKey<Parameters,Boolean> P_EXIT_EVENT_CREATE = JKey.of(MetaParameters.exitEventCreating);
-    /** Description of an EXIT action. */
-    public static final JKey<Parameters,String> P_EXIT_EVENT_DESCR = JKey.of(MetaParameters.exitEventDescription);
-    /** Hide Buoon Icon. */
-    public static final JKey<Parameters,Boolean> P_HIDE_ICONS = JKey.of(MetaParameters.hideButtonIcons);
-    /** Last window size and position. */
-    public static final JKey<Parameters,Rectangle> P_WINDOW_SIZE = JKey.of(MetaParameters.windowSize);
-    /** Restore the last application window size and position. */
-    public static final JKey<Parameters,Boolean> P_WINDOW_SIZE_RESTORATION = JKey.of(MetaParameters.windowSizeRestoration);
-    /** Automatic sorting of the events by time. */
-    public static final JKey<Parameters,Boolean> P_AUTOMATIC_SORTING_BY_TIME = JKey.of(MetaParameters.automaticSortingByTime);
-    /** Check new release on the home page */
-    public static final JKey<Parameters,Boolean> P_CHECK_NEW_RELEASE = JKey.of(MetaParameters.checkNewRelease);
-    /** A full path to a system browser. */
-    public static final JKey<Parameters,String> P_SYSTEM_BROWSER_PATH = JKey.of(MetaParameters.systemBrowserPath);
-    /** A full path to a DataFile. */
-    public static final JKey<Parameters,File> P_DATA_FILE_PATH = JKey.of(MetaParameters.dataFilePath);
-    /** Project table sorted column */
-    public static final JKey<Parameters,String> P_SORT_PROJ_COLUMN = JKey.of(MetaParameters.sortProjColumn);
-    /** A full path to a Shared Projects DataFile. */
-    public static final JKey<Parameters,File> P_PROJECTS_FILE_PATH = JKey.of(MetaParameters.sharedProjectsFilePath);
-    /** Name of user of this application. */
-    public static final JKey<Parameters,String> P_USERNAME = JKey.of(MetaParameters.username);
 
     // ------------------------ ATTRIBUTES ------------------------
 
@@ -481,31 +425,31 @@ public class Parameters implements Exportable {
 
     /** An authorization settings. */
     @Override
-    public boolean isExportable(final ExportAction action, final JKey<?,?> key, final Object value) {
+    public boolean isExportable(final ExportAction action, final Key<?,?> key, final Object value) {
         switch (action) {
             case RESOURCE_BUNDLE:
                 // A default value is not stored to the configuration file:
-                return !Objects.equals(value, key.getDefault());
+                return !Objects.equals(value, Keys.defaultOf(key));
             case TABLE_SHOW:
-                if (key == P_SORT_PROJ_COLUMN) {
+                if (key == MetaParameters.sortProjColumn) {
                     return false;
                 }
-                if (key == P_DATA_FILE_PATH) {
-                    return value != null && !value.equals(P_DATA_FILE_PATH.getDefault());
+                if (key == MetaParameters.dataFilePath) {
+                    return value != null && !value.equals(Keys.defaultOf(key));
                 }
-                return key != P_WINDOW_SIZE;
+                return key != MetaParameters.windowSize;
             default:
                 return true;
         }
     }
 
     /** Returns a text representation of the key value. */
-    public String readValueString(final JKey<Parameters,?> key) {
-        return ValueCoder.encode(key.getValue(this));
+    public String readValueString(final Key<Parameters,?> key) {
+        return ValueCoder.encode(key, key.getValue(this));
     }
 
     /** Returns a localized date format */
-    public String getDateFormat(final JKey<Parameters,String> key, final ApplContext context) {
+    public String getDateFormat(final Key<Parameters,String> key, final ApplContext context) {
         final String result = get(key);
         final String week = context.getLanguageManager().getTextAllways("Week");
         return String.format(result, week);
@@ -518,7 +462,7 @@ public class Parameters implements Exportable {
 
     /** Returns a format time. */
     public String formatTime(int minutes) {
-       final boolean deci = get(P_DECIMAL_TIME_FORMAT);
+       final boolean deci = decimalTimeFormat;
 
        if (deci) {
             // Numeric format: 1.50
@@ -550,12 +494,12 @@ public class Parameters implements Exportable {
 
     // ------------------------ KEY ACCESS ------------------------
 
-    public <V> V get(final JKey<Parameters,V> key) {
+    public <V> V get(final Key<Parameters,V> key) {
         return key.getValue(this);
     }
 
-    public <V> Parameters set(final JKey<Parameters,V> key, final V value) {
-        key.setValue(this, value);
+    public <V> Parameters set(final Key<Parameters,V> key, final V value) {
+        Keys.write(key, this, value);
         return this;
     }
 }

@@ -25,10 +25,10 @@ import net.ponec.jworksheet.bo.meta.MetaWorkSpace;
 import net.ponec.jworksheet.core.Version;
 import net.ponec.jworksheet.core.ujo.ExportAction;
 import net.ponec.jworksheet.core.ujo.Exportable;
-import net.ponec.jworksheet.core.ujo.JKey;
-import net.ponec.jworksheet.core.ujo.JListKey;
+import net.ponec.jworksheet.core.ujo.Keys;
 import net.ponec.jworksheet.gui.JWorkSheet;
 import org.ujorm.annotation.Domain;
+import org.ujorm.core.Key;
 
 /**
  * This is a <strong>root</strong> of all persistent business objects.
@@ -38,24 +38,6 @@ import org.ujorm.annotation.Domain;
  */
 @Domain
 public class WorkSpace implements Exportable {
-
-    /** Version of the persistence file format. */
-    public static final JKey<WorkSpace,Version> P_VERSN     = JKey.of(MetaWorkSpace.version);
-    /** Date of the last file saving. */
-    public static final JKey<WorkSpace,Date> P_CREATED      = JKey.of(MetaWorkSpace.created);
-    /** Date of the last file archivation. */
-    public static final JKey<WorkSpace,Date> P_ARCHIVED     = JKey.of(MetaWorkSpace.archived);
-    /** Name of user of this workspace. */
-    public static final JKey<WorkSpace,String> P_USERNAME   = JKey.of(MetaWorkSpace.username);
-    /** Minimal date to check new release */
-    public static final JKey<WorkSpace,Date> P_RELEASE_CHECK_DATE = JKey.of(MetaWorkSpace.checkReleaseDate);
-    /** Minimal version to new release notification */
-    public static final JKey<WorkSpace,Version> P_RELEASE_CHECK_VERSION = JKey.of(MetaWorkSpace.checkReleaseVersion);
-
-    /** Work day list */
-    public static final JListKey<WorkSpace,WorkDay> P_DAYS  = JListKey.of(MetaWorkSpace.days, WorkDay.class);
-    /** Code-book of all projects. */
-    public static final JListKey<WorkSpace,Project> P_PROJS = JListKey.of(MetaWorkSpace.projects, Project.class);
 
     @Column(name = "Version")
     private Version version = new Version("0");
@@ -151,22 +133,22 @@ public class WorkSpace implements Exportable {
 
     /** Find a workDay or create new. */
     public WorkDay findWorkDay(final YearMonthDay dayId) {
-        for (WorkDay workDay : P_DAYS.getList(this)) {
-            if (WorkDay.P_DATE.equals(workDay, dayId)) {
+        for (WorkDay workDay : days) {
+            if (dayId.equals(workDay.getDate())) {
                 return workDay;
             }
         }
 
         final WorkDay result = new WorkDay();
-        WorkDay.P_DATE.setValue(result, dayId.cloneDay());
-        WorkSpace.P_DAYS.addItem(this, result);
+        result.setDate(dayId.cloneDay());
+        days.add(result);
         return result;
     }
 
     /** Find a Project by its identifier. An undefined identifier has got no project. */
     public Project findProject(final Integer id) {
         if (id != null) {
-            for (Project project : P_PROJS.getList(this)) {
+            for (Project project : projects) {
                 if (project.getId() == id.intValue()) {
                     return project;
                 }
@@ -177,10 +159,8 @@ public class WorkSpace implements Exportable {
 
     /** Returns the first "default" TaskType, null. */
     public Project findDefaultProject() {
-        for (Project proj : P_PROJS.getList(this)) {
-            if (proj.get(Project.P_DEFAULT)
-            && !proj.get(Project.P_FINISHED)
-            ){
+        for (Project proj : projects) {
+            if (proj.isDefaultProject() && !proj.isFinished()) {
                 return proj;
             }
         }
@@ -189,10 +169,10 @@ public class WorkSpace implements Exportable {
 
     /** Returns all open Projects. */
     public ArrayList<Project> getOpenProjects() {
-        final ArrayList<Project> result = new ArrayList<>(P_PROJS.getItemCount(this));
-        for (Project task : P_PROJS.getList(this)) {
-            if (!task.get(Project.P_FINISHED)) {
-                result.add(task);
+        final ArrayList<Project> result = new ArrayList<>(projects.size());
+        for (Project project : projects) {
+            if (!project.isFinished()) {
+                result.add(project);
             }
         }
         return result;
@@ -202,16 +182,13 @@ public class WorkSpace implements Exportable {
      * <p>The setters of the Event keep the identifiers in sync with the assigned objects,
      * so a broken reference clears the identifier too. */
     public void assingTasks() {
-        for (WorkDay day : P_DAYS.getList(this)) {
-            for (Event event : WorkDay.P_EVENTS.getList(day)) {
-                final Integer projectId = event.get(Event.P_PROJID);
-                final Integer taskId    = event.get(Event.P_TASKID);
+        for (WorkDay day : days) {
+            for (Event event : day.getEvents()) {
+                final Project project = findProject(event.getProjectId());
+                final TaskType task = project != null ? project.findTaskType(event.getTaskId()) : null;
                 //
-                final Project project = this.findProject(projectId);
-                final TaskType task   = project != null ? project.findTaskType(taskId) : null ;
-                //
-                Event.P_PROJ.setValue(event, project);
-                Event.P_TASK.setValue(event, task);
+                event.setProject(project);
+                event.setTask(task);
             }
         }
     }
@@ -219,11 +196,11 @@ public class WorkSpace implements Exportable {
     /**Sync projects with other WorkSpace. */
     public void syncProjects(final WorkSpace otherSpace) {
         final ArrayList<Project> newProjects = new ArrayList<>();
-        for (Project otherProject : P_PROJS.getList(otherSpace)) {
+        for (Project otherProject : otherSpace.getProjects()) {
             boolean found = false;
-            for (Project thisProject : P_PROJS.getList(this)) {
-                if (Project.P_ID.equals(otherProject, thisProject.get(Project.P_ID))) {
-                    if (Project.P_DESCR.equals(otherProject, thisProject.get(Project.P_DESCR))) {
+            for (Project thisProject : projects) {
+                if (otherProject.getId() == thisProject.getId()) {
+                    if (otherProject.getDescr().equals(thisProject.getDescr())) {
                         // only update projects with same description, otherwise
                         // old non-synced projects may change description
                         thisProject.copyFrom(otherProject);
@@ -237,50 +214,50 @@ public class WorkSpace implements Exportable {
                 newProjects.add(otherProject);
             }
         }
-        for (Project thisProject : P_PROJS.getList(this)) {
+        for (Project thisProject : projects) {
             boolean found = false;
-            for (Project otherProject : P_PROJS.getList(otherSpace)) {
-                if (Project.P_ID.equals(otherProject, thisProject.get(Project.P_ID))) {
+            for (Project otherProject : otherSpace.getProjects()) {
+                if (otherProject.getId() == thisProject.getId()) {
                     found = true;
                     break;
                 }
             }
             if (!found) {
-                thisProject.set(Project.P_FINISHED, true);
+                thisProject.setFinished(true);
             }
         }
         for (Project otherProject : newProjects) {
             final Project project = new Project();
             project.copyFrom(otherProject);
             project.syncTasks(otherProject);
-            WorkSpace.P_PROJS.addItem(this, project);
+            projects.add(project);
         }
     }
 
     /** Create a DemoData */
     public void createDemoData() {
         final TaskType task = new TaskType();
-        TaskType.P_DESCR.setValue(task, "Task of the 1st Project");
+        task.setDescr("Task of the 1st Project");
         final Project project = new Project();
-        Project.P_DESCR.setValue(project, "1st Project");
-        Project.P_TASKS.addItem(project, task);
-        WorkSpace.P_PROJS.addItem(this, project);
+        project.setDescr("1st Project");
+        project.getTasks().add(task);
+        projects.add(project);
     }
 
     /** Sort Days by a YearMonthDay */
     public void sortDays() {
-        P_DAYS.sort(this, WorkDay.P_DATE);
+        days.sort(null);
     }
 
     /** An undefined archivation date is not exported and an empty day is skipped. */
     @Override
-    public boolean isExportable(final ExportAction action, final JKey<?,?> key, final Object value) {
+    public boolean isExportable(final ExportAction action, final Key<?,?> key, final Object value) {
         if (action == ExportAction.XML) {
-            if (P_ARCHIVED == key) {
+            if (MetaWorkSpace.archived == key) {
                 return value != null;
             }
-            if (P_DAYS == key && value instanceof final WorkDay workDay) {
-                return WorkDay.P_EVENTS.getItemCount(workDay) > 0;
+            if (MetaWorkSpace.days == key && value instanceof final WorkDay workDay) {
+                return !workDay.getEvents().isEmpty();
             }
         }
         return true;
@@ -291,13 +268,13 @@ public class WorkSpace implements Exportable {
         boolean result = false;
 
         final Date currentDate = new Date();
-        final Date requiredDate = get(P_RELEASE_CHECK_DATE);
+        final Date requiredDate = checkReleaseDate;
 
         if (currentDate.compareTo(requiredDate) >= 0) {
 
             final Version currentVersion = JWorkSheet.APPL_VERSION;
             final Version webVersion = params.getWebRelease();
-            final Version requiredVersion = get(P_RELEASE_CHECK_VERSION);
+            final Version requiredVersion = checkReleaseVersion;
 
             if (webVersion.compareTo(currentVersion) > 0
             &&  webVersion.compareTo(requiredVersion) > 0
@@ -310,12 +287,12 @@ public class WorkSpace implements Exportable {
 
     // ------------------------ KEY ACCESS ------------------------
 
-    public <V> V get(final JKey<WorkSpace,V> key) {
+    public <V> V get(final Key<WorkSpace,V> key) {
         return key.getValue(this);
     }
 
-    public <V> WorkSpace set(final JKey<WorkSpace,V> key, final V value) {
-        key.setValue(this, value);
+    public <V> WorkSpace set(final Key<WorkSpace,V> key, final V value) {
+        Keys.write(key, this, value);
         return this;
     }
 }

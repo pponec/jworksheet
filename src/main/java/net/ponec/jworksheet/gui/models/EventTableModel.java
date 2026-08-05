@@ -17,6 +17,9 @@
 
 package net.ponec.jworksheet.gui.models;
 
+import net.ponec.jworksheet.bo.meta.MetaEvent;
+import net.ponec.jworksheet.bo.meta.MetaParameters;
+
 import java.util.List;
 import javax.swing.SwingUtilities;
 import javax.swing.event.TableModelEvent;
@@ -27,8 +30,8 @@ import net.ponec.jworksheet.bo.Project;
 import net.ponec.jworksheet.bo.TaskType;
 import net.ponec.jworksheet.bo.item.Time;
 import net.ponec.jworksheet.core.ujo.DomainTools;
-import net.ponec.jworksheet.core.ujo.JKey;
-import net.ponec.jworksheet.gui.models.UjoTableModel;
+import net.ponec.jworksheet.core.ujo.Keys;
+import org.ujorm.core.Key;
 
 /**
  * Event Table Model
@@ -38,8 +41,6 @@ public class EventTableModel extends UjoTableModel<Event> {
 
     public static final int ACTION_SELECT_EVENT = 1001;
 
-    /** Properties */
-    public final static Event PROPS = null;
     
     /** Application workSpace */
     protected ApplContext applContext;
@@ -51,25 +52,24 @@ public class EventTableModel extends UjoTableModel<Event> {
      * Creates a new instance of UjoTableModel
      * @param applContext Application Context
      */
-    @SuppressWarnings("static-access")
     public EventTableModel(ApplContext applContext) {
         super
-        ( PROPS.P_TIME
-        , PROPS.P_PERIOD
-        , PROPS.P_PROJ
-        , PROPS.P_TASK
-        , PROPS.P_DESCR
+        ( MetaEvent.time
+        , MetaEvent.period
+        , MetaEvent.project
+        , MetaEvent.task
+        , MetaEvent.descr
         );
         this.applContext = applContext;
     }
     
     /** Is the cell editable? */
     @Override
-    public boolean isCellEditable(int rowIndex, JKey column) {
-        if (Event.P_PERIOD==column) {
+    public boolean isCellEditable(int rowIndex, Key column) {
+        if (MetaEvent.period==column) {
             return rowIndex==(getRowCount()-1);
         } else {
-            return applContext.getParameters().get(Parameters.P_MODIFY_FINESHED_PROJ)
+            return applContext.getParameters().get(MetaParameters.modifyFinishedProject)
             ||   ! getRow(rowIndex).isFinished(column)
             ;
         }
@@ -77,7 +77,7 @@ public class EventTableModel extends UjoTableModel<Event> {
 
     /** Returns a localized Column Name */
     @Override
-    public String getColumnName(JKey property) {
+    public String getColumnName(Key property) {
         return applContext.getLanguageManager().getTextAllways(property);
     }
     
@@ -86,7 +86,7 @@ public class EventTableModel extends UjoTableModel<Event> {
         Event lastRow = getRowLast();
         if (lastRow!=null) {
             // Set the last period:
-            lastRow.setPeriod(row.get(Event.P_TIME));
+            lastRow.setPeriod(row.getStartTime());
         }
         super.addRow(row);
     }
@@ -97,10 +97,10 @@ public class EventTableModel extends UjoTableModel<Event> {
         // Set Default values:
         Project defaultProj = applContext.getWorkSpace().findDefaultProject();
         if (defaultProj!=null) {
-            Event.P_PROJ.setValue(row, defaultProj);
+            MetaEvent.project.setValue(row, defaultProj);
             TaskType defaultTask = defaultProj.findDefaultTask();
             if (defaultTask!=null) {
-                Event.P_TASK.setValue(row, defaultTask);
+                MetaEvent.task.setValue(row, defaultTask);
             }
         }
         insertRow(row);
@@ -125,16 +125,16 @@ public class EventTableModel extends UjoTableModel<Event> {
         int requPeriod; // Required period
         
         if (insertedRow!=null
-        && (requPeriod = insertedRow.get(Event.P_PERIOD)) > 0
+        && (requPeriod = insertedRow.get(MetaEvent.period)) > 0
         && (index = getRowIndex(insertedRow)) > 0
         && (index < getRowCount()-1)
         ){
-            final Time time1 = insertedRow.get(Event.P_TIME);
-            final Time time2 = getRow(index+1).get(Event.P_TIME);
+            final Time time1 = insertedRow.getStartTime();
+            final Time time2 = getRow(index+1).getStartTime();
             int realPeriod = time2.substract(time1);
             if (realPeriod > requPeriod) {
                 Event nextEvent = DomainTools.deepCopy(getRow(index-1), 2);
-                Event.P_TIME.setValue(nextEvent, time1.cloneAdd(requPeriod));
+                nextEvent.setStartTime(time1.cloneAdd(requPeriod));
                 rows.add(index+1, nextEvent);
             }
         }
@@ -145,7 +145,7 @@ public class EventTableModel extends UjoTableModel<Event> {
 
         timeChange = false;
         Event lastRow = getRowLast();
-        super.sort(Event.P_TIME);
+        super.sort(MetaEvent.time);
         
         if (enableInsertAction) {
             performAfterInsertAction(lastRow);
@@ -159,7 +159,7 @@ public class EventTableModel extends UjoTableModel<Event> {
         for (int i=0; i<getRowCount(); i++) {
             Event newEvent = getRow(i);
             if (lastEvent!=null) {
-                lastEvent.setPeriod(newEvent.get(Event.P_TIME));
+                lastEvent.setPeriod(newEvent.getStartTime());
             }
             lastEvent = newEvent;
         }
@@ -171,7 +171,7 @@ public class EventTableModel extends UjoTableModel<Event> {
         int time = 0 ;
         for (Event event : rows) {
             if (!event.isPrivate()) {
-                time += event.get(Event.P_PERIOD);
+                time += event.get(MetaEvent.period);
             }
         }
         return time;
@@ -185,23 +185,33 @@ public class EventTableModel extends UjoTableModel<Event> {
     
     
     @Override
-    public Class getColumnClass(JKey column) {
-        @SuppressWarnings("static-access")
-        final Class result
-        = PROPS.P_PERIOD==column
+    public Class getColumnClass(Key column) {
+            final Class result
+        = MetaEvent.period==column
         ? Object.class
+        : MetaEvent.time==column
+        ? Time.class
         : super.getColumnClass(column)
         ;
         return result;
     }
+
+    /** Returns a value from the cell.
+     * <p>The start time is stored by a short field of the minutes, however the table
+     * presents it as a {@link Time} object. */
+    @Override
+    public Object getValueAt(final int rowIndex, final Key column) {
+        return MetaEvent.time == column
+                ? getRow(rowIndex).getStartTime()
+                : super.getValueAt(rowIndex, column);
+    }
     
     /** Set value to cell. */
     @Override
-    @SuppressWarnings("static-access")
-    public void setValueAt(Object value, int rowIndex, JKey column) {
+    public void setValueAt(Object value, int rowIndex, Key column) {
         
         // Convert a decimal value to minutes:
-        if (PROPS.P_PERIOD==column) {
+        if (MetaEvent.period==column) {
             String data = String.valueOf(value);
             
             final int timeSeparator = data.indexOf(':');
@@ -219,26 +229,31 @@ public class EventTableModel extends UjoTableModel<Event> {
             }
             
             // Test:
-            getRow(rowIndex).get(PROPS.P_TIME).cloneAdd((Short)value);
+            getRow(rowIndex).getStartTime().cloneAdd((Short) value);
         }
-        else if (PROPS.P_TIME==column
-        ||       PROPS.P_PROJ==column // a case PRIVATE state change
+        else if (MetaEvent.time==column
+        ||       MetaEvent.project==column // a case PRIVATE state change
         ){
             // the time change listener
             timeChange=true;
         }
         
-        if (column==Event.P_PROJ
+        if (column==MetaEvent.project
         &&  value!=null
         &&  value!=getValueAt(rowIndex, column)
         ){
             TaskType taskType = ((Project) value).findDefaultTask();
-            super.setValueAt(taskType, rowIndex, Event.P_TASK);
+            super.setValueAt(taskType, rowIndex, MetaEvent.task);
         }
-        super.setValueAt(value, rowIndex, column);
+        if (MetaEvent.time == column && value instanceof final Time startTime) {
+            getRow(rowIndex).setStartTime(startTime);
+            fireTableCellUpdated(rowIndex, getColumnIndex(column));
+        } else {
+            super.setValueAt(value, rowIndex, column);
+        }
 
         if (timeChange 
-        && applContext.getParameters().get(Parameters.P_AUTOMATIC_SORTING_BY_TIME)) {
+        && applContext.getParameters().get(MetaParameters.automaticSortingByTime)) {
             final Event e = getRow(rowIndex);
 
             SwingUtilities.invokeLater(new Runnable() {

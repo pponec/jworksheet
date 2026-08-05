@@ -17,6 +17,8 @@
 
 package net.ponec.jworksheet.gui;
 
+import net.ponec.jworksheet.bo.meta.MetaParameters;
+
 import java.awt.event.ActionEvent;
 import java.io.File;
 import java.util.logging.Logger;
@@ -52,7 +54,7 @@ public class BrowserDialog extends TopDialog {
         setSize(450, 130);
         getRootPane().setDefaultButton(bOK);
 
-        if (!applContext.getParameters().get(Parameters.P_HIDE_ICONS)) {
+        if (!applContext.getParameters().get(MetaParameters.hideButtonIcons)) {
             ResourceProvider rp = new ResourceProvider();
             bOK.setIcon    (rp.getIcon(ResourceProvider.IMG_OK));
             bCancel.setIcon(rp.getIcon(ResourceProvider.IMG_CANCEL));

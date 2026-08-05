@@ -25,6 +25,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.util.Properties;
+import org.ujorm.core.Key;
 
 /**
  * A serialization of a domain object to a {@link Properties} file and back.
@@ -51,13 +52,13 @@ public final class BundleManager {
         final Properties properties = new Properties();
         final Exportable filter = domain instanceof final Exportable e ? e : null;
 
-        for (JKey<D, ?> key : keysOf(domain)) {
+        for (Key<D, ?> key : keysOf(domain)) {
             final Object value = key.getValue(domain);
             if (value == null) {
                 continue;
             }
             if (filter == null || filter.isExportable(ExportAction.RESOURCE_BUNDLE, key, value)) {
-                properties.setProperty(key.getName(), ValueCoder.encode(value));
+                properties.setProperty(Keys.nameOf(key), ValueCoder.encode(key, value));
             }
         }
         try (OutputStream os = new BufferedOutputStream(new FileOutputStream(file))) {
@@ -79,32 +80,23 @@ public final class BundleManager {
         final Properties properties = new Properties();
         properties.load(is);
 
-        final D result = newInstance(domainClass);
-        for (JKey<D, ?> key : JKey.keysOf(domainClass)) {
-            final String text = properties.getProperty(key.getName());
+        final D result = Keys.newInstance(domainClass);
+        for (Key<D, ?> key : Keys.keysOf(domainClass)) {
+            final String text = properties.getProperty(Keys.nameOf(key));
             if (text != null) {
-                setValue(key, result, ValueCoder.decode(key.getType(), text));
+                setValue(key, result, ValueCoder.decode(key, text));
             }
         }
         return result;
     }
 
     @SuppressWarnings({"unchecked", "rawtypes"})
-    private static <D> void setValue(final JKey<D, ?> key, final D domain, final Object value) {
-        ((JKey) key).setValue(domain, value);
+    private static <D> void setValue(final Key<D, ?> key, final D domain, final Object value) {
+        Keys.write((Key) key, domain, value);
     }
 
     @SuppressWarnings("unchecked")
-    private static <D> Iterable<JKey<D, ?>> keysOf(final D domain) {
-        return JKey.keysOf((Class<D>) domain.getClass());
-    }
-
-    private static <D> D newInstance(final Class<D> domainClass) {
-        try {
-            return domainClass.getDeclaredConstructor().newInstance();
-        } catch (ReflectiveOperationException e) {
-            throw new IllegalStateException("A domain class requires a public constructor"
-                    + " without arguments: " + domainClass.getName(), e);
-        }
+    private static <D> Iterable<Key<D, ?>> keysOf(final D domain) {
+        return Keys.keysOf((Class<D>) domain.getClass());
     }
 }

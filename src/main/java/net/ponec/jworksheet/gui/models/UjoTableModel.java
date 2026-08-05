@@ -22,11 +22,12 @@ import java.util.List;
 import javax.swing.event.TableModelEvent;
 import javax.swing.table.AbstractTableModel;
 import net.ponec.jworksheet.core.ujo.DomainTools;
-import net.ponec.jworksheet.core.ujo.JKey;
+import net.ponec.jworksheet.core.ujo.Keys;
+import org.ujorm.core.Key;
 import net.ponec.jworksheet.core.ujo.UjoComparator;
 
 /**
- * A table model of the domain objects where a column is described by a {@link JKey}.
+ * A table model of the domain objects where a column is described by a {@link Key}.
  * The class replaces the {@code org.ujorm.swing.UjoTableModel} of the original
  * Ujorm implementation.
  *
@@ -40,20 +41,20 @@ public class UjoTableModel<ROW> extends AbstractTableModel {
     public static final int EVENT_REPAINT_HEADER = 1000;
 
     /** Columns of the table. */
-    protected JKey[] columns;
+    protected Key[] columns;
 
     /** Rows of the table. */
     protected List<ROW> rows;
 
     /** Creates a new instance for the required columns. */
-    public UjoTableModel(final JKey... columns) {
+    public UjoTableModel(final Key... columns) {
         this.columns = columns;
         initData();
     }
 
     /** Creates a new instance for all the keys of the domain class. */
     public UjoTableModel(final Class<ROW> domainClass) {
-        this(JKey.keysOf(domainClass).toArray(new JKey[0]));
+        this(Keys.keysOf(domainClass).toArray(new Key[0]));
     }
 
     /** An Initialization */
@@ -81,12 +82,12 @@ public class UjoTableModel<ROW> extends AbstractTableModel {
     }
 
     /** Convert a column index to a key. */
-    public JKey getColumn(final int columnIndex) {
+    public Key getColumn(final int columnIndex) {
         return columns[columnIndex];
     }
 
     /** Set columns into table */
-    public void setColumns(final JKey... columns) {
+    public void setColumns(final Key... columns) {
         this.columns = columns;
         fireTableStructureChanged();
     }
@@ -136,33 +137,33 @@ public class UjoTableModel<ROW> extends AbstractTableModel {
     }
 
     /** Returns a value from the cell. */
-    public Object getValueAt(final int rowIndex, final JKey column) {
+    public Object getValueAt(final int rowIndex, final Key column) {
         return column.getValue(rows.get(rowIndex));
     }
 
     /** Set a value to a cell of table model. */
-    public void setValueAt(final Object value, final int rowIndex, final JKey column) {
+    public void setValueAt(final Object value, final int rowIndex, final Key column) {
         column.setValue(getRow(rowIndex), value);
         fireTableCellUpdated(rowIndex, getColumnIndex(column));
     }
 
     /** Column Name */
-    public String getColumnName(final JKey column) {
-        return column.getName();
+    public String getColumnName(final Key column) {
+        return Keys.nameOf(column);
     }
 
     /** Is the cell editable? */
-    public boolean isCellEditable(final int rowIndex, final JKey column) {
+    public boolean isCellEditable(final int rowIndex, final Key column) {
         return true;
     }
 
     /** Returns the most specific superclass for all the cell values in the column. */
-    public Class getColumnClass(final JKey column) {
-        return column.getType();
+    public Class getColumnClass(final Key column) {
+        return Keys.typeOf(column);
     }
 
     /** Returns a table column index. */
-    public int getColumnIndex(final JKey column) {
+    public int getColumnIndex(final Key column) {
         for (int i = columns.length - 1; i >= 0; i--) {
             if (columns[i] == column) {
                 return i;
@@ -216,7 +217,7 @@ public class UjoTableModel<ROW> extends AbstractTableModel {
     // ------------------------ UTILS ------------------------
 
     /** Sort data by a key list. A key value must be comparable. */
-    public void sort(final JKey... keys) {
+    public void sort(final Key... keys) {
         sort(UjoComparator.<ROW>newInstance(keys));
     }
 
@@ -232,7 +233,7 @@ public class UjoTableModel<ROW> extends AbstractTableModel {
     }
 
     /** Fire a sign, that the column was updated. */
-    public void fireTableColumnUpdated(final JKey column) {
+    public void fireTableColumnUpdated(final Key column) {
         final int columnIndex = getColumnIndex(column);
         for (int i = getRowCount() - 1; i >= 0; i--) {
             fireTableCellUpdated(i, columnIndex);

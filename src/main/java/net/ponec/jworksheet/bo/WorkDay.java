@@ -24,9 +24,9 @@ import net.ponec.jworksheet.bo.item.YearMonthDay;
 import net.ponec.jworksheet.bo.meta.MetaWorkDay;
 import net.ponec.jworksheet.core.ujo.ExportAction;
 import net.ponec.jworksheet.core.ujo.Exportable;
-import net.ponec.jworksheet.core.ujo.JKey;
-import net.ponec.jworksheet.core.ujo.JListKey;
+import net.ponec.jworksheet.core.ujo.Keys;
 import org.ujorm.annotation.Domain;
+import org.ujorm.core.Key;
 
 /**
  * One Work Day
@@ -35,13 +35,6 @@ import org.ujorm.annotation.Domain;
  */
 @Domain
 public class WorkDay implements Comparable<WorkDay>, Exportable {
-
-    /** A work day */
-    public static final JKey<WorkDay,YearMonthDay> P_DATE   = JKey.of(MetaWorkDay.date);
-    /** A day off work */
-    public static final JKey<WorkDay,Boolean>      P_DAYOFF = JKey.of(MetaWorkDay.dayOff);
-    /** List of events */
-    public static final JListKey<WorkDay,Event>    P_EVENTS = JListKey.of(MetaWorkDay.events, Event.class);
 
     @Column(name = "Date")
     private YearMonthDay date;
@@ -82,27 +75,27 @@ public class WorkDay implements Comparable<WorkDay>, Exportable {
 
     /** A day off flag is exported for a true value only. */
     @Override
-    public boolean isExportable(final ExportAction action, final JKey<?,?> key, final Object value) {
-        if (action == ExportAction.XML && key == P_DAYOFF) {
+    public boolean isExportable(final ExportAction action, final Key<?,?> key, final Object value) {
+        if (action == ExportAction.XML && key == MetaWorkDay.dayOff) {
             return Boolean.TRUE.equals(value);
         }
         return true;
     }
 
-    /** Compare to another WorkDay by a P_DATE. */
+    /** Compare to another WorkDay by its date. */
     @Override
     public int compareTo(final WorkDay o) {
-        return get(P_DATE).compareTo(o.get(P_DATE));
+        return date.compareTo(o.getDate());
     }
 
     // ------------------------ KEY ACCESS ------------------------
 
-    public <V> V get(final JKey<WorkDay,V> key) {
+    public <V> V get(final Key<WorkDay,V> key) {
         return key.getValue(this);
     }
 
-    public <V> WorkDay set(final JKey<WorkDay,V> key, final V value) {
-        key.setValue(this, value);
+    public <V> WorkDay set(final Key<WorkDay,V> key, final V value) {
+        Keys.write(key, this, value);
         return this;
     }
 }

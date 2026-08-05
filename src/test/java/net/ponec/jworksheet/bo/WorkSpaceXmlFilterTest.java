@@ -16,6 +16,10 @@
 
 package net.ponec.jworksheet.bo;
 
+import net.ponec.jworksheet.bo.meta.MetaEvent;
+import net.ponec.jworksheet.bo.meta.MetaWorkDay;
+import net.ponec.jworksheet.bo.meta.MetaWorkSpace;
+
 import net.ponec.jworksheet.core.Version;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -40,10 +44,10 @@ public class WorkSpaceXmlFilterTest extends XmlTestSupport {
         project = newProject(3, "Water the garden", task);
 
         workSpace = newWorkSpace()
-                .set(WorkSpace.P_VERSN, new Version("1.00"))
-                .set(WorkSpace.P_USERNAME, "Pavel");
-        WorkSpace.P_PROJS.addItem(workSpace, project);
-        WorkSpace.P_DAYS.addItem(workSpace, newDay("2021-03-14"
+                .set(MetaWorkSpace.version, new Version("1.00"))
+                .set(MetaWorkSpace.username, "Pavel");
+        workSpace.getProjects().add(project);
+        workSpace.getDays().add(newDay("2021-03-14"
                 , newEvent("08:00", 240, project, task, "Watering")));
     }
 
@@ -64,18 +68,18 @@ public class WorkSpaceXmlFilterTest extends XmlTestSupport {
     @Test
     @DisplayName("The identifiers are kept in sync with the assigned objects")
     public void identifiersFollowTheObjects() {
-        final Event event = WorkDay.P_EVENTS.getItem(WorkSpace.P_DAYS.getItem(workSpace, 0), 0);
+        final Event event = workSpace.getDays().get(0).getEvents().get(0);
 
         // Assigning a project or a task assigns its identifier too:
         assertEquals(Integer.valueOf(3), event.getProjectId(), "The identifier of the project");
         assertEquals(Integer.valueOf(1), event.getTaskId(), "The identifier of the task");
 
         // ... and the keys provide the same values:
-        assertEquals(Integer.valueOf(3), event.get(Event.P_PROJID));
-        assertEquals(Integer.valueOf(1), event.get(Event.P_TASKID));
+        assertEquals(Integer.valueOf(3), event.get(MetaEvent.projectId));
+        assertEquals(Integer.valueOf(1), event.get(MetaEvent.taskId));
 
         // A cleared reference clears its identifier as well:
-        event.set(Event.P_TASK, null);
+        event.set(MetaEvent.task, null);
         assertNull(event.getTaskId());
     }
 
@@ -83,25 +87,25 @@ public class WorkSpaceXmlFilterTest extends XmlTestSupport {
     @DisplayName("The assingTasks() method restores the references after a loading")
     public void identifiersAreSyncedAfterLoading() {
         final WorkSpace result = reload(workSpace);
-        final Event event = WorkDay.P_EVENTS.getItem(WorkSpace.P_DAYS.getItem(result, 0), 0);
+        final Event event = result.getDays().get(0).getEvents().get(0);
 
-        assertNotNull(event.get(Event.P_PROJ));
-        assertNotNull(event.get(Event.P_TASK));
+        assertNotNull(event.get(MetaEvent.project));
+        assertNotNull(event.get(MetaEvent.task));
 
         // The identifiers of the assigned objects are available again:
         assertEquals(Integer.valueOf(3), event.getProjectId());
         assertEquals(Integer.valueOf(1), event.getTaskId());
-        assertEquals(Integer.valueOf(3), event.get(Event.P_PROJID));
-        assertEquals(Integer.valueOf(1), event.get(Event.P_TASKID));
+        assertEquals(Integer.valueOf(3), event.get(MetaEvent.projectId));
+        assertEquals(Integer.valueOf(1), event.get(MetaEvent.taskId));
     }
 
     @Test
     @DisplayName("A negative period is normalized to the zero before the export")
     public void negativePeriodIsNormalized() {
-        final Event event = WorkDay.P_EVENTS.getItem(WorkSpace.P_DAYS.getItem(workSpace, 0), 0);
-        event.set(Event.P_PERIOD, (short) -30);
+        final Event event = workSpace.getDays().get(0).getEvents().get(0);
+        event.set(MetaEvent.period, (short) -30);
 
-        assertEquals(Event.ZERO_SHORT, event.get(Event.P_PERIOD));
+        assertEquals(Event.ZERO_SHORT, event.get(MetaEvent.period));
         assertEquals("0", elementBody(toXml(workSpace), "Period"));
     }
 
@@ -110,25 +114,25 @@ public class WorkSpaceXmlFilterTest extends XmlTestSupport {
     public void archivedDateFilter() {
         assertTrue(hasElement(toXml(workSpace), "Archived"));
 
-        workSpace.set(WorkSpace.P_ARCHIVED, null);
+        workSpace.set(MetaWorkSpace.archived, null);
         assertFalse(hasElement(toXml(workSpace), "Archived"));
     }
 
     @Test
     @DisplayName("An empty day is not exported")
     public void emptyDayFilter() {
-        WorkSpace.P_DAYS.addItem(workSpace, newDay("2021-03-15"));
-        assertEquals(2, WorkSpace.P_DAYS.getItemCount(workSpace));
+        workSpace.getDays().add(newDay("2021-03-15"));
+        assertEquals(2, workSpace.getDays().size());
         assertEquals(1, countElements(toXml(workSpace), "Day"));
     }
 
     @Test
     @DisplayName("The DayOff flag is exported for a true value only")
     public void dayOffFilter() {
-        final WorkDay day = WorkSpace.P_DAYS.getItem(workSpace, 0);
+        final WorkDay day = workSpace.getDays().get(0);
 
         assertFalse(hasElement(toXml(workSpace), "DayOff"));
-        day.set(WorkDay.P_DAYOFF, true);
+        day.set(MetaWorkDay.dayOff, true);
         assertTrue(hasElement(toXml(workSpace), "DayOff"));
     }
 

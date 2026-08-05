@@ -26,6 +26,7 @@ import net.ponec.jworksheet.bo.WorkSpace;
 import net.ponec.jworksheet.gui.models.UjoKeyRow;
 import net.ponec.jworksheet.report.TaskGroup;
 import org.junit.jupiter.api.DisplayName;
+import org.ujorm.core.Key;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ValueSource;
 
@@ -52,14 +53,14 @@ public class DomainMetamodelTest {
             })
     @DisplayName("A metamodel of every domain class can be created")
     public void metamodelIsAvailable(final Class<?> domainClass) {
-        final List<? extends JKey<?,?>> keys = assertDoesNotThrow
-                (() -> JKey.keysOf(domainClass)
+        final List<? extends Key<?,?>> keys = assertDoesNotThrow
+                (() -> Keys.keysOf(domainClass)
                 , "The metamodel generator failed for " + domainClass.getName());
 
         assertFalse(keys.isEmpty(), "No key was declared");
-        for (JKey<?,?> key : keys) {
-            assertNotNull(key.getName(), "A key name is required");
-            assertNotNull(key.getType(), "A key type is required");
+        for (Key<?,?> key : keys) {
+            assertNotNull(Keys.nameOf(key), "A key name is required");
+            assertNotNull(Keys.typeOf(key), "A key type is required");
         }
     }
 
@@ -74,8 +75,8 @@ public class DomainMetamodelTest {
             })
     @DisplayName("A default value of every persistent key is readable from a prototype")
     public void defaultValuesAreReadable(final Class<?> domainClass) {
-        for (JKey<?,?> key : JKey.keysOf(domainClass)) {
-            assertDoesNotThrow(key::getDefault, "Can't read a default of " + key);
+        for (Key<?,?> key : Keys.keysOf(domainClass)) {
+            assertDoesNotThrow(() -> Keys.defaultOf(key), "Can't read a default of " + key);
         }
     }
 }

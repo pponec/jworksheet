@@ -16,6 +16,8 @@
 
 package net.ponec.jworksheet.core.ujo;
 
+import net.ponec.jworksheet.bo.meta.MetaParameters;
+
 import java.awt.Rectangle;
 import java.io.File;
 import java.nio.charset.StandardCharsets;
@@ -45,7 +47,7 @@ public class BundleManagerTest {
     @DisplayName("Only the modified values are stored, the default ones are skipped")
     public void defaultValuesAreSkipped() throws Exception {
         final Parameters params = new Parameters();
-        params.set(Parameters.P_WINDOW_SIZE, new Rectangle(649, 397, 622, 405));
+        params.set(MetaParameters.windowSize, new Rectangle(649, 397, 622, 405));
 
         final File file = newFile();
         BundleManager.save(file, params, "A test:");
@@ -60,21 +62,21 @@ public class BundleManagerTest {
     @DisplayName("The modified values survive the round trip")
     public void roundTrip() throws Exception {
         final Parameters params = new Parameters()
-                .set(Parameters.P_WORKING_HOURS, 7.5f)
-                .set(Parameters.P_FIRST_DAY_OF_WEEK, 3)
-                .set(Parameters.P_EXIT_EVENT_DESCR, "Odchod")
-                .set(Parameters.P_SYSTRAY_SECOND_CLICK, SysTray.Action.EVENT)
-                .set(Parameters.P_HIDE_ICONS, true);
+                .set(MetaParameters.workingHours, 7.5f)
+                .set(MetaParameters.firstDayOfWeek, 3)
+                .set(MetaParameters.exitEventDescription, "Odchod")
+                .set(MetaParameters.systemTraySecondClick, SysTray.Action.EVENT)
+                .set(MetaParameters.hideButtonIcons, true);
 
         final File file = newFile();
         BundleManager.save(file, params, "A test:");
         final Parameters result = BundleManager.load(file, Parameters.class);
 
-        assertEquals(7.5f, result.get(Parameters.P_WORKING_HOURS));
-        assertEquals(3, result.get(Parameters.P_FIRST_DAY_OF_WEEK));
-        assertEquals("Odchod", result.get(Parameters.P_EXIT_EVENT_DESCR));
-        assertEquals(SysTray.Action.EVENT, result.get(Parameters.P_SYSTRAY_SECOND_CLICK));
-        assertTrue(result.get(Parameters.P_HIDE_ICONS));
+        assertEquals(7.5f, result.get(MetaParameters.workingHours));
+        assertEquals(3, result.get(MetaParameters.firstDayOfWeek));
+        assertEquals("Odchod", result.get(MetaParameters.exitEventDescription));
+        assertEquals(SysTray.Action.EVENT, result.get(MetaParameters.systemTraySecondClick));
+        assertTrue(result.get(MetaParameters.hideButtonIcons));
     }
 
     @Test
@@ -85,17 +87,17 @@ public class BundleManagerTest {
 
         final Parameters result = BundleManager.load(file, Parameters.class);
 
-        assertTrue(result.get(Parameters.P_HIDE_ICONS), "The stored value");
-        assertEquals(Parameters.P_WORKING_HOURS.getDefault(), result.get(Parameters.P_WORKING_HOURS));
-        assertEquals(Parameters.P_EXIT_EVENT_DESCR.getDefault(), result.get(Parameters.P_EXIT_EVENT_DESCR));
+        assertTrue(result.get(MetaParameters.hideButtonIcons), "The stored value");
+        assertEquals(Keys.defaultOf(MetaParameters.workingHours), result.get(MetaParameters.workingHours));
+        assertEquals(Keys.defaultOf(MetaParameters.exitEventDescription), result.get(MetaParameters.exitEventDescription));
     }
 
     @Test
     @DisplayName("A saved file is loaded to an equal state")
     public void savingIsIdempotent() throws Exception {
         final Parameters params = new Parameters()
-                .set(Parameters.P_WORKING_HOURS, 6f)
-                .set(Parameters.P_WINDOW_SIZE, new Rectangle(1, 2, 3, 4));
+                .set(MetaParameters.workingHours, 6f)
+                .set(MetaParameters.windowSize, new Rectangle(1, 2, 3, 4));
 
         final File first = tempDir.resolve("first.properties").toFile();
         final File second = tempDir.resolve("second.properties").toFile();

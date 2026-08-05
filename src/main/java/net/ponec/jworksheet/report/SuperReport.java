@@ -9,6 +9,10 @@
 
 package net.ponec.jworksheet.report;
 
+import net.ponec.jworksheet.bo.meta.MetaParameters;
+import net.ponec.jworksheet.bo.meta.MetaWorkDay;
+import net.ponec.jworksheet.bo.meta.MetaWorkSpace;
+
 import java.io.IOException;
 import java.util.List;
 import net.ponec.jworksheet.core.ApplContext;
@@ -22,7 +26,8 @@ import net.ponec.jworksheet.bo.item.YearMonthDay;
 import net.ponec.jworksheet.core.LanguageManager;
 import net.ponec.jworksheet.gui.JWorkSheet;
 import net.ponec.jworksheet.resources.ResourceProvider;
-import net.ponec.jworksheet.core.ujo.JKey;
+import net.ponec.jworksheet.core.ujo.Keys;
+import org.ujorm.core.Key;
 
 /**
  * Standard report
@@ -45,8 +50,8 @@ public abstract class SuperReport implements Calculator {
     /** Translate key pro Key */
     protected String getText(CharSequence key) {
         LanguageManager lm = applContext.getLanguageManager();
-        if (key instanceof JKey) {
-            return lm.getTextAllways((JKey) key);
+        if (key instanceof Key) {
+            return lm.getTextAllways((Key) key);
         } else {
             return lm.getTextAllways(key.toString());
         }
@@ -64,16 +69,16 @@ public abstract class SuperReport implements Calculator {
         init();
         
         // Loop:
-        for(WorkDay workDay : applContext.getWorkSpace().get(WorkSpace.P_DAYS)) {
-            YearMonthDay ymd = workDay.get(WorkDay.P_DATE);
+        for(WorkDay workDay : applContext.getWorkSpace().getDays()) {
+            YearMonthDay ymd = workDay.get(MetaWorkDay.date);
             if (ymd.compareTo(dateFrom)>=0
             &&  ymd.compareTo(dateTo  )<=0
-            &&  WorkDay.P_EVENTS.getItemCount(workDay)>0
+            &&  workDay.getEvents().size()>0
             ){
-                if (!workDay.get(WorkDay.P_DAYOFF)) {
+                if (!workDay.get(MetaWorkDay.dayOff)) {
                     ++workDayCount;
                 }
-                for (Event event : workDay.get(WorkDay.P_EVENTS)) {
+                for (Event event : workDay.getEvents()) {
                     calculate(workDay, event);
                 }
             }
@@ -173,7 +178,7 @@ public abstract class SuperReport implements Calculator {
     /** Create HTML report */
     public String getReport(String body, String title ) {
 
-        String username = applContext.getParameters().get(Parameters.P_USERNAME);
+        String username = applContext.getParameters().get(MetaParameters.username);
 
         if (title==null) {
             title = JWorkSheet.APPL_NAME + " Report for " + username;
@@ -188,9 +193,9 @@ public abstract class SuperReport implements Calculator {
          , "<meta http-equiv=\"Content-Type\" content=\"text/html; charset=UTF-8\">"
          , "<title>" + escape(title) + "</title>"
          , "<meta name=\"Generator\" content=\""+JWorkSheet.APPL_NAME+"\" />"
-         , "<link rel=\"stylesheet\" type=\"text/css\" href=\""+Parameters.P_REPORT_CSS.getDefault()                    +"\" />"
+         , "<link rel=\"stylesheet\" type=\"text/css\" href=\""+Keys.defaultOf(MetaParameters.reportCss)                    +"\" />"
          //, "<!-- A style from an application setup -- >"
-         , "<link rel=\"stylesheet\" type=\"text/css\" href=\""+applContext.getParameters().get(Parameters.P_REPORT_CSS)+"\" />"
+         , "<link rel=\"stylesheet\" type=\"text/css\" href=\""+applContext.getParameters().get(MetaParameters.reportCss)+"\" />"
          , "</head>"
          , "<body>"
          , "<h2 style=\"margin-bottom:0px;\">" + escape(title) + "</h2>"
@@ -231,10 +236,10 @@ public abstract class SuperReport implements Calculator {
     
     /** Is the day a DayOff? */
     protected boolean isDayOff(YearMonthDay aDay) {
-        final List<WorkDay> days = WorkSpace.P_DAYS.getList(applContext.getWorkSpace());
+        final List<WorkDay> days = applContext.getWorkSpace().getDays();
         for(WorkDay day : days) {
-            if (WorkDay.P_DATE.equals(day, aDay)) {
-                final boolean result = day.get(WorkDay.P_DAYOFF);
+            if (MetaWorkDay.date.equals(day, aDay)) {
+                final boolean result = day.get(MetaWorkDay.dayOff);
                 return result;
             }
         }

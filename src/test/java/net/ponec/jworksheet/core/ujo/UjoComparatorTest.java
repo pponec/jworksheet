@@ -16,6 +16,8 @@
 
 package net.ponec.jworksheet.core.ujo;
 
+import net.ponec.jworksheet.bo.meta.MetaTaskType;
+
 import java.util.ArrayList;
 import java.util.List;
 import net.ponec.jworksheet.bo.TaskType;
@@ -30,7 +32,7 @@ import static org.junit.jupiter.api.Assertions.*;
 public class UjoComparatorTest {
 
     private static TaskType newTask(final int id, final String descr) {
-        return new TaskType().set(TaskType.P_ID, id).set(TaskType.P_DESCR, descr);
+        return new TaskType().set(MetaTaskType.id, id).set(MetaTaskType.descr, descr);
     }
 
     @Test
@@ -41,19 +43,19 @@ public class UjoComparatorTest {
                 , newTask(1, "Charlie")
                 , newTask(2, "Alfa")));
 
-        UjoComparator.<TaskType>newInstance(TaskType.P_ID, TaskType.P_DESCR).sort(list);
+        UjoComparator.<TaskType>newInstance(MetaTaskType.id, MetaTaskType.descr).sort(list);
 
-        assertEquals("Charlie", list.get(0).get(TaskType.P_DESCR));
-        assertEquals("Alfa", list.get(1).get(TaskType.P_DESCR));
-        assertEquals("Bravo", list.get(2).get(TaskType.P_DESCR));
+        assertEquals("Charlie", list.get(0).get(MetaTaskType.descr));
+        assertEquals("Alfa", list.get(1).get(MetaTaskType.descr));
+        assertEquals("Bravo", list.get(2).get(MetaTaskType.descr));
     }
 
     @Test
     @DisplayName("An undefined value is the first one")
     public void undefinedValueIsFirst() {
-        final UjoComparator<TaskType> comparator = UjoComparator.newInstance(TaskType.P_DESCR);
+        final UjoComparator<TaskType> comparator = UjoComparator.newInstance(MetaTaskType.descr);
         final TaskType undefined = newTask(1, null); // The setter stores an empty text
-        undefined.set(TaskType.P_DESCR, null);
+        undefined.set(MetaTaskType.descr, null);
 
         final TaskType defined = newTask(2, "Alfa");
         assertTrue(comparator.compare(undefined, defined) < 0);
@@ -63,7 +65,7 @@ public class UjoComparatorTest {
     @Test
     @DisplayName("The equals() method compares the selected keys only")
     public void equalsBySelectedKeys() {
-        final UjoComparator<TaskType> comparator = UjoComparator.newInstance(TaskType.P_ID);
+        final UjoComparator<TaskType> comparator = UjoComparator.newInstance(MetaTaskType.id);
 
         assertTrue(comparator.equals(newTask(1, "Alfa"), newTask(1, "Bravo")), "The same identifier");
         assertFalse(comparator.equals(newTask(1, "Alfa"), newTask(2, "Alfa")), "A different identifier");
@@ -73,7 +75,7 @@ public class UjoComparatorTest {
     @DisplayName("A comparison of the equal items provides the zero")
     public void equalItems() {
         final UjoComparator<TaskType> comparator = UjoComparator
-                .newInstance(TaskType.P_ID, TaskType.P_DESCR);
+                .newInstance(MetaTaskType.id, MetaTaskType.descr);
         assertEquals(0, comparator.compare(newTask(7, "Alfa"), newTask(7, "Alfa")));
     }
 }

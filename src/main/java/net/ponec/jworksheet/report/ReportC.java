@@ -17,6 +17,8 @@
 
 package net.ponec.jworksheet.report;
 
+import net.ponec.jworksheet.bo.meta.MetaWorkDay;
+
 import java.io.IOException;
 import net.ponec.jworksheet.core.MessageException;
 import net.ponec.jworksheet.bo.Event;
@@ -56,8 +58,8 @@ public class ReportC extends SuperReport {
         }
         report.init
         ( applContext
-        , lastWorkDay.get(WorkDay.P_DATE)
-        , lastWorkDay.get(WorkDay.P_DATE)
+        , lastWorkDay.get(MetaWorkDay.date)
+        , lastWorkDay.get(MetaWorkDay.date)
         , reportTitle
         );
         
