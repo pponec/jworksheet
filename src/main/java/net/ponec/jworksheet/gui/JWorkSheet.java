@@ -129,12 +129,12 @@ public final class JWorkSheet extends TopFrame {
                     int selectedRow = paramTable.getSelectedRow();
                     if (isVisible() && selectedRow>=0) {
                         final String key
-                            = "param."
-                            + paramTable.getValueAt
-                            ( selectedRow
-                            , paramTable.convertColumnIndexToModel(1)
-                            ).toString()
-                            ;
+                                = "param."
+                                + paramTable.getValueAt
+                                ( selectedRow
+                                        , paramTable.convertColumnIndexToModel(1)
+                                ).toString()
+                                ;
                         descr = applContext.getLanguageManager().getTextAllways(key);
                     }
                     paramDescr.setText(descr);
@@ -156,8 +156,8 @@ public final class JWorkSheet extends TopFrame {
                     final EventTableModel model = (EventTableModel) eventTable.getModel();
                     Key column = e.getColumn()>=0 ? model.getColumn(e.getColumn()) : null ;
                     if (column==null
-                    ||  column==Event.P_PERIOD
-                    ||  column==Event.P_TIME ){
+                            ||  column==Event.P_PERIOD
+                            ||  column==Event.P_TIME ){
                         displayTotalTime();
                     }
                     if (e.getLastRow()>=model.getRowCount()-1) {
@@ -248,7 +248,7 @@ public final class JWorkSheet extends TopFrame {
                 @Override
                 public void windowDeiconified(WindowEvent e) {
                     if (!applContext.isSystrayEnabled()
-                    &&   applContext.isToday()) {
+                            &&   applContext.isToday()) {
                         bSortActionPerformed(null);
                     }
                 }
@@ -1240,7 +1240,7 @@ public final class JWorkSheet extends TopFrame {
 
         // Accesories
         if (applContext.getWorkSpace()!=null
-        &&  tabbedPane.getSelectedComponent()==pWorkSheet
+                &&  tabbedPane.getSelectedComponent()==pWorkSheet
         ){
             setTableEventEditor();
             displaySelectedDay();
@@ -1249,7 +1249,7 @@ public final class JWorkSheet extends TopFrame {
 
         // Parameters
         if (tabbedPane.getSelectedComponent()==pParameters
-        &&  paramTable.getSelectedRow()<0
+                &&  paramTable.getSelectedRow()<0
         ){
             paramTable.selectRow(0);
         }
@@ -1263,23 +1263,23 @@ public final class JWorkSheet extends TopFrame {
 
         eventTable.submitEditMode(true);
         ApplTools.aboutApplication
-        ( this
-        , APPL_NAME
-        , APPL_VERSION
-        , "GNU/GPL 2"
-        , "<a href=\"" + APPL_HOMEPAGE + "\">" + APPL_HOMEPAGE + "</a>"
-        , APPL_RELEASED
-        , "NetBeans 6.1"
-        , "Mark James' icons"
-        + "<br>&nbsp;(Creative Commons Attribution License)"
-        + "<br>&nbsp;<a href=\"http://famfamfam.com\">http://famfamfam.com</a>"
-        , ujo.getSpecificationTitle() + " " + ujo.getSpecificationVersion()
-        + "<br>&nbsp;(Apache License, Version 2.0)"
-        + "<br>&nbsp;<a href=\"http://ujorm.org\">http://ujorm.org</a>"
-        , new ResourceProvider().getIcon(ResourceProvider.LOGO)
-        , ApplTools.createCloseButton(applContext.getLanguageManager().getText("OK"))
-        , applContext.getLanguageManager()
-        );
+                ( this
+                        , APPL_NAME
+                        , APPL_VERSION
+                        , "GNU/GPL 2"
+                        , "<a href=\"" + APPL_HOMEPAGE + "\">" + APPL_HOMEPAGE + "</a>"
+                        , APPL_RELEASED
+                        , "NetBeans 6.1"
+                        , "Mark James' icons"
+                                + "<br>&nbsp;(Creative Commons Attribution License)"
+                                + "<br>&nbsp;<a href=\"http://famfamfam.com\">http://famfamfam.com</a>"
+                        , ujo.getSpecificationTitle() + " " + ujo.getSpecificationVersion()
+                                + "<br>&nbsp;(Apache License, Version 2.0)"
+                                + "<br>&nbsp;<a href=\"http://ujorm.org\">http://ujorm.org</a>"
+                        , new ResourceProvider().getIcon(ResourceProvider.LOGO)
+                        , ApplTools.createCloseButton(applContext.getLanguageManager().getText("OK"))
+                        , applContext.getLanguageManager()
+                );
     }//GEN-LAST:event_bAboutActionPerformed
 
     private void bTaskReportActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_bTaskReportActionPerformed
@@ -1470,22 +1470,22 @@ public final class JWorkSheet extends TopFrame {
 
         final String NEW_EVENT = "NewEvent";
         ApplTools.registerAction
-        ( KeyStroke.getKeyStroke(KeyEvent.VK_F5, 0)
-        , NEW_EVENT
-        , getRootPane()
-        , new AbstractAction(NEW_EVENT) { public void actionPerformed(ActionEvent e) {
-            createWorkEvent(true);
-        }});
+                ( KeyStroke.getKeyStroke(KeyEvent.VK_F5, 0)
+                        , NEW_EVENT
+                        , getRootPane()
+                        , new AbstractAction(NEW_EVENT) { public void actionPerformed(ActionEvent e) {
+                            createWorkEvent(true);
+                        }});
 
         final String SORT_EVENT = "SortEvent";
         ApplTools.registerAction
-        ( KeyStroke.getKeyStroke(KeyEvent.VK_F6, 0)
-        , SORT_EVENT
-        , getRootPane()
-        , new AbstractAction(SORT_EVENT) { public void actionPerformed(ActionEvent e) {
-            tabbedPane.setSelectedIndex(0);
-            bSortActionPerformed(e);
-        }});
+                ( KeyStroke.getKeyStroke(KeyEvent.VK_F6, 0)
+                        , SORT_EVENT
+                        , getRootPane()
+                        , new AbstractAction(SORT_EVENT) { public void actionPerformed(ActionEvent e) {
+                            tabbedPane.setSelectedIndex(0);
+                            bSortActionPerformed(e);
+                        }});
 
     }
 
@@ -1497,7 +1497,7 @@ public final class JWorkSheet extends TopFrame {
         if (lock) {
             super.setVisible(true);
         } else if (applContext.isToday()) {
-             bSortActionPerformed(null);
+            bSortActionPerformed(null);
         }
     }
 
