@@ -407,23 +407,25 @@ public class ApplContext implements TableModelListener, Runnable, JwsContext {
         return result;
     }
 
-    /** Data File */
+    /** Data File.
+     * <p>An undefined path is replaced by a file of the configuration directory. The value
+     * must be compared by the equals() method, because the default value is read from
+     * a prototype instance of the Parameters, so it is a different object than the value
+     * carried by the parameters of the application. */
     @Override
     public File getDataFile() {
-        File result = MetaParameters.dataFilePath.getValue(getParameters());
-        if (result==Keys.defaultOf(MetaParameters.dataFilePath)) {
-            result = new File(getConfigDir(), FILE_DATA);
-        }
-        return result;
+        return Keys.isDefault(MetaParameters.dataFilePath, getParameters())
+             ? new File(getConfigDir(), FILE_DATA)
+             : MetaParameters.dataFilePath.getValue(getParameters())
+             ;
     }
 
-    /** Shared Projects Data File */
+    /** Shared Projects Data File, see the {@link #getDataFile()} method for the default value. */
     public File getProjectsFile() {
-        File result = MetaParameters.sharedProjectsFilePath.getValue(getParameters());
-        if (result==Keys.defaultOf(MetaParameters.sharedProjectsFilePath)) {
-            result = new File(getConfigDir(), PROJECTS_DATA);
-        }
-        return result;
+        return Keys.isDefault(MetaParameters.sharedProjectsFilePath, getParameters())
+             ? new File(getConfigDir(), PROJECTS_DATA)
+             : MetaParameters.sharedProjectsFilePath.getValue(getParameters())
+             ;
     }
 
     /** Data File for a temporarry usage. */
