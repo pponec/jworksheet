@@ -14,8 +14,8 @@ See the [link](https://pponec.github.io/jworksheet/screenshots/) for more screen
 ### Build
 
 ```shell
-mvn package                # fat jar
-mvn -Pinstallers package   # fat jar + installer in target/dist
+./mvnw package                # fat jar
+./mvnw -Pinstallers package   # fat jar + installer in target/dist
 ```
 
 Installers carry their own runtime: `.dmg` (macOS), `.msi` (WiX 3, Windows),
