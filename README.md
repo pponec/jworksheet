@@ -11,6 +11,16 @@ Application offers some completed work sheet reports, however you can create you
 
 See the [link](https://pponec.github.io/jworksheet/screenshots/) for more screenshots.
 
+### Build
+
+```shell
+mvn package                # fat jar
+mvn -Pinstallers package   # fat jar + installer in target/dist
+```
+
+Installers carry their own runtime: `.dmg` (macOS), `.msi` (WiX 3, Windows),
+`.deb` (`fakeroot`, Linux). CI runs the same target after the Maven build and
+refreshes `latest`.
 
 ### Links
 
