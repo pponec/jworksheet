@@ -1,0 +1,102 @@
+# Builds the installer by running `mvn -Pinstallers package`, which drives
+# jpackage through jpackage-maven-plugin. The installer type follows the host:
+# deb on Linux, msi on Windows, dmg on macOS.
+#
+# Runs only after "Java CI with Maven" succeeded, so nothing is packaged from a
+# tree whose tests did not pass.
+#
+# Artifacts expire after one day, which is GitHub's minimum. Every run therefore
+# also refreshes a rolling pre-release tagged "latest" that holds exactly one
+# file per platform, so the newest MSI / DMG / DEB is always at one URL and older
+# builds never pile up.
+#
+# macOS: the dmg is ad-hoc signed, which is enough to launch it. A downloaded app
+# is still marked with com.apple.quarantine, and that flag is attached by the
+# browser *after* the download, so no build step can strip it; the user removes
+# it once with: xattr -dr com.apple.quarantine /Applications/jWorkSheet.app
+
+name: Package
+
+on:
+  workflow_run:
+    workflows: ["Java CI with Maven"]
+    types: [completed]
+    branches: [master]
+  workflow_dispatch:
+
+concurrency:
+  group: package-${{ github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  contents: write
+
+jobs:
+
+  package:
+    name: Package (${{ matrix.os }})
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, windows-latest, macos-latest]
+    runs-on: ${{ matrix.os }}
+    if: github.event_name == 'workflow_dispatch' || github.event.workflow_run.conclusion == 'success'
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          ref: ${{ github.event.workflow_run.head_sha || github.sha }}
+
+      - uses: actions/setup-java@b843ebf9b913146b38da2eaa7aeddf76074ae1ad # v6.1.0
+        with:
+          distribution: temurin
+          java-version: '21'
+          cache: maven
+
+      - name: Bundler prerequisites (Linux)
+        if: runner.os == 'Linux'
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y --no-install-recommends fakeroot rpm
+
+      # jpackage delegates MSI creation to WiX, and only to WiX 3.x.
+      - name: Bundler prerequisites (Windows)
+        if: runner.os == 'Windows'
+        shell: pwsh
+        run: |
+          if (-not (Get-Command candle.exe -ErrorAction SilentlyContinue)) {
+            choco install wixtoolset --version 3.14.1 -y --no-progress
+          }
+
+      - name: Package
+        shell: bash
+        run: mvn -B -Pinstallers package
+
+      - uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
+        with:
+          name: jworksheet-${{ matrix.os }}
+          path: target/dist/*
+          retention-days: 1
+          if-no-files-found: error
+
+  publish-latest:
+    name: Refresh the rolling "latest" release
+    needs: [package]
+    if: github.event_name == 'workflow_dispatch' || github.event.workflow_run.conclusion == 'success'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/download-artifact@9000827ccba6bdab643e8b6fd33ac0654aef8333 # v8.0.2
+        with:
+          path: artifacts
+          merge-multiple: true
+
+      - name: Publish
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          set -euo pipefail
+          ls -lh artifacts
+          gh release view latest --repo "$GITHUB_REPOSITORY" > /dev/null 2>&1 \
+            || gh release create latest --repo "$GITHUB_REPOSITORY" \
+                 --prerelease --title "Latest build" \
+                 --notes "Rolling build of ${{ github.event.workflow_run.head_sha || github.sha }}."
+          gh release upload latest artifacts/* --clobber --repo "$GITHUB_REPOSITORY"
