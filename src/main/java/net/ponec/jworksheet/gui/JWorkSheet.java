@@ -77,8 +77,8 @@ import org.ujorm.swing.UjoKeyRow;
 @SuppressWarnings("unchecked")
 public final class JWorkSheet extends TopFrame {
 
-    public static final Version APPL_VERSION = new Version("1.01") ;
-    public static final String APPL_RELEASED = "2022-02-10";
+    public static final Version APPL_VERSION = new Version("1.10") ;
+    public static final String APPL_RELEASED = "2026-11-03";
 
     public static final String APPL_NAME     = "jWorkSheet";
     public static final String APPL_HOMEPAGE = "https://pponec.github.io/jworksheet/";

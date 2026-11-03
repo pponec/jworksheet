@@ -3,11 +3,11 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>net.ponec</groupId>
     <artifactId>jWorkSheet</artifactId>
-    <version>1.00</version>
+    <version>1.10</version>
     <packaging>jar</packaging>
 
     <properties>
-        <project.version>1.00</project.version>
+        <project.version>1.10</project.version>
         <project.jar.name>jWorkSheet</project.jar.name>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <java.version>17</java.version>
