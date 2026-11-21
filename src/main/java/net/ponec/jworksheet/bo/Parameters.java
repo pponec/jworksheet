@@ -365,15 +365,11 @@ public class Parameters implements Exportable {
 
     /** An undefined path is replaced by the default value, otherwise the file must be writable. */
     public void setDataFilePath(final File dataFilePath) {
-        final String name = dataFilePath != null ? dataFilePath.getName().trim() : VALUE_DEFAULT;
-        if (VALUE_DEFAULT.equals(name) || name.isEmpty()) {
-            this.dataFilePath = new File(VALUE_DEFAULT);
-            return;
+        final File path = pathOrDefault(dataFilePath);
+        if (!isDefaultPath(path) && !canWrite(path)) {
+            throw new MessageException("Can't write data to " + path);
         }
-        if (!canWrite(dataFilePath)) {
-            throw new MessageException("Can't write data to " + dataFilePath);
-        }
-        this.dataFilePath = dataFilePath;
+        this.dataFilePath = path;
     }
 
     public String getSortProjColumn() {
@@ -388,8 +384,10 @@ public class Parameters implements Exportable {
         return sharedProjectsFilePath;
     }
 
+    /** An undefined path is replaced by the default value. The file is read only,
+     * so it is not checked for writing. */
     public void setSharedProjectsFilePath(final File sharedProjectsFilePath) {
-        this.sharedProjectsFilePath = sharedProjectsFilePath;
+        this.sharedProjectsFilePath = pathOrDefault(sharedProjectsFilePath);
     }
 
     public String getUsername() {
@@ -409,6 +407,18 @@ public class Parameters implements Exportable {
              ? Character.toUpperCase(result.charAt(0)) + result.substring(1)
              : "?"
              ;
+    }
+
+    /** Returns the default path for an undefined, an empty or a {@code <default>} path. */
+    private static File pathOrDefault(final File path) {
+        return path == null || isDefaultPath(path) || path.getName().isBlank()
+                ? new File(VALUE_DEFAULT)
+                : path;
+    }
+
+    /** Is the name of the path the {@code <default>} marker? */
+    private static boolean isDefaultPath(final File path) {
+        return VALUE_DEFAULT.equals(path.getName().trim());
     }
 
     /** Enables the file writing or creating changes? */

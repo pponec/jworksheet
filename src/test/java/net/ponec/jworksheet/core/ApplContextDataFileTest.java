@@ -67,6 +67,23 @@ public class ApplContextDataFileTest {
     }
 
     @Test
+    @DisplayName("An undefined or an empty path points to the configuration directory")
+    public void undefinedPath() {
+        final ApplContext context = applContext();
+        final Parameters parameters = context.getParameters();
+        final File projectsFile = new File(configDir, ApplContext.PROJECTS_DATA);
+
+        parameters.setSharedProjectsFilePath(null);
+        assertEquals(projectsFile, context.getProjectsFile());
+
+        parameters.setSharedProjectsFilePath(new File(" "));
+        assertEquals(projectsFile, context.getProjectsFile());
+
+        parameters.setDataFilePath(null);
+        assertEquals(new File(configDir, ApplContext.FILE_DATA), context.getDataFile());
+    }
+
+    @Test
     @DisplayName("An assigned path is used as it is")
     public void assignedPath() {
         final ApplContext context = applContext();

@@ -1217,8 +1217,7 @@ public final class JWorkSheet extends TopFrame {
         UjoTableModel model = paramTable.getModel();
         for (int i=model.getRowCount()-1; i>=0; i--) {
             UjoKeyRow ujo = (UjoKeyRow) model.getRowNullable(i);
-            Key param = ujo.getKey();
-            ujo.setValue(param.getDefault());
+            ujo.resetValue();
         }
         model.fireTableAllRowUpdated();
     }//GEN-LAST:event_bParamDefaultActionPerformed

@@ -121,6 +121,12 @@ public class UjoKeyRow {
         return key != null ? Keys.defaultOf(key) : null;
     }
 
+    /** Restores the default value of the key. The {@code Key.getDefault()} method
+     * of the Ujorm 3 always provides the {@code null}, so it must not be used here. */
+    public void resetValue() {
+        setValue(getDefaultValue());
+    }
+
     public void setDefaultValue(final Object defaultValue) {
         throw new UnsupportedOperationException("Read only: " + MetaUjoKeyRow.defaultValue);
     }

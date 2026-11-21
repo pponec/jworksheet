@@ -92,8 +92,10 @@ public class Event implements Exportable {
         this.projectId = project != null ? project.getId() : null;
     }
 
+    /** The identifier is read from the assigned project, because the user can change it
+     * in the project table, otherwise the stored value of a document is provided. */
     public Integer getProjectId() {
-        return projectId;
+        return project != null ? Integer.valueOf(project.getId()) : projectId;
     }
 
     public void setProjectId(final Integer projectId) {
@@ -110,8 +112,9 @@ public class Event implements Exportable {
         this.taskId = task != null ? task.getId() : null;
     }
 
+    /** The identifier is read from the assigned task, see the {@link #getProjectId()}. */
     public Integer getTaskId() {
-        return taskId;
+        return task != null ? Integer.valueOf(task.getId()) : taskId;
     }
 
     public void setTaskId(final Integer taskId) {
