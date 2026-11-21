@@ -31,11 +31,9 @@ import java.awt.Rectangle;
 import java.io.BufferedInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
-import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.OutputStreamWriter;
-import java.io.Writer;
+import java.nio.file.Files;
 import static java.nio.charset.StandardCharsets.UTF_8;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
@@ -286,9 +284,8 @@ public class ApplContext implements TableModelListener, Runnable, JwsContext {
             String comment = " <?xml-stylesheet type=\"text/xsl\" href=\"styles/"
                     + ResourceProvider.REPORT_BASE
                     + "\"?> ";
-            File dataTempFile = getDataFileTemp();
-            XmlManager.saveXML(dataTempFile, workSpace, comment);
-            ApplTools.rename(dataTempFile, getDataFile());
+            ApplTools.saveSafely(getDataFileTemp(), getDataFile()
+                    , file -> XmlManager.saveXML(file, workSpace, comment));
         } catch (IOException e) {
             throw new MessageException("Can't save: " + getDataFile(), e);
         }
@@ -431,16 +428,14 @@ public class ApplContext implements TableModelListener, Runnable, JwsContext {
     /** Data File for a temporarry usage. */
     @Override
     public File getDataFileTemp() throws IOException {
-        final File result = File.createTempFile("data", EXTENSION_TMP, getConfigFile().getParentFile());
-        return result;
+        return File.createTempFile("data", EXTENSION_TMP, getConfigFile().getParentFile());
     }
 
     /** Delete all temporarry files from a Config Directory. */
     public void deleteTempFiles() {
-        File configDir = getConfigDir();
-        for (String item : configDir.list()) {
-            if (item.endsWith(EXTENSION_TMP)) {
-                File file = new File(configDir, item);
+        final File[] files = getConfigDir().listFiles((dir, name) -> name.endsWith(EXTENSION_TMP));
+        if (files != null) {
+            for (File file : files) {
                 file.delete();
             }
         }
@@ -591,10 +586,8 @@ public class ApplContext implements TableModelListener, Runnable, JwsContext {
     public void saveParameters() {
         try {
             final String msg = "A " + JWorkSheet.APPL_NAME + " configuration file:";
-            // A temporary file is renamed, so a failure never damages the original file:
-            final File tempFile = File.createTempFile("config", EXTENSION_TMP, getConfigDir());
-            BundleManager.save(tempFile, parameters, msg);
-            ApplTools.rename(tempFile, getConfigFile());
+            ApplTools.saveSafely(File.createTempFile("config", EXTENSION_TMP, getConfigDir()), getConfigFile()
+                    , file -> BundleManager.save(file, parameters, msg));
         } catch (Throwable e) {
             LOGGER.log(Level.WARNING, "Can't save Parameters to " + getConfigFile(), e);
         }
@@ -767,26 +760,10 @@ public class ApplContext implements TableModelListener, Runnable, JwsContext {
 
     /** Show report in a browser. */
     public void showReport(String report) throws IOException {
-        Writer writer = null;
-        try {
-            File tempFile = File.createTempFile("_report.", ".html");
-            tempFile.deleteOnExit();
-            FileOutputStream os = new FileOutputStream(tempFile);
-            writer = new OutputStreamWriter(os, UTF_8);
-            writer.write(report);
-            writer.close();
-            getTopFrame().browse(tempFile.toURI().toString());
-
-        } catch (IOException e)  {
-            if (writer!=null) {
-                try {
-                    writer.close();
-                } catch (Throwable ex) {
-                    LOGGER.log(Level.WARNING, "Can't close a temp file.");
-                }
-            }
-            throw e;
-        }
+        final File tempFile = File.createTempFile("_report.", ".html");
+        tempFile.deleteOnExit();
+        Files.writeString(tempFile.toPath(), report, UTF_8);
+        getTopFrame().browse(tempFile.toURI().toString());
     }
 
     /** Warning: data is restored from a backup! */
@@ -798,32 +775,12 @@ public class ApplContext implements TableModelListener, Runnable, JwsContext {
     // ----------------- COVERSIONS ------------------------
 
     private void makeDataConversion(float oldVersion) {
-        FileOutputStream os = null;
         try {
-            String data = ApplTools.getFileContent(getDataFile(), UTF_8, Integer.MAX_VALUE);
-            data = data.replaceAll("<Time javaClass=\"java.lang.String\">", "<Time>" );
-
-            //data = data.replaceAll("<item>"  , " " );
-            //data = data.replaceAll("</item>" , " " );
-
-            File dataFileTemp = getDataFileTemp();
-            File dataFileTarget = getDataFile();
-
-            os = new FileOutputStream(dataFileTemp);
-            os.write(data.getBytes(UTF_8));
-            os.close();
-            ApplTools.rename(dataFileTemp, dataFileTarget);
-
+            final String data = ApplTools.getFileContent(getDataFile(), UTF_8, Integer.MAX_VALUE)
+                    .replaceAll("<Time javaClass=\"java.lang.String\">", "<Time>");
+            ApplTools.saveSafely(getDataFileTemp(), getDataFile(), file -> Files.writeString(file.toPath(), data, UTF_8));
         } catch (IOException e) {
             throw new UnsupportedOperationException("Can't convert data file from version: " + oldVersion);
-        } finally {
-            if (os!=null) {
-                try {
-                    os.close();
-                } catch (IOException ex) {
-                    LOGGER.log(Level.WARNING, "Bug", ex);
-                }
-            }
         }
     }
 

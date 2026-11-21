@@ -65,8 +65,6 @@ public class UjoKeyRow {
     @Getter
     private final transient Key key;
 
-    /** A constructor required by the metamodel. The instance presents no key. */
-
     // ------------------------ THE COMPUTED ACCESSORS ------------------------
 
     public Integer getIndex() {
@@ -113,7 +111,7 @@ public class UjoKeyRow {
 
     /** Writes the value of the key to the domain object. */
     public void setValue(final Object value) {
-        Keys.write(key, content, value);
+        key.setValue(content, value);
     }
 
     public Object getDefaultValue() {

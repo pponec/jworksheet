@@ -34,7 +34,6 @@ import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.io.Reader;
 import java.io.StringWriter;
-import java.io.UnsupportedEncodingException;
 import java.lang.reflect.Method;
 import java.net.MalformedURLException;
 import java.net.URI;
@@ -359,6 +358,24 @@ public final class ApplTools {
         }
     }
 
+    /** A writer of a content to a file. */
+    @FunctionalInterface
+    public interface FileWriter {
+        void write(File file) throws IOException;
+    }
+
+    /** Writes the content to the temporary file which then replaces the target, so a failure
+     * never damages the target file. The temporary file is removed on a failure. */
+    public static void saveSafely(final File temp, final File target, final FileWriter writer) throws IOException {
+        try {
+            writer.write(temp);
+            rename(temp, target);
+        } catch (IOException | RuntimeException e) {
+            Files.deleteIfExists(temp.toPath());
+            throw e;
+        }
+    }
+
     /** Make a XSL transformation. */
     public static File makeXslTransformation(StreamSource source, StreamSource xsl, ArrayList<String[]> params)
     throws TransformerConfigurationException, TransformerException, IOException {
@@ -506,39 +523,12 @@ public final class ApplTools {
         return ok;
     }
 
-    /** Converts bytes to String on Java 5.0. */
-    public static String newString(byte[] bytes, Charset charset) {
-        String result;
-        try {
-            result = new String(bytes, charset.name());
-        } catch (UnsupportedEncodingException e) {
-            result = new String(bytes);
-        }
-        return result;
-    }
-
-    /** Converts String to bytes on Java 5.0. */
-    public static byte[] getBytes(String text, Charset charset) {
-        byte[] result;
-        try {
-            result = text.getBytes(charset.name());
-        } catch (UnsupportedEncodingException e) {
-            result = text.getBytes();
-        }
-        return result;
-    }
-
     /** Set a default look and feel */
     public static void initLookAndFeel(boolean nimbus) throws UnsupportedLookAndFeelException {
         String property = System.getProperty("swing.defaultlaf");
 
         if (property==null) try {
             if (nimbus) {
-                if (false) {
-                    // Test compile:
-                    Class nimbusClass = javax.swing.plaf.nimbus.NimbusLookAndFeel.class;
-                    LOGGER.log(Level.FINEST, nimbusClass.toString());
-                }
                 UIManager.setLookAndFeel("javax.swing.plaf.nimbus.NimbusLookAndFeel");
             } else {
                 throw new UnsupportedLookAndFeelException("");
@@ -599,7 +589,7 @@ public final class ApplTools {
             is = new URL(url).openStream();
             Reader reader = new InputStreamReader(new BufferedInputStream(is), UTF_8);
 
-            String word = findWord(reader, "<description>Release:", "</description>").trim();
+            String word = findWord(reader, "<description>Release:", "</description>");
             if (Check.isEmpty(word)) {
                 word = "0";
             }

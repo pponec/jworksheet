@@ -93,6 +93,19 @@ public class BundleManagerTest {
     }
 
     @Test
+    @DisplayName("An invalid value is skipped, the other values are loaded")
+    public void invalidValueKeepsOthers() throws Exception {
+        final File file = newFile();
+        Files.writeString(file.toPath(), "WorkingHours=abc\nDateMainFormat=bad'\nHideButtonIcons=true\n");
+
+        final Parameters result = BundleManager.load(file, Parameters.class);
+
+        assertTrue(result.isHideButtonIcons(), "The valid value");
+        assertEquals(Keys.defaultOf(MetaParameters.workingHours), result.getWorkingHours());
+        assertEquals(Keys.defaultOf(MetaParameters.dateMainFormat), result.getDateMainFormat());
+    }
+
+    @Test
     @DisplayName("A saved file is loaded to an equal state")
     public void savingIsIdempotent() throws Exception {
         final Parameters params = new Parameters();

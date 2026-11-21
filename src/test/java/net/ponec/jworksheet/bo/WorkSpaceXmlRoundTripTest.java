@@ -318,7 +318,7 @@ public class WorkSpaceXmlRoundTripTest extends XmlTestSupport {
         @DisplayName("C5b) An undefined period is normalized to the zero")
         public void undefinedPeriod() {
             final Event event = new Event();
-            Keys.write(MetaEvent.period, event, null);
+            MetaEvent.period.setValue(event, null);
             event.setStartTime(new Time("08:00"));
             assertEquals(Event.ZERO_SHORT, event.getPeriod());
         }

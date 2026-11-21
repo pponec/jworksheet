@@ -20,6 +20,7 @@ import org.ujorm.annotation.UColumn;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.stream.Collectors;
 import lombok.Getter;
 import lombok.Setter;
 import net.ponec.jworksheet.bo.item.YearMonthDay;
@@ -80,49 +81,38 @@ public class WorkSpace implements Exportable {
 
     /** Find a workDay or create new. */
     public WorkDay findWorkDay(final YearMonthDay dayId) {
-        for (WorkDay workDay : days) {
-            if (dayId.equals(workDay.getDate())) {
-                return workDay;
-            }
-        }
-
-        final WorkDay result = new WorkDay();
-        result.setDate(dayId.cloneDay());
-        days.add(result);
-        return result;
+        return days.stream()
+                .filter(workDay -> dayId.equals(workDay.getDate()))
+                .findFirst()
+                .orElseGet(() -> {
+                    final WorkDay result = new WorkDay();
+                    result.setDate(dayId.cloneDay());
+                    days.add(result);
+                    return result;
+                });
     }
 
     /** Find a Project by its identifier. An undefined identifier has got no project. */
     public Project findProject(final Integer id) {
-        if (id != null) {
-            for (Project project : projects) {
-                if (project.getId() == id.intValue()) {
-                    return project;
-                }
-            }
-        }
-        return null;
+        return id == null ? null : projects.stream()
+                .filter(project -> project.getId() == id)
+                .findFirst()
+                .orElse(null);
     }
 
     /** Returns the first "default" TaskType, null. */
     public Project findDefaultProject() {
-        for (Project proj : projects) {
-            if (proj.isDefaultProject() && !proj.isFinished()) {
-                return proj;
-            }
-        }
-        return null ;
+        return projects.stream()
+                .filter(proj -> proj.isDefaultProject() && !proj.isFinished())
+                .findFirst()
+                .orElse(null);
     }
 
     /** Returns all open Projects. */
     public ArrayList<Project> getOpenProjects() {
-        final ArrayList<Project> result = new ArrayList<>(projects.size());
-        for (Project project : projects) {
-            if (!project.isFinished()) {
-                result.add(project);
-            }
-        }
-        return result;
+        return projects.stream()
+                .filter(project -> !project.isFinished())
+                .collect(Collectors.toCollection(ArrayList::new));
     }
 
     /** Assing tasks and projects. Call the method after a data loading.
@@ -196,18 +186,13 @@ public class WorkSpace implements Exportable {
         days.sort(null);
     }
 
-    /** An undefined archivation date is not exported and an empty day is skipped. */
+    /** An empty day is not exported. An undefined value is skipped by the exporter itself. */
     @Override
     public boolean isExportable(final ExportAction action, final Key<?,?> key, final Object value) {
-        if (action == ExportAction.XML) {
-            if (MetaWorkSpace.archived == key) {
-                return value != null;
-            }
-            if (MetaWorkSpace.days == key && value instanceof final WorkDay workDay) {
-                return !workDay.getEvents().isEmpty();
-            }
-        }
-        return true;
+        return action != ExportAction.XML
+            || MetaWorkSpace.days != key
+            || !(value instanceof final WorkDay workDay)
+            || !workDay.getEvents().isEmpty();
     }
 
     /** Show release notification */

@@ -25,6 +25,8 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.util.Properties;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import org.ujorm.core.Key;
 
 /**
@@ -39,6 +41,8 @@ import org.ujorm.core.Key;
  */
 public final class BundleManager {
 
+    private static final Logger LOGGER = Logger.getLogger(BundleManager.class.getName());
+
     private BundleManager() {
     }
 
@@ -50,14 +54,9 @@ public final class BundleManager {
     public static <D> void save(final File file, final D domain, final String comment)
             throws IOException {
         final Properties properties = new Properties();
-        final Exportable filter = domain instanceof final Exportable e ? e : null;
-
         for (Key<Object, Object> key : Keys.keysOfAny(domain.getClass())) {
             final Object value = key.getValue(domain);
-            if (value == null) {
-                continue;
-            }
-            if (filter == null || filter.isExportable(ExportAction.RESOURCE_BUNDLE, key, value)) {
+            if (value != null && Exportable.isExportable(domain, ExportAction.RESOURCE_BUNDLE, key, value)) {
                 properties.setProperty(Keys.nameOf(key), ValueCoder.encode(key, value));
             }
         }
@@ -83,8 +82,11 @@ public final class BundleManager {
         final D result = Keys.newInstance(domainClass);
         for (Key<Object, Object> key : Keys.keysOfAny(domainClass)) {
             final String text = properties.getProperty(Keys.nameOf(key));
-            if (text != null) {
-                Keys.write(key, result, ValueCoder.decode(key, text));
+            if (text != null) try {
+                key.setValue(result, ValueCoder.decode(key, text));
+            } catch (RuntimeException e) {
+                // A single invalid value must not discard the whole configuration:
+                LOGGER.log(Level.WARNING, "Invalid value of the parameter " + Keys.nameOf(key) + ": " + text, e);
             }
         }
         return result;

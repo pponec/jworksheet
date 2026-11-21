@@ -167,19 +167,29 @@ public class Parameters implements Exportable {
 
     /** A value out of the range 1..7 is fixed. */
     public void setFirstDayOfWeek(final int firstDayOfWeek) {
-        this.firstDayOfWeek = firstDayOfWeek < 1 || firstDayOfWeek > 7
-                ? ((firstDayOfWeek + 7 * 1000 - 1) % 7) + 1
-                : firstDayOfWeek;
+        this.firstDayOfWeek = Math.floorMod(firstDayOfWeek - 1, 7) + 1;
     }
 
     public void setDateMainFormat(final String dateMainFormat) {
-        new SimpleDateFormat(dateMainFormat); // A validation only
-        this.dateMainFormat = dateMainFormat;
+        this.dateMainFormat = validDateFormat(dateMainFormat);
     }
 
     public void setDateReportFormat(final String dateReportFormat) {
-        new SimpleDateFormat(dateReportFormat); // A validation only
-        this.dateReportFormat = dateReportFormat;
+        this.dateReportFormat = validDateFormat(dateReportFormat);
+    }
+
+    public void setDateReportFormat2(final String dateReportFormat2) {
+        this.dateReportFormat2 = validDateFormat(dateReportFormat2);
+    }
+
+    public void setDateGotoFormat(final String dateGotoFormat) {
+        this.dateGotoFormat = validDateFormat(dateGotoFormat);
+    }
+
+    /** Returns the pattern, or throws an exception for an invalid one. */
+    private static String validDateFormat(final String pattern) {
+        new SimpleDateFormat(pattern);
+        return pattern;
     }
 
     /** An undefined action is replaced by the default one. */
@@ -249,21 +259,14 @@ public class Parameters implements Exportable {
     /** An authorization settings. */
     @Override
     public boolean isExportable(final ExportAction action, final Key<?,?> key, final Object value) {
-        switch (action) {
-            case RESOURCE_BUNDLE:
-                // A default value is not stored to the configuration file:
-                return !Keys.isDefaultValue(key, value);
-            case TABLE_SHOW:
-                if (key == MetaParameters.sortProjColumn) {
-                    return false;
-                }
-                if (key == MetaParameters.dataFilePath) {
-                    return !Keys.isDefaultValue(key, value);
-                }
-                return key != MetaParameters.windowSize;
-            default:
-                return true;
-        }
+        return switch (action) {
+            // A default value is not stored to the configuration file:
+            case RESOURCE_BUNDLE -> !Keys.isDefaultValue(key, value);
+            case TABLE_SHOW -> key != MetaParameters.sortProjColumn
+                            && key != MetaParameters.windowSize
+                            && (key != MetaParameters.dataFilePath || !Keys.isDefaultValue(key, value));
+            default -> true;
+        };
     }
 
     /** Returns a text representation of the key value. */
@@ -285,13 +288,9 @@ public class Parameters implements Exportable {
 
     /** Returns a format time. */
     public String formatTime(int minutes) {
-       final boolean deci = decimalTimeFormat;
-
-       if (deci) {
+       if (decimalTimeFormat) {
             // Numeric format: 1.50
-            final DecimalFormat NUM_FORMAT = decimalFormat;
-            final float val = minutes / 60f;
-            return NUM_FORMAT.format(val);
+            return decimalFormat.format(minutes / 60f);
        } else {
             // HH:MM Format
             boolean minus = minutes<0;

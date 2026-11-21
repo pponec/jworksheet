@@ -45,8 +45,8 @@ public class KeysTest {
     @DisplayName("A null value of a primitive field is written as the zero")
     public void writeNullToPrimitive() {
         final Parameters parameters = new Parameters();
-        Keys.write(MetaParameters.workingHours, parameters, null);
-        Keys.write(MetaParameters.windowSizeRestoration, parameters, null);
+        MetaParameters.workingHours.setValue(parameters, null);
+        MetaParameters.windowSizeRestoration.setValue(parameters, null);
 
         assertEquals(0f, parameters.getWorkingHours());
         assertFalse(parameters.isWindowSizeRestoration());

@@ -119,7 +119,6 @@ public final class XmlManager {
 
         indent(out, level).append('<').append(name).append('>').append(NEW_LINE);
 
-        final Exportable filter = domain instanceof final Exportable e ? e : null;
         for (Key<Object, Object> key : Keys.keysOfAny(domain.getClass())) {
             final Object value = key.getValue(domain);
             if (value == null) {
@@ -128,11 +127,11 @@ public final class XmlManager {
             final String element = Keys.nameOf(key);
             if (Keys.isList(key)) {
                 for (Object item : (List<?>) value) {
-                    if (item != null && isExportable(filter, key, item)) {
+                    if (item != null && Exportable.isExportable(domain, ExportAction.XML, key, item)) {
                         writeElement(out, element, item, level + 1);
                     }
                 }
-            } else if (isExportable(filter, key, value)) {
+            } else if (Exportable.isExportable(domain, ExportAction.XML, key, value)) {
                 if (isDomain(value.getClass())) {
                     writeElement(out, element, value, level + 1);
                 } else {
@@ -148,10 +147,6 @@ public final class XmlManager {
             // The original implementation writes no new line behind the root element:
             out.append(NEW_LINE);
         }
-    }
-
-    private static boolean isExportable(final Exportable filter, final Key<?, ?> key, final Object value) {
-        return filter == null || filter.isExportable(ExportAction.XML, key, value);
     }
 
     private static Appendable indent(final Appendable out, final int level) throws IOException {
@@ -273,7 +268,7 @@ public final class XmlManager {
             if (text != null) {
                 final Object parent = domains.peek();
                 final Key<Object, Object> key = elementMapOf(parent.getClass()).get(name);
-                Keys.write(key, parent, ValueCoder.decode(key, text.toString()));
+                key.setValue(parent, ValueCoder.decode(key, text.toString()));
                 text = null;
                 return;
             }

@@ -38,4 +38,9 @@ public interface Exportable {
     default boolean isExportable(final ExportAction action, final Key<?, ?> key, final Object value) {
         return true;
     }
+
+    /** Is the value exportable? A domain object which is not {@link Exportable} exports all. */
+    static boolean isExportable(final Object domain, final ExportAction action, final Key<?, ?> key, final Object value) {
+        return !(domain instanceof final Exportable filter) || filter.isExportable(action, key, value);
+    }
 }
