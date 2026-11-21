@@ -16,7 +16,7 @@
 
 package net.ponec.jworksheet.report;
 
-import jakarta.persistence.Column;
+import org.ujorm.annotation.UColumn;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.Setter;
@@ -36,21 +36,21 @@ import org.ujorm.annotation.Domain;
 @Setter
 public class TaskGroup {
 
-    @Column(name = "Project")
+    @UColumn(name = "Project")
     private Project project;
 
-    @Column(name = "Task")
+    @UColumn(name = "Task")
     private TaskType task;
 
-    @Column(name = "Date")
+    @UColumn(name = "Date")
     private YearMonthDay day;
 
     /** A declaration of the derived column, see the {@link #getMonth()} method. */
-    @Column(name = "Month")
+    @UColumn(name = "Month")
     private Integer month;
 
     /** A declaration of the derived column, see the {@link #getYear()} method. */
-    @Column(name = "Year")
+    @UColumn(name = "Year")
     private Integer year;
 
     /** A total time in minutes. */

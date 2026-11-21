@@ -65,7 +65,7 @@ public final class Keys {
     }
 
     /** Returns a name of the key used by the XML documents, the configuration file and
-     * the localization bundles. It is the {@code @Column} label of the field rather than
+     * the localization bundles. It is the {@code @UColumn} label of the field rather than
      * the Java field name. */
     public static String nameOf(final Key<?, ?> key) {
         return key.info().columnLabel();

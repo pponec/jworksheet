@@ -16,7 +16,7 @@
 
 package net.ponec.jworksheet.gui.models;
 
-import jakarta.persistence.Column;
+import org.ujorm.annotation.UColumn;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.RequiredArgsConstructor;
@@ -39,22 +39,22 @@ import org.ujorm.core.Key;
 @NoArgsConstructor(force = true)
 public class UjoKeyRow {
 
-    @Column(name = "Index")
+    @UColumn(name = "Index")
     private Integer index;
 
-    @Column(name = "Name")
+    @UColumn(name = "Name")
     private String name;
 
-    @Column(name = "Class")
+    @UColumn(name = "Class")
     private Class type;
 
-    @Column(name = "Type")
+    @UColumn(name = "Type")
     private String typeName;
 
-    @Column(name = "Value")
+    @UColumn(name = "Value")
     private Object value;
 
-    @Column(name = "Default")
+    @UColumn(name = "Default")
     private Object defaultValue;
 
     /** A domain object of the presented key. */

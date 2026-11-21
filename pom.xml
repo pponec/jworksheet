@@ -12,7 +12,7 @@
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <java.version>17</java.version>
         <lombok.version>1.18.42</lombok.version>
-        <ujorm.version>3.0.6</ujorm.version>
+        <ujorm.version>3.0.7-SNAPSHOT</ujorm.version>
         <maven.compiler.source>${java.version}</maven.compiler.source>
         <maven.compiler.target>${java.version}</maven.compiler.target>
     </properties>
@@ -30,10 +30,8 @@
             <artifactId>ujo-core</artifactId>
             <version>${ujorm.version}</version>
         </dependency>
-        <!-- The jakarta.persistence-api 3.1.0 is not a dependency: only the 9 annotations,
-             which the ujo-core loads at build and run time, and the 9 types they reference
-             are copied to the src/main/java/jakarta under the Eclipse Distribution License
-             v. 1.0 (BSD-3-Clause), see the META-INF/jakarta.persistence directory. -->
+        <!-- The domain classes are mapped by the Ujorm annotations (@UColumn),
+             so the jakarta.persistence-api is not needed at all. -->
         <!-- The accessors of the domain objects, see the maven-compiler-plugin -->
         <dependency>
             <groupId>org.projectlombok</groupId>

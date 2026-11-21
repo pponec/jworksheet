@@ -16,7 +16,7 @@
 
 package net.ponec.jworksheet.bo;
 
-import jakarta.persistence.Column;
+import org.ujorm.annotation.UColumn;
 import java.awt.Color;
 import java.awt.Rectangle;
 import java.io.File;
@@ -59,88 +59,88 @@ public class Parameters implements Exportable {
 
     // ------------------------ ATTRIBUTES ------------------------
 
-    @Column(name = "Language")
+    @UColumn(name = "Language")
     private Locale language = Locale.getDefault();
 
-    @Column(name = "WorkingHours")
+    @UColumn(name = "WorkingHours")
     private float workingHours = 8f;
 
-    @Column(name = "FirstDayOfWeek")
+    @UColumn(name = "FirstDayOfWeek")
     private int firstDayOfWeek = Calendar.getInstance().getFirstDayOfWeek();
 
-    @Column(name = "DecimalTimeFormat")
+    @UColumn(name = "DecimalTimeFormat")
     private boolean decimalTimeFormat = false;
 
-    @Column(name = "DateMainFormat")
+    @UColumn(name = "DateMainFormat")
     private String dateMainFormat = DATE_FORMAT_DEFAULT;
 
-    @Column(name = "DateReportFormat")
+    @UColumn(name = "DateReportFormat")
     private String dateReportFormat = DATE_FORMAT_DEFAULT;
 
-    @Column(name = "DateReportFormat2")
+    @UColumn(name = "DateReportFormat2")
     private String dateReportFormat2 = "d'<br/><span class=\"smallMonth\">'MMMM'</span>'";
 
-    @Column(name = "ReportCSS")
+    @UColumn(name = "ReportCSS")
     private String reportCss = "styles/style.css";
 
-    @Column(name = "DateGotoFormat")
+    @UColumn(name = "DateGotoFormat")
     private String dateGotoFormat = "yyyy-MM-dd";
 
-    @Column(name = "NimbusL&FSupport")
+    @UColumn(name = "NimbusL&FSupport")
     private boolean nimbusLaf = !ApplTools.isWindowsOS();
 
-    @Column(name = "ColorOfPrivateProject")
+    @UColumn(name = "ColorOfPrivateProject")
     private Color colorOfPrivateProject = new Color(0x5DA158);
 
-    @Column(name = "ColorOfFinishedProject")
+    @UColumn(name = "ColorOfFinishedProject")
     private Color colorOfFinishedProject = new Color(0xA9AC88);
 
-    @Column(name = "ColorOfEditableArea")
+    @UColumn(name = "ColorOfEditableArea")
     private Color colorOfEditableArea = new Color(0xFFFACD);
 
-    @Column(name = "SystemTrayEnabled")
+    @UColumn(name = "SystemTrayEnabled")
     private boolean systemTrayEnabled = true;
 
-    @Column(name = "SystemTraySecondClick")
+    @UColumn(name = "SystemTraySecondClick")
     private SysTray.Action systemTraySecondClick = SysTray.Action.HIDE;
 
-    @Column(name = "ModifyFinishedProject")
+    @UColumn(name = "ModifyFinishedProject")
     private boolean modifyFinishedProject = false;
 
-    @Column(name = "ExitEventCreating")
+    @UColumn(name = "ExitEventCreating")
     private boolean exitEventCreating = true;
 
-    @Column(name = "ExitEventDescription")
+    @UColumn(name = "ExitEventDescription")
     private String exitEventDescription = "EXIT";
 
-    @Column(name = "HideButtonIcons")
+    @UColumn(name = "HideButtonIcons")
     private boolean hideButtonIcons = false;
 
-    @Column(name = "WindowSize")
+    @UColumn(name = "WindowSize")
     private Rectangle windowSize = new Rectangle(-1, -1, 622, 405);
 
-    @Column(name = "WindowSizeRestoration")
+    @UColumn(name = "WindowSizeRestoration")
     private boolean windowSizeRestoration = true;
 
-    @Column(name = "AutomaticSortingByTime")
+    @UColumn(name = "AutomaticSortingByTime")
     private boolean automaticSortingByTime = true;
 
-    @Column(name = "CheckNewRelease")
+    @UColumn(name = "CheckNewRelease")
     private boolean checkNewRelease = true;
 
-    @Column(name = "SystemBrowserPath")
+    @UColumn(name = "SystemBrowserPath")
     private String systemBrowserPath = VALUE_DEFAULT;
 
-    @Column(name = "DataFilePath")
+    @UColumn(name = "DataFilePath")
     private File dataFilePath = new File(VALUE_DEFAULT);
 
-    @Column(name = "SortProjColumn")
+    @UColumn(name = "SortProjColumn")
     private String sortProjColumn = "ID";
 
-    @Column(name = "SharedProjectsFilePath")
+    @UColumn(name = "SharedProjectsFilePath")
     private File sharedProjectsFilePath = new File(VALUE_DEFAULT);
 
-    @Column(name = "Username")
+    @UColumn(name = "Username")
     private String username = getSystemLogin();
 
     /** Decimal Formatter */

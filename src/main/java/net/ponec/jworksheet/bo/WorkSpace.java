@@ -16,7 +16,7 @@
 
 package net.ponec.jworksheet.bo;
 
-import jakarta.persistence.Column;
+import org.ujorm.annotation.UColumn;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -42,28 +42,28 @@ import org.ujorm.core.Key;
 @Setter
 public class WorkSpace implements Exportable {
 
-    @Column(name = "Version")
+    @UColumn(name = "Version")
     private Version version = new Version("0");
 
-    @Column(name = "Created")
+    @UColumn(name = "Created")
     private Date created;
 
-    @Column(name = "Archived")
+    @UColumn(name = "Archived")
     private Date archived;
 
-    @Column(name = "Username")
+    @UColumn(name = "Username")
     private String username = "?";
 
-    @Column(name = "CheckReleaseDate")
+    @UColumn(name = "CheckReleaseDate")
     private Date checkReleaseDate = new Date(0L);
 
-    @Column(name = "CheckReleaseVersion")
+    @UColumn(name = "CheckReleaseVersion")
     private Version checkReleaseVersion = JWorkSheet.APPL_VERSION;
 
-    @Column(name = "Day")
+    @UColumn(name = "Day")
     private List<WorkDay> days = new ArrayList<>();
 
-    @Column(name = "Project")
+    @UColumn(name = "Project")
     private List<Project> projects = new ArrayList<>();
 
     // ------------------------ JAVABEAN ------------------------

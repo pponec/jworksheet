@@ -16,7 +16,7 @@
 
 package net.ponec.jworksheet.bo;
 
-import jakarta.persistence.Column;
+import org.ujorm.annotation.UColumn;
 import lombok.Getter;
 import lombok.Setter;
 import net.ponec.jworksheet.core.ujo.Keys;
@@ -33,16 +33,16 @@ import org.ujorm.tools.Check;
 @Setter
 public class TaskType implements Comparable<TaskType> {
 
-    @Column(name = "ID")
+    @UColumn(name = "ID")
     private int id = 0;
 
-    @Column(name = "Default")
+    @UColumn(name = "Default")
     private boolean defaultTask = false;
 
-    @Column(name = "Finished")
+    @UColumn(name = "Finished")
     private boolean finished = false;
 
-    @Column(name = "Description")
+    @UColumn(name = "Description")
     private String descr = "";
 
     // ------------------------ JAVABEAN ------------------------

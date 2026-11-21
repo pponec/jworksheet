@@ -16,7 +16,7 @@
 
 package net.ponec.jworksheet.bo;
 
-import jakarta.persistence.Column;
+import org.ujorm.annotation.UColumn;
 import java.util.ArrayList;
 import java.util.List;
 import lombok.Getter;
@@ -36,22 +36,22 @@ import org.ujorm.tools.Check;
 @Setter
 public class Project implements Comparable<Project> {
 
-    @Column(name = "ID")
+    @UColumn(name = "ID")
     private int id = 0;
 
-    @Column(name = "Default")
+    @UColumn(name = "Default")
     private boolean defaultProject = false;
 
-    @Column(name = "Finished")
+    @UColumn(name = "Finished")
     private boolean finished = false;
 
-    @Column(name = "Private")
+    @UColumn(name = "Private")
     private boolean privateProject = false;
 
-    @Column(name = "Description")
+    @UColumn(name = "Description")
     private String descr = "";
 
-    @Column(name = "Task")
+    @UColumn(name = "Task")
     private List<TaskType> tasks = new ArrayList<>();
 
     // ------------------------ JAVABEAN ------------------------

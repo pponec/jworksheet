@@ -16,7 +16,7 @@
 
 package net.ponec.jworksheet.bo;
 
-import jakarta.persistence.Column;
+import org.ujorm.annotation.UColumn;
 import lombok.Getter;
 import lombok.Setter;
 import net.ponec.jworksheet.bo.item.Time;
@@ -43,26 +43,26 @@ public class Event implements Exportable {
 
     public static final Short ZERO_SHORT = (short) 0;
 
-    @Column(name = "Time")
+    @UColumn(name = "Time")
     @TextValue(TimeCodec.class)
     private short time;
 
-    @Column(name = "Period")
+    @UColumn(name = "Period")
     private short period; // [min]
 
-    @Column(name = "Project")
+    @UColumn(name = "Project")
     private Project project;
 
-    @Column(name = "ProjectID")
+    @UColumn(name = "ProjectID")
     private Integer projectId;
 
-    @Column(name = "Task")
+    @UColumn(name = "Task")
     private TaskType task;
 
-    @Column(name = "TaskID")
+    @UColumn(name = "TaskID")
     private Integer taskId;
 
-    @Column(name = "Description")
+    @UColumn(name = "Description")
     private String descr = "";
 
     // ------------------------ JAVABEAN ------------------------

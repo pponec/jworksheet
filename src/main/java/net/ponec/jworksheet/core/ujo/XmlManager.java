@@ -50,7 +50,7 @@ import static java.nio.charset.StandardCharsets.UTF_8;
  * <p>The rules of the format:
  * <ul>
  * <li>the root element is the {@value #ROOT_ELEMENT},</li>
- * <li>an element is named by the key name, so by the {@code @Column} label of the field,</li>
+ * <li>an element is named by the key name, so by the {@code @UColumn} label of the field,</li>
  * <li>the elements are written in the order of the key declaration,</li>
  * <li>an undefined value is skipped, an empty text is written as a pair of the tags,</li>
  * <li>a key rejected by the {@link Exportable} interface of the domain object is skipped,</li>

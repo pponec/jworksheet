@@ -27,7 +27,7 @@ import java.lang.annotation.Target;
  * the type of the document - see the start time of an {@code Event}, which is stored
  * by a {@code short} field but written as a {@code Time} text:
  * <pre class="pre">
- *  {@code @Column}(name = "Time")
+ *  {@code @UColumn}(name = "Time")
  *  {@code @TextValue}(TimeCodec.class)
  *  private short time;
  * </pre>

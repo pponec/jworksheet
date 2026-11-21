@@ -16,7 +16,7 @@
 
 package net.ponec.jworksheet.bo;
 
-import jakarta.persistence.Column;
+import org.ujorm.annotation.UColumn;
 import java.util.ArrayList;
 import java.util.List;
 import lombok.Getter;
@@ -38,13 +38,13 @@ import org.ujorm.core.Key;
 @Setter
 public class WorkDay implements Comparable<WorkDay>, Exportable {
 
-    @Column(name = "Date")
+    @UColumn(name = "Date")
     private YearMonthDay date;
 
-    @Column(name = "DayOff")
+    @UColumn(name = "DayOff")
     private boolean dayOff = false;
 
-    @Column(name = "Event")
+    @UColumn(name = "Event")
     private List<Event> events = new ArrayList<>();
 
     // ------------------------ JAVABEAN ------------------------
