@@ -181,6 +181,8 @@ public final class XmlManager {
             final SAXParserFactory factory = SAXParserFactory.newInstance();
             factory.setNamespaceAware(false);
             factory.setValidating(false);
+            // No document type is expected, so the external entities can not be abused (XXE):
+            factory.setFeature("http://apache.org/xml/features/disallow-doctype-decl", true);
             final SAXParser parser = factory.newSAXParser();
             final RootHandler<T> handler = new RootHandler<>(rootType);
             parser.parse(new InputSource(is), handler);

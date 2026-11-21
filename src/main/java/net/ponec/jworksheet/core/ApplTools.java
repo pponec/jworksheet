@@ -27,14 +27,10 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
 import java.io.BufferedInputStream;
-import java.io.BufferedOutputStream;
 import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
-import java.io.OutputStream;
 import java.io.PrintWriter;
 import java.io.Reader;
 import java.io.StringWriter;
@@ -45,7 +41,13 @@ import java.net.URI;
 import java.net.URL;
 import java.net.URLClassLoader;
 import java.nio.charset.Charset;
+import java.nio.file.AtomicMoveNotSupportedException;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import static java.nio.charset.StandardCharsets.UTF_8;
+import static java.nio.file.StandardCopyOption.ATOMIC_MOVE;
+import static java.nio.file.StandardCopyOption.COPY_ATTRIBUTES;
+import static java.nio.file.StandardCopyOption.REPLACE_EXISTING;
 import java.text.DecimalFormat;
 import java.time.LocalDate;
 import java.util.ArrayList;
@@ -111,33 +113,16 @@ public final class ApplTools {
         return result;
     }
 
-    /** Copy a file to a target file. */
-    public static void copy(File source, File target) throws IOException {
-        InputStream  is = null;
-        try {
-            is = new BufferedInputStream( new FileInputStream(source));
-            copy(is, target);
-            target.setLastModified(source.lastModified()); // Set the time
-        } finally {
-            if (is!=null) { is.close(); }
-        }
+    /** Copies a file to a target file including its time of the last modification.
+     * An existing target is replaced. */
+    public static void copy(final File source, final File target) throws IOException {
+        Files.copy(source.toPath(), target.toPath(), REPLACE_EXISTING, COPY_ATTRIBUTES);
     }
 
-    /** Copy a file to a target file. */
-    public static void copy(InputStream is, File target) throws IOException {
-        OutputStream os = null;
-        try {
-            os = new BufferedOutputStream(new FileOutputStream(target));
-
-            int c;
-            while ((c=is.read()) != -1) {
-                os.write(c);
-            }
-        } finally {
-            if (os!=null) {
-                os.close();
-            }
-        }
+    /** Copies a stream to a target file. An existing target is replaced,
+     * the stream stays open. */
+    public static void copy(final InputStream is, final File target) throws IOException {
+        Files.copy(is, target.toPath(), REPLACE_EXISTING);
     }
 
     /** Reset Time to 12:00:00.000 . */
@@ -359,21 +344,18 @@ public final class ApplTools {
         tf.setHorizontalAlignment(aligment);
     }
 
-    /** Rename a source to target. */
-    public static void rename(File source, File target) throws IOException {
-        File tmpFile = null ;
-        if (target.exists()) {
-            tmpFile = new File(target.getParent(), target.getName() + "$");
-            tmpFile.delete();
-            target.renameTo(tmpFile);
-        }
-        // CORE:
-        final boolean result = source.renameTo(target);
-        if (!result) {
-            throw new IOException("Can't rename temporary file " + source);
-        }
-        if (tmpFile!=null) {
-            tmpFile.delete();
+    /** Renames a source file to a target one, an existing target is replaced.
+     * <p>The move is atomic where the file system supports it, so the target always
+     * contains either the original or the new content - the data file is never missing.
+     * A move between two file systems (a data file on another drive, for example)
+     * can't be atomic, so it falls back to a plain replacement. */
+    public static void rename(final File source, final File target) throws IOException {
+        final Path from = source.toPath();
+        final Path to = target.toPath();
+        try {
+            Files.move(from, to, REPLACE_EXISTING, ATOMIC_MOVE);
+        } catch (AtomicMoveNotSupportedException e) {
+            Files.move(from, to, REPLACE_EXISTING);
         }
     }
 
@@ -404,23 +386,23 @@ public final class ApplTools {
         return file;
     }
 
-    /** Creates a new instance of Str */
-    public static String getFileContent(File file, Charset enc, int maxLength) throws IOException {
-        if (file==null || !file.isFile()) { return ""; }
-
-        FileInputStream fis = null;
-        try {
-            fis = new FileInputStream(file);
-            InputStreamReader isr = new InputStreamReader(fis, enc);
-            int length = (int) Math.min(maxLength, file.length());
-            char[] chars = new char[length];
-            int loaded = isr.read(chars);
-            return new String(chars, 0, loaded);
-        } finally {
-            if (fis!=null) {
-                fis.close();
+    /** Reads a text of the file up to the maximal length of the characters.
+     * A malformed character is replaced, so a damaged file can still be read.
+     * @return An empty text for a missing file, never the {@code null}. */
+    public static String getFileContent(final File file, final Charset enc, final int maxLength) throws IOException {
+        if (file == null || !file.isFile()) {
+            return "";
+        }
+        final StringBuilder result = new StringBuilder((int) Math.min(maxLength, file.length()));
+        try (Reader reader = new InputStreamReader(Files.newInputStream(file.toPath()), enc)) {
+            final char[] buffer = new char[8192];
+            int count;
+            while (result.length() < maxLength
+                    && (count = reader.read(buffer, 0, Math.min(buffer.length, maxLength - result.length()))) >= 0) {
+                result.append(buffer, 0, count);
             }
         }
+        return result.toString();
     }
 
     /** Register Escape Action. */

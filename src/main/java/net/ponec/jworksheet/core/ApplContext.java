@@ -591,7 +591,10 @@ public class ApplContext implements TableModelListener, Runnable, JwsContext {
     public void saveParameters() {
         try {
             final String msg = "A " + JWorkSheet.APPL_NAME + " configuration file:";
-            BundleManager.save(getConfigFile(), parameters, msg);
+            // A temporary file is renamed, so a failure never damages the original file:
+            final File tempFile = File.createTempFile("config", EXTENSION_TMP, getConfigDir());
+            BundleManager.save(tempFile, parameters, msg);
+            ApplTools.rename(tempFile, getConfigFile());
         } catch (Throwable e) {
             LOGGER.log(Level.WARNING, "Can't save Parameters to " + getConfigFile(), e);
         }
