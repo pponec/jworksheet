@@ -11,7 +11,6 @@ package net.ponec.jworksheet.report;
 
 import net.ponec.jworksheet.bo.meta.MetaParameters;
 import net.ponec.jworksheet.bo.meta.MetaWorkDay;
-import net.ponec.jworksheet.bo.meta.MetaWorkSpace;
 
 import java.io.IOException;
 import java.util.List;
@@ -70,12 +69,12 @@ public abstract class SuperReport implements Calculator {
         
         // Loop:
         for(WorkDay workDay : applContext.getWorkSpace().getDays()) {
-            YearMonthDay ymd = workDay.get(MetaWorkDay.date);
+            YearMonthDay ymd = workDay.getDate();
             if (ymd.compareTo(dateFrom)>=0
             &&  ymd.compareTo(dateTo  )<=0
             &&  workDay.getEvents().size()>0
             ){
-                if (!workDay.get(MetaWorkDay.dayOff)) {
+                if (!workDay.isDayOff()) {
                     ++workDayCount;
                 }
                 for (Event event : workDay.getEvents()) {
@@ -178,7 +177,7 @@ public abstract class SuperReport implements Calculator {
     /** Create HTML report */
     public String getReport(String body, String title ) {
 
-        String username = applContext.getParameters().get(MetaParameters.username);
+        String username = applContext.getParameters().getUsername();
 
         if (title==null) {
             title = JWorkSheet.APPL_NAME + " Report for " + username;
@@ -195,7 +194,7 @@ public abstract class SuperReport implements Calculator {
          , "<meta name=\"Generator\" content=\""+JWorkSheet.APPL_NAME+"\" />"
          , "<link rel=\"stylesheet\" type=\"text/css\" href=\""+Keys.defaultOf(MetaParameters.reportCss)                    +"\" />"
          //, "<!-- A style from an application setup -- >"
-         , "<link rel=\"stylesheet\" type=\"text/css\" href=\""+applContext.getParameters().get(MetaParameters.reportCss)+"\" />"
+         , "<link rel=\"stylesheet\" type=\"text/css\" href=\""+applContext.getParameters().getReportCss()+"\" />"
          , "</head>"
          , "<body>"
          , "<h2 style=\"margin-bottom:0px;\">" + escape(title) + "</h2>"
@@ -239,7 +238,7 @@ public abstract class SuperReport implements Calculator {
         final List<WorkDay> days = applContext.getWorkSpace().getDays();
         for(WorkDay day : days) {
             if (MetaWorkDay.date.equals(day, aDay)) {
-                final boolean result = day.get(MetaWorkDay.dayOff);
+                final boolean result = day.isDayOff();
                 return result;
             }
         }

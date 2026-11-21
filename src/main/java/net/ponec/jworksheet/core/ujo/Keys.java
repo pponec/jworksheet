@@ -16,12 +16,15 @@
 
 package net.ponec.jworksheet.core.ujo;
 
+import java.lang.invoke.MethodType;
+import java.lang.reflect.Array;
 import java.lang.reflect.Field;
 import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
+import java.util.concurrent.ConcurrentHashMap;
 import org.ujorm.core.DomainHandlerProvider;
 import org.ujorm.core.Key;
 
@@ -38,10 +41,10 @@ import org.ujorm.core.Key;
 public final class Keys {
 
     /** A cache of the prototypes to resolve the default values. */
-    private static final Map<Class<?>, Object> PROTOTYPES = new HashMap<>();
+    private static final Map<Class<?>, Object> PROTOTYPES = new ConcurrentHashMap<>();
 
     /** A cache of the fields of the keys. */
-    private static final Map<Key<?, ?>, Field> FIELDS = new HashMap<>();
+    private static final Map<Key<?, ?>, Field> FIELDS = new ConcurrentHashMap<>();
 
     private Keys() {
     }
@@ -51,6 +54,14 @@ public final class Keys {
     /** Returns all the keys of a domain class in the order of the field declaration. */
     public static <D> List<Key<D, ?>> keysOf(final Class<D> domainClass) {
         return DomainHandlerProvider.getHandler(domainClass).getKeyList();
+    }
+
+    /** Returns all the keys of a domain class whose type is not known at the compile time.
+     * The keys are typed to the {@link Object}, so they can read and write a value
+     * of any domain object without a cast. */
+    @SuppressWarnings({"unchecked", "rawtypes"})
+    public static List<Key<Object, Object>> keysOfAny(final Class<?> domainClass) {
+        return (List) keysOf(domainClass);
     }
 
     /** Returns a name of the key used by the XML documents, the configuration file and
@@ -85,18 +96,13 @@ public final class Keys {
 
     /** Returns a field of the domain class which declares the key. */
     public static Field fieldOf(final Key<?, ?> key) {
-        synchronized (FIELDS) {
-            Field result = FIELDS.get(key);
-            if (result == null) {
-                try {
-                    result = key.domainClass().getDeclaredField(key.name());
-                } catch (NoSuchFieldException e) {
-                    throw new IllegalStateException("No field of the key: " + fullNameOf(key), e);
-                }
-                FIELDS.put(key, result);
+        return FIELDS.computeIfAbsent(key, k -> {
+            try {
+                return k.domainClass().getDeclaredField(k.name());
+            } catch (NoSuchFieldException e) {
+                throw new IllegalStateException("No field of the key: " + fullNameOf(k), e);
             }
-            return result;
-        }
+        });
     }
 
     /** A name of the key including its domain class, for the error messages. */
@@ -124,27 +130,28 @@ public final class Keys {
      * <p>The Ujorm 3 does not know the default values, so the value is read from a prototype
      * instance of the domain class - the field initializers are the single source of the truth.
      * The prototype is created lazily and cached, so a dynamic default (a system locale
-     * or a system login) is evaluated exactly once. */
+     * or a system login) is evaluated exactly once.
+     * <p><strong>The value is shared</strong> by all the callers, so a mutable value
+     * (a {@code Rectangle}, a {@code Date} or a {@code List}) must not be modified,
+     * otherwise the default value changes for the whole application. */
     public static <D, V> V defaultOf(final Key<D, V> key) {
         return key.getValue(prototypeOf(key.domainClass()));
     }
 
     /** Has the domain object the default value of the key? */
     public static <D, V> boolean isDefault(final Key<D, V> key, final D domain) {
-        return java.util.Objects.equals(key.getValue(domain), defaultOf(key));
+        return isDefaultValue(key, key.getValue(domain));
+    }
+
+    /** Is the value equal to the default value of the key? */
+    public static boolean isDefaultValue(final Key<?, ?> key, final Object value) {
+        return Objects.equals(value, defaultOf(key));
     }
 
     /** Returns a shared prototype of the domain class to read the default values from. */
     @SuppressWarnings("unchecked")
     private static <D> D prototypeOf(final Class<D> domainClass) {
-        synchronized (PROTOTYPES) {
-            Object result = PROTOTYPES.get(domainClass);
-            if (result == null) {
-                result = newInstance(domainClass);
-                PROTOTYPES.put(domainClass, result);
-            }
-            return (D) result;
-        }
+        return (D) PROTOTYPES.computeIfAbsent(domainClass, Keys::newInstance);
     }
 
     /** Creates a new instance of the domain class. */
@@ -161,30 +168,11 @@ public final class Keys {
 
     /** Returns a wrapper of the primitive type, or the original class. */
     public static Class<?> box(final Class<?> type) {
-        if (!type.isPrimitive()) {
-            return type;
-        }
-        if (type == boolean.class) { return Boolean.class; }
-        if (type == byte.class) { return Byte.class; }
-        if (type == char.class) { return Character.class; }
-        if (type == short.class) { return Short.class; }
-        if (type == int.class) { return Integer.class; }
-        if (type == long.class) { return Long.class; }
-        if (type == float.class) { return Float.class; }
-        if (type == double.class) { return Double.class; }
-        throw new IllegalArgumentException("Unsupported type: " + type);
+        return MethodType.methodType(type).wrap().returnType();
     }
 
-    /** Returns a zero value of the primitive type. */
+    /** Returns a zero value of the primitive type: {@code false}, {@code 0} or {@code '\0'}. */
     private static Object zeroOf(final Class<?> type) {
-        if (type == boolean.class) { return Boolean.FALSE; }
-        if (type == byte.class) { return (byte) 0; }
-        if (type == char.class) { return (char) 0; }
-        if (type == short.class) { return (short) 0; }
-        if (type == int.class) { return 0; }
-        if (type == long.class) { return 0L; }
-        if (type == float.class) { return 0f; }
-        if (type == double.class) { return 0d; }
-        throw new IllegalArgumentException("Unsupported type: " + type);
+        return Array.get(Array.newInstance(type, 1), 0);
     }
 }

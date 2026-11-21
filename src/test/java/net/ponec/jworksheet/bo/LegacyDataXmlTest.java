@@ -16,11 +16,6 @@
 
 package net.ponec.jworksheet.bo;
 
-import net.ponec.jworksheet.bo.meta.MetaEvent;
-import net.ponec.jworksheet.bo.meta.MetaProject;
-import net.ponec.jworksheet.bo.meta.MetaTaskType;
-import net.ponec.jworksheet.bo.meta.MetaWorkDay;
-import net.ponec.jworksheet.bo.meta.MetaWorkSpace;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -51,11 +46,11 @@ public class LegacyDataXmlTest extends XmlTestSupport {
     public void workSpaceAttributes() throws IOException {
         final WorkSpace workSpace = loadXml(readDataFile());
 
-        assertEquals("1.00", workSpace.get(MetaWorkSpace.version).toString());
-        assertEquals("Pavel", workSpace.get(MetaWorkSpace.username));
-        assertNotNull(workSpace.get(MetaWorkSpace.created));
-        assertNotNull(workSpace.get(MetaWorkSpace.archived));
-        assertEquals("1.00", workSpace.get(MetaWorkSpace.checkReleaseVersion).toString());
+        assertEquals("1.00", workSpace.getVersion().toString());
+        assertEquals("Pavel", workSpace.getUsername());
+        assertNotNull(workSpace.getCreated());
+        assertNotNull(workSpace.getArchived());
+        assertEquals("1.00", workSpace.getCheckReleaseVersion().toString());
     }
 
     @Test
@@ -65,24 +60,24 @@ public class LegacyDataXmlTest extends XmlTestSupport {
 
         assertEquals(1, workSpace.getDays().size());
         final WorkDay day = workSpace.getDays().get(0);
-        assertEquals("2021-03-14", day.get(MetaWorkDay.date).toString());
-        assertFalse(day.get(MetaWorkDay.dayOff));
+        assertEquals("2021-03-14", day.getDate().toString());
+        assertFalse(day.isDayOff());
         assertEquals(2, day.getEvents().size());
 
         final Event first = day.getEvents().get(0);
         assertEquals("08:00", first.getStartTime().toString());
-        assertEquals(Short.valueOf((short) 240), first.get(MetaEvent.period));
+        assertEquals(Short.valueOf((short) 240), first.getPeriod());
         assertEquals("12:00", first.getTimeFinished().toString());
-        assertEquals("Water the garden", first.get(MetaEvent.project).get(MetaProject.descr));
-        assertEquals("Roses", first.get(MetaEvent.task).get(MetaTaskType.descr));
-        assertEquals("", first.get(MetaEvent.descr));
+        assertEquals("Water the garden", first.getProject().getDescr());
+        assertEquals("Roses", first.getTask().getDescr());
+        assertEquals("", first.getDescr());
         assertFalse(first.isPrivate());
 
         final Event second = day.getEvents().get(1);
         assertEquals("12:00", second.getStartTime().toString());
-        assertEquals(Short.valueOf((short) 0), second.get(MetaEvent.period));
-        assertEquals("Dinner", second.get(MetaEvent.project).get(MetaProject.descr));
-        assertNull(second.get(MetaEvent.task), "The event has no TaskID element");
+        assertEquals(Short.valueOf((short) 0), second.getPeriod());
+        assertEquals("Dinner", second.getProject().getDescr());
+        assertNull(second.getTask(), "The event has no TaskID element");
         assertTrue(second.isPrivate(), "The project 'Dinner' is a private one");
     }
 
@@ -99,11 +94,11 @@ public class LegacyDataXmlTest extends XmlTestSupport {
         assertEquals(1, workSpace.findProject(1).getTasks().size());
         assertEquals(0, workSpace.findProject(2).getTasks().size());
 
-        assertTrue(workSpace.findProject(3).get(MetaProject.privateProject));
-        assertTrue(workSpace.findProject(5).get(MetaProject.privateProject));
-        assertFalse(workSpace.findProject(4).get(MetaProject.privateProject));
+        assertTrue(workSpace.findProject(3).isPrivateProject());
+        assertTrue(workSpace.findProject(5).isPrivateProject());
+        assertFalse(workSpace.findProject(4).isPrivateProject());
 
-        assertEquals("No comment", workSpace.findProject(3).findDefaultTask().get(MetaTaskType.descr));
+        assertEquals("No comment", workSpace.findProject(3).findDefaultTask().getDescr());
     }
 
     @Test

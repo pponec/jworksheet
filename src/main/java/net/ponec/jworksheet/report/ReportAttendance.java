@@ -17,8 +17,6 @@
 
 package net.ponec.jworksheet.report;
 
-import net.ponec.jworksheet.bo.meta.MetaEvent;
-import net.ponec.jworksheet.bo.meta.MetaProject;
 import net.ponec.jworksheet.bo.meta.MetaWorkDay;
 
 import java.io.IOException;
@@ -77,12 +75,12 @@ public class ReportAttendance extends SuperReport {
 
         } else {
 
-            if (event.get(MetaEvent.project).get(MetaProject.privateProject)) {
-                breakTime += event.get(MetaEvent.period);
+            if (event.getProject().isPrivateProject()) {
+                breakTime += event.getPeriod();
             } else {
-                workTime  += event.get(MetaEvent.period);
+                workTime  += event.getPeriod();
 
-                String descr = event.get(MetaEvent.descr);
+                String descr = event.getDescr();
                 if (!descrs.contains(descr)) {
                     descrs.add(descr);
                 }
@@ -92,7 +90,7 @@ public class ReportAttendance extends SuperReport {
             if (arrival > startTime) {
                 arrival = startTime;
             }
-            int endTime = startTime + event.get(MetaEvent.period);
+            int endTime = startTime + event.getPeriod();
             if (departure < endTime) {
                 departure = endTime;
             }

@@ -20,12 +20,13 @@ import jakarta.persistence.Column;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import lombok.Getter;
+import lombok.Setter;
 import net.ponec.jworksheet.bo.item.YearMonthDay;
 import net.ponec.jworksheet.bo.meta.MetaWorkSpace;
 import net.ponec.jworksheet.core.Version;
 import net.ponec.jworksheet.core.ujo.ExportAction;
 import net.ponec.jworksheet.core.ujo.Exportable;
-import net.ponec.jworksheet.core.ujo.Keys;
 import net.ponec.jworksheet.gui.JWorkSheet;
 import org.ujorm.annotation.Domain;
 import org.ujorm.core.Key;
@@ -37,6 +38,8 @@ import org.ujorm.core.Key;
  * @composed 1 - * Project
  */
 @Domain
+@Getter
+@Setter
 public class WorkSpace implements Exportable {
 
     @Column(name = "Version")
@@ -65,64 +68,8 @@ public class WorkSpace implements Exportable {
 
     // ------------------------ JAVABEAN ------------------------
 
-    public Version getVersion() {
-        return version;
-    }
-
-    public void setVersion(final Version version) {
-        this.version = version;
-    }
-
-    public Date getCreated() {
-        return created;
-    }
-
-    public void setCreated(final Date created) {
-        this.created = created;
-    }
-
-    public Date getArchived() {
-        return archived;
-    }
-
-    public void setArchived(final Date archived) {
-        this.archived = archived;
-    }
-
-    public String getUsername() {
-        return username;
-    }
-
-    public void setUsername(final String username) {
-        this.username = username;
-    }
-
-    public Date getCheckReleaseDate() {
-        return checkReleaseDate;
-    }
-
-    public void setCheckReleaseDate(final Date checkReleaseDate) {
-        this.checkReleaseDate = checkReleaseDate;
-    }
-
-    public Version getCheckReleaseVersion() {
-        return checkReleaseVersion;
-    }
-
-    public void setCheckReleaseVersion(final Version checkReleaseVersion) {
-        this.checkReleaseVersion = checkReleaseVersion;
-    }
-
-    public List<WorkDay> getDays() {
-        return days;
-    }
-
     public void setDays(final List<WorkDay> days) {
         this.days = days != null ? days : new ArrayList<>();
-    }
-
-    public List<Project> getProjects() {
-        return projects;
     }
 
     public void setProjects(final List<Project> projects) {
@@ -283,16 +230,5 @@ public class WorkSpace implements Exportable {
             }
         }
         return result;
-    }
-
-    // ------------------------ KEY ACCESS ------------------------
-
-    public <V> V get(final Key<WorkSpace,V> key) {
-        return key.getValue(this);
-    }
-
-    public <V> WorkSpace set(final Key<WorkSpace,V> key, final V value) {
-        Keys.write(key, this, value);
-        return this;
     }
 }

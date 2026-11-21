@@ -14,16 +14,16 @@
   * http://www.gnu.org/licenses/gpl-2.0.txt
   */
 
-
 package net.ponec.jworksheet.bo;
 
 import jakarta.persistence.Column;
+import lombok.Getter;
+import lombok.Setter;
 import net.ponec.jworksheet.bo.item.Time;
 import net.ponec.jworksheet.bo.item.TimeCodec;
 import net.ponec.jworksheet.bo.meta.MetaEvent;
 import net.ponec.jworksheet.core.ujo.ExportAction;
 import net.ponec.jworksheet.core.ujo.Exportable;
-import net.ponec.jworksheet.core.ujo.Keys;
 import net.ponec.jworksheet.core.ujo.TextValue;
 import org.ujorm.annotation.Domain;
 import org.ujorm.core.Key;
@@ -37,6 +37,8 @@ import org.ujorm.core.Key;
  * always contains the identifiers of the currently assigned objects.
  */
 @Domain
+@Getter
+@Setter
 public class Event implements Exportable {
 
     public static final Short ZERO_SHORT = (short) 0;
@@ -65,25 +67,9 @@ public class Event implements Exportable {
 
     // ------------------------ JAVABEAN ------------------------
 
-    public short getTime() {
-        return time;
-    }
-
-    public void setTime(final short time) {
-        this.time = time;
-    }
-
-    public short getPeriod() {
-        return period;
-    }
-
     /** A negative period is normalized to the zero. */
     public void setPeriod(final short period) {
         this.period = period > 0 ? period : 0;
-    }
-
-    public Project getProject() {
-        return project;
     }
 
     /** Assigning a project keeps its identifier in sync. */
@@ -98,14 +84,6 @@ public class Event implements Exportable {
         return project != null ? Integer.valueOf(project.getId()) : projectId;
     }
 
-    public void setProjectId(final Integer projectId) {
-        this.projectId = projectId;
-    }
-
-    public TaskType getTask() {
-        return task;
-    }
-
     /** Assigning a task keeps its identifier in sync. */
     public void setTask(final TaskType task) {
         this.task = task;
@@ -115,14 +93,6 @@ public class Event implements Exportable {
     /** The identifier is read from the assigned task, see the {@link #getProjectId()}. */
     public Integer getTaskId() {
         return task != null ? Integer.valueOf(task.getId()) : taskId;
-    }
-
-    public void setTaskId(final Integer taskId) {
-        this.taskId = taskId;
-    }
-
-    public String getDescr() {
-        return descr;
     }
 
     /** An undefined description is replaced by an empty text. */
@@ -184,16 +154,5 @@ public class Event implements Exportable {
                 && key != MetaEvent.task;
         }
         return true;
-    }
-
-    // ------------------------ KEY ACCESS ------------------------
-
-    public <V> V get(final Key<Event,V> key) {
-        return key.getValue(this);
-    }
-
-    public <V> Event set(final Key<Event,V> key, final V value) {
-        Keys.write(key, this, value);
-        return this;
     }
 }

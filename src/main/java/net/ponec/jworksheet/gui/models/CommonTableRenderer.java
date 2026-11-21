@@ -14,16 +14,14 @@
   * http://www.gnu.org/licenses/gpl-2.0.txt
   */
 
-
 package net.ponec.jworksheet.gui.models;
-
-import net.ponec.jworksheet.bo.meta.MetaParameters;
 
 import java.awt.Color;
 import java.awt.Component;
 import javax.swing.JLabel;
 import javax.swing.JTable;
 import javax.swing.table.DefaultTableCellRenderer;
+import lombok.RequiredArgsConstructor;
 import net.ponec.jworksheet.core.ApplContext;
 import net.ponec.jworksheet.bo.Parameters;
 import net.ponec.jworksheet.core.ApplTools;
@@ -32,6 +30,7 @@ import net.ponec.jworksheet.core.ApplTools;
  * EventTableRenderer.
  * @author Pavel Ponec
  */
+@RequiredArgsConstructor
 public class CommonTableRenderer extends DefaultTableCellRenderer {
     
     /** Context */
@@ -39,12 +38,6 @@ public class CommonTableRenderer extends DefaultTableCellRenderer {
     
     protected Color colorAlt = null;
     
-    /**
-     * Creates a new instance of EventTableRenderer
-     */
-    public CommonTableRenderer(ApplContext context) {
-        this.context = context;
-    }
     
     @Override
     public Component getTableCellRendererComponent
@@ -80,10 +73,10 @@ public class CommonTableRenderer extends DefaultTableCellRenderer {
         
         Color result;
         if (row%2==0) {
-            result = context.getParameters().get(MetaParameters.colorOfEditableArea);
+            result = context.getParameters().getColorOfEditableArea();
         } else {
             if (colorAlt==null) {
-                colorAlt = context.getParameters().get(MetaParameters.colorOfEditableArea);
+                colorAlt = context.getParameters().getColorOfEditableArea();
                 colorAlt = ApplTools.modify(colorAlt, 30);
             }
             result = colorAlt;

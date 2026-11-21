@@ -16,11 +16,6 @@
 
 package net.ponec.jworksheet.bo;
 
-import net.ponec.jworksheet.bo.meta.MetaEvent;
-import net.ponec.jworksheet.bo.meta.MetaProject;
-import net.ponec.jworksheet.bo.meta.MetaTaskType;
-import net.ponec.jworksheet.bo.meta.MetaWorkDay;
-import net.ponec.jworksheet.bo.meta.MetaWorkSpace;
 
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
@@ -115,17 +110,18 @@ public abstract class XmlTestSupport {
             , final String description
             , final boolean defaultTask
             , final boolean finished) {
-        return new TaskType()
-                .set(MetaTaskType.id, id)
-                .set(MetaTaskType.descr, description)
-                .set(MetaTaskType.defaultTask, defaultTask)
-                .set(MetaTaskType.finished, finished);
+        final TaskType result = new TaskType();
+        result.setId(id);
+        result.setDescr(description);
+        result.setDefaultTask(defaultTask);
+        result.setFinished(finished);
+        return result;
     }
 
     protected static Project newProject(final int id, final String description, final TaskType... tasks) {
-        final Project result = new Project()
-                .set(MetaProject.id, id)
-                .set(MetaProject.descr, description);
+        final Project result = new Project();
+        result.setId(id);
+        result.setDescr(description);
         for (TaskType task : tasks) {
             result.getTasks().add(task);
         }
@@ -138,17 +134,18 @@ public abstract class XmlTestSupport {
             , final Project project
             , final TaskType task
             , final String description) {
-        final Event result = new Event()
-                .set(MetaEvent.period, (short) period)
-                .set(MetaEvent.project, project)
-                .set(MetaEvent.task, task)
-                .set(MetaEvent.descr, description);
+        final Event result = new Event();
+        result.setPeriod((short) period);
+        result.setProject(project);
+        result.setTask(task);
+        result.setDescr(description);
         result.setStartTime(new Time(time));
         return result;
     }
 
     protected static WorkDay newDay(final String date, final Event... events) {
-        final WorkDay result = new WorkDay().set(MetaWorkDay.date, new YearMonthDay(date));
+        final WorkDay result = new WorkDay();
+        result.setDate(new YearMonthDay(date));
         for (Event event : events) {
             result.getEvents().add(event);
         }
@@ -157,7 +154,9 @@ public abstract class XmlTestSupport {
 
     /** A minimal WorkSpace with the mandatory attributes assigned. */
     protected static WorkSpace newWorkSpace() {
-        return new WorkSpace().set(MetaWorkSpace.archived, newDate(2021, Calendar.MARCH, 14, 11, 42, 58));
+        final WorkSpace result = new WorkSpace();
+        result.setArchived(newDate(2021, Calendar.MARCH, 14, 11, 42, 58));
+        return result;
     }
 
     /** A time zone independent date without milliseconds. */

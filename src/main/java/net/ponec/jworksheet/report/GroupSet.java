@@ -14,13 +14,12 @@
   * http://www.gnu.org/licenses/gpl-2.0.txt
   */
 
-
 package net.ponec.jworksheet.report;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import lombok.RequiredArgsConstructor;
 import net.ponec.jworksheet.bo.Event;
-import net.ponec.jworksheet.core.ujo.Keys;
 import org.ujorm.core.Key;
 import net.ponec.jworksheet.core.ujo.UjoComparator;
 
@@ -28,29 +27,25 @@ import net.ponec.jworksheet.core.ujo.UjoComparator;
  * Report Set
  * @author Pavel Ponec
  */
+@RequiredArgsConstructor
 public class GroupSet {
 
     /** Task Group Collection */
     protected ArrayList<TaskGroup> tasks = new ArrayList<TaskGroup>();
 
     /** Task Group Comparator */
-    protected UjoComparator<TaskGroup> comparator;
+    protected final UjoComparator<TaskGroup> comparator;
 
-    protected Key<Event,Short> propertyTime;
+    protected final Key<Event,Short> propertyTime;
 
     protected boolean showEmptyProject = false;
 
     /** Look-up KEY. */
     protected TaskGroup key = new TaskGroup(null);
 
-    public GroupSet(UjoComparator<TaskGroup> comparator, Key<Event,Short> propertyTime) {
-        this.comparator   = comparator;
-        this.propertyTime = propertyTime;
-    }
-
     /** Insert or create an task group. */
     public TaskGroup addTime(Event event) {
-        short period = event.get(propertyTime);
+        short period = propertyTime.getValue(event);
         if (showEmptyProject || period>0) {
             TaskGroup taskGroup = findTaskGroup(event);
             taskGroup.addTime( period );
@@ -102,7 +97,5 @@ public class GroupSet {
     public void setShowEmptyProject(boolean showEmptyProject) {
         this.showEmptyProject = showEmptyProject;
     }
-
-
 
 }

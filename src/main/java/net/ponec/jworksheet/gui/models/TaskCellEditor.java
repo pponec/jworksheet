@@ -17,7 +17,6 @@
 
 package net.ponec.jworksheet.gui.models;
 
-import net.ponec.jworksheet.bo.meta.MetaEvent;
 
 import java.awt.Component;
 import java.util.ArrayList;
@@ -50,7 +49,7 @@ public class TaskCellEditor extends DefaultCellEditor implements TableCellEditor
 
         UjoTableModel tableModel = (UjoTableModel) table.getModel();
         final Event event = (Event) tableModel.getRow(row);
-        final Project project = event.get(MetaEvent.project);
+        final Project project = event.getProject();
         final ArrayList<TaskType> tasks = project!=null ? project.getOpenTasks() : null;
 
         if (tasks!=null && tasks.size()>0) {

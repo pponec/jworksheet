@@ -279,9 +279,9 @@ public class ApplContext implements TableModelListener, Runnable, JwsContext {
     public synchronized void saveData(boolean includeParams) {
         try {
             // WorkSpace attributes
-            workSpace.set(MetaWorkSpace.created, new Date());
-            workSpace.set(MetaWorkSpace.version  , JWorkSheet.APPL_VERSION);
-            workSpace.set(MetaWorkSpace.username, MetaParameters.username.getValue(getParameters()));
+            workSpace.setCreated(new Date());
+            workSpace.setVersion(JWorkSheet.APPL_VERSION);
+            workSpace.setUsername(MetaParameters.username.getValue(getParameters()));
 
             String comment = " <?xml-stylesheet type=\"text/xsl\" href=\"styles/"
                     + ResourceProvider.REPORT_BASE

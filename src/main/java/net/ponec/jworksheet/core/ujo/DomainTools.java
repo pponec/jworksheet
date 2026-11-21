@@ -39,7 +39,7 @@ public final class DomainTools {
      * @param depth A depth of the copy. A value less than one provides the original object.
      * @return A new instance of the domain object.
      */
-    @SuppressWarnings({"unchecked", "rawtypes"})
+    @SuppressWarnings("unchecked")
     public static <T> T deepCopy(final T source, final int depth) {
         if (source == null || depth <= 0) {
             return source;
@@ -47,15 +47,15 @@ public final class DomainTools {
         final Class<T> domainClass = (Class<T>) source.getClass();
         final T result = Keys.newInstance(domainClass);
 
-        for (Key<T,?> key : Keys.keysOf(domainClass)) {
+        for (Key<Object, Object> key : Keys.keysOfAny(domainClass)) {
             if (Keys.isList(key)) {
                 final List<Object> items = new ArrayList<>();
                 for (Object item : (List<?>) key.getValue(source)) {
                     items.add(deepCopy(item, depth - 1));
                 }
-                ((Key) key).setValue(result, items);
+                key.setValue(result, items);
             } else {
-                Keys.copy((Key) key, source, result);
+                Keys.copy(key, source, result);
             }
         }
         return result;

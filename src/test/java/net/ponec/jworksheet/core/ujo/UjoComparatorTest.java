@@ -32,7 +32,10 @@ import static org.junit.jupiter.api.Assertions.*;
 public class UjoComparatorTest {
 
     private static TaskType newTask(final int id, final String descr) {
-        return new TaskType().set(MetaTaskType.id, id).set(MetaTaskType.descr, descr);
+        final TaskType result = new TaskType();
+        result.setId(id);
+        result.setDescr(descr);
+        return result;
     }
 
     @Test
@@ -45,9 +48,9 @@ public class UjoComparatorTest {
 
         UjoComparator.<TaskType>newInstance(MetaTaskType.id, MetaTaskType.descr).sort(list);
 
-        assertEquals("Charlie", list.get(0).get(MetaTaskType.descr));
-        assertEquals("Alfa", list.get(1).get(MetaTaskType.descr));
-        assertEquals("Bravo", list.get(2).get(MetaTaskType.descr));
+        assertEquals("Charlie", list.get(0).getDescr());
+        assertEquals("Alfa", list.get(1).getDescr());
+        assertEquals("Bravo", list.get(2).getDescr());
     }
 
     @Test
@@ -55,7 +58,7 @@ public class UjoComparatorTest {
     public void undefinedValueIsFirst() {
         final UjoComparator<TaskType> comparator = UjoComparator.newInstance(MetaTaskType.descr);
         final TaskType undefined = newTask(1, null); // The setter stores an empty text
-        undefined.set(MetaTaskType.descr, null);
+        undefined.setDescr(null);
 
         final TaskType defined = newTask(2, "Alfa");
         assertTrue(comparator.compare(undefined, defined) < 0);

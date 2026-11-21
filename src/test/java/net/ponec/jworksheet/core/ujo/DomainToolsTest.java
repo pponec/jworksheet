@@ -16,8 +16,6 @@
 
 package net.ponec.jworksheet.core.ujo;
 
-import net.ponec.jworksheet.bo.meta.MetaProject;
-import net.ponec.jworksheet.bo.meta.MetaTaskType;
 
 import net.ponec.jworksheet.bo.Project;
 import net.ponec.jworksheet.bo.TaskType;
@@ -32,13 +30,14 @@ import static org.junit.jupiter.api.Assertions.*;
 public class DomainToolsTest {
 
     private static Project newProject() {
-        final Project result = new Project()
-                .set(MetaProject.id, 3)
-                .set(MetaProject.descr, "Water the garden")
-                .set(MetaProject.privateProject, true);
-        result.getTasks().add(new TaskType()
-                .set(MetaTaskType.id, 1)
-                .set(MetaTaskType.descr, "Roses"));
+        final Project result = new Project();
+        result.setId(3);
+        result.setDescr("Water the garden");
+        result.setPrivateProject(true);
+        final TaskType task = new TaskType();
+        task.setId(1);
+        task.setDescr("Roses");
+        result.getTasks().add(task);
         return result;
     }
 
@@ -49,9 +48,9 @@ public class DomainToolsTest {
         final Project result = DomainTools.deepCopy(source, 2);
 
         assertNotSame(source, result);
-        assertEquals(3, result.get(MetaProject.id));
-        assertEquals("Water the garden", result.get(MetaProject.descr));
-        assertTrue(result.get(MetaProject.privateProject));
+        assertEquals(3, result.getId());
+        assertEquals("Water the garden", result.getDescr());
+        assertTrue(result.isPrivateProject());
     }
 
     @Test
@@ -65,10 +64,10 @@ public class DomainToolsTest {
         final TaskType resultTask = result.getTasks().get(0);
 
         assertNotSame(sourceTask, resultTask, "The item is copied");
-        assertEquals("Roses", resultTask.get(MetaTaskType.descr));
+        assertEquals("Roses", resultTask.getDescr());
 
-        resultTask.set(MetaTaskType.descr, "Tulips");
-        assertEquals("Roses", sourceTask.get(MetaTaskType.descr), "The source is not affected");
+        resultTask.setDescr("Tulips");
+        assertEquals("Roses", sourceTask.getDescr(), "The source is not affected");
     }
 
     @Test
@@ -87,7 +86,7 @@ public class DomainToolsTest {
         final Project source = newProject();
         final Project result = DomainTools.deepCopy(source, 1);
 
-        result.getTasks().add(new TaskType().set(MetaTaskType.id, 2));
+        result.getTasks().add(new TaskType());
         assertEquals(1, source.getTasks().size(), "The source list is not affected");
         assertEquals(2, result.getTasks().size());
     }

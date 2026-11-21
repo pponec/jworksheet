@@ -14,12 +14,10 @@
   * http://www.gnu.org/licenses/gpl-2.0.txt
   */
 
-
 package net.ponec.jworksheet.gui.models;
 
+import lombok.RequiredArgsConstructor;
 import net.ponec.jworksheet.bo.meta.MetaEvent;
-import net.ponec.jworksheet.bo.meta.MetaParameters;
-import net.ponec.jworksheet.bo.meta.MetaProject;
 
 import java.awt.Color;
 import java.awt.Component;
@@ -32,13 +30,13 @@ import net.ponec.jworksheet.bo.Event;
 import net.ponec.jworksheet.bo.Project;
 import net.ponec.jworksheet.core.ApplTools;
 import net.ponec.jworksheet.gui.component.*;
-import net.ponec.jworksheet.core.ujo.Keys;
 import org.ujorm.core.Key;
 
 /**
  * EventTableRenderer.
  * @author Pavel Ponec
  */
+@RequiredArgsConstructor
 public class EventTableRenderer extends DefaultTableCellRenderer {
     
     /** Context */
@@ -49,12 +47,6 @@ public class EventTableRenderer extends DefaultTableCellRenderer {
     final protected boolean nimbus = ApplTools.isNimbusLAF();
     
     
-    /**
-     * Creates a new instance of EventTableRenderer
-     */
-    public EventTableRenderer(ApplContext context) {
-        this.context = context;
-    }
     
     @Override
     public Component getTableCellRendererComponent
@@ -86,9 +78,9 @@ public class EventTableRenderer extends DefaultTableCellRenderer {
             && model.isCellEditable(rowIndex, column)
             ;
         
-        Project project = event.get(MetaEvent.project);
+        Project project = event.getProject();
         boolean finishedProj = project!=null && projOrTask && event.isFinished(column);
-        boolean privateProj  = project!=null && project.get(MetaProject.privateProject);
+        boolean privateProj  = project!=null && project.isPrivateProject();
         
         result.setForeground
         ( isSelected   ? aTable.getSelectionForeground()
@@ -122,19 +114,19 @@ public class EventTableRenderer extends DefaultTableCellRenderer {
     
     /** Get Color of a private project. */
     protected Color getColorOfPrivateProject() {
-        return context.getParameters().get(MetaParameters.colorOfPrivateProject);
+        return context.getParameters().getColorOfPrivateProject();
     }
     
     /** Get a Color of an editable area. */
     protected Color getColorOfFihishedProject() {
-        final Color result = context.getParameters().get(MetaParameters.colorOfFinishedProject);
+        final Color result = context.getParameters().getColorOfFinishedProject();
         return result;
     }
 
     
     /** Get a Color of an editable area. */
     protected Color getColorOfEditableArea() {
-        return context.getParameters().get(MetaParameters.colorOfEditableArea);
+        return context.getParameters().getColorOfEditableArea();
     }
     
     /** Get a Color of an editable area. */

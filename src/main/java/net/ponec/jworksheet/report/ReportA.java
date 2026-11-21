@@ -18,8 +18,6 @@
 package net.ponec.jworksheet.report;
 
 import net.ponec.jworksheet.bo.meta.MetaEvent;
-import net.ponec.jworksheet.bo.meta.MetaParameters;
-import net.ponec.jworksheet.bo.meta.MetaProject;
 import net.ponec.jworksheet.report.meta.MetaTaskGroup;
 
 import java.io.IOException;
@@ -89,10 +87,10 @@ public class ReportA extends SuperReport {
         sb.append("</tr>");
         
         for(TaskGroup group : groupSet.getGroups()) {
-            Project  proj = group.get(MetaTaskGroup.project);
-            TaskType task = group.get(MetaTaskGroup.task);
+            Project  proj = group.getProject();
+            TaskType task = group.getTask();
             
-            if (proj==null || !proj.get(MetaProject.privateProject)) {
+            if (proj==null || !proj.isPrivateProject()) {
                 sb.append("<tr>");
                 sb.append("<td>").append( escape(proj) ).append("</td>");
                 sb.append("<td>").append( escape(task) ).append("</td>");
@@ -117,7 +115,7 @@ public class ReportA extends SuperReport {
         sb.append("</tr>");
         
         // Overtime:
-        float requiredTime = getWorkDayCount()*applContext.getParameters().get(MetaParameters.workingHours);
+        float requiredTime = getWorkDayCount()*applContext.getParameters().getWorkingHours();
         sb.append("<tr class=\"total\">");
         sb.append("<td class=\"alignLeft\">").append(getText("Overtime")).append("</td>");
         if (tasks) {

@@ -98,7 +98,7 @@ public class ReportDialog extends TopDialog implements java.awt.event.ActionList
             ApplTools.setAlign(tDateTo  , JFormattedTextField.LEFT);
         }
 
-        if (!applContext.getParameters().get(MetaParameters.hideButtonIcons)) {
+        if (!applContext.getParameters().isHideButtonIcons()) {
             ResourceProvider rp = new ResourceProvider();
             bOK.setIcon    (rp.getIcon(ResourceProvider.IMG_OK));
             bReport.setIcon(rp.getIcon(ResourceProvider.IMG_EMPTY));
@@ -700,7 +700,7 @@ public class ReportDialog extends TopDialog implements java.awt.event.ActionList
         c1.setTimeInMillis(originalDay);
         c2.setTimeInMillis(originalDay);
 
-        int firstDay = applContext.getParameters().get(MetaParameters.firstDayOfWeek);
+        int firstDay = applContext.getParameters().getFirstDayOfWeek();
         Object sourceComp = evt.getSource();
 
         if (rbDayPrev==sourceComp) {

@@ -149,7 +149,7 @@ public class YearMonthDay implements Comparable<YearMonthDay> {
     
     /** Get Localized String to GUI. */
     public String toString(ApplContext context) {
-        Locale language = context.getParameters().get(MetaParameters.language);
+        Locale language = context.getParameters().getLanguage();
         String sFormat = context.getParameters().getDateFormat(MetaParameters.dateMainFormat, context);
         
         SimpleDateFormat format = new SimpleDateFormat(sFormat, language);

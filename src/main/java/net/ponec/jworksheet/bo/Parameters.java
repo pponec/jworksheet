@@ -14,7 +14,6 @@
  * http://www.gnu.org/licenses/gpl-2.0.txt
  */
 
-
 package net.ponec.jworksheet.bo;
 
 import jakarta.persistence.Column;
@@ -26,7 +25,9 @@ import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Locale;
-import java.util.Objects;
+import lombok.AccessLevel;
+import lombok.Getter;
+import lombok.Setter;
 import net.ponec.jworksheet.bo.meta.MetaParameters;
 import net.ponec.jworksheet.core.*;
 import net.ponec.jworksheet.core.ujo.ExportAction;
@@ -43,6 +44,8 @@ import org.ujorm.tools.Check;
  * @author Pavel Ponec
  */
 @Domain
+@Getter
+@Setter
 public class Parameters implements Exportable {
 
     /** A configuration subdirectory of a user home directory. */
@@ -141,11 +144,13 @@ public class Parameters implements Exportable {
     private String username = getSystemLogin();
 
     /** Decimal Formatter */
+    @Getter(AccessLevel.NONE) @Setter(AccessLevel.NONE)
     private transient DecimalFormat decimalFormat = null;
 
     /** WebRelease.
      * <p>The field must be transient - it has got a getter but no setter, and such
      * a property breaks the runtime metamodel generator of the Ujorm. */
+    @Setter(AccessLevel.NONE)
     private transient Version webRelease;
 
     /** Parameters constructor */
@@ -155,25 +160,9 @@ public class Parameters implements Exportable {
 
     // ------------------------ JAVABEAN ------------------------
 
-    public Locale getLanguage() {
-        return language;
-    }
-
     public void setLanguage(final Locale language) {
         this.language = language;
         setDecimalFormat();
-    }
-
-    public float getWorkingHours() {
-        return workingHours;
-    }
-
-    public void setWorkingHours(final float workingHours) {
-        this.workingHours = workingHours;
-    }
-
-    public int getFirstDayOfWeek() {
-        return firstDayOfWeek;
     }
 
     /** A value out of the range 1..7 is fixed. */
@@ -183,98 +172,14 @@ public class Parameters implements Exportable {
                 : firstDayOfWeek;
     }
 
-    public boolean isDecimalTimeFormat() {
-        return decimalTimeFormat;
-    }
-
-    public void setDecimalTimeFormat(final boolean decimalTimeFormat) {
-        this.decimalTimeFormat = decimalTimeFormat;
-    }
-
-    public String getDateMainFormat() {
-        return dateMainFormat;
-    }
-
     public void setDateMainFormat(final String dateMainFormat) {
         new SimpleDateFormat(dateMainFormat); // A validation only
         this.dateMainFormat = dateMainFormat;
     }
 
-    public String getDateReportFormat() {
-        return dateReportFormat;
-    }
-
     public void setDateReportFormat(final String dateReportFormat) {
         new SimpleDateFormat(dateReportFormat); // A validation only
         this.dateReportFormat = dateReportFormat;
-    }
-
-    public String getDateReportFormat2() {
-        return dateReportFormat2;
-    }
-
-    public void setDateReportFormat2(final String dateReportFormat2) {
-        this.dateReportFormat2 = dateReportFormat2;
-    }
-
-    public String getReportCss() {
-        return reportCss;
-    }
-
-    public void setReportCss(final String reportCss) {
-        this.reportCss = reportCss;
-    }
-
-    public String getDateGotoFormat() {
-        return dateGotoFormat;
-    }
-
-    public void setDateGotoFormat(final String dateGotoFormat) {
-        this.dateGotoFormat = dateGotoFormat;
-    }
-
-    public boolean isNimbusLaf() {
-        return nimbusLaf;
-    }
-
-    public void setNimbusLaf(final boolean nimbusLaf) {
-        this.nimbusLaf = nimbusLaf;
-    }
-
-    public Color getColorOfPrivateProject() {
-        return colorOfPrivateProject;
-    }
-
-    public void setColorOfPrivateProject(final Color colorOfPrivateProject) {
-        this.colorOfPrivateProject = colorOfPrivateProject;
-    }
-
-    public Color getColorOfFinishedProject() {
-        return colorOfFinishedProject;
-    }
-
-    public void setColorOfFinishedProject(final Color colorOfFinishedProject) {
-        this.colorOfFinishedProject = colorOfFinishedProject;
-    }
-
-    public Color getColorOfEditableArea() {
-        return colorOfEditableArea;
-    }
-
-    public void setColorOfEditableArea(final Color colorOfEditableArea) {
-        this.colorOfEditableArea = colorOfEditableArea;
-    }
-
-    public boolean isSystemTrayEnabled() {
-        return systemTrayEnabled;
-    }
-
-    public void setSystemTrayEnabled(final boolean systemTrayEnabled) {
-        this.systemTrayEnabled = systemTrayEnabled;
-    }
-
-    public SysTray.Action getSystemTraySecondClick() {
-        return systemTraySecondClick;
     }
 
     /** An undefined action is replaced by the default one. */
@@ -284,83 +189,11 @@ public class Parameters implements Exportable {
                 : SysTray.Action.HIDE;
     }
 
-    public boolean isModifyFinishedProject() {
-        return modifyFinishedProject;
-    }
-
-    public void setModifyFinishedProject(final boolean modifyFinishedProject) {
-        this.modifyFinishedProject = modifyFinishedProject;
-    }
-
-    public boolean isExitEventCreating() {
-        return exitEventCreating;
-    }
-
-    public void setExitEventCreating(final boolean exitEventCreating) {
-        this.exitEventCreating = exitEventCreating;
-    }
-
-    public String getExitEventDescription() {
-        return exitEventDescription;
-    }
-
-    public void setExitEventDescription(final String exitEventDescription) {
-        this.exitEventDescription = exitEventDescription;
-    }
-
-    public boolean isHideButtonIcons() {
-        return hideButtonIcons;
-    }
-
-    public void setHideButtonIcons(final boolean hideButtonIcons) {
-        this.hideButtonIcons = hideButtonIcons;
-    }
-
-    public Rectangle getWindowSize() {
-        return windowSize;
-    }
-
-    public void setWindowSize(final Rectangle windowSize) {
-        this.windowSize = windowSize;
-    }
-
-    public boolean isWindowSizeRestoration() {
-        return windowSizeRestoration;
-    }
-
-    public void setWindowSizeRestoration(final boolean windowSizeRestoration) {
-        this.windowSizeRestoration = windowSizeRestoration;
-    }
-
-    public boolean isAutomaticSortingByTime() {
-        return automaticSortingByTime;
-    }
-
-    public void setAutomaticSortingByTime(final boolean automaticSortingByTime) {
-        this.automaticSortingByTime = automaticSortingByTime;
-    }
-
-    public boolean isCheckNewRelease() {
-        return checkNewRelease;
-    }
-
-    public void setCheckNewRelease(final boolean checkNewRelease) {
-        this.checkNewRelease = checkNewRelease;
-    }
-
-    public String getSystemBrowserPath() {
-        return systemBrowserPath;
-    }
-
     /** An empty path is replaced by the default value. */
     public void setSystemBrowserPath(final String systemBrowserPath) {
         this.systemBrowserPath = Check.isEmpty(systemBrowserPath)
                 ? VALUE_DEFAULT
                 : systemBrowserPath;
-    }
-
-    public File getDataFilePath() {
-        return dataFilePath;
     }
 
     /** An undefined path is replaced by the default value, otherwise the file must be writable. */
@@ -372,30 +205,10 @@ public class Parameters implements Exportable {
         this.dataFilePath = path;
     }
 
-    public String getSortProjColumn() {
-        return sortProjColumn;
-    }
-
-    public void setSortProjColumn(final String sortProjColumn) {
-        this.sortProjColumn = sortProjColumn;
-    }
-
-    public File getSharedProjectsFilePath() {
-        return sharedProjectsFilePath;
-    }
-
     /** An undefined path is replaced by the default value. The file is read only,
      * so it is not checked for writing. */
     public void setSharedProjectsFilePath(final File sharedProjectsFilePath) {
         this.sharedProjectsFilePath = pathOrDefault(sharedProjectsFilePath);
-    }
-
-    public String getUsername() {
-        return username;
-    }
-
-    public void setUsername(final String username) {
-        this.username = username;
     }
 
     // ------------------------ BUSINESS ------------------------
@@ -439,13 +252,13 @@ public class Parameters implements Exportable {
         switch (action) {
             case RESOURCE_BUNDLE:
                 // A default value is not stored to the configuration file:
-                return !Objects.equals(value, Keys.defaultOf(key));
+                return !Keys.isDefaultValue(key, value);
             case TABLE_SHOW:
                 if (key == MetaParameters.sortProjColumn) {
                     return false;
                 }
                 if (key == MetaParameters.dataFilePath) {
-                    return value != null && !value.equals(Keys.defaultOf(key));
+                    return !Keys.isDefaultValue(key, value);
                 }
                 return key != MetaParameters.windowSize;
             default:
@@ -460,7 +273,7 @@ public class Parameters implements Exportable {
 
     /** Returns a localized date format */
     public String getDateFormat(final Key<Parameters,String> key, final ApplContext context) {
-        final String result = get(key);
+        final String result = key.getValue(this);
         final String week = context.getLanguageManager().getTextAllways("Week");
         return String.format(result, week);
     }
@@ -500,16 +313,5 @@ public class Parameters implements Exportable {
             webRelease = ApplTools.getWebRelease(JWorkSheet.APPL_JNLP);
         }
         return webRelease;
-    }
-
-    // ------------------------ KEY ACCESS ------------------------
-
-    public <V> V get(final Key<Parameters,V> key) {
-        return key.getValue(this);
-    }
-
-    public <V> Parameters set(final Key<Parameters,V> key, final V value) {
-        Keys.write(key, this, value);
-        return this;
     }
 }

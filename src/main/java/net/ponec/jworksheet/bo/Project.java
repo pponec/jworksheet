@@ -14,12 +14,13 @@
   * http://www.gnu.org/licenses/gpl-2.0.txt
   */
 
-
 package net.ponec.jworksheet.bo;
 
 import jakarta.persistence.Column;
 import java.util.ArrayList;
 import java.util.List;
+import lombok.Getter;
+import lombok.Setter;
 import net.ponec.jworksheet.core.ujo.Keys;
 import org.ujorm.annotation.Domain;
 import org.ujorm.core.Key;
@@ -31,6 +32,8 @@ import org.ujorm.tools.Check;
  * @composed 1 - * TaskType
  */
 @Domain
+@Getter
+@Setter
 public class Project implements Comparable<Project> {
 
     @Column(name = "ID")
@@ -53,49 +56,9 @@ public class Project implements Comparable<Project> {
 
     // ------------------------ JAVABEAN ------------------------
 
-    public int getId() {
-        return id;
-    }
-
-    public void setId(final int id) {
-        this.id = id;
-    }
-
-    public boolean isDefaultProject() {
-        return defaultProject;
-    }
-
-    public void setDefaultProject(final boolean defaultProject) {
-        this.defaultProject = defaultProject;
-    }
-
-    public boolean isFinished() {
-        return finished;
-    }
-
-    public void setFinished(final boolean finished) {
-        this.finished = finished;
-    }
-
-    public boolean isPrivateProject() {
-        return privateProject;
-    }
-
-    public void setPrivateProject(final boolean privateProject) {
-        this.privateProject = privateProject;
-    }
-
-    public String getDescr() {
-        return descr;
-    }
-
     /** An undefined description is replaced by an empty text. */
     public void setDescr(final String descr) {
         this.descr = descr != null ? descr : "";
-    }
-
-    public List<TaskType> getTasks() {
-        return tasks;
     }
 
     public void setTasks(final List<TaskType> tasks) {
@@ -198,16 +161,5 @@ public class Project implements Comparable<Project> {
             task.copyFrom(otherTask);
             tasks.add(task);
         }
-    }
-
-    // ------------------------ KEY ACCESS ------------------------
-
-    public <V> V get(final Key<Project,V> key) {
-        return key.getValue(this);
-    }
-
-    public <V> Project set(final Key<Project,V> key, final V value) {
-        Keys.write(key, this, value);
-        return this;
     }
 }

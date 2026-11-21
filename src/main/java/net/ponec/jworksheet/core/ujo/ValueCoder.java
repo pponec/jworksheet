@@ -25,10 +25,10 @@ import java.math.BigDecimal;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
-import java.util.HashMap;
 import java.util.Locale;
 import java.util.Map;
 import java.util.StringTokenizer;
+import java.util.concurrent.ConcurrentHashMap;
 import org.ujorm.core.Key;
 
 /**
@@ -57,7 +57,7 @@ public final class ValueCoder {
 
     /** A cache of the codecs of the annotated fields. The {@link #NO_CODEC} marks a key
      * without any annotation. */
-    private static final Map<Key<?, ?>, TextCodec<?>> CODECS = new HashMap<>();
+    private static final Map<Key<?, ?>, TextCodec<?>> CODECS = new ConcurrentHashMap<>();
 
     /** A marker of a key which requires no codec. */
     private static final TextCodec<Object> NO_CODEC = new TextCodec<>() {
@@ -96,17 +96,13 @@ public final class ValueCoder {
 
     /** Returns a codec of the key, or the {@code null} value for a plain field. */
     private static TextCodec<?> codecOf(final Key<?, ?> key) {
-        synchronized (CODECS) {
-            TextCodec<?> result = CODECS.get(key);
-            if (result == null) {
-                final TextValue annotation = Keys.fieldOf(key).getAnnotation(TextValue.class);
-                result = annotation != null
-                        ? (TextCodec<?>) Keys.newInstance(annotation.value())
-                        : NO_CODEC;
-                CODECS.put(key, result);
-            }
-            return result != NO_CODEC ? result : null;
-        }
+        final TextCodec<?> result = CODECS.computeIfAbsent(key, k -> {
+            final TextValue annotation = Keys.fieldOf(k).getAnnotation(TextValue.class);
+            return annotation != null
+                    ? (TextCodec<?>) Keys.newInstance(annotation.value())
+                    : NO_CODEC;
+        });
+        return result != NO_CODEC ? result : null;
     }
 
     // ------------------------ ENCODING ------------------------
@@ -170,7 +166,7 @@ public final class ValueCoder {
      *         where the required type is not a {@link String}. */
     @SuppressWarnings({"unchecked", "rawtypes"})
     public static Object decode(final Class<?> requiredType, final String text) {
-        final Class<?> type = box(requiredType);
+        final Class<?> type = Keys.box(requiredType);
         if (text == null || String.class == type) {
             return text;
         }
@@ -241,19 +237,4 @@ public final class ValueCoder {
         return result;
     }
 
-    /** Returns a wrapper of the primitive type, or the original class. */
-    private static Class<?> box(final Class<?> type) {
-        if (!type.isPrimitive()) {
-            return type;
-        }
-        if (type == boolean.class) { return Boolean.class; }
-        if (type == byte.class) { return Byte.class; }
-        if (type == char.class) { return Character.class; }
-        if (type == short.class) { return Short.class; }
-        if (type == int.class) { return Integer.class; }
-        if (type == long.class) { return Long.class; }
-        if (type == float.class) { return Float.class; }
-        if (type == double.class) { return Double.class; }
-        throw new IllegalArgumentException("Unsupported type: " + type);
-    }
 }

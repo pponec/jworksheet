@@ -47,7 +47,7 @@ public class BundleManagerTest {
     @DisplayName("Only the modified values are stored, the default ones are skipped")
     public void defaultValuesAreSkipped() throws Exception {
         final Parameters params = new Parameters();
-        params.set(MetaParameters.windowSize, new Rectangle(649, 397, 622, 405));
+        params.setWindowSize(new Rectangle(649, 397, 622, 405));
 
         final File file = newFile();
         BundleManager.save(file, params, "A test:");
@@ -61,22 +61,22 @@ public class BundleManagerTest {
     @Test
     @DisplayName("The modified values survive the round trip")
     public void roundTrip() throws Exception {
-        final Parameters params = new Parameters()
-                .set(MetaParameters.workingHours, 7.5f)
-                .set(MetaParameters.firstDayOfWeek, 3)
-                .set(MetaParameters.exitEventDescription, "Odchod")
-                .set(MetaParameters.systemTraySecondClick, SysTray.Action.EVENT)
-                .set(MetaParameters.hideButtonIcons, true);
+        final Parameters params = new Parameters();
+        params.setWorkingHours(7.5f);
+        params.setFirstDayOfWeek(3);
+        params.setExitEventDescription("Odchod");
+        params.setSystemTraySecondClick(SysTray.Action.EVENT);
+        params.setHideButtonIcons(true);
 
         final File file = newFile();
         BundleManager.save(file, params, "A test:");
         final Parameters result = BundleManager.load(file, Parameters.class);
 
-        assertEquals(7.5f, result.get(MetaParameters.workingHours));
-        assertEquals(3, result.get(MetaParameters.firstDayOfWeek));
-        assertEquals("Odchod", result.get(MetaParameters.exitEventDescription));
-        assertEquals(SysTray.Action.EVENT, result.get(MetaParameters.systemTraySecondClick));
-        assertTrue(result.get(MetaParameters.hideButtonIcons));
+        assertEquals(7.5f, result.getWorkingHours());
+        assertEquals(3, result.getFirstDayOfWeek());
+        assertEquals("Odchod", result.getExitEventDescription());
+        assertEquals(SysTray.Action.EVENT, result.getSystemTraySecondClick());
+        assertTrue(result.isHideButtonIcons());
     }
 
     @Test
@@ -87,17 +87,17 @@ public class BundleManagerTest {
 
         final Parameters result = BundleManager.load(file, Parameters.class);
 
-        assertTrue(result.get(MetaParameters.hideButtonIcons), "The stored value");
-        assertEquals(Keys.defaultOf(MetaParameters.workingHours), result.get(MetaParameters.workingHours));
-        assertEquals(Keys.defaultOf(MetaParameters.exitEventDescription), result.get(MetaParameters.exitEventDescription));
+        assertTrue(result.isHideButtonIcons(), "The stored value");
+        assertEquals(Keys.defaultOf(MetaParameters.workingHours), result.getWorkingHours());
+        assertEquals(Keys.defaultOf(MetaParameters.exitEventDescription), result.getExitEventDescription());
     }
 
     @Test
     @DisplayName("A saved file is loaded to an equal state")
     public void savingIsIdempotent() throws Exception {
-        final Parameters params = new Parameters()
-                .set(MetaParameters.workingHours, 6f)
-                .set(MetaParameters.windowSize, new Rectangle(1, 2, 3, 4));
+        final Parameters params = new Parameters();
+        params.setWorkingHours(6f);
+        params.setWindowSize(new Rectangle(1, 2, 3, 4));
 
         final File first = tempDir.resolve("first.properties").toFile();
         final File second = tempDir.resolve("second.properties").toFile();

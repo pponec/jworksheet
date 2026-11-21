@@ -17,10 +17,7 @@
 package net.ponec.jworksheet.bo;
 
 import net.ponec.jworksheet.bo.meta.MetaEvent;
-import net.ponec.jworksheet.bo.meta.MetaProject;
-import net.ponec.jworksheet.bo.meta.MetaTaskType;
-import net.ponec.jworksheet.bo.meta.MetaWorkDay;
-import net.ponec.jworksheet.bo.meta.MetaWorkSpace;
+import net.ponec.jworksheet.core.ujo.Keys;
 
 import java.util.Calendar;
 import java.util.Date;
@@ -53,10 +50,10 @@ public class WorkSpaceXmlRoundTripTest extends XmlTestSupport {
         public void emptyWorkSpace() {
             final WorkSpace result = reload(new WorkSpace());
 
-            assertEquals("0", result.get(MetaWorkSpace.version).toString());
-            assertEquals("?", result.get(MetaWorkSpace.username));
-            assertNull(result.get(MetaWorkSpace.created));
-            assertNull(result.get(MetaWorkSpace.archived));
+            assertEquals("0", result.getVersion().toString());
+            assertEquals("?", result.getUsername());
+            assertNull(result.getCreated());
+            assertNull(result.getArchived());
             assertEquals(0, result.getDays().size());
             assertEquals(0, result.getProjects().size());
         }
@@ -68,22 +65,22 @@ public class WorkSpaceXmlRoundTripTest extends XmlTestSupport {
             final Date archived = newDate(2021, Calendar.MARCH, 13, 22, 42, 58);
             final Date checkDate = newDate(2022, Calendar.JANUARY, 1, 0, 0, 0);
 
-            final WorkSpace workSpace = new WorkSpace()
-                    .set(MetaWorkSpace.version, new Version("1.00"))
-                    .set(MetaWorkSpace.created, created)
-                    .set(MetaWorkSpace.archived, archived)
-                    .set(MetaWorkSpace.username, "Příliš žluťoučký kůň")
-                    .set(MetaWorkSpace.checkReleaseDate, checkDate)
-                    .set(MetaWorkSpace.checkReleaseVersion, new Version("1.02"));
+            final WorkSpace workSpace = new WorkSpace();
+            workSpace.setVersion(new Version("1.00"));
+            workSpace.setCreated(created);
+            workSpace.setArchived(archived);
+            workSpace.setUsername("Příliš žluťoučký kůň");
+            workSpace.setCheckReleaseDate(checkDate);
+            workSpace.setCheckReleaseVersion(new Version("1.02"));
 
             final WorkSpace result = reload(workSpace);
 
-            assertEquals("1.00", result.get(MetaWorkSpace.version).toString());
-            assertEquals(created, result.get(MetaWorkSpace.created));
-            assertEquals(archived, result.get(MetaWorkSpace.archived));
-            assertEquals("Příliš žluťoučký kůň", result.get(MetaWorkSpace.username));
-            assertEquals(checkDate, result.get(MetaWorkSpace.checkReleaseDate));
-            assertEquals("1.02", result.get(MetaWorkSpace.checkReleaseVersion).toString());
+            assertEquals("1.00", result.getVersion().toString());
+            assertEquals(created, result.getCreated());
+            assertEquals(archived, result.getArchived());
+            assertEquals("Příliš žluťoučký kůň", result.getUsername());
+            assertEquals(checkDate, result.getCheckReleaseDate());
+            assertEquals("1.02", result.getCheckReleaseVersion().toString());
         }
 
         @Test
@@ -92,7 +89,7 @@ public class WorkSpaceXmlRoundTripTest extends XmlTestSupport {
             final String xml = toXml(new WorkSpace());
 
             assertFalse(hasElement(xml, "Archived"));
-            assertNull(loadXml(xml).get(MetaWorkSpace.archived));
+            assertNull(loadXml(xml).getArchived());
         }
     }
 
@@ -113,7 +110,7 @@ public class WorkSpaceXmlRoundTripTest extends XmlTestSupport {
             final List<WorkDay> days = result.getDays();
 
             assertEquals(1, days.size());
-            assertEquals("2021-03-14", days.get(0).get(MetaWorkDay.date).toString());
+            assertEquals("2021-03-14", days.get(0).getDate().toString());
             assertEquals(1, days.get(0).getEvents().size());
         }
 
@@ -137,14 +134,14 @@ public class WorkSpaceXmlRoundTripTest extends XmlTestSupport {
         public void dayOffTrue() {
             final WorkSpace workSpace = newWorkSpace();
             final WorkDay day = newDay("2021-03-14", newEvent("08:00", 60, null, null, ""));
-            day.set(MetaWorkDay.dayOff, true);
+            day.setDayOff(true);
             workSpace.getDays().add(day);
 
             final String xml = toXml(workSpace);
             assertTrue(hasElement(xml, "DayOff"));
 
             final WorkDay result = loadXml(xml).getDays().get(0);
-            assertTrue(result.get(MetaWorkDay.dayOff));
+            assertTrue(result.isDayOff());
         }
 
         @Test
@@ -158,7 +155,7 @@ public class WorkSpaceXmlRoundTripTest extends XmlTestSupport {
             assertFalse(hasElement(xml, "DayOff"));
 
             final WorkDay result = loadXml(xml).getDays().get(0);
-            assertFalse(result.get(MetaWorkDay.dayOff));
+            assertFalse(result.isDayOff());
         }
 
         @Test
@@ -166,7 +163,7 @@ public class WorkSpaceXmlRoundTripTest extends XmlTestSupport {
         public void dayOffWithoutEvents() {
             final WorkSpace workSpace = newWorkSpace();
             final WorkDay day = newDay("2021-03-14");
-            day.set(MetaWorkDay.dayOff, true);
+            day.setDayOff(true);
             workSpace.getDays().add(day);
 
             final String xml = toXml(workSpace);
@@ -185,12 +182,12 @@ public class WorkSpaceXmlRoundTripTest extends XmlTestSupport {
             }
 
             final WorkSpace result = reload(workSpace);
-            assertEquals("2021-03-16", result.getDays().get(0).get(MetaWorkDay.date).toString());
+            assertEquals("2021-03-16", result.getDays().get(0).getDate().toString());
 
             result.sortDays();
-            assertEquals("2021-03-14", result.getDays().get(0).get(MetaWorkDay.date).toString());
-            assertEquals("2021-03-15", result.getDays().get(1).get(MetaWorkDay.date).toString());
-            assertEquals("2021-03-16", result.getDays().get(2).get(MetaWorkDay.date).toString());
+            assertEquals("2021-03-14", result.getDays().get(0).getDate().toString());
+            assertEquals("2021-03-15", result.getDays().get(1).getDate().toString());
+            assertEquals("2021-03-16", result.getDays().get(2).getDate().toString());
         }
 
         @ParameterizedTest(name = "B5) The date {0} survives the round trip")
@@ -201,8 +198,8 @@ public class WorkSpaceXmlRoundTripTest extends XmlTestSupport {
                     , newEvent("08:00", 60, null, null, "")));
 
             final WorkDay result = reload(workSpace).getDays().get(0);
-            assertEquals(date, result.get(MetaWorkDay.date).toString());
-            assertEquals(new YearMonthDay(date), result.get(MetaWorkDay.date));
+            assertEquals(date, result.getDate().toString());
+            assertEquals(new YearMonthDay(date), result.getDate());
         }
     }
 
@@ -226,10 +223,10 @@ public class WorkSpaceXmlRoundTripTest extends XmlTestSupport {
             final WorkSpace result = reload(workSpace);
             final Event event = result.getDays().get(0).getEvents().get(0);
 
-            assertSame(result.findProject(3), event.get(MetaEvent.project));
-            assertSame(result.findProject(3).findTaskType(7), event.get(MetaEvent.task));
-            assertEquals("Water the garden", event.get(MetaEvent.project).get(MetaProject.descr));
-            assertEquals("Roses", event.get(MetaEvent.task).get(MetaTaskType.descr));
+            assertSame(result.findProject(3), event.getProject());
+            assertSame(result.findProject(3).findTaskType(7), event.getTask());
+            assertEquals("Water the garden", event.getProject().getDescr());
+            assertEquals("Roses", event.getTask().getDescr());
         }
 
         @Test
@@ -247,8 +244,8 @@ public class WorkSpaceXmlRoundTripTest extends XmlTestSupport {
             assertFalse(hasElement(xml, "TaskID"));
 
             final Event event = loadXml(xml).getDays().get(0).getEvents().get(0);
-            assertNotNull(event.get(MetaEvent.project));
-            assertNull(event.get(MetaEvent.task));
+            assertNotNull(event.getProject());
+            assertNull(event.getTask());
         }
 
         @Test
@@ -263,9 +260,9 @@ public class WorkSpaceXmlRoundTripTest extends XmlTestSupport {
             assertFalse(hasElement(xml, "TaskID"));
 
             final Event event = loadXml(xml).getDays().get(0).getEvents().get(0);
-            assertNull(event.get(MetaEvent.project));
-            assertNull(event.get(MetaEvent.task));
-            assertEquals("Free time", event.get(MetaEvent.descr));
+            assertNull(event.getProject());
+            assertNull(event.getTask());
+            assertEquals("Free time", event.getDescr());
         }
 
         @Test
@@ -298,12 +295,12 @@ public class WorkSpaceXmlRoundTripTest extends XmlTestSupport {
             final WorkDay day = result.getDays().get(0);
 
             final Event unknownProject = day.getEvents().get(0);
-            assertNull(unknownProject.get(MetaEvent.project), "An unknown project");
-            assertNull(unknownProject.get(MetaEvent.task), "A task of an unknown project");
+            assertNull(unknownProject.getProject(), "An unknown project");
+            assertNull(unknownProject.getTask(), "A task of an unknown project");
 
             final Event unknownTask = day.getEvents().get(1);
-            assertNotNull(unknownTask.get(MetaEvent.project));
-            assertNull(unknownTask.get(MetaEvent.task), "An unknown task of a known project");
+            assertNotNull(unknownTask.getProject());
+            assertNull(unknownTask.getTask(), "An unknown task of a known project");
         }
 
         @ParameterizedTest(name = "C5) The period {0} is stored as {1}")
@@ -314,15 +311,16 @@ public class WorkSpaceXmlRoundTripTest extends XmlTestSupport {
                     , newEvent("08:00", period, null, null, "")));
 
             final Event event = reload(workSpace).getDays().get(0).getEvents().get(0);
-            assertEquals(expected, event.get(MetaEvent.period));
+            assertEquals(expected, event.getPeriod());
         }
 
         @Test
         @DisplayName("C5b) An undefined period is normalized to the zero")
         public void undefinedPeriod() {
-            final Event event = new Event().set(MetaEvent.period, null);
+            final Event event = new Event();
+            Keys.write(MetaEvent.period, event, null);
             event.setStartTime(new Time("08:00"));
-            assertEquals(Event.ZERO_SHORT, event.get(MetaEvent.period));
+            assertEquals(Event.ZERO_SHORT, event.getPeriod());
         }
 
         @ParameterizedTest(name = "C6) The time {0} plus {1} minutes is finished at {2}")
@@ -355,7 +353,7 @@ public class WorkSpaceXmlRoundTripTest extends XmlTestSupport {
                     , newEvent("08:00", 60, null, null, description)));
 
             final Event event = reload(workSpace).getDays().get(0).getEvents().get(0);
-            assertEquals(description, event.get(MetaEvent.descr));
+            assertEquals(description, event.getDescr());
         }
 
         @Test
@@ -366,7 +364,7 @@ public class WorkSpaceXmlRoundTripTest extends XmlTestSupport {
                     , newEvent("08:00", 60, null, null, null)));
 
             final Event event = reload(workSpace).getDays().get(0).getEvents().get(0);
-            assertEquals("", event.get(MetaEvent.descr));
+            assertEquals("", event.getDescr());
         }
 
         @Test
@@ -380,9 +378,9 @@ public class WorkSpaceXmlRoundTripTest extends XmlTestSupport {
 
             final WorkDay day = reload(workSpace).getDays().get(0);
             assertEquals(3, day.getEvents().size());
-            assertEquals("C", day.getEvents().get(0).get(MetaEvent.descr));
-            assertEquals("A", day.getEvents().get(1).get(MetaEvent.descr));
-            assertEquals("B", day.getEvents().get(2).get(MetaEvent.descr));
+            assertEquals("C", day.getEvents().get(0).getDescr());
+            assertEquals("A", day.getEvents().get(1).getDescr());
+            assertEquals("B", day.getEvents().get(2).getDescr());
         }
     }
 
@@ -410,23 +408,23 @@ public class WorkSpaceXmlRoundTripTest extends XmlTestSupport {
                     , newTask(1, "A default task", true, false)
                     , newTask(2, "A finished task", false, true)
                     , newTask(3, "A common task", false, false));
-            project.set(MetaProject.defaultProject, true);
-            project.set(MetaProject.finished, true);
-            project.set(MetaProject.privateProject, true);
+            project.setDefaultProject(true);
+            project.setFinished(true);
+            project.setPrivateProject(true);
 
             final WorkSpace workSpace = newWorkSpace();
             workSpace.getProjects().add(project);
 
             final Project result = reload(workSpace).findProject(5);
 
-            assertTrue(result.get(MetaProject.defaultProject));
-            assertTrue(result.get(MetaProject.finished));
-            assertTrue(result.get(MetaProject.privateProject));
+            assertTrue(result.isDefaultProject());
+            assertTrue(result.isFinished());
+            assertTrue(result.isPrivateProject());
             assertEquals(3, result.getTasks().size());
-            assertTrue(result.findTaskType(1).get(MetaTaskType.defaultTask));
-            assertTrue(result.findTaskType(2).get(MetaTaskType.finished));
-            assertFalse(result.findTaskType(3).get(MetaTaskType.defaultTask));
-            assertFalse(result.findTaskType(3).get(MetaTaskType.finished));
+            assertTrue(result.findTaskType(1).isDefaultTask());
+            assertTrue(result.findTaskType(2).isFinished());
+            assertFalse(result.findTaskType(3).isDefaultTask());
+            assertFalse(result.findTaskType(3).isFinished());
         }
 
         @Test
@@ -446,8 +444,8 @@ public class WorkSpaceXmlRoundTripTest extends XmlTestSupport {
 
             final WorkDay day = reload(workSpace).getDays().get(0);
 
-            assertEquals("Roses", day.getEvents().get(0).get(MetaEvent.task).get(MetaTaskType.descr));
-            assertEquals("Dishes", day.getEvents().get(1).get(MetaEvent.task).get(MetaTaskType.descr));
+            assertEquals("Roses", day.getEvents().get(0).getTask().getDescr());
+            assertEquals("Dishes", day.getEvents().get(1).getTask().getDescr());
         }
 
         @Test
@@ -458,8 +456,8 @@ public class WorkSpaceXmlRoundTripTest extends XmlTestSupport {
                     , newTask(1, "Úkol č. 1 & 2")));
 
             final Project result = reload(workSpace).findProject(0);
-            assertEquals("R&D <Šílený> \"projekt\"", result.get(MetaProject.descr));
-            assertEquals("Úkol č. 1 & 2", result.findTaskType(1).get(MetaTaskType.descr));
+            assertEquals("R&D <Šílený> \"projekt\"", result.getDescr());
+            assertEquals("Úkol č. 1 & 2", result.findTaskType(1).getDescr());
         }
     }
 }

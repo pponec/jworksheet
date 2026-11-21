@@ -11,6 +11,7 @@
         <project.jar.name>jWorkSheet</project.jar.name>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <java.version>17</java.version>
+        <lombok.version>1.18.42</lombok.version>
         <ujorm.version>3.0.6</ujorm.version>
         <maven.compiler.source>${java.version}</maven.compiler.source>
         <maven.compiler.target>${java.version}</maven.compiler.target>
@@ -33,6 +34,13 @@
              which the ujo-core loads at build and run time, and the 9 types they reference
              are copied to the src/main/java/jakarta under the Eclipse Distribution License
              v. 1.0 (BSD-3-Clause), see the META-INF/jakarta.persistence directory. -->
+        <!-- The accessors of the domain objects, see the maven-compiler-plugin -->
+        <dependency>
+            <groupId>org.projectlombok</groupId>
+            <artifactId>lombok</artifactId>
+            <version>${lombok.version}</version>
+            <scope>provided</scope>
+        </dependency>
         <!-- An APT generator of the Meta* key classes, see the maven-compiler-plugin -->
         <dependency>
             <groupId>org.ujorm</groupId>
@@ -125,6 +133,12 @@
                     <!-- Generates the Meta* classes with the type-safe keys
                          into target/generated-sources/annotations -->
                     <annotationProcessorPaths>
+                        <!-- The Lombok generates the accessors, which the Ujorm handlers call -->
+                        <path>
+                            <groupId>org.projectlombok</groupId>
+                            <artifactId>lombok</artifactId>
+                            <version>${lombok.version}</version>
+                        </path>
                         <path>
                             <groupId>org.ujorm</groupId>
                             <artifactId>ujorm-meta-processor</artifactId>

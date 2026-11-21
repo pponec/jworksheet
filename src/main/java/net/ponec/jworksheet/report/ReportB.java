@@ -18,7 +18,6 @@
 package net.ponec.jworksheet.report;
 
 import net.ponec.jworksheet.bo.meta.MetaEvent;
-import net.ponec.jworksheet.bo.meta.MetaProject;
 import net.ponec.jworksheet.report.meta.MetaTaskGroup;
 
 import java.io.IOException;
@@ -50,10 +49,10 @@ public class ReportB extends ReportA {
         sb.append("</tr>");
         
         for(TaskGroup group : groupSet.getGroups()) {
-            Project  proj = group.get(MetaTaskGroup.project);
-            TaskType task = group.get(MetaTaskGroup.task);
+            Project  proj = group.getProject();
+            TaskType task = group.getTask();
             
-            if (proj==null || !proj.get(MetaProject.privateProject)) {
+            if (proj==null || !proj.isPrivateProject()) {
                 sb.append("<tr>");
                 sb.append("<td>").append(escape(proj)).append("</td>");
                 sb.append("<td class=\"num\">").append(formatTime(group.getTime())).append("</td>");

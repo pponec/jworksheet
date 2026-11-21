@@ -21,7 +21,6 @@ import net.ponec.jworksheet.bo.meta.MetaParameters;
 import net.ponec.jworksheet.bo.meta.MetaProject;
 import net.ponec.jworksheet.bo.meta.MetaTaskType;
 import net.ponec.jworksheet.bo.meta.MetaWorkDay;
-import net.ponec.jworksheet.bo.meta.MetaWorkSpace;
 import net.ponec.jworksheet.gui.models.meta.MetaUjoKeyRow;
 
 import java.awt.Color;
@@ -198,7 +197,7 @@ public final class JWorkSheet extends TopFrame {
             projTable .getTableColumn(MetaProject.privateProject).setMaxWidth(58);
             projTable .getTableColumn(MetaProject.defaultProject).setMaxWidth(58);
             projTable .getTableColumn(MetaProject.finished ).setMaxWidth(58);
-            projTable .showSortedColumn(applContext.getParameters().get(MetaParameters.sortProjColumn));
+            projTable .showSortedColumn(applContext.getParameters().getSortProjColumn());
             taskTable .getTableColumn(MetaTaskType.id    ).setMaxWidth(48);
             taskTable .getTableColumn(MetaTaskType.defaultTask).setMaxWidth(58);
             taskTable .getTableColumn(MetaTaskType.finished).setMaxWidth(58);
@@ -268,7 +267,7 @@ public final class JWorkSheet extends TopFrame {
             }));
 
             // Window sizing:
-            ApplTools.windowsSizing(this, applContext.getParameters().get(MetaParameters.windowSize));
+            ApplTools.windowsSizing(this, applContext.getParameters().getWindowSize());
 
             applContext.tableChanged(null); // Save a startup event
 
@@ -291,7 +290,7 @@ public final class JWorkSheet extends TopFrame {
     /** Check new release. */
     private void checkNewRelease() {
 
-        if (applContext.getParameters().get(MetaParameters.checkNewRelease)) {
+        if (applContext.getParameters().isCheckNewRelease()) {
 
             new Thread() {
                 @Override public void run() {
@@ -309,11 +308,11 @@ public final class JWorkSheet extends TopFrame {
                             case 1:
                                 Calendar calendar = Calendar.getInstance();
                                 calendar.add(Calendar.HOUR, 1 /*24+12*/);
-                                applContext.getWorkSpace().set(MetaWorkSpace.checkReleaseDate, calendar.getTime());
+                                applContext.getWorkSpace().setCheckReleaseDate(calendar.getTime());
                                 break;
                             case 2:
                                 Version version = applContext.getParameters().getWebRelease();
-                                applContext.getWorkSpace().set(MetaWorkSpace.checkReleaseVersion, version);
+                                applContext.getWorkSpace().setCheckReleaseVersion(version);
                                 break;
                         }
                     }
@@ -411,7 +410,7 @@ public final class JWorkSheet extends TopFrame {
         UjoTableModel model = eventTable.getModel();
         WorkDay workDay = applContext.getWorkDay();
         model.setRows(workDay.getEvents());
-        cbTimeOff.setSelected(workDay.get(MetaWorkDay.dayOff));
+        cbTimeOff.setSelected(workDay.isDayOff());
         cbTimeOffActionPerformed(null);
 
         if (today && model.getRowCount()==0) {
@@ -473,13 +472,13 @@ public final class JWorkSheet extends TopFrame {
         tabbedPane.setIconAt(1, imageProvider.getIcon(ResourceProvider.IMG_APPLICATION_SPLIT));
         tabbedPane.setIconAt(2, imageProvider.getIcon(ResourceProvider.IMG_WRENCH));
         //
-        boolean hideIcon = applContext.getParameters().get(MetaParameters.hideButtonIcons);
+        boolean hideIcon = applContext.getParameters().isHideButtonIcons();
         bDayPrev.setIcon(imageProvider.getIcon(ResourceProvider.IMG_PREV, hideIcon));
         bDayNext.setIcon(imageProvider.getIcon(ResourceProvider.IMG_NEXT, hideIcon));
         bGoto   .setIcon(imageProvider.getIcon(ResourceProvider.IMG_DATE, hideIcon));
         bToday  .setIcon(imageProvider.getIcon(ResourceProvider.IMG_HOME, hideIcon));
 
-        bSort.setVisible(!applContext.getParameters().get(MetaParameters.automaticSortingByTime));
+        bSort.setVisible(!applContext.getParameters().isAutomaticSortingByTime());
         //
         setImage(bCreate, ResourceProvider.IMG_ADD, imageProvider);
         setImage(bClone , ResourceProvider.IMG_APPLICATION_DOUBLE, imageProvider);
@@ -507,7 +506,7 @@ public final class JWorkSheet extends TopFrame {
 
     /** Set Icon */
     private void setImage(JButton button, String resource, ResourceProvider imageProvider) {
-        if (applContext.getParameters().get(MetaParameters.hideButtonIcons)) {
+        if (applContext.getParameters().isHideButtonIcons()) {
             button.setIcon(null);
             button.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         } else {
@@ -1579,7 +1578,7 @@ public final class JWorkSheet extends TopFrame {
         try {
             applContext.setUserConfigDir(args.length>0 ? args[0] : null);
             applContext.loadData();
-            ApplTools.initLookAndFeel(applContext.getParameters().get(MetaParameters.nimbusLaf));
+            ApplTools.initLookAndFeel(applContext.getParameters().isNimbusLaf());
         } catch (Throwable e) {
             error = e;
         }

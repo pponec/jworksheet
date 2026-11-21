@@ -14,7 +14,6 @@
  * http://www.gnu.org/licenses/gpl-2.0.txt
  */
 
-
 package net.ponec.jworksheet.gui;
 
 import net.ponec.jworksheet.core.ujo.Keys;
@@ -30,6 +29,7 @@ import javax.swing.Icon;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
+import lombok.RequiredArgsConstructor;
 import net.ponec.jworksheet.core.ApplContext;
 import net.ponec.jworksheet.core.ApplTools;
 import net.ponec.jworksheet.core.MessageException;
@@ -40,18 +40,13 @@ import org.ujorm.tools.Check;
  * A TopFrame.
  * @author Pavel Ponec
  */
+@RequiredArgsConstructor
 public class TopFrame extends JFrame {
 
     /** Logger */
     private static final Logger LOGGER = Logger.getLogger(TopFrame.class.getName());
 
     final protected ApplContext applContext;
-
-
-    /** Creates a new instance of TopFrame */
-    public TopFrame(final ApplContext applContext) {
-        this.applContext = applContext;
-    }
 
     /** Set Visible the frame */
     public void setVisible() {
@@ -136,7 +131,7 @@ public class TopFrame extends JFrame {
         try {
             try {
                 uri = new URI(url);
-                browser = applContext.getParameters().get(MetaParameters.systemBrowserPath);
+                browser = applContext.getParameters().getSystemBrowserPath();
                 if (Keys.defaultOf(MetaParameters.systemBrowserPath).equals(browser)) {
                     browser = "";
                 }

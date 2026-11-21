@@ -21,7 +21,6 @@ import net.ponec.jworksheet.bo.meta.MetaTaskType;
 
 import net.ponec.jworksheet.bo.TaskType;
 import net.ponec.jworksheet.core.ApplContext;
-import net.ponec.jworksheet.core.ujo.Keys;
 import org.ujorm.core.Key;
 
 
@@ -52,7 +51,7 @@ public class TaskTableModel extends UjoTableModel<TaskType> {
     protected Integer nextTaskId() {
         Integer result = 0;
         for (TaskType task : super.rows) {
-            Integer id = task.get(MetaTaskType.id);
+            Integer id = task.getId();
             if (result.compareTo(id)<0) {
                 result = id;
             }

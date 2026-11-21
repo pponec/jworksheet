@@ -16,10 +16,6 @@
 
 package net.ponec.jworksheet.bo;
 
-import net.ponec.jworksheet.bo.meta.MetaEvent;
-import net.ponec.jworksheet.bo.meta.MetaProject;
-import net.ponec.jworksheet.bo.meta.MetaTaskType;
-import net.ponec.jworksheet.bo.meta.MetaWorkDay;
 
 import java.util.List;
 import net.ponec.jworksheet.bo.item.Time;
@@ -41,10 +37,10 @@ public class WorkSpaceTreeLogicTest extends XmlTestSupport {
                 , newTask(1, "Roses")
                 , newTask(2, "Tulips", true, false)
                 , newTask(3, "Cactus", false, true));
-        garden.set(MetaProject.defaultProject, true);
+        garden.setDefaultProject(true);
 
         final Project washing = newProject(1, "Washing dishes", newTask(1, "Plates"));
-        washing.set(MetaProject.finished, true);
+        washing.setFinished(true);
 
         final WorkSpace result = newWorkSpace();
         result.getProjects().add(garden);
@@ -58,21 +54,21 @@ public class WorkSpaceTreeLogicTest extends XmlTestSupport {
     @DisplayName("E1) The assingTasks() assigns the references and syncs the identifiers")
     public void assingTasks() {
         final WorkSpace workSpace = newCodeBook();
-        final Event event = new Event()
-                .set(MetaEvent.period, (short) 60)
-                .set(MetaEvent.projectId, 0)
-                .set(MetaEvent.taskId, 2);
+        final Event event = new Event();
+        event.setPeriod((short) 60);
+        event.setProjectId(0);
+        event.setTaskId(2);
         event.setStartTime(new Time("08:00"));
         final WorkDay day = newDay("2021-03-14");
         day.getEvents().add(event);
         workSpace.getDays().add(day);
 
-        assertNull(event.get(MetaEvent.project), "No reference before the assignment");
+        assertNull(event.getProject(), "No reference before the assignment");
 
         workSpace.assingTasks();
 
-        assertSame(workSpace.findProject(0), event.get(MetaEvent.project));
-        assertSame(workSpace.findProject(0).findTaskType(2), event.get(MetaEvent.task));
+        assertSame(workSpace.findProject(0), event.getProject());
+        assertSame(workSpace.findProject(0).findTaskType(2), event.getTask());
 
         // The identifier attributes are kept in sync with the assigned objects:
         assertEquals(Integer.valueOf(0), event.getProjectId());
@@ -104,7 +100,7 @@ public class WorkSpaceTreeLogicTest extends XmlTestSupport {
 
             final WorkDay result = workSpace.findWorkDay(new YearMonthDay("2021-03-15"));
 
-            assertEquals("2021-03-15", result.get(MetaWorkDay.date).toString());
+            assertEquals("2021-03-15", result.getDate().toString());
             assertEquals(2, workSpace.getDays().size());
             assertSame(result, workSpace.getDays().get(1));
         }
@@ -121,17 +117,17 @@ public class WorkSpaceTreeLogicTest extends XmlTestSupport {
         @Test
         @DisplayName("The findProject() returns null for an unknown identifier")
         public void findProject() {
-            assertEquals("Water the garden", workSpace.findProject(0).get(MetaProject.descr));
-            assertEquals("Washing dishes", workSpace.findProject(1).get(MetaProject.descr));
+            assertEquals("Water the garden", workSpace.findProject(0).getDescr());
+            assertEquals("Washing dishes", workSpace.findProject(1).getDescr());
             assertNull(workSpace.findProject(99));
         }
 
         @Test
         @DisplayName("The findDefaultProject() skips the finished projects")
         public void findDefaultProject() {
-            assertEquals(Integer.valueOf(0), workSpace.findDefaultProject().get(MetaProject.id));
+            assertEquals(Integer.valueOf(0), workSpace.findDefaultProject().getId());
 
-            workSpace.findProject(0).set(MetaProject.finished, true);
+            workSpace.findProject(0).setFinished(true);
             assertNull(workSpace.findDefaultProject());
         }
 
@@ -140,14 +136,14 @@ public class WorkSpaceTreeLogicTest extends XmlTestSupport {
         public void getOpenProjects() {
             final List<Project> result = workSpace.getOpenProjects();
             assertEquals(1, result.size());
-            assertEquals(Integer.valueOf(0), result.get(0).get(MetaProject.id));
+            assertEquals(Integer.valueOf(0), result.get(0).getId());
         }
 
         @Test
         @DisplayName("The findTaskType() returns null for an unknown identifier")
         public void findTaskType() {
             final Project project = workSpace.findProject(0);
-            assertEquals("Roses", project.findTaskType(1).get(MetaTaskType.descr));
+            assertEquals("Roses", project.findTaskType(1).getDescr());
             assertNull(project.findTaskType(99));
         }
 
@@ -156,10 +152,10 @@ public class WorkSpaceTreeLogicTest extends XmlTestSupport {
         public void taskFilters() {
             final Project project = workSpace.findProject(0);
 
-            assertEquals("Tulips", project.findDefaultTask().get(MetaTaskType.descr));
+            assertEquals("Tulips", project.findDefaultTask().getDescr());
             assertEquals(2, project.getOpenTasks().size());
 
-            project.findTaskType(2).set(MetaTaskType.finished, true);
+            project.findTaskType(2).setFinished(true);
             assertNull(project.findDefaultTask());
             assertEquals(1, project.getOpenTasks().size());
         }
@@ -191,7 +187,7 @@ public class WorkSpaceTreeLogicTest extends XmlTestSupport {
 
             final Project result = workSpace.findProject(7);
             assertNotNull(result);
-            assertEquals("A brand new project", result.get(MetaProject.descr));
+            assertEquals("A brand new project", result.getDescr());
             assertEquals(1, result.getTasks().size());
             assertNotSame(sharedSpace.findProject(7), result, "A deep copy is expected");
             assertNotSame(sharedSpace.findProject(7).findTaskType(1), result.findTaskType(1));
@@ -205,19 +201,19 @@ public class WorkSpaceTreeLogicTest extends XmlTestSupport {
 
             final Project result = workSpace.findProject(0);
             assertNotNull(result.findTaskType(9), "The new task");
-            assertEquals("Orchids", result.findTaskType(9).get(MetaTaskType.descr));
+            assertEquals("Orchids", result.findTaskType(9).getDescr());
         }
 
         @Test
         @DisplayName("A local project missing in the shared code-book is marked as finished")
         public void missingProjectIsFinished() {
             final WorkSpace workSpace = newCodeBook();
-            assertFalse(workSpace.findProject(0).get(MetaProject.finished));
+            assertFalse(workSpace.findProject(0).isFinished());
 
             workSpace.syncProjects(newSharedSpace());
 
-            assertFalse(workSpace.findProject(0).get(MetaProject.finished), "A shared project");
-            assertTrue(workSpace.findProject(1).get(MetaProject.finished), "A local project only");
+            assertFalse(workSpace.findProject(0).isFinished(), "A shared project");
+            assertTrue(workSpace.findProject(1).isFinished(), "A local project only");
         }
 
         @Test
@@ -227,22 +223,22 @@ public class WorkSpaceTreeLogicTest extends XmlTestSupport {
             workSpace.syncProjects(newSharedSpace());
 
             final Project result = workSpace.findProject(0);
-            assertFalse(result.findTaskType(1).get(MetaTaskType.finished), "A shared task");
-            assertTrue(result.findTaskType(2).get(MetaTaskType.finished), "A local task only");
+            assertFalse(result.findTaskType(1).isFinished(), "A shared task");
+            assertTrue(result.findTaskType(2).isFinished(), "A local task only");
         }
 
         @Test
         @DisplayName("A project of the same identifier but of a different description is not overwritten")
         public void renamedProjectIsNotOverwritten() {
             final WorkSpace workSpace = newCodeBook();
-            workSpace.findProject(0).set(MetaProject.descr, "My own description");
+            workSpace.findProject(0).setDescr("My own description");
 
             workSpace.syncProjects(newSharedSpace());
 
             final Project result = workSpace.findProject(0);
-            assertEquals("My own description", result.get(MetaProject.descr));
+            assertEquals("My own description", result.getDescr());
             assertNull(result.findTaskType(9), "No task is synchronized");
-            assertFalse(result.get(MetaProject.finished), "The project is not closed");
+            assertFalse(result.isFinished(), "The project is not closed");
         }
     }
 }

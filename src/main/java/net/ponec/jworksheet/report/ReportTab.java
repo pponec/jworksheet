@@ -19,7 +19,6 @@ package net.ponec.jworksheet.report;
 
 import net.ponec.jworksheet.bo.meta.MetaEvent;
 import net.ponec.jworksheet.bo.meta.MetaParameters;
-import net.ponec.jworksheet.bo.meta.MetaWorkDay;
 import net.ponec.jworksheet.report.meta.MetaTaskGroup;
 
 import java.io.IOException;
@@ -72,7 +71,7 @@ public class ReportTab extends SuperReport {
     }
     
     private void saveDay() {
-        YearMonthDay ymd = lastWorkDay.get(MetaWorkDay.date);
+        YearMonthDay ymd = lastWorkDay.getDate();
         
         report = new ReportA();
         GroupSet groupSet = new GroupSet(createUjoComparator(), MetaEvent.period);
@@ -109,7 +108,7 @@ public class ReportTab extends SuperReport {
         List<TaskGroup> projs = getProjects();
         List<YearMonthDay> days = getDays();
         
-        SimpleDateFormat exportDateFormat = new SimpleDateFormat(applContext.getParameters().get(MetaParameters.dateReportFormat2), applContext.getLanguage());
+        SimpleDateFormat exportDateFormat = new SimpleDateFormat(applContext.getParameters().getDateReportFormat2(), applContext.getLanguage());
         String tipFormat = applContext.getParameters().getDateFormat(MetaParameters.dateReportFormat, applContext);
         SimpleDateFormat tooltipDateFormat = new SimpleDateFormat(tipFormat, applContext.getLanguage());
         
@@ -135,9 +134,9 @@ public class ReportTab extends SuperReport {
             sb.append("<tr>");
             
             sb.append("<td>");
-            sb.append(escape(proj.get(MetaTaskGroup.project)));
+            sb.append(escape(proj.getProject()));
             sb.append(" / ");
-            sb.append(escape(proj.get(MetaTaskGroup.task)));
+            sb.append(escape(proj.getTask()));
             sb.append("</td>\n");
             
             int total = 0;
@@ -176,7 +175,7 @@ public class ReportTab extends SuperReport {
         
         // Overtime ---
         total = 0;
-        int workingMinutes = Math.round(applContext.getParameters().get(MetaParameters.workingHours)*60);
+        int workingMinutes = Math.round(applContext.getParameters().getWorkingHours()*60);
         sb.append("<tr class=\"total\">\n<td class=\"alignLeft\">");
         sb.append(getText("Overtime"));
         sb.append("</td>\n");
@@ -205,7 +204,7 @@ public class ReportTab extends SuperReport {
         
         for (GroupSet set : data) {
             for (TaskGroup proj : set.getGroups()) {
-                final YearMonthDay day = proj.get(MetaTaskGroup.day);
+                final YearMonthDay day = proj.getDay();
                 if (aDay.equals(day)
                 &&  comparator.equals(aProj, proj)
                 ){
@@ -222,7 +221,7 @@ public class ReportTab extends SuperReport {
         
         for (GroupSet set : data) {
             for (TaskGroup proj : set.getGroups()) {
-                final YearMonthDay day = proj.get(MetaTaskGroup.day);
+                final YearMonthDay day = proj.getDay();
                 if (aDay.equals(day)) {
                     result += proj.getBusinessTime();
                 }
@@ -235,7 +234,7 @@ public class ReportTab extends SuperReport {
         List<YearMonthDay> result = new ArrayList<YearMonthDay>();
         for (GroupSet set : data) {
             for (TaskGroup group : set.getGroups()) {
-                final YearMonthDay ymd = group.get(MetaTaskGroup.day);
+                final YearMonthDay ymd = group.getDay();
                 if (ymd!=null
                 &&! result.contains(ymd)
                 ){

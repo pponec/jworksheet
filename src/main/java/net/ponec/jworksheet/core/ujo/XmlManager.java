@@ -26,9 +26,10 @@ import java.io.OutputStreamWriter;
 import java.io.Writer;
 import java.util.ArrayDeque;
 import java.util.Deque;
-import java.util.HashMap;
 import java.util.List;
+import java.util.HashMap;
 import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.parsers.SAXParser;
 import javax.xml.parsers.SAXParserFactory;
@@ -74,7 +75,7 @@ public final class XmlManager {
     private static final String NEW_LINE = "\n";
 
     /** A cache of the element name to the key mapping. */
-    private static final Map<Class<?>, Map<String, Key<?, ?>>> ELEMENT_MAPS = new HashMap<>();
+    private static final Map<Class<?>, Map<String, Key<Object, Object>>> ELEMENT_MAPS = new ConcurrentHashMap<>();
 
     private XmlManager() {
     }
@@ -119,8 +120,8 @@ public final class XmlManager {
         indent(out, level).append('<').append(name).append('>').append(NEW_LINE);
 
         final Exportable filter = domain instanceof final Exportable e ? e : null;
-        for (Key<?, ?> key : keysOf(domain.getClass())) {
-            final Object value = readValue(key, domain);
+        for (Key<Object, Object> key : Keys.keysOfAny(domain.getClass())) {
+            final Object value = key.getValue(domain);
             if (value == null) {
                 continue;
             }
@@ -263,7 +264,7 @@ public final class XmlManager {
         }
 
         @Override
-        @SuppressWarnings({"unchecked", "rawtypes"})
+        @SuppressWarnings("unchecked")
         public void endElement(final String uri, final String localName, final String name) {
             if (skipped > 0) {
                 skipped--;
@@ -271,7 +272,7 @@ public final class XmlManager {
             }
             if (text != null) {
                 final Object parent = domains.peek();
-                final Key key = elementMapOf(parent.getClass()).get(name);
+                final Key<Object, Object> key = elementMapOf(parent.getClass()).get(name);
                 Keys.write(key, parent, ValueCoder.decode(key, text.toString()));
                 text = null;
                 return;
@@ -281,7 +282,7 @@ public final class XmlManager {
                 return; // The root element is closed
             }
             final Object parent = domains.peek();
-            final Key key = elementMapOf(parent.getClass()).get(name);
+            final Key<Object, Object> key = elementMapOf(parent.getClass()).get(name);
             if (Keys.isList(key)) {
                 ((List<Object>) key.getValue(parent)).add(child);
             } else {
@@ -292,29 +293,15 @@ public final class XmlManager {
 
     // ------------------------ TOOLS ------------------------
 
-    @SuppressWarnings({"unchecked", "rawtypes"})
-    private static Object readValue(final Key<?, ?> key, final Object domain) {
-        return ((Key) key).getValue(domain);
-    }
-
-    @SuppressWarnings({"unchecked", "rawtypes"})
-    private static List<Key<?, ?>> keysOf(final Class<?> domainClass) {
-        return (List) Keys.keysOf((Class) domainClass);
-    }
-
     /** Returns a mapping of the element name to the key of a domain class. */
-    private static Map<String, Key<?, ?>> elementMapOf(final Class<?> domainClass) {
-        synchronized (ELEMENT_MAPS) {
-            Map<String, Key<?, ?>> result = ELEMENT_MAPS.get(domainClass);
-            if (result == null) {
-                result = new HashMap<>();
-                for (Key<?, ?> key : keysOf(domainClass)) {
-                    result.put(Keys.nameOf(key), key);
-                }
-                ELEMENT_MAPS.put(domainClass, result);
+    private static Map<String, Key<Object, Object>> elementMapOf(final Class<?> domainClass) {
+        return ELEMENT_MAPS.computeIfAbsent(domainClass, type -> {
+            final Map<String, Key<Object, Object>> result = new HashMap<>();
+            for (Key<Object, Object> key : Keys.keysOfAny(type)) {
+                result.put(Keys.nameOf(key), key);
             }
             return result;
-        }
+        });
     }
 
     /** Is the class a domain object with its own keys? */

@@ -14,17 +14,17 @@
  * http://www.gnu.org/licenses/gpl-2.0.txt
  */
 
-
 package net.ponec.jworksheet.bo;
 
 import jakarta.persistence.Column;
 import java.util.ArrayList;
 import java.util.List;
+import lombok.Getter;
+import lombok.Setter;
 import net.ponec.jworksheet.bo.item.YearMonthDay;
 import net.ponec.jworksheet.bo.meta.MetaWorkDay;
 import net.ponec.jworksheet.core.ujo.ExportAction;
 import net.ponec.jworksheet.core.ujo.Exportable;
-import net.ponec.jworksheet.core.ujo.Keys;
 import org.ujorm.annotation.Domain;
 import org.ujorm.core.Key;
 
@@ -34,6 +34,8 @@ import org.ujorm.core.Key;
  * @composed 1 - * Event
  */
 @Domain
+@Getter
+@Setter
 public class WorkDay implements Comparable<WorkDay>, Exportable {
 
     @Column(name = "Date")
@@ -46,26 +48,6 @@ public class WorkDay implements Comparable<WorkDay>, Exportable {
     private List<Event> events = new ArrayList<>();
 
     // ------------------------ JAVABEAN ------------------------
-
-    public YearMonthDay getDate() {
-        return date;
-    }
-
-    public void setDate(final YearMonthDay date) {
-        this.date = date;
-    }
-
-    public boolean isDayOff() {
-        return dayOff;
-    }
-
-    public void setDayOff(final boolean dayOff) {
-        this.dayOff = dayOff;
-    }
-
-    public List<Event> getEvents() {
-        return events;
-    }
 
     public void setEvents(final List<Event> events) {
         this.events = events != null ? events : new ArrayList<>();
@@ -86,16 +68,5 @@ public class WorkDay implements Comparable<WorkDay>, Exportable {
     @Override
     public int compareTo(final WorkDay o) {
         return date.compareTo(o.getDate());
-    }
-
-    // ------------------------ KEY ACCESS ------------------------
-
-    public <V> V get(final Key<WorkDay,V> key) {
-        return key.getValue(this);
-    }
-
-    public <V> WorkDay set(final Key<WorkDay,V> key, final V value) {
-        Keys.write(key, this, value);
-        return this;
     }
 }

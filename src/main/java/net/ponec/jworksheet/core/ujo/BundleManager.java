@@ -52,7 +52,7 @@ public final class BundleManager {
         final Properties properties = new Properties();
         final Exportable filter = domain instanceof final Exportable e ? e : null;
 
-        for (Key<D, ?> key : keysOf(domain)) {
+        for (Key<Object, Object> key : Keys.keysOfAny(domain.getClass())) {
             final Object value = key.getValue(domain);
             if (value == null) {
                 continue;
@@ -81,22 +81,12 @@ public final class BundleManager {
         properties.load(is);
 
         final D result = Keys.newInstance(domainClass);
-        for (Key<D, ?> key : Keys.keysOf(domainClass)) {
+        for (Key<Object, Object> key : Keys.keysOfAny(domainClass)) {
             final String text = properties.getProperty(Keys.nameOf(key));
             if (text != null) {
-                setValue(key, result, ValueCoder.decode(key, text));
+                Keys.write(key, result, ValueCoder.decode(key, text));
             }
         }
         return result;
-    }
-
-    @SuppressWarnings({"unchecked", "rawtypes"})
-    private static <D> void setValue(final Key<D, ?> key, final D domain, final Object value) {
-        Keys.write((Key) key, domain, value);
-    }
-
-    @SuppressWarnings("unchecked")
-    private static <D> Iterable<Key<D, ?>> keysOf(final D domain) {
-        return Keys.keysOf((Class<D>) domain.getClass());
     }
 }

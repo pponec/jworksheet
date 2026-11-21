@@ -21,7 +21,6 @@ import net.ponec.jworksheet.bo.meta.MetaProject;
 
 import net.ponec.jworksheet.bo.Project;
 import net.ponec.jworksheet.core.ApplContext;
-import net.ponec.jworksheet.core.ujo.Keys;
 import org.ujorm.core.Key;
 
 /**
@@ -61,7 +60,7 @@ public class ProjectTableModel extends UjoTableModel<Project> {
     protected Integer nextProjectId() {
         Integer result = 0;
         for (Project proj : super.rows) {
-            Integer id = proj.get(MetaProject.id);
+            Integer id = proj.getId();
             if (result.compareTo(id)<0) {
                 result = id;
             }

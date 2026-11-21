@@ -18,7 +18,6 @@
 package net.ponec.jworksheet.gui.models;
 
 import net.ponec.jworksheet.bo.meta.MetaEvent;
-import net.ponec.jworksheet.bo.meta.MetaParameters;
 
 import java.util.List;
 import javax.swing.SwingUtilities;
@@ -30,7 +29,6 @@ import net.ponec.jworksheet.bo.Project;
 import net.ponec.jworksheet.bo.TaskType;
 import net.ponec.jworksheet.bo.item.Time;
 import net.ponec.jworksheet.core.ujo.DomainTools;
-import net.ponec.jworksheet.core.ujo.Keys;
 import org.ujorm.core.Key;
 
 /**
@@ -69,7 +67,7 @@ public class EventTableModel extends UjoTableModel<Event> {
         if (MetaEvent.period==column) {
             return rowIndex==(getRowCount()-1);
         } else {
-            return applContext.getParameters().get(MetaParameters.modifyFinishedProject)
+            return applContext.getParameters().isModifyFinishedProject()
             ||   ! getRow(rowIndex).isFinished(column)
             ;
         }
@@ -125,7 +123,7 @@ public class EventTableModel extends UjoTableModel<Event> {
         int requPeriod; // Required period
         
         if (insertedRow!=null
-        && (requPeriod = insertedRow.get(MetaEvent.period)) > 0
+        && (requPeriod = insertedRow.getPeriod()) > 0
         && (index = getRowIndex(insertedRow)) > 0
         && (index < getRowCount()-1)
         ){
@@ -171,7 +169,7 @@ public class EventTableModel extends UjoTableModel<Event> {
         int time = 0 ;
         for (Event event : rows) {
             if (!event.isPrivate()) {
-                time += event.get(MetaEvent.period);
+                time += event.getPeriod();
             }
         }
         return time;
@@ -253,7 +251,7 @@ public class EventTableModel extends UjoTableModel<Event> {
         }
 
         if (timeChange 
-        && applContext.getParameters().get(MetaParameters.automaticSortingByTime)) {
+        && applContext.getParameters().isAutomaticSortingByTime()) {
             final Event e = getRow(rowIndex);
 
             SwingUtilities.invokeLater(new Runnable() {

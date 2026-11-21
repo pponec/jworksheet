@@ -17,6 +17,9 @@
 package net.ponec.jworksheet.gui.models;
 
 import jakarta.persistence.Column;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.RequiredArgsConstructor;
 import net.ponec.jworksheet.core.ujo.Keys;
 import net.ponec.jworksheet.gui.models.meta.MetaUjoKeyRow;
 import org.ujorm.annotation.Domain;
@@ -32,6 +35,8 @@ import org.ujorm.core.Key;
  */
 @Domain
 @SuppressWarnings({"unchecked", "rawtypes"})
+@RequiredArgsConstructor
+@NoArgsConstructor(force = true)
 public class UjoKeyRow {
 
     @Column(name = "Index")
@@ -53,20 +58,14 @@ public class UjoKeyRow {
     private Object defaultValue;
 
     /** A domain object of the presented key. */
+    @Getter
     private final transient Object content;
 
     /** A presented key of the domain object. */
+    @Getter
     private final transient Key key;
 
     /** A constructor required by the metamodel. The instance presents no key. */
-    public UjoKeyRow() {
-        this(null, null);
-    }
-
-    public UjoKeyRow(final Object content, final Key key) {
-        this.content = content;
-        this.key = key;
-    }
 
     // ------------------------ THE COMPUTED ACCESSORS ------------------------
 
@@ -132,16 +131,6 @@ public class UjoKeyRow {
     }
 
     // ------------------------ TOOLS ------------------------
-
-    /** Returns an assigned key (a parameter e.g.) */
-    public Key getKey() {
-        return key;
-    }
-
-    /** Returns the domain object of the presented key. */
-    public Object getContent() {
-        return content;
-    }
 
     @Override
     public String toString() {

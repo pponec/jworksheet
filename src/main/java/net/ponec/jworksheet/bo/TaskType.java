@@ -14,10 +14,11 @@
   * http://www.gnu.org/licenses/gpl-2.0.txt
   */
 
-
 package net.ponec.jworksheet.bo;
 
 import jakarta.persistence.Column;
+import lombok.Getter;
+import lombok.Setter;
 import net.ponec.jworksheet.core.ujo.Keys;
 import org.ujorm.annotation.Domain;
 import org.ujorm.core.Key;
@@ -28,6 +29,8 @@ import org.ujorm.tools.Check;
  * @author Pavel Ponec
  */
 @Domain
+@Getter
+@Setter
 public class TaskType implements Comparable<TaskType> {
 
     @Column(name = "ID")
@@ -43,34 +46,6 @@ public class TaskType implements Comparable<TaskType> {
     private String descr = "";
 
     // ------------------------ JAVABEAN ------------------------
-
-    public int getId() {
-        return id;
-    }
-
-    public void setId(final int id) {
-        this.id = id;
-    }
-
-    public boolean isDefaultTask() {
-        return defaultTask;
-    }
-
-    public void setDefaultTask(final boolean defaultTask) {
-        this.defaultTask = defaultTask;
-    }
-
-    public boolean isFinished() {
-        return finished;
-    }
-
-    public void setFinished(final boolean finished) {
-        this.finished = finished;
-    }
-
-    public String getDescr() {
-        return descr;
-    }
 
     /** An undefined description is replaced by an empty text. */
     public void setDescr(final String descr) {
@@ -99,16 +74,5 @@ public class TaskType implements Comparable<TaskType> {
         for (Key<TaskType,?> key : Keys.keysOf(TaskType.class)) {
             Keys.copy(key, otherTask, this);
         }
-    }
-
-    // ------------------------ KEY ACCESS ------------------------
-
-    public <V> V get(final Key<TaskType,V> key) {
-        return key.getValue(this);
-    }
-
-    public <V> TaskType set(final Key<TaskType,V> key, final V value) {
-        Keys.write(key, this, value);
-        return this;
     }
 }

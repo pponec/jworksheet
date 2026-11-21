@@ -17,20 +17,23 @@
 package net.ponec.jworksheet.report;
 
 import jakarta.persistence.Column;
+import lombok.AccessLevel;
+import lombok.Getter;
+import lombok.Setter;
 import net.ponec.jworksheet.bo.Event;
 import net.ponec.jworksheet.bo.Project;
 import net.ponec.jworksheet.bo.TaskType;
 import net.ponec.jworksheet.bo.item.YearMonthDay;
-import net.ponec.jworksheet.core.ujo.Keys;
 import net.ponec.jworksheet.report.meta.MetaTaskGroup;
 import org.ujorm.annotation.Domain;
-import org.ujorm.core.Key;
 
 /**
  * Task Group
  * @author Pavel Ponec
  */
 @Domain
+@Getter
+@Setter
 public class TaskGroup {
 
     @Column(name = "Project")
@@ -51,6 +54,7 @@ public class TaskGroup {
     private Integer year;
 
     /** A total time in minutes. */
+    @Getter(AccessLevel.NONE) @Setter(AccessLevel.NONE)
     private transient int totalTime = 0;
 
     /** A constructor required by the metamodel. */
@@ -71,30 +75,6 @@ public class TaskGroup {
     }
 
     // ------------------------ JAVABEAN ------------------------
-
-    public Project getProject() {
-        return project;
-    }
-
-    public void setProject(final Project project) {
-        this.project = project;
-    }
-
-    public TaskType getTask() {
-        return task;
-    }
-
-    public void setTask(final TaskType task) {
-        this.task = task;
-    }
-
-    public YearMonthDay getDay() {
-        return day;
-    }
-
-    public void setDay(final YearMonthDay day) {
-        this.day = day;
-    }
 
     /** A month of the day. The value is derived, so it has got no setter behaviour. */
     public Integer getMonth() {
@@ -129,16 +109,5 @@ public class TaskGroup {
     /** Get business time. */
     public int getBusinessTime() {
         return project != null && project.isPrivateProject() ? 0 : totalTime;
-    }
-
-    // ------------------------ KEY ACCESS ------------------------
-
-    public <V> V get(final Key<TaskGroup,V> key) {
-        return key.getValue(this);
-    }
-
-    public <V> TaskGroup set(final Key<TaskGroup,V> key, final V value) {
-        Keys.write(key, this, value);
-        return this;
     }
 }
