@@ -84,7 +84,7 @@ import net.ponec.jworksheet.gui.models.UjoKeyRow;
 @SuppressWarnings("unchecked")
 public final class JWorkSheet extends TopFrame {
 
-    public static final Version APPL_VERSION = new Version("1.10") ;
+    public static final Version APPL_VERSION = new Version("2.00") ;
     public static final String APPL_RELEASED = "2026-11-03";
 
     public static final String APPL_NAME     = "jWorkSheet";
