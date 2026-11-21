@@ -11,7 +11,7 @@
         <project.jar.name>jWorkSheet</project.jar.name>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <java.version>17</java.version>
-        <ujorm.version>3.0.4</ujorm.version>
+        <ujorm.version>3.0.6</ujorm.version>
         <maven.compiler.source>${java.version}</maven.compiler.source>
         <maven.compiler.target>${java.version}</maven.compiler.target>
     </properties>
@@ -29,13 +29,10 @@
             <artifactId>ujo-core</artifactId>
             <version>${ujorm.version}</version>
         </dependency>
-        <!-- The ujo-core declares the API as 'provided', however the runtime
-             metamodel generator needs it on the application classpath. -->
-        <dependency>
-            <groupId>jakarta.persistence</groupId>
-            <artifactId>jakarta.persistence-api</artifactId>
-            <version>3.1.0</version>
-        </dependency>
+        <!-- The jakarta.persistence-api 3.1.0 is not a dependency: only the 9 annotations,
+             which the ujo-core loads at build and run time, and the 9 types they reference
+             are copied to the src/main/java/jakarta under the Eclipse Distribution License
+             v. 1.0 (BSD-3-Clause), see the META-INF/jakarta.persistence directory. -->
         <!-- An APT generator of the Meta* key classes, see the maven-compiler-plugin -->
         <dependency>
             <groupId>org.ujorm</groupId>
@@ -140,6 +137,36 @@
                         <arg>-Aujorm.metaPackage=meta</arg>
                     </compilerArgs>
                 </configuration>
+            </plugin>
+
+            <!-- Generates the Ujorm domain handlers (the implementation of the Keys)
+                 at build time, so the application runs on a plain JRE with no Java compiler.
+                 The handler classes go straight to target/classes, the sources
+                 in target/generated-sources/ujorm-handlers are for review only. -->
+            <plugin>
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>exec-maven-plugin</artifactId>
+                <version>3.5.0</version>
+                <executions>
+                    <execution>
+                        <id>ujorm-precompile-handlers</id>
+                        <phase>process-classes</phase>
+                        <goals>
+                            <goal>exec</goal>
+                        </goals>
+                        <configuration>
+                            <executable>${java.home}/bin/java</executable>
+                            <classpathScope>compile</classpathScope>
+                            <arguments>
+                                <argument>-classpath</argument>
+                                <classpath/>
+                                <argument>org.ujorm.core.generator.HandlerPrecompiler</argument>
+                                <argument>${project.build.outputDirectory}</argument>
+                                <argument>${project.build.directory}/generated-sources/ujorm-handlers</argument>
+                            </arguments>
+                        </configuration>
+                    </execution>
+                </executions>
             </plugin>
         </plugins>
     </build>

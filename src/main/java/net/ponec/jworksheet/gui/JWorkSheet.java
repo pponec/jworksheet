@@ -1574,9 +1574,6 @@ public final class JWorkSheet extends TopFrame {
 
     /** Main */
     public static void main(String args[]) {
-
-        checkJavaCompiler();
-
         ApplContext applContext = new ApplContext();
         Throwable error = null;
 
@@ -1593,29 +1590,5 @@ public final class JWorkSheet extends TopFrame {
         // otherwise the AWT thread may start processing layout/paint events
         // on the still partially constructed frame (race condition).
         SwingUtilities.invokeLater(() -> new JWorkSheet(applContext, finalError).setVisible());
-    }
-
-    /** The Ujorm builds the metamodel of the business objects at the run time by the Java
-     * compiler, so the application requires a JDK. Without the compiler the first access
-     * to a key fails by an unclear error, so the state is reported here instead.
-     * <p>The check is a reflective one on purpose: a plain JRE offers no {@code javax.tools}
-     * package at all, so a direct reference would fail before this message is printed. */
-    private static void checkJavaCompiler() {
-        Object compiler = null;
-        try {
-            compiler = Class.forName("javax.tools.ToolProvider")
-                    .getMethod("getSystemJavaCompiler")
-                    .invoke(null);
-        } catch (ReflectiveOperationException | LinkageError e) {
-            // The compiler is unavailable, see the message below.
-        }
-        if (compiler == null) {
-            System.err.println(APPL_NAME + " requires a JDK 17 or newer to run,"
-                    + " a plain JRE is not enough."
-                    + "\nThe application builds its data metamodel at the run time"
-                    + " using the Java compiler."
-                    + "\nThe current Java is: " + System.getProperty("java.home"));
-            System.exit(1);
-        }
     }
 }

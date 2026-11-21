@@ -7,9 +7,9 @@ Application offers some completed work sheet reports, however you can create you
 
 ### Requirements
 
-A **JDK 17 or newer** is required to run the application - a plain JRE is not enough.
-The [Ujorm 3](https://ujorm.org/) framework builds the metamodel of the domain objects
-at the run time using the Java compiler, so the `jdk.compiler` module must be available.
+A **Java 17 or newer** is required to run the application, a plain JRE is enough.
+The metamodel of the domain objects for the [Ujorm 3](https://ujorm.org/) framework
+is generated at build time, so no Java compiler is needed at run time.
 
 ### Screenshots
 
