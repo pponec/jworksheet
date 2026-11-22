@@ -65,9 +65,6 @@ public class ReportDialog extends TopDialog implements java.awt.event.ActionList
     /** General selected date. */
     private long originalDay;
 
-    /** An result of report: */
-    private Boolean result = false;
-
     /** Enable a synchronization of Date. */
     private boolean dateSynchroEnabled = true;
 
@@ -160,10 +157,6 @@ public class ReportDialog extends TopDialog implements java.awt.event.ActionList
         Calendar cal = Calendar.getInstance();
         cal.setTime(date);
         result.setYearMonthDay(cal);
-        return result;
-    }
-
-    public Boolean getResult() {
         return result;
     }
 
@@ -653,7 +646,6 @@ public class ReportDialog extends TopDialog implements java.awt.event.ActionList
                 sorted = true;
             }
             if (metaReport.getXSL()!=null) {
-                result = null;
                 applContext.showReport(null, metaReport.getXSL(), getXslParams(metaReport));
 
             } else {
@@ -668,7 +660,6 @@ public class ReportDialog extends TopDialog implements java.awt.event.ActionList
                 String report = cal.print();
 
                 applContext.showReport(report);
-                result = null;
             }
 
         } catch (Throwable e) {

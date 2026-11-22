@@ -48,15 +48,12 @@ public class TaskTableModel extends UjoTableModel<TaskType> {
     }
 
     /** Get next Task id */
-    protected Integer nextTaskId() {
-        Integer result = 0;
+    protected int nextTaskId() {
+        int result = 0;
         for (TaskType task : super.rows) {
-            Integer id = task.getId();
-            if (result.compareTo(id)<0) {
-                result = id;
-            }
+            result = Math.max(result, task.getId());
         }
-        return ++result ;
+        return result + 1;
     }
 
     @Override

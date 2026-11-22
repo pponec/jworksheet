@@ -1297,28 +1297,9 @@ public final class JWorkSheet extends TopFrame {
 
     private void bReportActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_bReportActionPerformed
         eventTable.submitEditMode(true);
-
-        if (true) {
-            bSortActionPerformed(evt);
-            applContext.saveData(true);
-            ReportDialog reportDialog = new ReportDialog(this, applContext);
-            reportDialog.setVisible(true);
-            Boolean result = reportDialog.getResult();
-//            if (result!=null && result) {
-//                showTableReport();
-//            }
-        } else if (false) {
-            // EXPRORT:
-            // bSortActionPerformed(evt);
-            // ApplTools.setClipboard(lCurrentDay.getText() + '\n' + eventTable.getStringModel());
-        } else {
-            // bSortActionPerformed(evt);
-            // String statistics = lCurrentDay.getText() + '\n' + ((EventTableModel)eventTable.getModel()).calculateGroupStatistics();
-            // ApplTools.setClipboard(statistics);
-            // showTableReport();
-
-        }
-
+        bSortActionPerformed(evt);
+        applContext.saveData(true);
+        new ReportDialog(this, applContext).setVisible(true);
     }//GEN-LAST:event_bReportActionPerformed
 
     private void bTaskSortActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_bTaskSortActionPerformed

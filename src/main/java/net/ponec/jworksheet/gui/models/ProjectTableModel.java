@@ -57,15 +57,12 @@ public class ProjectTableModel extends UjoTableModel<Project> {
     }
 
     /** Get next Project id */
-    protected Integer nextProjectId() {
-        Integer result = 0;
+    protected int nextProjectId() {
+        int result = 0;
         for (Project proj : super.rows) {
-            Integer id = proj.getId();
-            if (result.compareTo(id)<0) {
-                result = id;
-            }
+            result = Math.max(result, proj.getId());
         }
-        return ++result ;
+        return result + 1;
     }
     
     @Override
