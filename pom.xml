@@ -12,7 +12,7 @@
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <java.version>17</java.version>
         <lombok.version>1.18.42</lombok.version>
-        <ujorm.version>3.0.7-SNAPSHOT</ujorm.version>
+        <ujorm.version>3.0.7</ujorm.version>
         <maven.compiler.source>${java.version}</maven.compiler.source>
         <maven.compiler.target>${java.version}</maven.compiler.target>
     </properties>
