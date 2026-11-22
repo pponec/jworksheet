@@ -23,7 +23,12 @@ import java.lang.reflect.Type;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
+import java.util.Optional;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.function.Function;
+import java.util.stream.Collectors;
+import org.ujorm.annotation.Domain;
+import org.ujorm.core.DomainHandler;
 import org.ujorm.core.DomainHandlerProvider;
 import org.ujorm.core.Key;
 
@@ -44,22 +49,61 @@ public final class Keys {
     /** A cache of the fields of the keys. */
     private static final Map<Key<?, ?>, Field> FIELDS = new ConcurrentHashMap<>();
 
+    /** The domain class of a type: the type itself or its nearest superclass annotated by the {@code @Domain}. */
+    private static final ClassValue<Class<?>> DOMAIN_CLASSES = new ClassValue<>() {
+        @Override
+        protected Class<?> computeValue(final Class<?> type) {
+            for (Class<?> result = type; result != null; result = result.getSuperclass()) {
+                if (result.isAnnotationPresent(Domain.class)) {
+                    return result;
+                }
+            }
+            throw new IllegalStateException("No class annotated by the @Domain: " + type.getName());
+        }
+    };
+
+    /** The keys of a domain class by their names, see the {@link #nameOf(Key)}. */
+    private static final ClassValue<Map<String, Key<Object, Object>>> KEYS_BY_NAME = new ClassValue<>() {
+        @Override
+        @SuppressWarnings({"unchecked", "rawtypes"})
+        protected Map<String, Key<Object, Object>> computeValue(final Class<?> type) {
+            final List<Key<Object, Object>> keys = (List) keysOf(type.asSubclass(DomainObject.class));
+            return keys.stream().collect(Collectors.toUnmodifiableMap(Keys::nameOf, Function.identity()));
+        }
+    };
+
     private Keys() {
     }
 
     // ------------------------ THE METAMODEL ------------------------
 
-    /** Returns all the keys of a domain class in the order of the field declaration. */
-    public static <D> List<Key<D, ?>> keysOf(final Class<D> domainClass) {
-        return DomainHandlerProvider.getHandler(domainClass).getKeyList();
+    /** Is the type a domain object with its own keys? */
+    public static boolean isDomain(final Class<?> type) {
+        return DomainObject.class.isAssignableFrom(type);
     }
 
-    /** Returns all the keys of a domain class whose type is not known at the compile time.
+    /** Returns the domain class of the type: the type itself or its nearest superclass annotated by the {@code @Domain}. */
+    static Class<?> domainClassOf(final Class<?> type) {
+        return DOMAIN_CLASSES.get(type);
+    }
+
+    /** Returns all the keys of a domain class in the order of the field declaration. */
+    @SuppressWarnings("unchecked")
+    public static <D extends DomainObject> List<Key<D, ?>> keysOf(final Class<D> domainClass) {
+        return ((DomainHandler<D>) DomainHandlerProvider.getHandler(domainClassOf(domainClass))).getKeyList();
+    }
+
+    /** Returns all the keys of a domain object whose type is not known at the compile time.
      * The keys are typed to the {@link Object}, so they can read and write a value
      * of any domain object without a cast. */
     @SuppressWarnings({"unchecked", "rawtypes"})
-    public static List<Key<Object, Object>> keysOfAny(final Class<?> domainClass) {
-        return (List) keysOf(domainClass);
+    public static List<Key<Object, Object>> keysOf(final DomainObject domain) {
+        return (List) keysOf(domain.getClass());
+    }
+
+    /** Finds a key of the domain object by its exact name, see the {@link #nameOf(Key)}. */
+    public static Optional<Key<Object, Object>> findKey(final DomainObject domain, final String name) {
+        return Optional.ofNullable(KEYS_BY_NAME.get(domain.getClass()).get(name));
     }
 
     /** Returns a name of the key used by the XML documents, the configuration file and

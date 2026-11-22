@@ -52,7 +52,7 @@ public class DomainMetamodelTest {
             , UjoKeyRow.class
             })
     @DisplayName("A metamodel of every domain class can be created")
-    public void metamodelIsAvailable(final Class<?> domainClass) {
+    public void metamodelIsAvailable(final Class<? extends DomainObject> domainClass) {
         final List<? extends Key<?,?>> keys = assertDoesNotThrow
                 (() -> Keys.keysOf(domainClass)
                 , "The metamodel generator failed for " + domainClass.getName());
@@ -61,6 +61,10 @@ public class DomainMetamodelTest {
         for (Key<?,?> key : keys) {
             assertNotNull(Keys.nameOf(key), "A key name is required");
             assertNotNull(Keys.typeOf(key), "A key type is required");
+            if (Keys.isList(key)) {
+                // The XML and the deep copy can process a list of the domain objects only:
+                assertTrue(Keys.isDomain(Keys.itemTypeOf(key)), "A list of the domain objects is required: " + key);
+            }
         }
     }
 
@@ -74,7 +78,7 @@ public class DomainMetamodelTest {
             , Parameters.class
             })
     @DisplayName("A default value of every persistent key is readable from a prototype")
-    public void defaultValuesAreReadable(final Class<?> domainClass) {
+    public void defaultValuesAreReadable(final Class<? extends DomainObject> domainClass) {
         for (Key<?,?> key : Keys.keysOf(domainClass)) {
             assertDoesNotThrow(() -> Keys.defaultOf(key), "Can't read a default of " + key);
         }

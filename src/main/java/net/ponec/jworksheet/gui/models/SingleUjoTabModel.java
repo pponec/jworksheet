@@ -16,6 +16,7 @@
 
 package net.ponec.jworksheet.gui.models;
 
+import net.ponec.jworksheet.core.ujo.DomainObject;
 import net.ponec.jworksheet.gui.models.meta.MetaUjoKeyRow;
 
 import java.util.ArrayList;
@@ -39,22 +40,22 @@ import net.ponec.jworksheet.core.ujo.ValueCoder;
 public class SingleUjoTabModel extends UjoTableModel<UjoKeyRow> {
 
     /** Creates a model of all the visible keys of the domain object. */
-    public SingleUjoTabModel(final Object content) {
+    public SingleUjoTabModel(final DomainObject content) {
         this(content, Keys.keysOf(UjoKeyRow.class).toArray(new Key[0]));
     }
 
     /** Creates a model of all the visible keys of the domain object. */
-    public SingleUjoTabModel(final Object content, final Key... columns) {
+    public SingleUjoTabModel(final DomainObject content, final Key... columns) {
         super(columns);
         rows = createKeyRows(content);
     }
 
     /** Creates a row per a key which the domain object allows to show. */
-    private static List<UjoKeyRow> createKeyRows(final Object content) {
+    private static List<UjoKeyRow> createKeyRows(final DomainObject content) {
         final Exportable filter = content instanceof final Exportable e ? e : null;
         final List<UjoKeyRow> result = new ArrayList<>();
 
-        for (Key key : Keys.keysOf(content.getClass())) {
+        for (Key key : Keys.keysOf(content)) {
             if (filter == null
             ||  filter.isExportable(ExportAction.TABLE_SHOW, key, key.getValue(content))) {
                 result.add(new UjoKeyRow(content, key));

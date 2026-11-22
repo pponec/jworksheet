@@ -16,6 +16,7 @@
 
 package net.ponec.jworksheet.report;
 
+import net.ponec.jworksheet.core.ujo.DomainObject;
 import org.ujorm.annotation.UColumn;
 import lombok.AccessLevel;
 import lombok.Getter;
@@ -34,7 +35,7 @@ import org.ujorm.annotation.Domain;
 @Domain
 @Getter
 @Setter
-public class TaskGroup {
+public class TaskGroup implements DomainObject {
 
     @UColumn(name = "Project")
     private Project project;

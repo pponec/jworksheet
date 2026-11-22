@@ -51,10 +51,10 @@ public final class BundleManager {
      * @param domain A domain object to export.
      * @param comment A header comment of the file.
      */
-    public static <D> void save(final File file, final D domain, final String comment)
+    public static void save(final File file, final DomainObject domain, final String comment)
             throws IOException {
         final Properties properties = new Properties();
-        for (Key<Object, Object> key : Keys.keysOfAny(domain.getClass())) {
+        for (Key<Object, Object> key : Keys.keysOf(domain)) {
             final Object value = key.getValue(domain);
             if (value != null && Exportable.isExportable(domain, ExportAction.RESOURCE_BUNDLE, key, value)) {
                 properties.setProperty(Keys.nameOf(key), ValueCoder.encode(key, value));
@@ -67,7 +67,7 @@ public final class BundleManager {
 
     /** Reads a domain object from a properties file. The keys missing in the file keep
      * their default values. */
-    public static <D> D load(final File file, final Class<D> domainClass) throws IOException {
+    public static <D extends DomainObject> D load(final File file, final Class<D> domainClass) throws IOException {
         try (InputStream is = new BufferedInputStream(new FileInputStream(file))) {
             return load(is, domainClass);
         }
@@ -75,12 +75,12 @@ public final class BundleManager {
 
     /** Reads a domain object from a properties stream. The keys missing in the stream keep
      * their default values. */
-    public static <D> D load(final InputStream is, final Class<D> domainClass) throws IOException {
+    public static <D extends DomainObject> D load(final InputStream is, final Class<D> domainClass) throws IOException {
         final Properties properties = new Properties();
         properties.load(is);
 
         final D result = Keys.newInstance(domainClass);
-        for (Key<Object, Object> key : Keys.keysOfAny(domainClass)) {
+        for (Key<Object, Object> key : Keys.keysOf(result)) {
             final String text = properties.getProperty(Keys.nameOf(key));
             if (text != null) try {
                 key.setValue(result, ValueCoder.decode(key, text));

@@ -16,6 +16,7 @@
 
 package net.ponec.jworksheet.bo;
 
+import net.ponec.jworksheet.core.ujo.DomainObject;
 import org.ujorm.annotation.UColumn;
 import java.util.ArrayList;
 import java.util.List;
@@ -36,7 +37,7 @@ import org.ujorm.core.Key;
 @Domain
 @Getter
 @Setter
-public class WorkDay implements Comparable<WorkDay>, Exportable {
+public class WorkDay implements Comparable<WorkDay>, Exportable, DomainObject {
 
     @UColumn(name = "Date")
     private YearMonthDay date;

@@ -16,6 +16,7 @@
 
 package net.ponec.jworksheet.bo;
 
+import net.ponec.jworksheet.core.ujo.DomainObject;
 import org.ujorm.annotation.UColumn;
 import java.awt.Color;
 import java.awt.Rectangle;
@@ -46,7 +47,7 @@ import org.ujorm.tools.Check;
 @Domain
 @Getter
 @Setter
-public class Parameters implements Exportable {
+public class Parameters implements Exportable, DomainObject {
 
     /** A configuration subdirectory of a user home directory. */
     public static final String CONFIG_DIR = ".jWorkSheet";

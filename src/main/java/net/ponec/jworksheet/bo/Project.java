@@ -16,6 +16,7 @@
 
 package net.ponec.jworksheet.bo;
 
+import net.ponec.jworksheet.core.ujo.DomainObject;
 import org.ujorm.annotation.UColumn;
 import java.util.ArrayList;
 import java.util.List;
@@ -34,7 +35,7 @@ import org.ujorm.tools.Check;
 @Domain
 @Getter
 @Setter
-public class Project implements Comparable<Project> {
+public class Project implements Comparable<Project>, DomainObject {
 
     @UColumn(name = "ID")
     private int id = 0;

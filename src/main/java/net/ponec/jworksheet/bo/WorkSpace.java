@@ -16,6 +16,7 @@
 
 package net.ponec.jworksheet.bo;
 
+import net.ponec.jworksheet.core.ujo.DomainObject;
 import org.ujorm.annotation.UColumn;
 import java.util.ArrayList;
 import java.util.Date;
@@ -41,7 +42,7 @@ import org.ujorm.core.Key;
 @Domain
 @Getter
 @Setter
-public class WorkSpace implements Exportable {
+public class WorkSpace implements Exportable, DomainObject {
 
     @UColumn(name = "Version")
     private Version version = new Version("0");

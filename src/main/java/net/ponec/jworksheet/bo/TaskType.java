@@ -16,6 +16,7 @@
 
 package net.ponec.jworksheet.bo;
 
+import net.ponec.jworksheet.core.ujo.DomainObject;
 import org.ujorm.annotation.UColumn;
 import lombok.Getter;
 import lombok.Setter;
@@ -31,7 +32,7 @@ import org.ujorm.tools.Check;
 @Domain
 @Getter
 @Setter
-public class TaskType implements Comparable<TaskType> {
+public class TaskType implements Comparable<TaskType>, DomainObject {
 
     @UColumn(name = "ID")
     private int id = 0;

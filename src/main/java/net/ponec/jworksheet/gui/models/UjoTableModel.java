@@ -16,6 +16,7 @@
 
 package net.ponec.jworksheet.gui.models;
 
+import net.ponec.jworksheet.core.ujo.DomainObject;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
@@ -35,7 +36,7 @@ import net.ponec.jworksheet.core.ujo.UjoComparator;
  * @author Pavel Ponec
  */
 @SuppressWarnings({"unchecked", "rawtypes"})
-public class UjoTableModel<ROW> extends AbstractTableModel {
+public class UjoTableModel<ROW extends DomainObject> extends AbstractTableModel {
 
     /** An identifier of the event which repaints the table header. */
     public static final int EVENT_REPAINT_HEADER = 1000;

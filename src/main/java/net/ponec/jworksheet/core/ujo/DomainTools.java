@@ -37,21 +37,20 @@ public final class DomainTools {
      *
      * @param source An object to copy.
      * @param depth A depth of the copy. A value less than one provides the original object.
-     * @return A new instance of the domain object.
+     * @return A new instance of the domain object, a subclass is copied to its {@code @Domain} class.
      */
     @SuppressWarnings("unchecked")
-    public static <T> T deepCopy(final T source, final int depth) {
+    public static <T extends DomainObject> T deepCopy(final T source, final int depth) {
         if (source == null || depth <= 0) {
             return source;
         }
-        final Class<T> domainClass = (Class<T>) source.getClass();
-        final T result = Keys.newInstance(domainClass);
+        final T result = (T) Keys.newInstance(Keys.domainClassOf(source.getClass()));
 
-        for (Key<Object, Object> key : Keys.keysOfAny(domainClass)) {
+        for (Key<Object, Object> key : Keys.keysOf(source)) {
             if (Keys.isList(key)) {
                 final List<Object> items = new ArrayList<>();
                 for (Object item : (List<?>) key.getValue(source)) {
-                    items.add(deepCopy(item, depth - 1));
+                    items.add(deepCopy((DomainObject) item, depth - 1));
                 }
                 key.setValue(result, items);
             } else {

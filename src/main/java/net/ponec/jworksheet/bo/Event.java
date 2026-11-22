@@ -16,6 +16,7 @@
 
 package net.ponec.jworksheet.bo;
 
+import net.ponec.jworksheet.core.ujo.DomainObject;
 import org.ujorm.annotation.UColumn;
 import lombok.Getter;
 import lombok.Setter;
@@ -39,7 +40,7 @@ import org.ujorm.core.Key;
 @Domain
 @Getter
 @Setter
-public class Event implements Exportable {
+public class Event implements Exportable, DomainObject {
 
     public static final Short ZERO_SHORT = (short) 0;
 

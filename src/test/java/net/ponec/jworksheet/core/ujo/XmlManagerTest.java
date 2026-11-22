@@ -17,10 +17,14 @@
 package net.ponec.jworksheet.core.ujo;
 
 import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
+import java.io.PrintStream;
 import net.ponec.jworksheet.bo.WorkSpace;
 import net.ponec.jworksheet.bo.meta.MetaWorkSpace;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.parallel.ResourceLock;
+import org.junit.jupiter.api.parallel.Resources;
 
 import static java.nio.charset.StandardCharsets.UTF_8;
 import static org.junit.jupiter.api.Assertions.*;
@@ -44,6 +48,30 @@ public class XmlManagerTest {
                 + "</body>");
 
         assertEquals("Pavel", result.getUsername());
+    }
+
+    @Test
+    @DisplayName("The names of the elements are case sensitive")
+    public void elementNameIsCaseSensitive() {
+        final String name = Keys.nameOf(MetaWorkSpace.username);
+        final WorkSpace result = parse("<body><" + name.toLowerCase() + ">Wrong</" + name.toLowerCase() + "></body>");
+
+        assertEquals(new WorkSpace().getUsername(), result.getUsername());
+    }
+
+    @Test
+    @ResourceLock(Resources.SYSTEM_ERR)
+    @DisplayName("A malformed document is rejected by an exception only")
+    public void malformedDocumentIsRejected() {
+        final PrintStream original = System.err;
+        final ByteArrayOutputStream console = new ByteArrayOutputStream();
+        System.setErr(new PrintStream(console));
+        try {
+            assertThrows(IllegalStateException.class, () -> parse("<body><Username>Pavel</body>"));
+        } finally {
+            System.setErr(original);
+        }
+        assertEquals("", console.toString());
     }
 
     @Test

@@ -24,18 +24,13 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStreamWriter;
 import java.io.Writer;
-import java.util.ArrayDeque;
-import java.util.Deque;
 import java.util.List;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.concurrent.ConcurrentHashMap;
+import javax.xml.parsers.DocumentBuilder;
+import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
-import javax.xml.parsers.SAXParser;
-import javax.xml.parsers.SAXParserFactory;
-import org.ujorm.annotation.Domain;
 import org.ujorm.core.Key;
-import org.xml.sax.Attributes;
+import org.w3c.dom.Element;
+import org.w3c.dom.Node;
 import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
 import org.xml.sax.helpers.DefaultHandler;
@@ -74,16 +69,13 @@ public final class XmlManager {
      * to keep the data file portable. */
     private static final String NEW_LINE = "\n";
 
-    /** A cache of the element name to the key mapping. */
-    private static final Map<Class<?>, Map<String, Key<Object, Object>>> ELEMENT_MAPS = new ConcurrentHashMap<>();
-
     private XmlManager() {
     }
 
     // ------------------------ EXPORT ------------------------
 
     /** Writes the domain object to an XML document with the default comment. */
-    public static void saveXML(final Appendable out, final Object root) throws IOException {
+    public static void saveXML(final Appendable out, final DomainObject root) throws IOException {
         saveXML(out, root, DEFAULT_COMMENT);
     }
 
@@ -92,7 +84,7 @@ public final class XmlManager {
      * @param root A domain object to export.
      * @param comment A body of the comment written behind the XML declaration.
      */
-    public static void saveXML(final Appendable out, final Object root, final String comment)
+    public static void saveXML(final Appendable out, final DomainObject root, final String comment)
             throws IOException {
         out.append("<?xml version=\"1.0\" encoding=\"UTF-8\"?>").append(NEW_LINE);
         if (comment != null) {
@@ -102,7 +94,7 @@ public final class XmlManager {
     }
 
     /** Writes the domain object to an XML file. */
-    public static void saveXML(final File file, final Object root, final String comment)
+    public static void saveXML(final File file, final DomainObject root, final String comment)
             throws IOException {
         try (Writer out = new OutputStreamWriter
                 (new BufferedOutputStream(new FileOutputStream(file)), UTF_8)) {
@@ -114,12 +106,12 @@ public final class XmlManager {
     private static void writeElement
             ( final Appendable out
             , final String name
-            , final Object domain
+            , final DomainObject domain
             , final int level) throws IOException {
 
         indent(out, level).append('<').append(name).append('>').append(NEW_LINE);
 
-        for (Key<Object, Object> key : Keys.keysOfAny(domain.getClass())) {
+        for (Key<Object, Object> key : Keys.keysOf(domain)) {
             final Object value = key.getValue(domain);
             if (value == null) {
                 continue;
@@ -128,12 +120,12 @@ public final class XmlManager {
             if (Keys.isList(key)) {
                 for (Object item : (List<?>) value) {
                     if (item != null && Exportable.isExportable(domain, ExportAction.XML, key, item)) {
-                        writeElement(out, element, item, level + 1);
+                        writeElement(out, element, (DomainObject) item, level + 1);
                     }
                 }
             } else if (Exportable.isExportable(domain, ExportAction.XML, key, value)) {
-                if (isDomain(value.getClass())) {
-                    writeElement(out, element, value, level + 1);
+                if (value instanceof final DomainObject child) {
+                    writeElement(out, element, child, level + 1);
                 } else {
                     indent(out, level + 1).append('<').append(element).append('>');
                     escape(out, ValueCoder.encode(key, value));
@@ -171,18 +163,18 @@ public final class XmlManager {
 
     // ------------------------ IMPORT ------------------------
 
-    /** Reads a domain object from an XML document. */
-    public static <T> T parseXML(final InputStream is, final Class<T> rootType) {
+    /** Reads a domain object from an XML document. The name of the root element is not checked,
+     * an element of an unknown name (the names are case sensitive) is skipped including its children. */
+    public static <T extends DomainObject> T parseXML(final InputStream is, final Class<T> rootType) {
         try {
-            final SAXParserFactory factory = SAXParserFactory.newInstance();
-            factory.setNamespaceAware(false);
-            factory.setValidating(false);
+            final DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
             // No document type is expected, so the external entities can not be abused (XXE):
             factory.setFeature("http://apache.org/xml/features/disallow-doctype-decl", true);
-            final SAXParser parser = factory.newSAXParser();
-            final RootHandler<T> handler = new RootHandler<>(rootType);
-            parser.parse(new InputSource(is), handler);
-            return handler.getRoot();
+            final DocumentBuilder builder = factory.newDocumentBuilder();
+            // The default handler would print a fatal error to the console, the exception is enough:
+            builder.setErrorHandler(new DefaultHandler());
+            final Element root = builder.parse(new InputSource(is)).getDocumentElement();
+            return read(root, rootType);
         } catch (ParserConfigurationException | SAXException | IOException e) {
             throw new IllegalStateException("Can't parse the XML document to "
                     + rootType.getSimpleName(), e);
@@ -190,7 +182,7 @@ public final class XmlManager {
     }
 
     /** Reads a domain object from an XML file. */
-    public static <T> T parseXML(final File file, final Class<T> rootType) {
+    public static <T extends DomainObject> T parseXML(final File file, final Class<T> rootType) {
         try (InputStream is = new FileInputStream(file)) {
             return parseXML(is, rootType);
         } catch (IOException e) {
@@ -198,110 +190,28 @@ public final class XmlManager {
         }
     }
 
-    /** A SAX handler which builds the tree of the domain objects. */
-    private static final class RootHandler<T> extends DefaultHandler {
-
-        /** A type of the root domain object. */
-        private final Class<T> rootType;
-
-        /** The domain objects of the currently open elements. */
-        private final Deque<Object> domains = new ArrayDeque<>();
-
-        /** A text of the currently open scalar element, or {@code null}. */
-        private StringBuilder text;
-
-        /** A depth of the elements which are not recognized and so are skipped. */
-        private int skipped;
-
-        private T root;
-
-        RootHandler(final Class<T> rootType) {
-            this.rootType = rootType;
-        }
-
-        T getRoot() {
-            return root != null ? root : Keys.newInstance(rootType);
-        }
-
-        @Override
-        public void startElement(final String uri, final String localName
-                , final String name, final Attributes attributes) {
-            if (skipped > 0) {
-                skipped++;
-                return;
-            }
-            if (domains.isEmpty()) {
-                root = Keys.newInstance(rootType);
-                domains.push(root);
-                return;
-            }
-            final Object parent = domains.peek();
-            final Key<?, ?> key = elementMapOf(parent.getClass()).get(name);
-            if (key == null) {
-                // An element of an unknown name is skipped including its children:
-                skipped = 1;
-                return;
-            }
-            if (Keys.isList(key)) {
-                domains.push(Keys.newInstance(Keys.itemTypeOf(key)));
-            } else if (isDomain(key.type())) {
-                domains.push(Keys.newInstance(key.type()));
-            } else {
-                text = new StringBuilder();
+    /** Creates a domain object of the type and fills it by the child elements.
+     * An element of an unknown name is skipped including its children. */
+    private static <T extends DomainObject> T read(final Element element, final Class<T> type) {
+        final T result = Keys.newInstance(type);
+        for (Node node = element.getFirstChild(); node != null; node = node.getNextSibling()) {
+            if (node instanceof final Element child) {
+                Keys.findKey(result, child.getTagName()).ifPresent(key -> assign(result, key, child));
             }
         }
-
-        @Override
-        public void characters(final char[] ch, final int start, final int length) {
-            if (text != null) {
-                text.append(ch, start, length);
-            }
-        }
-
-        @Override
-        @SuppressWarnings("unchecked")
-        public void endElement(final String uri, final String localName, final String name) {
-            if (skipped > 0) {
-                skipped--;
-                return;
-            }
-            if (text != null) {
-                final Object parent = domains.peek();
-                final Key<Object, Object> key = elementMapOf(parent.getClass()).get(name);
-                key.setValue(parent, ValueCoder.decode(key, text.toString()));
-                text = null;
-                return;
-            }
-            final Object child = domains.pop();
-            if (domains.isEmpty()) {
-                return; // The root element is closed
-            }
-            final Object parent = domains.peek();
-            final Key<Object, Object> key = elementMapOf(parent.getClass()).get(name);
-            if (Keys.isList(key)) {
-                ((List<Object>) key.getValue(parent)).add(child);
-            } else {
-                key.setValue(parent, child);
-            }
-        }
+        return result;
     }
 
-    // ------------------------ TOOLS ------------------------
-
-    /** Returns a mapping of the element name to the key of a domain class. */
-    private static Map<String, Key<Object, Object>> elementMapOf(final Class<?> domainClass) {
-        return ELEMENT_MAPS.computeIfAbsent(domainClass, type -> {
-            final Map<String, Key<Object, Object>> result = new HashMap<>();
-            for (Key<Object, Object> key : Keys.keysOfAny(type)) {
-                result.put(Keys.nameOf(key), key);
-            }
-            return result;
-        });
+    /** Writes the content of the element to the key of the domain object. */
+    @SuppressWarnings("unchecked")
+    private static void assign(final DomainObject domain, final Key<Object, Object> key, final Element element) {
+        if (Keys.isList(key)) {
+            final Class<? extends DomainObject> itemType = Keys.itemTypeOf(key).asSubclass(DomainObject.class);
+            ((List<Object>) key.getValue(domain)).add(read(element, itemType));
+        } else if (Keys.isDomain(key.type())) {
+            key.setValue(domain, read(element, key.type().asSubclass(DomainObject.class)));
+        } else {
+            key.setValue(domain, ValueCoder.decode(key, element.getTextContent()));
+        }
     }
-
-    /** Is the class a domain object with its own keys? */
-    private static boolean isDomain(final Class<?> type) {
-        return type.isAnnotationPresent(Domain.class);
-    }
-
 }

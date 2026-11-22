@@ -16,6 +16,7 @@
 
 package net.ponec.jworksheet.gui.models;
 
+import net.ponec.jworksheet.core.ujo.DomainObject;
 import org.ujorm.annotation.UColumn;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -37,7 +38,7 @@ import org.ujorm.core.Key;
 @SuppressWarnings({"unchecked", "rawtypes"})
 @RequiredArgsConstructor
 @NoArgsConstructor(force = true)
-public class UjoKeyRow {
+public class UjoKeyRow implements DomainObject {
 
     @UColumn(name = "Index")
     private Integer index;
