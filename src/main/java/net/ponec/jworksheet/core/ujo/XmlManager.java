@@ -17,28 +17,28 @@
 package net.ponec.jworksheet.core.ujo;
 
 import java.io.BufferedOutputStream;
+import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStreamWriter;
+import java.io.StringWriter;
 import java.io.Writer;
 import java.util.List;
-import javax.xml.parsers.DocumentBuilder;
-import javax.xml.parsers.DocumentBuilderFactory;
-import javax.xml.parsers.ParserConfigurationException;
+import javax.xml.stream.XMLInputFactory;
+import javax.xml.stream.XMLOutputFactory;
+import javax.xml.stream.XMLStreamConstants;
+import javax.xml.stream.XMLStreamException;
+import javax.xml.stream.XMLStreamReader;
+import javax.xml.stream.XMLStreamWriter;
 import org.ujorm.core.Key;
-import org.w3c.dom.Element;
-import org.w3c.dom.Node;
-import org.xml.sax.InputSource;
-import org.xml.sax.SAXException;
-import org.xml.sax.helpers.DefaultHandler;
 
 import static java.nio.charset.StandardCharsets.UTF_8;
 
 /**
- * A serialization of the domain objects to an XML document and back.
+ * A serialization of the domain objects to an XML document and back by the StAX API of the JDK.
  * <p>The Ujorm 3 does not offer any XML support, so the class reimplements the document
  * format of the original {@code org.ujorm.core.UjoManagerXML}. The format must be kept -
  * the users have got the data files written by the previous releases.
@@ -69,6 +69,11 @@ public final class XmlManager {
      * to keep the data file portable. */
     private static final String NEW_LINE = "\n";
 
+    /** The default JDK implementations are used, so a StAX provider of the class path
+     * can not change the document format. */
+    private static final XMLOutputFactory OUTPUT_FACTORY = XMLOutputFactory.newDefaultFactory();
+    private static final XMLInputFactory INPUT_FACTORY = createInputFactory();
+
     private XmlManager() {
     }
 
@@ -86,30 +91,53 @@ public final class XmlManager {
      */
     public static void saveXML(final Appendable out, final DomainObject root, final String comment)
             throws IOException {
-        out.append("<?xml version=\"1.0\" encoding=\"UTF-8\"?>").append(NEW_LINE);
-        if (comment != null) {
-            out.append("<!--").append(comment).append("-->").append(NEW_LINE);
+        if (out instanceof final Writer writer) {
+            saveXML(writer, root, comment);
+        } else {
+            final StringWriter writer = new StringWriter(1024);
+            saveXML(writer, root, comment);
+            out.append(writer.getBuffer());
         }
-        writeElement(out, ROOT_ELEMENT, root, 0);
     }
 
     /** Writes the domain object to an XML file. */
     public static void saveXML(final File file, final DomainObject root, final String comment)
             throws IOException {
-        try (Writer out = new OutputStreamWriter
-                (new BufferedOutputStream(new FileOutputStream(file)), UTF_8)) {
+        try (Writer out = new BufferedWriter(new OutputStreamWriter
+                (new BufferedOutputStream(new FileOutputStream(file)), UTF_8))) {
             saveXML(out, root, comment);
+        }
+    }
+
+    /** Writes the domain object to a character stream. */
+    private static void saveXML(final Writer out, final DomainObject root, final String comment)
+            throws IOException {
+        try {
+            final XMLStreamWriter writer = OUTPUT_FACTORY.createXMLStreamWriter(out);
+            writer.writeStartDocument(UTF_8.name(), "1.0");
+            writer.writeCharacters(NEW_LINE);
+            if (comment != null) {
+                writer.writeComment(comment);
+                writer.writeCharacters(NEW_LINE);
+            }
+            writeElement(writer, ROOT_ELEMENT, root, 0);
+            writer.writeEndDocument();
+            writer.flush(); // The writer does not close the underlying stream
+        } catch (XMLStreamException e) {
+            throw new IOException("Can't write the " + root.getClass().getSimpleName(), e);
         }
     }
 
     /** Writes a single element including all its children. */
     private static void writeElement
-            ( final Appendable out
+            ( final XMLStreamWriter out
             , final String name
             , final DomainObject domain
-            , final int level) throws IOException {
+            , final int level) throws XMLStreamException {
 
-        indent(out, level).append('<').append(name).append('>').append(NEW_LINE);
+        indent(out, level);
+        out.writeStartElement(name);
+        out.writeCharacters(NEW_LINE);
 
         for (Key<Object, Object> key : Keys.keysOf(domain)) {
             final Object value = key.getValue(domain);
@@ -127,57 +155,62 @@ public final class XmlManager {
                 if (value instanceof final DomainObject child) {
                     writeElement(out, element, child, level + 1);
                 } else {
-                    indent(out, level + 1).append('<').append(element).append('>');
-                    escape(out, ValueCoder.encode(key, value));
-                    out.append("</").append(element).append('>').append(NEW_LINE);
+                    indent(out, level + 1);
+                    out.writeStartElement(element);
+                    // An empty text closes the start tag, so the element is written as a pair of tags:
+                    out.writeCharacters(ValueCoder.encode(key, value));
+                    out.writeEndElement();
+                    out.writeCharacters(NEW_LINE);
                 }
             }
         }
 
-        indent(out, level).append("</").append(name).append('>');
+        indent(out, level);
+        out.writeEndElement();
         if (level > 0) {
             // The original implementation writes no new line behind the root element:
-            out.append(NEW_LINE);
+            out.writeCharacters(NEW_LINE);
         }
     }
 
-    private static Appendable indent(final Appendable out, final int level) throws IOException {
-        for (int i = 0; i < level; i++) {
-            out.append(INDENT);
-        }
-        return out;
-    }
-
-    /** Writes a text of an element content. */
-    private static void escape(final Appendable out, final String text) throws IOException {
-        for (int i = 0, max = text.length(); i < max; i++) {
-            final char c = text.charAt(i);
-            switch (c) {
-                case '&' -> out.append("&amp;");
-                case '<' -> out.append("&lt;");
-                case '>' -> out.append("&gt;");
-                default -> out.append(c);
-            }
+    /** Writes an indentation of the element at the level. The method must be called
+     * before the start tag of the element, the text is written by the parent element. */
+    private static void indent(final XMLStreamWriter out, final int level) throws XMLStreamException {
+        if (level > 0) {
+            out.writeCharacters(INDENT.repeat(level));
         }
     }
 
     // ------------------------ IMPORT ------------------------
 
+    /** Creates a factory of the XML readers. No document type is expected,
+     * so the DTD support is off and the external entities can not be abused (XXE). */
+    private static XMLInputFactory createInputFactory() {
+        final XMLInputFactory result = XMLInputFactory.newDefaultFactory();
+        result.setProperty(XMLInputFactory.SUPPORT_DTD, false);
+        result.setProperty(XMLInputFactory.IS_SUPPORTING_EXTERNAL_ENTITIES, false);
+        result.setProperty(XMLInputFactory.IS_COALESCING, true);
+        return result;
+    }
+
     /** Reads a domain object from an XML document. The name of the root element is not checked,
      * an element of an unknown name (the names are case sensitive) is skipped including its children. */
     public static <T extends DomainObject> T parseXML(final InputStream is, final Class<T> rootType) {
+        XMLStreamReader reader = null;
         try {
-            final DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
-            // No document type is expected, so the external entities can not be abused (XXE):
-            factory.setFeature("http://apache.org/xml/features/disallow-doctype-decl", true);
-            final DocumentBuilder builder = factory.newDocumentBuilder();
-            // The default handler would print a fatal error to the console, the exception is enough:
-            builder.setErrorHandler(new DefaultHandler());
-            final Element root = builder.parse(new InputSource(is)).getDocumentElement();
-            return read(root, rootType);
-        } catch (ParserConfigurationException | SAXException | IOException e) {
+            reader = INPUT_FACTORY.createXMLStreamReader(is);
+            nextElement(reader);
+            final T result = read(reader, rootType);
+            // Check the rest of the document:
+            while (reader.hasNext()) {
+                checkEvent(reader.next());
+            }
+            return result;
+        } catch (XMLStreamException e) {
             throw new IllegalStateException("Can't parse the XML document to "
                     + rootType.getSimpleName(), e);
+        } finally {
+            close(reader);
         }
     }
 
@@ -191,12 +224,17 @@ public final class XmlManager {
     }
 
     /** Creates a domain object of the type and fills it by the child elements.
+     * The reader must be located on the start tag, the method ends on the related end tag.
      * An element of an unknown name is skipped including its children. */
-    private static <T extends DomainObject> T read(final Element element, final Class<T> type) {
+    private static <T extends DomainObject> T read(final XMLStreamReader reader, final Class<T> type)
+            throws XMLStreamException {
         final T result = Keys.newInstance(type);
-        for (Node node = element.getFirstChild(); node != null; node = node.getNextSibling()) {
-            if (node instanceof final Element child) {
-                Keys.findKey(result, child.getTagName()).ifPresent(key -> assign(result, key, child));
+        while (nextElement(reader)) {
+            final var key = Keys.findKey(result, reader.getLocalName());
+            if (key.isPresent()) {
+                assign(result, key.get(), reader);
+            } else {
+                skipElement(reader);
             }
         }
         return result;
@@ -204,14 +242,74 @@ public final class XmlManager {
 
     /** Writes the content of the element to the key of the domain object. */
     @SuppressWarnings("unchecked")
-    private static void assign(final DomainObject domain, final Key<Object, Object> key, final Element element) {
+    private static void assign(final DomainObject domain, final Key<Object, Object> key, final XMLStreamReader reader)
+            throws XMLStreamException {
         if (Keys.isList(key)) {
             final Class<? extends DomainObject> itemType = Keys.itemTypeOf(key).asSubclass(DomainObject.class);
-            ((List<Object>) key.getValue(domain)).add(read(element, itemType));
+            ((List<Object>) key.getValue(domain)).add(read(reader, itemType));
         } else if (Keys.isDomain(key.type())) {
-            key.setValue(domain, read(element, key.type().asSubclass(DomainObject.class)));
+            key.setValue(domain, read(reader, key.type().asSubclass(DomainObject.class)));
         } else {
-            key.setValue(domain, ValueCoder.decode(key, element.getTextContent()));
+            key.setValue(domain, ValueCoder.decode(key, readText(reader)));
+        }
+    }
+
+    /** Moves the reader to the next start tag of a child element and returns {@code true},
+     * or to the end tag of the current element and returns {@code false}. */
+    private static boolean nextElement(final XMLStreamReader reader) throws XMLStreamException {
+        while (reader.hasNext()) {
+            switch (checkEvent(reader.next())) {
+                case XMLStreamConstants.START_ELEMENT:
+                    return true;
+                case XMLStreamConstants.END_ELEMENT:
+                    return false;
+                default:
+                    // A text, a comment and so on are ignored
+            }
+        }
+        throw new XMLStreamException("Unexpected end of the document", reader.getLocation());
+    }
+
+    /** Returns the text of the current element including the text of all nested elements,
+     * the reader ends on the related end tag. */
+    private static String readText(final XMLStreamReader reader) throws XMLStreamException {
+        final StringBuilder result = new StringBuilder();
+        for (int depth = 1; depth > 0;) {
+            switch (checkEvent(reader.next())) {
+                case XMLStreamConstants.START_ELEMENT -> depth++;
+                case XMLStreamConstants.END_ELEMENT -> depth--;
+                case XMLStreamConstants.CHARACTERS, XMLStreamConstants.CDATA, XMLStreamConstants.SPACE ->
+                        result.append(reader.getText());
+                default -> { /* A comment and so on are ignored */ }
+            }
+        }
+        return result.toString();
+    }
+
+    /** Skips the current element including its children, the reader ends on the related end tag. */
+    private static void skipElement(final XMLStreamReader reader) throws XMLStreamException {
+        for (int depth = 1; depth > 0;) {
+            switch (checkEvent(reader.next())) {
+                case XMLStreamConstants.START_ELEMENT -> depth++;
+                case XMLStreamConstants.END_ELEMENT -> depth--;
+                default -> { /* The content is ignored */ }
+            }
+        }
+    }
+
+    /** A document type is rejected, the data file does not use it. */
+    private static int checkEvent(final int event) throws XMLStreamException {
+        if (event == XMLStreamConstants.DTD || event == XMLStreamConstants.ENTITY_REFERENCE) {
+            throw new XMLStreamException("A document type is not supported");
+        }
+        return event;
+    }
+
+    private static void close(final XMLStreamReader reader) {
+        if (reader != null) try {
+            reader.close();
+        } catch (XMLStreamException e) {
+            // The parsing result or exception is more important
         }
     }
 }

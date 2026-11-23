@@ -20,7 +20,6 @@ import net.ponec.jworksheet.bo.meta.MetaEvent;
 import net.ponec.jworksheet.bo.meta.MetaParameters;
 import net.ponec.jworksheet.bo.meta.MetaProject;
 import net.ponec.jworksheet.bo.meta.MetaTaskType;
-import net.ponec.jworksheet.bo.meta.MetaWorkDay;
 import net.ponec.jworksheet.gui.models.meta.MetaUjoKeyRow;
 
 import java.awt.Color;
@@ -368,7 +367,7 @@ public final class JWorkSheet extends TopFrame {
     /** A close window event. */
     public void closeAppl(WindowEvent e) {
         try {
-            MetaParameters.sortProjColumn.setValue(applContext.getParameters(), Keys.nameOf(projTable.getSortedColumn()));
+            applContext.getParameters().setSortProjColumn(Keys.nameOf(projTable.getSortedColumn()));
             applContext.closeAppl(true);
         } catch (Throwable ex) {
             showMessage("Can't save data.", ex);
@@ -1193,7 +1192,7 @@ public final class JWorkSheet extends TopFrame {
 
     private void cbTimeOffActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cbTimeOffActionPerformed
 
-        MetaWorkDay.dayOff.setValue(applContext.getWorkDay(), cbTimeOff.isSelected());
+        applContext.getWorkDay().setDayOff(cbTimeOff.isSelected());
         lCurrentDay.setForeground(cbTimeOff.isSelected() ? COLOR_OFF : COLOR_WORK );
 
     }//GEN-LAST:event_cbTimeOffActionPerformed

@@ -21,9 +21,6 @@ import net.ponec.jworksheet.core.ujo.Keys;
 
 import net.ponec.jworksheet.bo.meta.MetaEvent;
 import net.ponec.jworksheet.bo.meta.MetaParameters;
-import net.ponec.jworksheet.bo.meta.MetaProject;
-import net.ponec.jworksheet.bo.meta.MetaTaskType;
-import net.ponec.jworksheet.bo.meta.MetaWorkDay;
 import net.ponec.jworksheet.bo.meta.MetaWorkSpace;
 
 import net.ponec.jworksheet.module.JwsContext;
@@ -209,7 +206,7 @@ public class ApplContext implements TableModelListener, Runnable, JwsContext {
         // Backup an Original File, if parsing and loading was successful.
         if (isTimeToBackup() && dataFile.exists()) try {
             ApplTools.copy(dataFile, backupFile);
-            MetaWorkSpace.archived.setValue(workSpace, new Date());
+            workSpace.setArchived(new Date());
         } catch (Throwable e) {
             LOGGER.log(Level.WARNING, "Can't create backup", e);
         }
@@ -256,10 +253,10 @@ public class ApplContext implements TableModelListener, Runnable, JwsContext {
     private boolean isTimeToBackup() {
         Calendar cal = Calendar.getInstance();
         long day2 = getDayCount(cal);
-        Date date = MetaWorkSpace.archived.getValue(workSpace);
+        Date date = workSpace.getArchived();
 
         if (date==null) {
-            MetaWorkSpace.archived.setValue(workSpace, cal.getTime());
+            workSpace.setArchived(cal.getTime());
             return false;
         } else {
             cal.setTime(date);
@@ -279,7 +276,7 @@ public class ApplContext implements TableModelListener, Runnable, JwsContext {
             // WorkSpace attributes
             workSpace.setCreated(new Date());
             workSpace.setVersion(JWorkSheet.APPL_VERSION);
-            workSpace.setUsername(MetaParameters.username.getValue(getParameters()));
+            workSpace.setUsername(getParameters().getUsername());
 
             String comment = " <?xml-stylesheet type=\"text/xsl\" href=\"styles/"
                     + ResourceProvider.REPORT_BASE
@@ -293,10 +290,10 @@ public class ApplContext implements TableModelListener, Runnable, JwsContext {
         if (includeParams) {
             // Window Sizing:
             Rectangle rect
-            = MetaParameters.windowSizeRestoration.getValue(parameters)
+            = parameters.isWindowSizeRestoration()
             ? topFrame.getBounds()
             : Keys.defaultOf(MetaParameters.windowSize) ;
-            MetaParameters.windowSize.setValue(parameters,rect);
+            parameters.setWindowSize(rect);
 
             saveParameters();
         }
@@ -328,7 +325,7 @@ public class ApplContext implements TableModelListener, Runnable, JwsContext {
     /** Create an Exit row, if it is enabled. */
     public void createExitEvent() {
 
-        if (MetaParameters.exitEventCreating.getValue(parameters) ) {
+        if (parameters.isExitEventCreating() ) {
             WorkDay today = workSpace.findWorkDay(new YearMonthDay());
             List<Event> events = today.getEvents();
 
@@ -338,11 +335,11 @@ public class ApplContext implements TableModelListener, Runnable, JwsContext {
                 Time currentTime  = new Time(true);
 
                 if (currentTime.compareTo(finishedTime)>=0) {
-                    String exitDescr = MetaParameters.exitEventDescription.getValue(parameters);
+                    String exitDescr = parameters.getExitEventDescription();
                     Event exitEvent;
 
-                    if (MetaEvent.project.getValue(lastEvent)==null
-                    &&  MetaEvent.task.getValue(lastEvent)==null
+                    if (lastEvent.getProject()==null
+                    &&  lastEvent.getTask()==null
                     &&  MetaEvent.descr.equals(lastEvent, exitDescr)
                     &&  events.size()>=2
                     ){
@@ -354,8 +351,8 @@ public class ApplContext implements TableModelListener, Runnable, JwsContext {
                     }
 
                     exitEvent.setStartTime(currentTime);
-                    MetaEvent.descr.setValue(exitEvent, exitDescr);
-                    MetaEvent.period.setValue(lastEvent, currentTime.substract(lastEvent.getStartTime()));
+                    exitEvent.setDescr(exitDescr);
+                    lastEvent.setPeriod(currentTime);
                 }
             }
         }
@@ -413,7 +410,7 @@ public class ApplContext implements TableModelListener, Runnable, JwsContext {
     public File getDataFile() {
         return Keys.isDefault(MetaParameters.dataFilePath, getParameters())
              ? new File(getConfigDir(), FILE_DATA)
-             : MetaParameters.dataFilePath.getValue(getParameters())
+             : getParameters().getDataFilePath()
              ;
     }
 
@@ -421,7 +418,7 @@ public class ApplContext implements TableModelListener, Runnable, JwsContext {
     public File getProjectsFile() {
         return Keys.isDefault(MetaParameters.sharedProjectsFilePath, getParameters())
              ? new File(getConfigDir(), PROJECTS_DATA)
-             : MetaParameters.sharedProjectsFilePath.getValue(getParameters())
+             : getParameters().getSharedProjectsFilePath()
              ;
     }
 
@@ -458,7 +455,7 @@ public class ApplContext implements TableModelListener, Runnable, JwsContext {
     /** Get "Selected Day" - don't modify it! */
     @Override
     public YearMonthDay getSelectedDay() {
-        return MetaWorkDay.date.getValue(currentDay);
+        return currentDay.getDate();
     }
 
     /** GetCurrentDay */
@@ -475,7 +472,7 @@ public class ApplContext implements TableModelListener, Runnable, JwsContext {
     /** Current Language */
     @Override
     public Locale getLanguage() {
-        return MetaParameters.language.getValue(parameters);
+        return parameters.getLanguage();
     }
 
     /**
@@ -607,7 +604,7 @@ public class ApplContext implements TableModelListener, Runnable, JwsContext {
         }
         if (LANGUAGE_MANAGER_ENABLED) {
            // translate the application:
-           languageManager.setLocaleAndTranslate(MetaParameters.language.getValue(parameters), true);
+           languageManager.setLocaleAndTranslate(parameters.getLanguage(), true);
         }
 
         fireModuleEvent();
@@ -668,7 +665,7 @@ public class ApplContext implements TableModelListener, Runnable, JwsContext {
 
         if (LANGUAGE_MANAGER_ENABLED) {
             this.languageManager = new LanguageManager(topFrame, ResourceProvider.class, showDebugWindow);
-            this.languageManager.setLocaleAndTranslate(MetaParameters.language.getValue(parameters), false);
+            this.languageManager.setLocaleAndTranslate(parameters.getLanguage(), false);
         }
     }
 
@@ -719,7 +716,7 @@ public class ApplContext implements TableModelListener, Runnable, JwsContext {
     @Override
     public boolean isSystrayEnabled() {
         boolean result
-        = MetaParameters.systemTrayEnabled.getValue(getParameters())
+        = getParameters().isSystemTrayEnabled()
         && systray.isSupported()
         ;
         return result;
@@ -743,14 +740,14 @@ public class ApplContext implements TableModelListener, Runnable, JwsContext {
         //
         Event event = findLastEventToday();
         if (event!=null) {
-            Project  proj = MetaEvent.project.getValue(event);
+            Project  proj = event.getProject();
             if (proj!=null) {
-                message.append(MetaProject.descr.getValue(proj));
+                message.append(proj.getDescr());
                 //
-                TaskType task = MetaEvent.task.getValue(event);
+                TaskType task = event.getTask();
                 if (task!=null) {
                     message.append(" / ");
-                    message.append(MetaTaskType.descr.getValue(task));
+                    message.append(task.getDescr());
                 }
             }
         }

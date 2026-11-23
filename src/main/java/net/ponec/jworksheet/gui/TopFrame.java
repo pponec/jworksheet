@@ -139,7 +139,7 @@ public class TopFrame extends JFrame {
             } catch (IOException e) {
                 browser = new BrowserDialog(applContext, browser).getResult();
                 if (Check.hasLength(browser)) {
-                    MetaParameters.systemBrowserPath.setValue(applContext.getParameters(), browser);
+                    applContext.getParameters().setSystemBrowserPath(browser);
                     ApplTools.browse(uri, browser);
                 } else {
                     throw e;

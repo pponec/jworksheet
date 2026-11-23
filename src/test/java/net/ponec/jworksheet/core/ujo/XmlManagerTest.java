@@ -84,4 +84,25 @@ public class XmlManagerTest {
 
         assertThrows(IllegalStateException.class, () -> parse(xml));
     }
+
+    @Test
+    @DisplayName("A text is escaped as by the original format and an empty text is written as a pair of tags")
+    public void textIsEscaped() throws Exception {
+        final String name = Keys.nameOf(MetaWorkSpace.username);
+        final String text = "a & b <c> \"d\" 'e' ěšč";
+        final WorkSpace workSpace = new WorkSpace();
+        workSpace.setUsername(text);
+        final StringBuilder xml = new StringBuilder();
+        XmlManager.saveXML(xml, workSpace, null);
+
+        assertTrue(xml.toString().startsWith("<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<body>\n"), xml.toString());
+        assertTrue(xml.toString().endsWith("</body>"), xml.toString());
+        assertTrue(xml.toString().contains("\n  <" + name + ">a &amp; b &lt;c&gt; \"d\" 'e' ěšč</" + name + ">\n"), xml.toString());
+        assertEquals(text, parse(xml.toString()).getUsername());
+
+        workSpace.setUsername("");
+        xml.setLength(0);
+        XmlManager.saveXML(xml, workSpace, null);
+        assertTrue(xml.toString().contains("<" + name + "></" + name + ">"), xml.toString());
+    }
 }

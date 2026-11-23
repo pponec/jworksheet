@@ -87,7 +87,7 @@ public class ReportTab extends SuperReport {
         
         //GroupSet groupSet = report.getGroupSet();
         for(TaskGroup tg : groupSet.getGroups() ) {
-            MetaTaskGroup.day.setValue(tg, ymd);
+            tg.setDay(ymd);
         }
         data.add(report.getGroupSet());
     }

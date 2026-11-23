@@ -58,7 +58,7 @@ public class TaskTableModel extends UjoTableModel<TaskType> {
 
     @Override
     public void addRow(TaskType row) {
-        MetaTaskType.id.setValue(row, nextTaskId());
+        row.setId(nextTaskId());
         super.addRow(row);
     }
 

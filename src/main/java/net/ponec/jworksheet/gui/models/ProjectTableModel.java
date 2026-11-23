@@ -67,7 +67,7 @@ public class ProjectTableModel extends UjoTableModel<Project> {
     
     @Override
     public void addRow(Project proj) {
-        MetaProject.id.setValue(proj, nextProjectId());
+        proj.setId(nextProjectId());
         super.addRow(proj);
     }
     

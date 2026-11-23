@@ -95,10 +95,10 @@ public class EventTableModel extends UjoTableModel<Event> {
         // Set Default values:
         Project defaultProj = applContext.getWorkSpace().findDefaultProject();
         if (defaultProj!=null) {
-            MetaEvent.project.setValue(row, defaultProj);
+            row.setProject(defaultProj);
             TaskType defaultTask = defaultProj.findDefaultTask();
             if (defaultTask!=null) {
-                MetaEvent.task.setValue(row, defaultTask);
+                row.setTask(defaultTask);
             }
         }
         insertRow(row);
