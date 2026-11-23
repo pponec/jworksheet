@@ -22,7 +22,7 @@ import java.util.ArrayList;
 import java.util.List;
 import lombok.Getter;
 import lombok.Setter;
-import net.ponec.jworksheet.bo.item.YearMonthDay;
+import java.time.LocalDate;
 import net.ponec.jworksheet.bo.meta.MetaWorkDay;
 import net.ponec.jworksheet.core.ujo.ExportAction;
 import net.ponec.jworksheet.core.ujo.Exportable;
@@ -40,7 +40,7 @@ import org.ujorm.core.Key;
 public class WorkDay implements Comparable<WorkDay>, Exportable, DomainObject {
 
     @UColumn(name = "Date")
-    private YearMonthDay date;
+    private LocalDate date;
 
     @UColumn(name = "DayOff")
     private boolean dayOff = false;

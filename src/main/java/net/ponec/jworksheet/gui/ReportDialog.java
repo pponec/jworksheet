@@ -24,7 +24,6 @@ import net.ponec.jworksheet.bo.meta.MetaProject;
 import java.awt.event.ActionEvent;
 import java.awt.event.MouseEvent;
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.Date;
 import java.util.logging.Logger;
 import javax.swing.DefaultListModel;
@@ -38,7 +37,7 @@ import net.ponec.jworksheet.core.ApplTools;
 import net.ponec.jworksheet.core.Calculator;
 import net.ponec.jworksheet.bo.Parameters;
 import net.ponec.jworksheet.bo.Project;
-import net.ponec.jworksheet.bo.item.YearMonthDay;
+import java.time.LocalDate;
 import net.ponec.jworksheet.core.LanguageManager;
 import net.ponec.jworksheet.report.MetaReport;
 import net.ponec.jworksheet.report.ReportA;
@@ -63,7 +62,7 @@ public class ReportDialog extends TopDialog implements java.awt.event.ActionList
     private String spinnerFormat;
 
     /** General selected date. */
-    private long originalDay;
+    private LocalDate originalDay;
 
     /** Enable a synchronization of Date. */
     private boolean dateSynchroEnabled = true;
@@ -76,7 +75,7 @@ public class ReportDialog extends TopDialog implements java.awt.event.ActionList
      */
     public ReportDialog(java.awt.Frame parent, ApplContext aContext) {
         super(aContext);
-        originalDay = aContext.getSelectedDay().getCalendar().getTimeInMillis();
+        originalDay = aContext.getSelectedDay();
 
         setLocale(aContext.getLanguage());
         spinnerFormat = applContext.getParameters().getDateFormat(MetaParameters.dateReportFormat, aContext);
@@ -150,14 +149,9 @@ public class ReportDialog extends TopDialog implements java.awt.event.ActionList
         return ApplTools.createSpinnerDate(spinnerFormat, getLocale());
     }
 
-    /** Returns a YearMonthDay from a JSpinner component. */
-    private YearMonthDay getYearMonthDay(JSpinner spinner) {
-        YearMonthDay result = new YearMonthDay();
-        Date date = (Date) spinner.getValue();
-        Calendar cal = Calendar.getInstance();
-        cal.setTime(date);
-        result.setYearMonthDay(cal);
-        return result;
+    /** Returns a date from a JSpinner component. */
+    private LocalDate getLocalDate(JSpinner spinner) {
+        return ApplTools.toLocalDate((Date) spinner.getValue());
     }
 
     @Override
@@ -169,8 +163,8 @@ public class ReportDialog extends TopDialog implements java.awt.event.ActionList
     private ArrayList<String[]> getXslParams(MetaReport metaReport) {
         ArrayList<String[]> result = new ArrayList<String[]>(16);
         //
-        result.add(new String[] {"DateFrom", getYearMonthDay(tDateFrom).toString()});
-        result.add(new String[] {"DateTo"  , getYearMonthDay(tDateTo  ).toString()});
+        result.add(new String[] {"DateFrom", getLocalDate(tDateFrom).toString()});
+        result.add(new String[] {"DateTo"  , getLocalDate(tDateTo  ).toString()});
         result.add(new String[] {"BaseUrl" , applContext.getConfigDir().toURI().toString()});
         result.add(new String[] {"JWSName"    , JWorkSheet.APPL_NAME});
         result.add(new String[] {"JWSHomePage", JWorkSheet.APPL_HOMEPAGE});
@@ -653,8 +647,8 @@ public class ReportDialog extends TopDialog implements java.awt.event.ActionList
 
                 cal.init
                 ( applContext
-                , getYearMonthDay(tDateFrom)
-                , getYearMonthDay(tDateTo)
+                , getLocalDate(tDateFrom)
+                , getLocalDate(tDateTo)
                 , metaReport.getTitle()
                 );
                 String report = cal.print();
@@ -686,56 +680,33 @@ public class ReportDialog extends TopDialog implements java.awt.event.ActionList
     }//GEN-LAST:event_bCancelActionPerformed
 
     private void selectDayAction(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_selectDayAction
-        Calendar c1 = Calendar.getInstance();
-        Calendar c2 = Calendar.getInstance();
-        c1.setTimeInMillis(originalDay);
-        c2.setTimeInMillis(originalDay);
+        final Object source = evt.getSource();
+        final LocalDate day
+                = source == rbDayPrev ? originalDay.minusDays(1)
+                : source == rbWeekPrev ? originalDay.minusWeeks(1)
+                : source == rbMonthPrev ? originalDay.minusMonths(1)
+                : source == rbYearPrev ? originalDay.minusYears(1)
+                : originalDay;
+        LocalDate from = day;
+        LocalDate to = day;
 
-        int firstDay = applContext.getParameters().getFirstDayOfWeek();
-        Object sourceComp = evt.getSource();
-
-        if (rbDayPrev==sourceComp) {
-            c1.add(Calendar.DAY_OF_YEAR, -1);
-        } else if (rbWeekPrev==sourceComp) {
-            c1.add(Calendar.WEEK_OF_YEAR, -1);
-        } else if (rbMonthPrev==sourceComp) {
-            c1.add(Calendar.MONTH, -1);
-        } else if (rbYearPrev==sourceComp) {
-            c1.add(Calendar.YEAR, -1);
-        }
-
-        // -------
-
-        if (sourceComp==rbDayPrev) {
-            c2.setTimeInMillis(c1.getTimeInMillis());
-        } else if (sourceComp==rbWeek
-        ||         sourceComp==rbWeekPrev
-        ){
-            int currDay = c2.get(Calendar.DAY_OF_WEEK); // Note: Calendar.SUNDAY=1
-            c1.add(Calendar.DAY_OF_YEAR, (firstDay-currDay-7) % 7);
-            c2.setTimeInMillis(c1.getTimeInMillis());
-            c2.add(Calendar.DAY_OF_YEAR, 6);
-        } else if (sourceComp==rbMonth
-        ||         sourceComp==rbMonthPrev
-        ){
-            int currDay = c2.get(Calendar.DAY_OF_MONTH);
-            c1.add(Calendar.DAY_OF_YEAR, 1-currDay);
-            c2.setTimeInMillis(c1.getTimeInMillis());
-            c2.add(Calendar.MONTH, 1);
-            c2.add(Calendar.DAY_OF_YEAR, -1);
-        } else if (sourceComp==rbYear
-        ||         sourceComp==rbYearPrev
-        ){
-            int currDay  = c2.get(Calendar.DAY_OF_YEAR);
-            c1.add(Calendar.DAY_OF_YEAR, 1-currDay);
-            c2.setTimeInMillis(c1.getTimeInMillis());
-            c2.add(Calendar.YEAR, 1);
-            c2.add(Calendar.DAY_OF_YEAR, -1);
+        if (source == rbWeek || source == rbWeekPrev) {
+            // The first day of the week is stored in the Calendar format, where the SUNDAY is 1:
+            final int firstDay = applContext.getParameters().getFirstDayOfWeek();
+            final int currDay = day.getDayOfWeek().getValue() % 7 + 1;
+            from = day.minusDays((currDay - firstDay + 7) % 7);
+            to = from.plusDays(6);
+        } else if (source == rbMonth || source == rbMonthPrev) {
+            from = day.withDayOfMonth(1);
+            to = from.plusMonths(1).minusDays(1);
+        } else if (source == rbYear || source == rbYearPrev) {
+            from = day.withDayOfYear(1);
+            to = from.plusYears(1).minusDays(1);
         }
 
         dateSynchroEnabled = false;
-        tDateFrom.setValue(c1.getTime());
-        tDateTo.setValue  (c2.getTime());
+        tDateFrom.setValue(ApplTools.toDate(from));
+        tDateTo.setValue  (ApplTools.toDate(to));
         dateSynchroEnabled = true;
 
     }//GEN-LAST:event_selectDayAction

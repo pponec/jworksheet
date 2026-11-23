@@ -22,16 +22,17 @@ import net.ponec.jworksheet.bo.meta.MetaParameters;
 import net.ponec.jworksheet.report.meta.MetaTaskGroup;
 
 import java.io.IOException;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Locale;
+import net.ponec.jworksheet.core.ApplTools;
 import net.ponec.jworksheet.core.ApplContext;
 import net.ponec.jworksheet.bo.Event;
 import net.ponec.jworksheet.bo.Parameters;
 import net.ponec.jworksheet.bo.WorkDay;
-import net.ponec.jworksheet.bo.item.YearMonthDay;
+import java.time.LocalDate;
 import net.ponec.jworksheet.core.ujo.UjoComparator;
 
 /**
@@ -52,7 +53,7 @@ public class ReportTab extends SuperReport {
     protected ReportA report = null;
     
     @Override
-    public void init(ApplContext applContext, YearMonthDay dateFrom, YearMonthDay dateTo, String reportTitle) {
+    public void init(ApplContext applContext, LocalDate dateFrom, LocalDate dateTo, String reportTitle) {
         super.init(applContext, dateFrom, dateTo, reportTitle);
         comparator = createUjoComparator();
     }
@@ -71,7 +72,7 @@ public class ReportTab extends SuperReport {
     }
     
     private void saveDay() {
-        YearMonthDay ymd = lastWorkDay.getDate();
+        LocalDate ymd = lastWorkDay.getDate();
         
         report = new ReportA();
         GroupSet groupSet = new GroupSet(createUjoComparator(), MetaEvent.period);
@@ -106,22 +107,22 @@ public class ReportTab extends SuperReport {
         printTableBeg(sb);
         
         List<TaskGroup> projs = getProjects();
-        List<YearMonthDay> days = getDays();
+        List<LocalDate> days = getDays();
         
-        SimpleDateFormat exportDateFormat = new SimpleDateFormat(applContext.getParameters().getDateReportFormat2(), applContext.getLanguage());
+        final String exportFormat = applContext.getParameters().getDateReportFormat2();
         String tipFormat = applContext.getParameters().getDateFormat(MetaParameters.dateReportFormat, applContext);
-        SimpleDateFormat tooltipDateFormat = new SimpleDateFormat(tipFormat, applContext.getLanguage());
+        final Locale locale = applContext.getLanguage();
         
         // Header ---
         sb.append("<tr>\n<th>");
         sb.append(getText(".TabbedPane.Projects"));
         sb.append("</th>\n");
-        for(YearMonthDay day : days) {
+        for(LocalDate day : days) {
             boolean dayOff = isDayOff(day);
-            sb.append("<th title=\"" + escape((dayOff?(getText("DayOff")+": "):"") + tooltipDateFormat.format(day.getTime())) + "\"");
+            sb.append("<th title=\"" + escape((dayOff?(getText("DayOff")+": "):"") + ApplTools.format(day, tipFormat, locale)) + "\"");
             if (dayOff) { sb.append(" class=\"dayOff\""); }
             sb.append(">");
-            sb.append(exportDateFormat.format(day.getTime()));
+            sb.append(ApplTools.format(day, exportFormat, locale));
             sb.append("</th>\n");
         }
         sb.append("<th>&nbsp;&nbsp;");
@@ -140,7 +141,7 @@ public class ReportTab extends SuperReport {
             sb.append("</td>\n");
             
             int total = 0;
-            for(YearMonthDay day : days) {
+            for(LocalDate day : days) {
                 int time = getCellTime(proj, day);
                 total += time;
                 sb.append("<td class=\"num\">");
@@ -159,12 +160,12 @@ public class ReportTab extends SuperReport {
         sb.append("<tr class=\"total\">\n<td class=\"alignLeft\">");
         sb.append(getText("TotalTime"));
         sb.append("</td>\n");
-        for(YearMonthDay day : days) {
+        for(LocalDate day : days) {
             int time = getDayTime(day);
             totals.add(time);
             total += time;
             
-            sb.append("<td title=\"" + escape(tooltipDateFormat.format(day.getTime())) + "\">");
+            sb.append("<td title=\"" + escape(ApplTools.format(day, tipFormat, locale)) + "\">");
             sb.append(formatTime(time));
             sb.append("</td>\n");
         }
@@ -179,14 +180,14 @@ public class ReportTab extends SuperReport {
         sb.append("<tr class=\"total\">\n<td class=\"alignLeft\">");
         sb.append(getText("Overtime"));
         sb.append("</td>\n");
-        for(YearMonthDay day : days) {
+        for(LocalDate day : days) {
             int time = totals.removeFirst();
             if (!isDayOff(day)) {
                 time -= workingMinutes;
             }
             total += time;
             
-            sb.append("<td title=\"" + escape(tooltipDateFormat.format(day.getTime())) + "\">");
+            sb.append("<td title=\"" + escape(ApplTools.format(day, tipFormat, locale)) + "\">");
             sb.append(formatTime(time));
             sb.append("</td>\n");
         }
@@ -200,11 +201,11 @@ public class ReportTab extends SuperReport {
     }
     
     /** Returns a time in minutes for selected day and project. */
-    private int getCellTime(TaskGroup aProj, YearMonthDay aDay) {
+    private int getCellTime(TaskGroup aProj, LocalDate aDay) {
         
         for (GroupSet set : data) {
             for (TaskGroup proj : set.getGroups()) {
-                final YearMonthDay day = proj.getDay();
+                final LocalDate day = proj.getDay();
                 if (aDay.equals(day)
                 &&  comparator.equals(aProj, proj)
                 ){
@@ -216,12 +217,12 @@ public class ReportTab extends SuperReport {
     }
     
     /** Returns a time in minutes for a selected day */
-    private int getDayTime(YearMonthDay aDay) {
+    private int getDayTime(LocalDate aDay) {
         int result = 0;
         
         for (GroupSet set : data) {
             for (TaskGroup proj : set.getGroups()) {
-                final YearMonthDay day = proj.getDay();
+                final LocalDate day = proj.getDay();
                 if (aDay.equals(day)) {
                     result += proj.getBusinessTime();
                 }
@@ -230,11 +231,11 @@ public class ReportTab extends SuperReport {
         return result;
     }
     
-    public List<YearMonthDay> getDays() {
-        List<YearMonthDay> result = new ArrayList<YearMonthDay>();
+    public List<LocalDate> getDays() {
+        List<LocalDate> result = new ArrayList<LocalDate>();
         for (GroupSet set : data) {
             for (TaskGroup group : set.getGroups()) {
-                final YearMonthDay ymd = group.getDay();
+                final LocalDate ymd = group.getDay();
                 if (ymd!=null
                 &&! result.contains(ymd)
                 ){

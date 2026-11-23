@@ -23,7 +23,7 @@ import javax.swing.JTabbedPane;
 import net.ponec.jworksheet.bo.Parameters;
 import net.ponec.jworksheet.bo.WorkDay;
 import net.ponec.jworksheet.bo.WorkSpace;
-import net.ponec.jworksheet.bo.item.YearMonthDay;
+import java.time.LocalDate;
 import net.ponec.jworksheet.gui.JWorkSheet;
 
 /**
@@ -60,7 +60,7 @@ public interface JwsContext {
     public File getStyleFile(String fileName);
 
     /** Get "Selected Day" - don't modify it! */
-    public YearMonthDay getSelectedDay();
+    public LocalDate getSelectedDay();
 
     /** Is selected time Today? */
     public boolean isToday();

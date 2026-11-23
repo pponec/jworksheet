@@ -20,10 +20,9 @@ package net.ponec.jworksheet.bo;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.util.Calendar;
-import java.util.Date;
+import java.time.LocalDate;
 import net.ponec.jworksheet.bo.item.Time;
-import net.ponec.jworksheet.bo.item.YearMonthDay;
+import java.time.LocalDate;
 import net.ponec.jworksheet.core.ujo.XmlManager;
 
 import static java.nio.charset.StandardCharsets.UTF_8;
@@ -145,7 +144,7 @@ public abstract class XmlTestSupport {
 
     protected static WorkDay newDay(final String date, final Event... events) {
         final WorkDay result = new WorkDay();
-        result.setDate(new YearMonthDay(date));
+        result.setDate(LocalDate.parse(date));
         for (Event event : events) {
             result.getEvents().add(event);
         }
@@ -155,21 +154,7 @@ public abstract class XmlTestSupport {
     /** A minimal WorkSpace with the mandatory attributes assigned. */
     protected static WorkSpace newWorkSpace() {
         final WorkSpace result = new WorkSpace();
-        result.setArchived(newDate(2021, Calendar.MARCH, 14, 11, 42, 58));
+        result.setArchived(LocalDate.of(2021, 3, 14));
         return result;
-    }
-
-    /** A time zone independent date without milliseconds. */
-    protected static Date newDate
-            ( final int year
-            , final int month
-            , final int day
-            , final int hour
-            , final int minute
-            , final int second) {
-        final Calendar cal = Calendar.getInstance();
-        cal.clear();
-        cal.set(year, month, day, hour, minute, second);
-        return cal.getTime();
     }
 }

@@ -17,8 +17,7 @@
 
 package net.ponec.jworksheet.module;
 
-import java.util.Calendar;
-import java.util.Date;
+import java.time.LocalDate;
 import net.ponec.jworksheet.gui.JWorkSheet;
 
 /**
@@ -37,10 +36,8 @@ public class ModuleSample extends ModuleApiImpl {
         }
     }
 
-    public Date getCreated() {
-        Calendar c = Calendar.getInstance();
-        c.set(2009, Calendar.JANUARY, 05);
-        return c.getTime();
+    public LocalDate getCreated() {
+        return LocalDate.of(2009, 1, 5);
     }
 
     public String getDescription() {

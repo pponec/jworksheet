@@ -40,7 +40,7 @@ public class ReportC extends SuperReport {
     protected StringBuilder repBody = new StringBuilder(256);
     
 //    @Override
-//    public void init(ApplContext applContext, YearMonthDay dateFrom, YearMonthDay dateTo, String title) {
+//    public void init(ApplContext applContext, LocalDate dateFrom, LocalDate dateTo, String title) {
 //        super.init(applContext, dateFrom, dateTo, title);
 //    }
     

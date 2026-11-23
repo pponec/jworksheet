@@ -233,7 +233,7 @@ public class LanguageManager {
             properties.append("# Properties for "
             + bundleName
             + " object ("
-            + new java.util.Date()
+            + java.time.LocalDateTime.now()
             + ") :"
             + nl + nl
             );
@@ -241,7 +241,7 @@ public class LanguageManager {
             warnings.append("# Warnings for "
             + bundleName
             + " object ("
-            + new java.util.Date()
+            + java.time.LocalDateTime.now()
             + ") :"
             + nl + nl
             );

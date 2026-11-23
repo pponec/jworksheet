@@ -29,8 +29,7 @@ import java.awt.event.KeyEvent;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Date;
+import java.time.LocalDate;
 import java.util.List;
 import javax.swing.AbstractAction;
 import javax.swing.DefaultCellEditor;
@@ -56,7 +55,7 @@ import net.ponec.jworksheet.bo.TaskType;
 import net.ponec.jworksheet.bo.WorkDay;
 import net.ponec.jworksheet.bo.WorkSpace;
 import net.ponec.jworksheet.bo.item.Time;
-import net.ponec.jworksheet.bo.item.YearMonthDay;
+import java.time.LocalDate;
 import net.ponec.jworksheet.core.ApplContext;
 import net.ponec.jworksheet.core.Version;
 import net.ponec.jworksheet.gui.component.CheckBoxRenderer;
@@ -305,9 +304,7 @@ public final class JWorkSheet extends TopFrame {
                                 browse(APPL_HOMEPAGE + "#download");
                                 break;
                             case 1:
-                                Calendar calendar = Calendar.getInstance();
-                                calendar.add(Calendar.HOUR, 1 /*24+12*/);
-                                applContext.getWorkSpace().setCheckReleaseDate(calendar.getTime());
+                                applContext.getWorkSpace().setCheckReleaseDate(LocalDate.now().plusDays(1));
                                 break;
                             case 2:
                                 Version version = applContext.getParameters().getWebRelease();
@@ -383,14 +380,10 @@ public final class JWorkSheet extends TopFrame {
     private void changeCurrentDate(int skip) {
         eventTable.submitEditMode(true);
 
-        YearMonthDay day = applContext.getSelectedDay().cloneDay();
-        if (skip==Integer.MIN_VALUE) {
-            // none
-        } else if (skip==0) {
-            day.setToday();
-        } else {
-            day.addDay(skip);
-        }
+        final LocalDate day
+                = skip == Integer.MIN_VALUE ? applContext.getSelectedDay()
+                : skip == 0 ? LocalDate.now()
+                : applContext.getSelectedDay().plusDays(skip);
         applContext.selectWorkDay(day);
         displaySelectedDay();
         setEventTableModel(false);
@@ -1203,10 +1196,9 @@ public final class JWorkSheet extends TopFrame {
     }//GEN-LAST:event_bHomePageActionPerformed
 
     private void bGotoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_bGotoActionPerformed
-        Date date = new DateDialog(applContext).getResult();
+        final LocalDate date = new DateDialog(applContext).getResult();
         if (date!=null) {
-            final YearMonthDay yearMonthDay = new YearMonthDay(date);
-            applContext.selectWorkDay(yearMonthDay);
+            applContext.selectWorkDay(date);
             changeCurrentDate(Integer.MIN_VALUE);
         }
     }//GEN-LAST:event_bGotoActionPerformed

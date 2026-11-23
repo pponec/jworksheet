@@ -19,11 +19,10 @@ package net.ponec.jworksheet.core.ujo;
 import java.awt.Color;
 import java.awt.Rectangle;
 import java.io.File;
-import java.util.Calendar;
-import java.util.Date;
+import java.time.LocalDate;
 import java.util.Locale;
 import net.ponec.jworksheet.bo.item.Time;
-import net.ponec.jworksheet.bo.item.YearMonthDay;
+import java.time.LocalDate;
 import net.ponec.jworksheet.core.SysTray;
 import net.ponec.jworksheet.core.Version;
 import org.junit.jupiter.api.DisplayName;
@@ -66,16 +65,14 @@ public class ValueCoderTest {
     }
 
     @Test
-    @DisplayName("A date keeps the milliseconds")
+    @DisplayName("A date is written in the ISO format, a time of the old documents is ignored")
     public void dateFormat() {
-        final Calendar cal = Calendar.getInstance();
-        cal.clear();
-        cal.set(2021, Calendar.MARCH, 14, 11, 51, 31);
-        cal.set(Calendar.MILLISECOND, 634);
-        final Date date = cal.getTime();
+        final LocalDate date = LocalDate.of(2021, 3, 14);
 
-        assertEquals("2021-03-14T11:51:31.634", ValueCoder.encode(date));
-        assertEquals(date, ValueCoder.decode(Date.class, "2021-03-14T11:51:31.634"));
+        assertEquals("2021-03-14", ValueCoder.encode(date));
+        assertEquals(date, ValueCoder.decode(LocalDate.class, "2021-03-14"));
+        // A time of the previous releases is ignored:
+        assertEquals(date, ValueCoder.decode(LocalDate.class, "2021-03-14T11:51:31.634"));
     }
 
     @Test
@@ -94,8 +91,8 @@ public class ValueCoderTest {
         assertEquals("08:00", ValueCoder.encode(new Time("08:00")));
         assertEquals(new Time("08:00"), ValueCoder.decode(Time.class, "08:00"));
 
-        assertEquals("2021-03-14", ValueCoder.encode(new YearMonthDay("2021-03-14")));
-        assertEquals(new YearMonthDay("2021-03-14"), ValueCoder.decode(YearMonthDay.class, "2021-03-14"));
+        assertEquals("2021-03-14", ValueCoder.encode(LocalDate.parse("2021-03-14")));
+        assertEquals(LocalDate.parse("2021-03-14"), ValueCoder.decode(LocalDate.class, "2021-03-14"));
 
         assertEquals("1.02", ValueCoder.encode(new Version("1.02")));
         assertEquals("1.02", ValueCoder.decode(Version.class, "1.02").toString());

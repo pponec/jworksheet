@@ -21,6 +21,7 @@ import net.ponec.jworksheet.bo.meta.MetaParameters;
 
 import java.awt.event.ActionEvent;
 import java.text.SimpleDateFormat;
+import java.time.LocalDate;
 import java.util.Date;
 import java.util.logging.Logger;
 import javax.swing.JFormattedTextField;
@@ -46,7 +47,7 @@ public class DateDialog extends TopDialog implements java.awt.event.ActionListen
     final private String mainFormat;
 
     /** A select daty */
-    private Date result = null;
+    private LocalDate result = null;
 
     /**
      * Creates new form ReportDialog
@@ -59,7 +60,7 @@ public class DateDialog extends TopDialog implements java.awt.event.ActionListen
         gotoFormat = applContext.getParameters().getDateFormat(MetaParameters.dateGotoFormat, aContext);
 
         initComponents();
-        tDate.setValue(applContext.getSelectedDay().getTime());
+        tDate.setValue(ApplTools.toDate(applContext.getSelectedDay()));
 
         setTitle("Go to the day");
         setSize(300, 130);
@@ -90,7 +91,7 @@ public class DateDialog extends TopDialog implements java.awt.event.ActionListen
     }
 
     /** Return result */
-    public Date getResult() {
+    public LocalDate getResult() {
         setVisible(true);
         return result;
     }
@@ -209,7 +210,7 @@ public class DateDialog extends TopDialog implements java.awt.event.ActionListen
     }//GEN-LAST:event_bTodayActionPerformed
 
     private void bOKActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_bOKActionPerformed
-        result = (Date) tDate.getValue();
+        result = ApplTools.toLocalDate((Date) tDate.getValue());
         bCancelActionPerformed(evt);
 
 

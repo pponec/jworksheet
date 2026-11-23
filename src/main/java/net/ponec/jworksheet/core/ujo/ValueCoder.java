@@ -22,9 +22,7 @@ import java.awt.Rectangle;
 import java.io.File;
 import java.lang.reflect.Constructor;
 import java.math.BigDecimal;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.util.Date;
+import java.time.LocalDate;
 import java.util.Locale;
 import java.util.StringTokenizer;
 import org.ujorm.core.Key;
@@ -37,7 +35,7 @@ import org.ujorm.core.Key;
  * written by the previous releases.
  * <p>A type which is not listed explicitly is encoded by its {@code toString()} method
  * and decoded by its constructor with a single {@link String} argument. The rule covers
- * the {@code Time}, the {@code YearMonthDay} and the {@code Version} value types.
+ * the {@code Time}, the {@code LocalDate} and the {@code Version} value types.
  *
  * @author Pavel Ponec
  */
@@ -46,12 +44,11 @@ public final class ValueCoder {
     /** A separator of the {@link Locale} items. */
     private static final String LOCALE_SEPARATOR = "-";
 
+    /** A length of the ISO date text, sample: {@code 2021-03-14}. */
+    private static final int DATE_LENGTH = 10;
+
     /** A separator of the {@link Rectangle} and the {@link Dimension} items. */
     private static final String SHAPE_SEPARATOR = ",";
-
-    /** A format of the {@link Date} values. The {@link SimpleDateFormat} is not thread safe. */
-    private static final ThreadLocal<SimpleDateFormat> DATE_FORMAT = ThreadLocal.withInitial
-            (() -> new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS", Locale.ENGLISH));
 
     private ValueCoder() {
     }
@@ -82,9 +79,6 @@ public final class ValueCoder {
         }
         if (value instanceof final Locale result) {
             return encodeLocale(result);
-        }
-        if (value instanceof final Date result) {
-            return DATE_FORMAT.get().format(result);
         }
         if (value instanceof final Color result) {
             return Integer.toHexString(result.getRGB() & 0xffffff | 0x1000000).substring(1).toUpperCase();
@@ -148,8 +142,9 @@ public final class ValueCoder {
             if (Locale.class == type) {
                 return decodeLocale(text);
             }
-            if (Date.class.isAssignableFrom(type)) {
-                return DATE_FORMAT.get().parse(text);
+            if (LocalDate.class == type) {
+                // The previous releases wrote a time of the day too, it is ignored:
+                return LocalDate.parse(text.length() > DATE_LENGTH ? text.substring(0, DATE_LENGTH) : text);
             }
             if (Color.class.isAssignableFrom(type)) {
                 return new Color(Integer.parseInt(text, 16));
@@ -171,7 +166,7 @@ public final class ValueCoder {
             }
             final Constructor<?> constructor = type.getConstructor(String.class);
             return constructor.newInstance(text);
-        } catch (ParseException | ReflectiveOperationException | RuntimeException e) {
+        } catch (ReflectiveOperationException | RuntimeException e) {
             throw new IllegalArgumentException("Can't decode \"" + text + "\" to " + type.getName(), e);
         }
     }

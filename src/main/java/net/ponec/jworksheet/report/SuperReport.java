@@ -21,7 +21,7 @@ import net.ponec.jworksheet.bo.Event;
 import net.ponec.jworksheet.bo.Parameters;
 import net.ponec.jworksheet.bo.WorkDay;
 import net.ponec.jworksheet.bo.WorkSpace;
-import net.ponec.jworksheet.bo.item.YearMonthDay;
+import java.time.LocalDate;
 import net.ponec.jworksheet.core.LanguageManager;
 import net.ponec.jworksheet.gui.JWorkSheet;
 import net.ponec.jworksheet.resources.ResourceProvider;
@@ -36,8 +36,8 @@ public abstract class SuperReport implements Calculator {
     
     /** An application context */
     protected ApplContext applContext;
-    protected YearMonthDay dateFrom;
-    protected YearMonthDay dateTo;
+    protected LocalDate dateFrom;
+    protected LocalDate dateTo;
     protected String  reportTitle;
     
     /** Work Day Count */
@@ -60,7 +60,7 @@ public abstract class SuperReport implements Calculator {
      * Call "init()" method on the start.
      * For each Event call "calculate()" method.
      */
-    public void init(ApplContext applContext, YearMonthDay dateFrom, YearMonthDay dateTo, String reportTitle) {
+    public void init(ApplContext applContext, LocalDate dateFrom, LocalDate dateTo, String reportTitle) {
         this.applContext = applContext;
         this.dateFrom  = dateFrom;
         this.dateTo    = dateTo  ;
@@ -69,7 +69,7 @@ public abstract class SuperReport implements Calculator {
         
         // Loop:
         for(WorkDay workDay : applContext.getWorkSpace().getDays()) {
-            YearMonthDay ymd = workDay.getDate();
+            LocalDate ymd = workDay.getDate();
             if (ymd.compareTo(dateFrom)>=0
             &&  ymd.compareTo(dateTo  )<=0
             &&  workDay.getEvents().size()>0
@@ -234,7 +234,7 @@ public abstract class SuperReport implements Calculator {
     }
     
     /** Is the day a DayOff? */
-    protected boolean isDayOff(YearMonthDay aDay) {
+    protected boolean isDayOff(LocalDate aDay) {
         final List<WorkDay> days = applContext.getWorkSpace().getDays();
         for(WorkDay day : days) {
             if (MetaWorkDay.date.equals(day, aDay)) {

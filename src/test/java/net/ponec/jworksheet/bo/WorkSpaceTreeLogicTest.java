@@ -19,7 +19,7 @@ package net.ponec.jworksheet.bo;
 
 import java.util.List;
 import net.ponec.jworksheet.bo.item.Time;
-import net.ponec.jworksheet.bo.item.YearMonthDay;
+import java.time.LocalDate;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
@@ -88,7 +88,7 @@ public class WorkSpaceTreeLogicTest extends XmlTestSupport {
             final WorkDay day = newDay("2021-03-14");
             workSpace.getDays().add(day);
 
-            assertSame(day, workSpace.findWorkDay(new YearMonthDay("2021-03-14")));
+            assertSame(day, workSpace.findWorkDay(LocalDate.parse("2021-03-14")));
             assertEquals(1, workSpace.getDays().size());
         }
 
@@ -98,7 +98,7 @@ public class WorkSpaceTreeLogicTest extends XmlTestSupport {
             final WorkSpace workSpace = newWorkSpace();
             workSpace.getDays().add(newDay("2021-03-14"));
 
-            final WorkDay result = workSpace.findWorkDay(new YearMonthDay("2021-03-15"));
+            final WorkDay result = workSpace.findWorkDay(LocalDate.parse("2021-03-15"));
 
             assertEquals("2021-03-15", result.getDate().toString());
             assertEquals(2, workSpace.getDays().size());

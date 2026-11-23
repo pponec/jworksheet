@@ -19,12 +19,12 @@ package net.ponec.jworksheet.bo;
 import net.ponec.jworksheet.core.ujo.DomainObject;
 import org.ujorm.annotation.UColumn;
 import java.util.ArrayList;
-import java.util.Date;
+import java.time.LocalDate;
 import java.util.List;
 import java.util.stream.Collectors;
 import lombok.Getter;
 import lombok.Setter;
-import net.ponec.jworksheet.bo.item.YearMonthDay;
+import java.time.LocalDate;
 import net.ponec.jworksheet.bo.meta.MetaWorkSpace;
 import net.ponec.jworksheet.core.Version;
 import net.ponec.jworksheet.core.ujo.ExportAction;
@@ -48,16 +48,16 @@ public class WorkSpace implements Exportable, DomainObject {
     private Version version = new Version("0");
 
     @UColumn(name = "Created")
-    private Date created;
+    private LocalDate created;
 
     @UColumn(name = "Archived")
-    private Date archived;
+    private LocalDate archived;
 
     @UColumn(name = "Username")
     private String username = "?";
 
     @UColumn(name = "CheckReleaseDate")
-    private Date checkReleaseDate = new Date(0L);
+    private LocalDate checkReleaseDate = LocalDate.EPOCH;
 
     @UColumn(name = "CheckReleaseVersion")
     private Version checkReleaseVersion = JWorkSheet.APPL_VERSION;
@@ -81,13 +81,13 @@ public class WorkSpace implements Exportable, DomainObject {
     // ------------------------ BUSINESS ------------------------
 
     /** Find a workDay or create new. */
-    public WorkDay findWorkDay(final YearMonthDay dayId) {
+    public WorkDay findWorkDay(final LocalDate dayId) {
         return days.stream()
                 .filter(workDay -> dayId.equals(workDay.getDate()))
                 .findFirst()
                 .orElseGet(() -> {
                     final WorkDay result = new WorkDay();
-                    result.setDate(dayId.cloneDay());
+                    result.setDate(dayId);
                     days.add(result);
                     return result;
                 });
@@ -182,7 +182,7 @@ public class WorkSpace implements Exportable, DomainObject {
         projects.add(project);
     }
 
-    /** Sort Days by a YearMonthDay */
+    /** Sort Days by the date */
     public void sortDays() {
         days.sort(null);
     }
@@ -200,10 +200,7 @@ public class WorkSpace implements Exportable, DomainObject {
     public boolean isReleaseNotification(final Parameters params) {
         boolean result = false;
 
-        final Date currentDate = new Date();
-        final Date requiredDate = checkReleaseDate;
-
-        if (currentDate.compareTo(requiredDate) >= 0) {
+        if (!LocalDate.now().isBefore(checkReleaseDate)) {
 
             final Version currentVersion = JWorkSheet.APPL_VERSION;
             final Version webVersion = params.getWebRelease();

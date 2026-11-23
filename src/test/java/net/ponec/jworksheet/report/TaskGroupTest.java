@@ -17,7 +17,7 @@
 package net.ponec.jworksheet.report;
 
 import java.util.Calendar;
-import net.ponec.jworksheet.bo.item.YearMonthDay;
+import java.time.LocalDate;
 import net.ponec.jworksheet.report.meta.MetaTaskGroup;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -36,7 +36,7 @@ public class TaskGroupTest {
         assertNull(group.getMonth());
         assertNull(group.getYear());
 
-        group.setDay(new YearMonthDay("2021-03-14"));
+        group.setDay(LocalDate.parse("2021-03-14"));
         assertEquals(Calendar.MARCH, group.getMonth(), "The month is zero based like the Calendar");
         assertEquals(2021, MetaTaskGroup.year.getValue(group));
         assertThrows(UnsupportedOperationException.class, () -> group.setMonth(4));

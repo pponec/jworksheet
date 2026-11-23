@@ -19,7 +19,7 @@ package net.ponec.jworksheet.core;
 import java.io.IOException;
 import net.ponec.jworksheet.bo.Event;
 import net.ponec.jworksheet.bo.WorkDay;
-import net.ponec.jworksheet.bo.item.YearMonthDay;
+import java.time.LocalDate;
 
 /**
  * Calculate all events.
@@ -36,8 +36,8 @@ public interface Calculator {
     /** An general initializaton */
     public void init
     ( ApplContext applContext
-    , YearMonthDay dateFrom
-    , YearMonthDay dateTo
+    , LocalDate dateFrom
+    , LocalDate dateTo
     , String reportTitle
     );
     

@@ -16,7 +16,7 @@
 
 package net.ponec.jworksheet.module;
 
-import java.util.Date;
+import java.time.LocalDate;
 import java.util.Locale;
 
 
@@ -50,6 +50,6 @@ public interface ModuleApi {
     public String getRelease();
 
     /** Returns a Date of Creation */
-    public Date getCreated();
+    public LocalDate getCreated();
 
 }

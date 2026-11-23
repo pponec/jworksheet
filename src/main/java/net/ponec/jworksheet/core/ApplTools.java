@@ -48,9 +48,11 @@ import static java.nio.file.StandardCopyOption.ATOMIC_MOVE;
 import static java.nio.file.StandardCopyOption.COPY_ATTRIBUTES;
 import static java.nio.file.StandardCopyOption.REPLACE_EXISTING;
 import java.text.DecimalFormat;
+import java.text.SimpleDateFormat;
 import java.time.LocalDate;
+import java.time.ZoneId;
 import java.util.ArrayList;
-import java.util.Calendar;
+import java.util.Date;
 import java.util.Locale;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -124,12 +126,19 @@ public final class ApplTools {
         Files.copy(is, target.toPath(), REPLACE_EXISTING);
     }
 
-    /** Reset Time to 12:00:00.000 . */
-    public static void resetTime(Calendar calednar) {
-        calednar.set(Calendar.HOUR_OF_DAY, 12);
-        calednar.set(Calendar.MINUTE, 0);
-        calednar.set(Calendar.SECOND, 0);
-        calednar.set(Calendar.MILLISECOND, 0);
+    /** Converts a date of the Swing components to a local date. */
+    public static LocalDate toLocalDate(final Date date) {
+        return LocalDate.ofInstant(date.toInstant(), ZoneId.systemDefault());
+    }
+
+    /** Converts a local date to a date of the Swing components and the {@link SimpleDateFormat}. */
+    public static Date toDate(final LocalDate date) {
+        return Date.from(date.atStartOfDay(ZoneId.systemDefault()).toInstant());
+    }
+
+    /** Formats the date by a pattern of the {@link SimpleDateFormat}, the users can change it. */
+    public static String format(final LocalDate date, final String pattern, final Locale locale) {
+        return new SimpleDateFormat(pattern, locale).format(toDate(date));
     }
 
     /** This method writes a string to the system clipboard, otherwise it returns null.*/

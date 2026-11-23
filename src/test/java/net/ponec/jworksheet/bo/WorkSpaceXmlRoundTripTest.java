@@ -19,11 +19,10 @@ package net.ponec.jworksheet.bo;
 import net.ponec.jworksheet.bo.meta.MetaEvent;
 import net.ponec.jworksheet.core.ujo.Keys;
 
-import java.util.Calendar;
-import java.util.Date;
+import java.time.LocalDate;
 import java.util.List;
 import net.ponec.jworksheet.bo.item.Time;
-import net.ponec.jworksheet.bo.item.YearMonthDay;
+import java.time.LocalDate;
 import net.ponec.jworksheet.core.Version;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
@@ -61,9 +60,9 @@ public class WorkSpaceXmlRoundTripTest extends XmlTestSupport {
         @Test
         @DisplayName("A2) All the scalar attributes survive the round trip")
         public void allScalarAttributes() {
-            final Date created = newDate(2021, Calendar.MARCH, 14, 11, 51, 31);
-            final Date archived = newDate(2021, Calendar.MARCH, 13, 22, 42, 58);
-            final Date checkDate = newDate(2022, Calendar.JANUARY, 1, 0, 0, 0);
+            final LocalDate created = LocalDate.of(2021, 3, 14);
+            final LocalDate archived = LocalDate.of(2021, 3, 13);
+            final LocalDate checkDate = LocalDate.of(2022, 1, 1);
 
             final WorkSpace workSpace = new WorkSpace();
             workSpace.setVersion(new Version("1.00"));
@@ -199,7 +198,7 @@ public class WorkSpaceXmlRoundTripTest extends XmlTestSupport {
 
             final WorkDay result = reload(workSpace).getDays().get(0);
             assertEquals(date, result.getDate().toString());
-            assertEquals(new YearMonthDay(date), result.getDate());
+            assertEquals(LocalDate.parse(date), result.getDate());
         }
     }
 

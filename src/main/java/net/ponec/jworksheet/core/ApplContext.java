@@ -34,9 +34,8 @@ import java.nio.file.Files;
 import static java.nio.charset.StandardCharsets.UTF_8;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
-import java.util.Calendar;
+import java.time.LocalDate;
 import java.util.Collections;
-import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 import java.util.concurrent.atomic.AtomicBoolean;
@@ -59,7 +58,7 @@ import net.ponec.jworksheet.bo.TaskType;
 import net.ponec.jworksheet.bo.WorkDay;
 import net.ponec.jworksheet.bo.WorkSpace;
 import net.ponec.jworksheet.bo.item.Time;
-import net.ponec.jworksheet.bo.item.YearMonthDay;
+import java.time.LocalDate;
 import net.ponec.jworksheet.gui.JWorkSheet;
 import net.ponec.jworksheet.module.ModuleApi;
 import net.ponec.jworksheet.report.MetaReport;
@@ -206,13 +205,13 @@ public class ApplContext implements TableModelListener, Runnable, JwsContext {
         // Backup an Original File, if parsing and loading was successful.
         if (isTimeToBackup() && dataFile.exists()) try {
             ApplTools.copy(dataFile, backupFile);
-            workSpace.setArchived(new Date());
+            workSpace.setArchived(LocalDate.now());
         } catch (Throwable e) {
             LOGGER.log(Level.WARNING, "Can't create backup", e);
         }
 
         // Select TODAY
-        selectWorkDay(new YearMonthDay());
+        selectWorkDay(LocalDate.now());
     }
 
     public void initModules() {
@@ -251,30 +250,20 @@ public class ApplContext implements TableModelListener, Runnable, JwsContext {
      * <br>WARNING: The method must be called allways, because it can initialize a MetaWorkSpace.archived property.
      */
     private boolean isTimeToBackup() {
-        Calendar cal = Calendar.getInstance();
-        long day2 = getDayCount(cal);
-        Date date = workSpace.getArchived();
-
-        if (date==null) {
-            workSpace.setArchived(cal.getTime());
+        final LocalDate today = LocalDate.now();
+        final LocalDate archived = workSpace.getArchived();
+        if (archived == null) {
+            workSpace.setArchived(today);
             return false;
-        } else {
-            cal.setTime(date);
-            long day1 = getDayCount(cal);
-            return (day2 > day1) && !isDataRestored();
         }
-    }
-
-    /** Count of day from year 0 (an approximately number). */
-    private long getDayCount(Calendar cal) {
-        return cal.get(Calendar.DAY_OF_YEAR) + cal.get(Calendar.YEAR)*365;
+        return today.isAfter(archived) && !isDataRestored();
     }
 
     /** Save data into file(s) */
     public synchronized void saveData(boolean includeParams) {
         try {
             // WorkSpace attributes
-            workSpace.setCreated(new Date());
+            workSpace.setCreated(LocalDate.now());
             workSpace.setVersion(JWorkSheet.APPL_VERSION);
             workSpace.setUsername(getParameters().getUsername());
 
@@ -326,7 +315,7 @@ public class ApplContext implements TableModelListener, Runnable, JwsContext {
     public void createExitEvent() {
 
         if (parameters.isExitEventCreating() ) {
-            WorkDay today = workSpace.findWorkDay(new YearMonthDay());
+            WorkDay today = workSpace.findWorkDay(LocalDate.now());
             List<Event> events = today.getEvents();
 
             if (events.size()>=1) {
@@ -454,19 +443,19 @@ public class ApplContext implements TableModelListener, Runnable, JwsContext {
 
     /** Get "Selected Day" - don't modify it! */
     @Override
-    public YearMonthDay getSelectedDay() {
+    public LocalDate getSelectedDay() {
         return currentDay.getDate();
     }
 
     /** GetCurrentDay */
     public String getSelectedDayStr() {
-        return getSelectedDay().toString(this);
+        return ApplTools.format(getSelectedDay(), parameters.getDateFormat(MetaParameters.dateMainFormat, this), getLanguage());
     }
 
     /** Is selected time Today? */
     @Override
     public boolean isToday() {
-        return new YearMonthDay().equals(getSelectedDay());
+        return LocalDate.now().equals(getSelectedDay());
     }
 
     /** Current Language */
@@ -479,7 +468,7 @@ public class ApplContext implements TableModelListener, Runnable, JwsContext {
      * Select a WorkDay by parameter
      * @see #getWorkDay()
      */
-    public void selectWorkDay(YearMonthDay workDay) {
+    public void selectWorkDay(LocalDate workDay) {
         currentDay = workSpace.findWorkDay(workDay);
     }
 
@@ -727,8 +716,8 @@ public class ApplContext implements TableModelListener, Runnable, JwsContext {
     public Event findLastEventToday() {
         if (getWorkSpace()==null) { return null; }
 
-        //WorkDay workDay = getWorkSpace().findWorkDay(getSelectedDay()); // YearMonthDay
-        WorkDay workDay = getWorkSpace().findWorkDay(new YearMonthDay());
+        //WorkDay workDay = getWorkSpace().findWorkDay(getSelectedDay()); // LocalDate
+        WorkDay workDay = getWorkSpace().findWorkDay(LocalDate.now());
         List<Event> events = workDay.getEvents();
         int lastIndex = events.size()-1;
         return lastIndex>=0 ? events.get(lastIndex) : null;

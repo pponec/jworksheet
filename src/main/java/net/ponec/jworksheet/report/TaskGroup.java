@@ -24,7 +24,7 @@ import lombok.Setter;
 import net.ponec.jworksheet.bo.Event;
 import net.ponec.jworksheet.bo.Project;
 import net.ponec.jworksheet.bo.TaskType;
-import net.ponec.jworksheet.bo.item.YearMonthDay;
+import java.time.LocalDate;
 import net.ponec.jworksheet.report.meta.MetaTaskGroup;
 import org.ujorm.annotation.Domain;
 
@@ -44,7 +44,7 @@ public class TaskGroup implements DomainObject {
     private TaskType task;
 
     @UColumn(name = "Date")
-    private YearMonthDay day;
+    private LocalDate day;
 
     /** A declaration of the derived column, see the {@link #getMonth()} method. */
     @UColumn(name = "Month")
@@ -79,7 +79,7 @@ public class TaskGroup implements DomainObject {
 
     /** A month of the day. The value is derived, so it has got no setter behaviour. */
     public Integer getMonth() {
-        return day != null ? day.get(YearMonthDay.TYPE_MONTH) : null;
+        return day != null ? day.getMonthValue() - 1 : null; // Zero based like the Calendar
     }
 
     public void setMonth(final Integer month) {
@@ -88,7 +88,7 @@ public class TaskGroup implements DomainObject {
 
     /** A year of the day. The value is derived, so it has got no setter behaviour. */
     public Integer getYear() {
-        return day != null ? day.get(YearMonthDay.TYPE_YEAR) : null;
+        return day != null ? day.getYear() : null;
     }
 
     public void setYear(final Integer year) {
