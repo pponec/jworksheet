@@ -21,17 +21,13 @@ import org.ujorm.annotation.UColumn;
 import lombok.Getter;
 import lombok.Setter;
 import net.ponec.jworksheet.bo.item.Time;
-import net.ponec.jworksheet.bo.item.TimeCodec;
 import net.ponec.jworksheet.bo.meta.MetaEvent;
 import net.ponec.jworksheet.core.ujo.ExportAction;
 import net.ponec.jworksheet.core.ujo.Exportable;
-import net.ponec.jworksheet.core.ujo.TextValue;
 import org.ujorm.annotation.Domain;
 import org.ujorm.core.Key;
 
 /** An Event of the Work Day.
- * <p>The start time is stored in a memory safe {@code short} field of the minutes, however
- * the documents publish it as a {@code Time} text - see the {@link TimeCodec} class.
  * <p>The identifiers {@code projectId} and {@code taskId} are persistent references
  * to the code-book. They are kept in sync by the {@link #setProject(net.ponec.jworksheet.bo.Project)}
  * and the {@link #setTask(net.ponec.jworksheet.bo.TaskType)} setters, so a saved document
@@ -44,9 +40,9 @@ public class Event implements Exportable, DomainObject {
 
     public static final Short ZERO_SHORT = (short) 0;
 
+    /** The start time of the event. */
     @UColumn(name = "Time")
-    @TextValue(TimeCodec.class)
-    private short time;
+    private Time time = new Time(0);
 
     @UColumn(name = "Period")
     private short period; // [min]
@@ -103,30 +99,25 @@ public class Event implements Exportable, DomainObject {
 
     // ------------------------ THE START TIME ------------------------
 
-    /** Returns the start time of the event. */
-    public Time getStartTime() {
-        return new Time(time);
-    }
-
-    /** Assigns the start time of the event. */
-    public void setStartTime(final Time startTime) {
-        this.time = startTime.getTimeMinutes();
+    /** An undefined start time is replaced by the midnight. */
+    public void setTime(final Time time) {
+        this.time = time != null ? time : new Time(0);
     }
 
     /** Init time */
     public Event initTime() {
-        setStartTime(new Time(true));
+        setTime(new Time(true));
         return this;
     }
 
     /** Returns a Finished time */
     public Time getTimeFinished() {
-        return getStartTime().cloneAdd(period);
+        return time.cloneAdd(period);
     }
 
     /** Set a time period */
     public void setPeriod(final Time finishedTime) {
-        setPeriod(finishedTime.substract(getStartTime()));
+        setPeriod(finishedTime.substract(time));
     }
 
     // ------------------------ BUSINESS ------------------------

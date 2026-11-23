@@ -350,7 +350,7 @@ public class ApplContext implements TableModelListener, Runnable, JwsContext {
                         events.add(exitEvent);
                     }
 
-                    exitEvent.setStartTime(currentTime);
+                    exitEvent.setTime(currentTime);
                     exitEvent.setDescr(exitDescr);
                     lastEvent.setPeriod(currentTime);
                 }

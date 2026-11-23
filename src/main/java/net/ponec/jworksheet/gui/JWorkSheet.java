@@ -1423,9 +1423,9 @@ public final class JWorkSheet extends TopFrame {
         if (!applContext.isToday()){
             if (eventTable.getRowCount()>0) {
                 Event lastEvent = model.getRowLast();
-                newEvent.setStartTime(lastEvent.getTimeFinished());
+                newEvent.setTime(lastEvent.getTimeFinished());
             } else {
-                newEvent.setStartTime(new Time(60 * 8)); // 8:00
+                newEvent.setTime(new Time(60 * 8)); // 8:00
             }
         }
 

@@ -84,7 +84,7 @@ public class EventTableModel extends UjoTableModel<Event> {
         Event lastRow = getRowLast();
         if (lastRow!=null) {
             // Set the last period:
-            lastRow.setPeriod(row.getStartTime());
+            lastRow.setPeriod(row.getTime());
         }
         super.addRow(row);
     }
@@ -127,12 +127,12 @@ public class EventTableModel extends UjoTableModel<Event> {
         && (index = getRowIndex(insertedRow)) > 0
         && (index < getRowCount()-1)
         ){
-            final Time time1 = insertedRow.getStartTime();
-            final Time time2 = getRow(index+1).getStartTime();
+            final Time time1 = insertedRow.getTime();
+            final Time time2 = getRow(index+1).getTime();
             int realPeriod = time2.substract(time1);
             if (realPeriod > requPeriod) {
                 Event nextEvent = DomainTools.deepCopy(getRow(index-1), 2);
-                nextEvent.setStartTime(time1.cloneAdd(requPeriod));
+                nextEvent.setTime(time1.cloneAdd(requPeriod));
                 rows.add(index+1, nextEvent);
             }
         }
@@ -157,7 +157,7 @@ public class EventTableModel extends UjoTableModel<Event> {
         for (int i=0; i<getRowCount(); i++) {
             Event newEvent = getRow(i);
             if (lastEvent!=null) {
-                lastEvent.setPeriod(newEvent.getStartTime());
+                lastEvent.setPeriod(newEvent.getTime());
             }
             lastEvent = newEvent;
         }
@@ -184,26 +184,11 @@ public class EventTableModel extends UjoTableModel<Event> {
     
     @Override
     public Class getColumnClass(Key column) {
-            final Class result
-        = MetaEvent.period==column
-        ? Object.class
-        : MetaEvent.time==column
-        ? Time.class
-        : super.getColumnClass(column)
-        ;
-        return result;
+        return MetaEvent.period == column
+                ? Object.class
+                : super.getColumnClass(column);
     }
 
-    /** Returns a value from the cell.
-     * <p>The start time is stored by a short field of the minutes, however the table
-     * presents it as a {@link Time} object. */
-    @Override
-    public Object getValueAt(final int rowIndex, final Key column) {
-        return MetaEvent.time == column
-                ? getRow(rowIndex).getStartTime()
-                : super.getValueAt(rowIndex, column);
-    }
-    
     /** Set value to cell. */
     @Override
     public void setValueAt(Object value, int rowIndex, Key column) {
@@ -227,7 +212,7 @@ public class EventTableModel extends UjoTableModel<Event> {
             }
             
             // Test:
-            getRow(rowIndex).getStartTime().cloneAdd((Short) value);
+            getRow(rowIndex).getTime().cloneAdd((Short) value);
         }
         else if (MetaEvent.time==column
         ||       MetaEvent.project==column // a case PRIVATE state change
@@ -243,12 +228,7 @@ public class EventTableModel extends UjoTableModel<Event> {
             TaskType taskType = ((Project) value).findDefaultTask();
             super.setValueAt(taskType, rowIndex, MetaEvent.task);
         }
-        if (MetaEvent.time == column && value instanceof final Time startTime) {
-            getRow(rowIndex).setStartTime(startTime);
-            fireTableCellUpdated(rowIndex, getColumnIndex(column));
-        } else {
-            super.setValueAt(value, rowIndex, column);
-        }
+        super.setValueAt(value, rowIndex, column);
 
         if (timeChange 
         && applContext.getParameters().isAutomaticSortingByTime()) {

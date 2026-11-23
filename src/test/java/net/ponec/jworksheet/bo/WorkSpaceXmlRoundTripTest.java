@@ -319,8 +319,16 @@ public class WorkSpaceXmlRoundTripTest extends XmlTestSupport {
         public void undefinedPeriod() {
             final Event event = new Event();
             MetaEvent.period.setValue(event, null);
-            event.setStartTime(new Time("08:00"));
+            event.setTime(new Time("08:00"));
             assertEquals(Event.ZERO_SHORT, event.getPeriod());
+        }
+
+        @Test
+        @DisplayName("C5c) An undefined start time is normalized to the midnight")
+        public void undefinedTime() {
+            final Event event = new Event();
+            MetaEvent.time.setValue(event, null);
+            assertEquals("00:00", event.getTime().toString());
         }
 
         @ParameterizedTest(name = "C6) The time {0} plus {1} minutes is finished at {2}")
@@ -334,7 +342,7 @@ public class WorkSpaceXmlRoundTripTest extends XmlTestSupport {
             assertEquals(time, elementBody(xml, "Time"));
 
             final Event event = loadXml(xml).getDays().get(0).getEvents().get(0);
-            assertEquals(new Time(time).getTimeMinutes(), event.getStartTime().getTimeMinutes());
+            assertEquals(new Time(time).getTimeMinutes(), event.getTime().getTimeMinutes());
             assertEquals(finished, event.getTimeFinished().toString());
         }
 

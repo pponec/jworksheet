@@ -86,7 +86,7 @@ public class XmlManagerTest {
     }
 
     @Test
-    @DisplayName("A text is escaped as by the original format and an empty text is written as a pair of tags")
+    @DisplayName("A text is escaped, an empty text is written as a pair of tags")
     public void textIsEscaped() throws Exception {
         final String name = Keys.nameOf(MetaWorkSpace.username);
         final String text = "a & b <c> \"d\" 'e' ěšč";
@@ -96,9 +96,15 @@ public class XmlManagerTest {
         XmlManager.saveXML(xml, workSpace, null);
 
         assertTrue(xml.toString().startsWith("<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<body>\n"), xml.toString());
-        assertTrue(xml.toString().endsWith("</body>"), xml.toString());
-        assertTrue(xml.toString().contains("\n  <" + name + ">a &amp; b &lt;c&gt; \"d\" 'e' ěšč</" + name + ">\n"), xml.toString());
+        assertTrue(xml.toString().endsWith("</body>\n"), xml.toString());
+        assertTrue(xml.toString().contains("\n\t<" + name + ">a &amp; b &lt;c&gt; \"d\" 'e' ěšč</" + name + ">\n"), xml.toString());
         assertEquals(text, parse(xml.toString()).getUsername());
+
+        final String lines = "a\r\nb\rc\n";
+        workSpace.setUsername(lines);
+        xml.setLength(0);
+        XmlManager.saveXML(xml, workSpace, null);
+        assertEquals(lines, parse(xml.toString()).getUsername());
 
         workSpace.setUsername("");
         xml.setLength(0);

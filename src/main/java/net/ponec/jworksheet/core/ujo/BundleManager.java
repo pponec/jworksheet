@@ -57,7 +57,7 @@ public final class BundleManager {
         for (Key<Object, Object> key : Keys.keysOf(domain)) {
             final Object value = key.getValue(domain);
             if (value != null && Exportable.isExportable(domain, ExportAction.RESOURCE_BUNDLE, key, value)) {
-                properties.setProperty(Keys.nameOf(key), ValueCoder.encode(key, value));
+                properties.setProperty(Keys.nameOf(key), ValueCoder.encode(value));
             }
         }
         try (OutputStream os = new BufferedOutputStream(new FileOutputStream(file))) {

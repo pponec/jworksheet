@@ -58,7 +58,7 @@ public class WorkSpaceTreeLogicTest extends XmlTestSupport {
         event.setPeriod((short) 60);
         event.setProjectId(0);
         event.setTaskId(2);
-        event.setStartTime(new Time("08:00"));
+        event.setTime(new Time("08:00"));
         final WorkDay day = newDay("2021-03-14");
         day.getEvents().add(event);
         workSpace.getDays().add(day);

@@ -87,7 +87,7 @@ public class SingleUjoTabModel extends UjoTableModel<UjoKeyRow> {
     public Object getValueAt(final int rowIndex, final Key column) {
         if (column == MetaUjoKeyRow.value || column == MetaUjoKeyRow.defaultValue) {
             final UjoKeyRow row = getRow(rowIndex);
-            return ValueCoder.encode(row.getKey(), super.getValueAt(rowIndex, column));
+            return ValueCoder.encode(super.getValueAt(rowIndex, column));
         }
         return super.getValueAt(rowIndex, column);
     }

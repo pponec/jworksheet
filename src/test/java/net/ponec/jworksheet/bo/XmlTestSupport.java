@@ -139,7 +139,7 @@ public abstract class XmlTestSupport {
         result.setProject(project);
         result.setTask(task);
         result.setDescr(description);
-        result.setStartTime(new Time(time));
+        result.setTime(new Time(time));
         return result;
     }
 

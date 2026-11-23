@@ -65,7 +65,7 @@ public class LegacyDataXmlTest extends XmlTestSupport {
         assertEquals(2, day.getEvents().size());
 
         final Event first = day.getEvents().get(0);
-        assertEquals("08:00", first.getStartTime().toString());
+        assertEquals("08:00", first.getTime().toString());
         assertEquals(Short.valueOf((short) 240), first.getPeriod());
         assertEquals("12:00", first.getTimeFinished().toString());
         assertEquals("Water the garden", first.getProject().getDescr());
@@ -74,7 +74,7 @@ public class LegacyDataXmlTest extends XmlTestSupport {
         assertFalse(first.isPrivate());
 
         final Event second = day.getEvents().get(1);
-        assertEquals("12:00", second.getStartTime().toString());
+        assertEquals("12:00", second.getTime().toString());
         assertEquals(Short.valueOf((short) 0), second.getPeriod());
         assertEquals("Dinner", second.getProject().getDescr());
         assertNull(second.getTask(), "The event has no TaskID element");

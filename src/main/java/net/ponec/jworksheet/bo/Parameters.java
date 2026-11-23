@@ -272,7 +272,7 @@ public class Parameters implements Exportable, DomainObject {
 
     /** Returns a text representation of the key value. */
     public String readValueString(final Key<Parameters,?> key) {
-        return ValueCoder.encode(key, key.getValue(this));
+        return ValueCoder.encode(key.getValue(this));
     }
 
     /** Returns a localized date format */

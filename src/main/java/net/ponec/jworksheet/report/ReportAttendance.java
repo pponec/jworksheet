@@ -86,7 +86,7 @@ public class ReportAttendance extends SuperReport {
                 }
             }
 
-            int startTime = event.getStartTime().getMinutes();
+            int startTime = event.getTime().getMinutes();
             if (arrival > startTime) {
                 arrival = startTime;
             }
