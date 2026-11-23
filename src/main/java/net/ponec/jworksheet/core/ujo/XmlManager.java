@@ -23,6 +23,7 @@ import java.io.InputStream;
 import java.io.Writer;
 import java.nio.file.Files;
 import java.util.List;
+import java.util.regex.Pattern;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import org.ujorm.core.Key;
@@ -56,6 +57,10 @@ public final class XmlManager {
 
     /** A default comment of the document header. */
     public static final String DEFAULT_COMMENT = " A data file of the jWorkSheet application ";
+
+    /** Characters which are not allowed by the XML 1.0 specification. */
+    private static final Pattern INVALID_CHARS = Pattern.compile
+            ("[^\\t\\n\\r\\x20-\\uD7FF\\uE000-\\uFFFD\\x{10000}-\\x{10FFFF}]");
 
     private XmlManager() {
     }
@@ -113,9 +118,12 @@ public final class XmlManager {
     }
 
     /** Escapes a text of an element. The carriage return is escaped too,
-     * because a parser normalizes the line ends of the text otherwise. */
+     * because a parser normalizes the line ends of the text otherwise.
+     * The characters not allowed by the XML 1.0 (a control character, a lone surrogate)
+     * are removed, because no XML document can contain them. */
     private static String escape(final String text) {
-        return text.replace("&", "&amp;").replace("<", "&lt;").replace(">", "&gt;").replace("\r", "&#13;");
+        return INVALID_CHARS.matcher(text).replaceAll("")
+                .replace("&", "&amp;").replace("<", "&lt;").replace(">", "&gt;").replace("\r", "&#13;");
     }
 
     // ------------------------ IMPORT ------------------------

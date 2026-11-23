@@ -111,4 +111,15 @@ public class XmlManagerTest {
         XmlManager.saveXML(xml, workSpace, null);
         assertTrue(xml.toString().contains("<" + name + "></" + name + ">"), xml.toString());
     }
+
+    @Test
+    @DisplayName("A character not allowed by the XML 1.0 is removed, so the document stays readable")
+    public void invalidCharacterIsRemoved() throws Exception {
+        final WorkSpace workSpace = new WorkSpace();
+        workSpace.setUsername("a\u0000b\u0001c\u001Fd\uD800e\uFFFEf \uD83D\uDE00\t");
+        final StringBuilder xml = new StringBuilder();
+        XmlManager.saveXML(xml, workSpace, null);
+
+        assertEquals("abcdef \uD83D\uDE00\t", parse(xml.toString()).getUsername());
+    }
 }
