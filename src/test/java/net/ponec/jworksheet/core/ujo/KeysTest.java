@@ -21,6 +21,7 @@ import java.util.Locale;
 import net.ponec.jworksheet.bo.Parameters;
 import net.ponec.jworksheet.bo.WorkDay;
 import net.ponec.jworksheet.bo.meta.MetaParameters;
+import net.ponec.jworksheet.bo.meta.MetaProject;
 import net.ponec.jworksheet.bo.meta.MetaWorkSpace;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -33,12 +34,11 @@ import static org.junit.jupiter.api.Assertions.*;
 public class KeysTest {
 
     @Test
-    @DisplayName("A primitive type is boxed, an object type is kept")
-    public void box() {
-        assertSame(Integer.class, Keys.box(int.class));
-        assertSame(Boolean.class, Keys.box(boolean.class));
-        assertSame(Character.class, Keys.box(char.class));
-        assertSame(String.class, Keys.box(String.class));
+    @DisplayName("A primitive type of the key is boxed, an object type is kept")
+    public void typeOf() {
+        assertSame(Integer.class, Keys.typeOf(MetaProject.id));
+        assertSame(Boolean.class, Keys.typeOf(MetaProject.finished));
+        assertSame(String.class, Keys.typeOf(MetaProject.descr));
     }
 
     @Test

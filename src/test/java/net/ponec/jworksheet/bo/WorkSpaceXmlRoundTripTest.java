@@ -341,7 +341,7 @@ public class WorkSpaceXmlRoundTripTest extends XmlTestSupport {
             assertEquals(time, elementBody(xml, "Time"));
 
             final Event event = loadXml(xml).getDays().get(0).getEvents().get(0);
-            assertEquals(new Time(time).getTimeMinutes(), event.getTime().getTimeMinutes());
+            assertEquals(new Time(time), event.getTime());
             assertEquals(finished, event.getTimeFinished().toString());
         }
 

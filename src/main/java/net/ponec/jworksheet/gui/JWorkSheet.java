@@ -82,6 +82,9 @@ import net.ponec.jworksheet.gui.models.UjoKeyRow;
 @SuppressWarnings("unchecked")
 public final class JWorkSheet extends TopFrame {
 
+    /** A start time of the first event of a past day. */
+    private static final Time DEFAULT_START_TIME = new Time("08:00");
+
     public static final Version APPL_VERSION = new Version("2.00") ;
     public static final String APPL_RELEASED = "2026-11-03";
 
@@ -1417,7 +1420,7 @@ public final class JWorkSheet extends TopFrame {
                 Event lastEvent = model.getRowLast();
                 newEvent.setTime(lastEvent.getTimeFinished());
             } else {
-                newEvent.setTime(new Time(60 * 8)); // 8:00
+                newEvent.setTime(DEFAULT_START_TIME);
             }
         }
 

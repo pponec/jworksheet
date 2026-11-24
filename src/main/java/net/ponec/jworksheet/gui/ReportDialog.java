@@ -37,7 +37,9 @@ import net.ponec.jworksheet.core.ApplTools;
 import net.ponec.jworksheet.core.Calculator;
 import net.ponec.jworksheet.bo.Parameters;
 import net.ponec.jworksheet.bo.Project;
+import java.time.DayOfWeek;
 import java.time.LocalDate;
+import java.time.temporal.TemporalAdjusters;
 import net.ponec.jworksheet.core.LanguageManager;
 import net.ponec.jworksheet.report.MetaReport;
 import net.ponec.jworksheet.report.ReportA;
@@ -691,16 +693,15 @@ public class ReportDialog extends TopDialog implements java.awt.event.ActionList
 
         if (source == rbWeek || source == rbWeekPrev) {
             // The first day of the week is stored in the Calendar format, where the SUNDAY is 1:
-            final int firstDay = applContext.getParameters().getFirstDayOfWeek();
-            final int currDay = day.getDayOfWeek().getValue() % 7 + 1;
-            from = day.minusDays((currDay - firstDay + 7) % 7);
+            final DayOfWeek firstDay = DayOfWeek.SUNDAY.plus(applContext.getParameters().getFirstDayOfWeek() - 1);
+            from = day.with(TemporalAdjusters.previousOrSame(firstDay));
             to = from.plusDays(6);
         } else if (source == rbMonth || source == rbMonthPrev) {
-            from = day.withDayOfMonth(1);
-            to = from.plusMonths(1).minusDays(1);
+            from = day.with(TemporalAdjusters.firstDayOfMonth());
+            to = day.with(TemporalAdjusters.lastDayOfMonth());
         } else if (source == rbYear || source == rbYearPrev) {
-            from = day.withDayOfYear(1);
-            to = from.plusYears(1).minusDays(1);
+            from = day.with(TemporalAdjusters.firstDayOfYear());
+            to = day.with(TemporalAdjusters.lastDayOfYear());
         }
 
         dateSynchroEnabled = false;

@@ -56,4 +56,12 @@ public class VersionTest {
         assertTrue(new Version("2.00").compareTo(new Version("1.10")) > 0);
         assertTrue(new Version("1.10").compareTo(new Version("1.10.1")) < 0);
     }
+
+    @Test
+    @DisplayName("The text is kept including the case, an empty item is skipped")
+    public void textFormat() {
+        assertEquals("2.00a", new Version("2.00a").toString());
+        assertEquals("1.2", new Version("1..2").toString());
+        assertEquals(new Version("1.2"), new Version("1..2"));
+    }
 }

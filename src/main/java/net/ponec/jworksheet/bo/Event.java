@@ -42,7 +42,7 @@ public class Event implements Exportable, DomainObject {
 
     /** The start time of the event. */
     @UColumn(name = "Time")
-    private Time time = new Time(0);
+    private Time time = Time.MIDNIGHT;
 
     @UColumn(name = "Period")
     private short period; // [min]
@@ -101,7 +101,7 @@ public class Event implements Exportable, DomainObject {
 
     /** An undefined start time is replaced by the midnight. */
     public void setTime(final Time time) {
-        this.time = time != null ? time : new Time(0);
+        this.time = time != null ? time : Time.MIDNIGHT;
     }
 
     /** Init time */

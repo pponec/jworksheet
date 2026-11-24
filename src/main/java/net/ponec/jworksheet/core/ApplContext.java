@@ -40,6 +40,8 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Locale;
 import java.util.concurrent.atomic.AtomicBoolean;
+import java.util.function.Predicate;
+import java.util.regex.Pattern;
 import java.util.jar.JarEntry;
 import java.util.jar.JarFile;
 import java.util.logging.Level;
@@ -99,8 +101,8 @@ public class ApplContext implements TableModelListener, Runnable, JwsContext {
     /** A name prefix of the temporary data file. */
     private static final String PREFIX_DATA_TMP = "data";
     /** A name of the temporary data file created by the {@link #getDataFileTemp()} method. */
-    private static final java.util.regex.Pattern DATA_TMP_NAME = java.util.regex.Pattern.compile
-            (PREFIX_DATA_TMP + "\\d+" + java.util.regex.Pattern.quote(EXTENSION_TMP));
+    private static final Pattern DATA_TMP_NAME = Pattern.compile
+            (PREFIX_DATA_TMP + "\\d+" + Pattern.quote(EXTENSION_TMP));
 
     public static final String MODULE_ENTRY = "META-INF/JWS-MODULE.MF";
 
@@ -435,7 +437,7 @@ public class ApplContext implements TableModelListener, Runnable, JwsContext {
     }
 
     /** Deletes the files of the directory whose name is accepted by the filter. */
-    private static void deleteFiles(final File dir, final java.util.function.Predicate<String> filter) {
+    private static void deleteFiles(final File dir, final Predicate<String> filter) {
         final File[] files = dir.listFiles((d, name) -> filter.test(name));
         if (files != null) {
             for (File file : files) {

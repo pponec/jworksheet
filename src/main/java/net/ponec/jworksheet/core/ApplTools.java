@@ -54,6 +54,7 @@ import java.time.ZoneId;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.Locale;
+import java.util.function.Function;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.Action;
@@ -138,7 +139,15 @@ public final class ApplTools {
 
     /** Formats the date by a pattern of the {@link SimpleDateFormat}, the users can change it. */
     public static String format(final LocalDate date, final String pattern, final Locale locale) {
-        return new SimpleDateFormat(pattern, locale).format(toDate(date));
+        return dateFormatter(pattern, locale).apply(date);
+    }
+
+    /** Creates a formatter of the dates by a pattern of the {@link SimpleDateFormat} for a repeated use.
+     * The {@code DateTimeFormatter} is not used, because it interprets some user patterns differently
+     * (the week of the year, for example). The result is not thread safe. */
+    public static Function<LocalDate, String> dateFormatter(final String pattern, final Locale locale) {
+        final SimpleDateFormat format = new SimpleDateFormat(pattern, locale);
+        return date -> format.format(toDate(date));
     }
 
     /** This method writes a string to the system clipboard, otherwise it returns null.*/

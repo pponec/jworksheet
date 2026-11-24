@@ -25,7 +25,6 @@ import net.ponec.jworksheet.bo.Event;
 import net.ponec.jworksheet.bo.Project;
 import net.ponec.jworksheet.bo.TaskType;
 import java.time.LocalDate;
-import net.ponec.jworksheet.report.meta.MetaTaskGroup;
 import org.ujorm.annotation.Domain;
 
 /**
@@ -46,14 +45,6 @@ public class TaskGroup implements DomainObject {
     @UColumn(name = "Date")
     private LocalDate day;
 
-    /** A declaration of the derived column, see the {@link #getMonth()} method. */
-    @UColumn(name = "Month")
-    private Integer month;
-
-    /** A declaration of the derived column, see the {@link #getYear()} method. */
-    @UColumn(name = "Year")
-    private Integer year;
-
     /** A total time in minutes. */
     @Getter(AccessLevel.NONE) @Setter(AccessLevel.NONE)
     private transient int totalTime = 0;
@@ -73,26 +64,6 @@ public class TaskGroup implements DomainObject {
     void init(final Event event) {
         this.project = event.getProject();
         this.task = event.getTask();
-    }
-
-    // ------------------------ JAVABEAN ------------------------
-
-    /** A month of the day. The value is derived, so it has got no setter behaviour. */
-    public Integer getMonth() {
-        return day != null ? day.getMonthValue() - 1 : null; // Zero based like the Calendar
-    }
-
-    public void setMonth(final Integer month) {
-        throw new UnsupportedOperationException("Read only: " + MetaTaskGroup.month);
-    }
-
-    /** A year of the day. The value is derived, so it has got no setter behaviour. */
-    public Integer getYear() {
-        return day != null ? day.getYear() : null;
-    }
-
-    public void setYear(final Integer year) {
-        throw new UnsupportedOperationException("Read only: " + MetaTaskGroup.year);
     }
 
     // ------------------------ BUSINESS ------------------------

@@ -23,10 +23,13 @@ import net.ponec.jworksheet.report.meta.MetaTaskGroup;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Locale;
+import java.util.Objects;
+import java.util.function.Function;
 import net.ponec.jworksheet.core.ApplTools;
 import net.ponec.jworksheet.core.ApplContext;
 import net.ponec.jworksheet.bo.Event;
@@ -109,9 +112,11 @@ public class ReportTab extends SuperReport {
         List<TaskGroup> projs = getProjects();
         List<LocalDate> days = getDays();
         
-        final String exportFormat = applContext.getParameters().getDateReportFormat2();
-        String tipFormat = applContext.getParameters().getDateFormat(MetaParameters.dateReportFormat, applContext);
         final Locale locale = applContext.getLanguage();
+        final Function<LocalDate, String> exportFormat = ApplTools.dateFormatter
+                (applContext.getParameters().getDateReportFormat2(), locale);
+        final Function<LocalDate, String> tipFormat = ApplTools.dateFormatter
+                (applContext.getParameters().getDateFormat(MetaParameters.dateReportFormat, applContext), locale);
         
         // Header ---
         sb.append("<tr>\n<th>");
@@ -119,10 +124,10 @@ public class ReportTab extends SuperReport {
         sb.append("</th>\n");
         for(LocalDate day : days) {
             boolean dayOff = isDayOff(day);
-            sb.append("<th title=\"" + escape((dayOff?(getText("DayOff")+": "):"") + ApplTools.format(day, tipFormat, locale)) + "\"");
+            sb.append("<th title=\"" + escape((dayOff?(getText("DayOff")+": "):"") + tipFormat.apply(day)) + "\"");
             if (dayOff) { sb.append(" class=\"dayOff\""); }
             sb.append(">");
-            sb.append(ApplTools.format(day, exportFormat, locale));
+            sb.append(exportFormat.apply(day));
             sb.append("</th>\n");
         }
         sb.append("<th>&nbsp;&nbsp;");
@@ -165,7 +170,7 @@ public class ReportTab extends SuperReport {
             totals.add(time);
             total += time;
             
-            sb.append("<td title=\"" + escape(ApplTools.format(day, tipFormat, locale)) + "\">");
+            sb.append("<td title=\"" + escape(tipFormat.apply(day)) + "\">");
             sb.append(formatTime(time));
             sb.append("</td>\n");
         }
@@ -187,7 +192,7 @@ public class ReportTab extends SuperReport {
             }
             total += time;
             
-            sb.append("<td title=\"" + escape(ApplTools.format(day, tipFormat, locale)) + "\">");
+            sb.append("<td title=\"" + escape(tipFormat.apply(day)) + "\">");
             sb.append(formatTime(time));
             sb.append("</td>\n");
         }
@@ -231,19 +236,14 @@ public class ReportTab extends SuperReport {
         return result;
     }
     
+    /** Returns the distinct days of the groups in the order of their occurrence. */
     public List<LocalDate> getDays() {
-        List<LocalDate> result = new ArrayList<LocalDate>();
-        for (GroupSet set : data) {
-            for (TaskGroup group : set.getGroups()) {
-                final LocalDate ymd = group.getDay();
-                if (ymd!=null
-                &&! result.contains(ymd)
-                ){
-                    result.add(ymd);
-                }
-            }
-        }
-        return result;
+        return data.stream()
+                .flatMap(set -> Arrays.stream(set.getGroups()))
+                .map(TaskGroup::getDay)
+                .filter(Objects::nonNull)
+                .distinct()
+                .toList();
     }
     
     /** Get NoPrivate projects */

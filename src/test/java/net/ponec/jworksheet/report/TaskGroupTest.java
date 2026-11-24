@@ -16,29 +16,32 @@
 
 package net.ponec.jworksheet.report;
 
-import java.util.Calendar;
-import java.time.LocalDate;
-import net.ponec.jworksheet.report.meta.MetaTaskGroup;
+import net.ponec.jworksheet.bo.Event;
+import net.ponec.jworksheet.bo.Project;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-/** The month and the year of a task group are derived from its day.
+/** The time of a task group.
  * @author Pavel Ponec
  */
 public class TaskGroupTest {
 
     @Test
-    @DisplayName("The month and the year are read from the day, the keys provide them too")
-    public void derivedValues() {
-        final TaskGroup group = new TaskGroup();
-        assertNull(group.getMonth());
-        assertNull(group.getYear());
+    @DisplayName("The time of a private project is no business time")
+    public void businessTime() {
+        final Project project = new Project();
+        final Event event = new Event();
+        event.setProject(project);
+        final TaskGroup group = new TaskGroup(event);
+        group.addTime((short) 90);
 
-        group.setDay(LocalDate.parse("2021-03-14"));
-        assertEquals(Calendar.MARCH, group.getMonth(), "The month is zero based like the Calendar");
-        assertEquals(2021, MetaTaskGroup.year.getValue(group));
-        assertThrows(UnsupportedOperationException.class, () -> group.setMonth(4));
+        assertEquals(90, group.getTime());
+        assertEquals(90, group.getBusinessTime());
+
+        project.setPrivateProject(true);
+        assertEquals(90, group.getTime());
+        assertEquals(0, group.getBusinessTime());
     }
 }

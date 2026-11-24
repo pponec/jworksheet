@@ -105,7 +105,7 @@ public final class XmlManager {
         for (Key<Object, Object> key : Keys.keysOf(domain)) {
             final Object value = key.getValue(domain);
             final String element = Keys.nameOf(key);
-            for (Object item : value == null ? List.of() : Keys.isList(key) ? (List<?>) value : List.of(value)) {
+            for (Object item : itemsOf(key, value)) {
                 if (item == null || !Exportable.isExportable(domain, ExportAction.XML, key, item)) {
                     continue;
                 }
@@ -119,6 +119,14 @@ public final class XmlManager {
             }
         }
         out.append(indent).append("</").append(name).append(">\n");
+    }
+
+    /** Returns the items of a list value, a single scalar value, or nothing for the null. */
+    private static List<?> itemsOf(final Key<?, ?> key, final Object value) {
+        if (value == null) {
+            return List.of();
+        }
+        return Keys.isList(key) ? (List<?>) value : List.of(value);
     }
 
     /** Escapes a text of an element. The carriage return is escaped too,

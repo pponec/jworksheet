@@ -18,10 +18,10 @@
 package net.ponec.jworksheet.bo.item;
 
 import java.io.Serializable;
-import java.util.Calendar;
-import java.util.StringTokenizer;
-import net.ponec.jworksheet.core.*;
+import java.time.LocalTime;
+import java.time.temporal.ChronoField;
 import lombok.EqualsAndHashCode;
+import net.ponec.jworksheet.core.MessageException;
 import org.jetbrains.annotations.NotNull;
 
 /**
@@ -36,77 +36,68 @@ public final class Time implements Comparable<Time>, Serializable {
     /** Separator */
     public static final String SEPARATOR = ":";
 
-
     public static final int VALUE_MIN = 0;
     public static final int VALUE_MAX = 24*60;
 
-    /** minutes from 0 to 60*24-1 */
+    /** The midnight 00:00 */
+    public static final Time MIDNIGHT = new Time(0);
+
+    /** minutes from 0 to 60*24 */
     private final short minutes;
 
     /**
-     * Creates a new instance of Time
-     * @param time Format 23:56
+     * Creates a new instance of Time.
+     * @param time Accepted formats: {@code 23:56}, {@code 23.56}, {@code 2356} or hours only {@code 8}.
+     * @throws MessageException An invalid text or a time out of the range.
      */
-    public Time(String time) {
-        if (time.indexOf('.')>=0) { time = time.replace('.', ':'); }
-
-        int timeLength = time.length();
-        int separIndex = time.indexOf(SEPARATOR);
-        if (separIndex<0 && timeLength>=2) {
-            StringBuilder sb = new StringBuilder(5);
-            sb.append('0');
-            sb.append(time, 0, timeLength-2);
-            sb.append(SEPARATOR);
-            sb.append(time.substring(timeLength-2));
-            time = sb.toString();
-        }
-
-        StringTokenizer st = new StringTokenizer(time, SEPARATOR);
-        int hourse = Integer.parseInt(st.nextToken());
-        int minute = Integer.parseInt(st.nextToken());
-        this.minutes = valid(hourse * 60 + minute);
+    public Time(final String time) {
+        this(parse(time));
     }
 
     /**
-     * Creates a new instance of a System Time.
+     * Creates a new instance of Time.
+     * @param minutes Minutes from the midnight.
      */
-    public Time(int minutes) {
+    public Time(final int minutes) {
         this.minutes = valid(minutes);
     }
 
-
     /**
-     * Creates a new instance of a System Time.
+     * Creates a new instance of a System Time, or the midnight.
      */
-    public Time(boolean systemTime) {
-        this(systemTime ? systemMinutes() : 0);
+    public Time(final boolean systemTime) {
+        this(systemTime ? LocalTime.now().get(ChronoField.MINUTE_OF_DAY) : 0);
     }
 
-    /** Returns minutes of the current system time. */
-    private static int systemMinutes() {
-        final Calendar cal = Calendar.getInstance();
-        return cal.get(Calendar.HOUR_OF_DAY) * 60 + cal.get(Calendar.MINUTE);
-    }
-
-    /** Returns Time in minutes. */
-    public short getTimeMinutes() {
-        return minutes;
+    /** Converts a text to minutes, see the {@link #Time(String)} constructor. */
+    private static int parse(final String time) {
+        final String text = time.trim().replace('.', ':');
+        final int separator = text.indexOf(SEPARATOR);
+        try {
+            if (separator >= 0) {
+                return Integer.parseInt(text.substring(0, separator)) * 60
+                     + Integer.parseInt(text.substring(separator + 1));
+            }
+            final int value = Integer.parseInt(text);
+            return text.length() <= 2
+                 ? value * 60                    // Hours only: 8
+                 : value / 100 * 60 + value % 100; // Hours and minutes: 830
+        } catch (NumberFormatException e) {
+            throw new MessageException("Invalid time: " + time, e);
+        }
     }
 
     /** Returns the valid minutes, or throws an exception. */
-    private static short valid(int minutes) {
-        if (minutes<VALUE_MIN
-        ||  minutes>VALUE_MAX
-        ){
-            throw new MessageException("Time is out of range: " + (minutes/60) + SEPARATOR + (minutes % 60)  );
+    private static short valid(final int minutes) {
+        if (minutes < VALUE_MIN || minutes > VALUE_MAX) {
+            throw new MessageException("Time is out of range: " + (minutes / 60) + SEPARATOR + (minutes % 60));
         }
         return (short) minutes;
     }
 
     /** Result [minutes]: this - time. */
-    public short substract(Time time) {
-        final int result = this.minutes - time.minutes;
-        return (short) result;
+    public short substract(final Time time) {
+        return (short) (this.minutes - time.minutes);
     }
 
     /** Return minutes */
@@ -114,38 +105,21 @@ public final class Time implements Comparable<Time>, Serializable {
         return minutes;
     }
 
-
+    /** Format: {@code 08:05} */
     @Override
     public String toString() {
-        StringBuilder result = new StringBuilder(5);
-        int hourse = minutes / 60 ;
-        int minute = minutes % 60 ;
-
-        if (hourse<10) { result.append('0'); }
-        result.append(hourse);
-        //
-        result.append(SEPARATOR);
-        if (minute<10) { result.append('0'); }
-        result.append(minute);
-
-        return result.toString();
+        return "%02d%s%02d".formatted(minutes / 60, SEPARATOR, minutes % 60);
     }
 
     @Override
-    public int compareTo(@NotNull Time obj) {
-        final int result
-        = this.minutes < obj.minutes ? -1
-        : this.minutes > obj.minutes ? +1
-        : 0
-        ;
-        return result;
+    public int compareTo(@NotNull final Time obj) {
+        return Short.compare(minutes, obj.minutes);
     }
 
     /**
      * Add some minutes to a new Time instance.
      */
-    public Time cloneAdd(int period) {
+    public Time cloneAdd(final int period) {
         return new Time(minutes + period);
     }
-
 }

@@ -16,8 +16,10 @@
 
 package net.ponec.jworksheet.core;
 
+import java.util.Arrays;
+import java.util.Comparator;
 import java.util.Locale;
-import java.util.StringTokenizer;
+import java.util.function.Predicate;
 
 /**
  * Code version - an immutable value.
@@ -27,72 +29,38 @@ import java.util.StringTokenizer;
  */
 public final class Version implements Comparable<Version> {
 
+    /** The first item is compared by its length, so the {@code 10} is greater than the {@code 9}. */
+    private static final Comparator<String> FIRST_ITEM = Comparator
+            .comparingInt(String::length)
+            .thenComparing(String.CASE_INSENSITIVE_ORDER);
+
     /** The items of the version, the array is never exposed. */
     private final String[] version;
 
+    /** Creates a version from the text, the empty items are skipped. Sample: {@code 2.00} */
     public Version(final String code) {
-        StringTokenizer st = new StringTokenizer(code, ".");
-        version = new String[st.countTokens()];
-        int i = 0;
-
-        while (st.hasMoreTokens()) {
-            version[i++] = st.nextToken();
-        }
+        version = Arrays.stream(code.split("\\."))
+                .filter(Predicate.not(String::isEmpty))
+                .toArray(String[]::new);
     }
 
     @Override
     public String toString() {
-        StringBuilder result = new StringBuilder();
-
-        for (String s : version) {
-            if (result.length()>0) {
-                result.append('.');
-            }
-            result.append(s);
-        }
-        return result.toString();
-    }
-
-    /** Compare two integers */
-    private int compare(int i1, int i2) {
-        return i1 < i2
-             ? -1
-             : i1 > i2
-             ? 1
-             : 0
-             ;
-    }
-
-    /** Compare two String elements */
-    private int compare(String s1, String s2, boolean lengthComparation) {
-        int result = 0;
-        if (lengthComparation) {
-           result = compare( s1.length()
-                           , s2.length()
-                           );
-        }
-        return result==0
-             ? s1.compareTo(s2)
-             : result
-             ;
+        return String.join(".", version);
     }
 
     /** Compare to antother version. */
     @Override
     public int compareTo(final Version parm) {
-        int max = Math.min
-                ( this.version.length
-                , parm.version.length
-                )
-                ;
-        for (int i=0; i<max; i++) {
-            String s1 = this.version[i].toUpperCase(Locale.ENGLISH);
-            String s2 = parm.version[i].toUpperCase(Locale.ENGLISH);
-            int result = compare(s1, s2, i==0);
-            if (result!=0) return result;
+        final int max = Math.min(version.length, parm.version.length);
+        for (int i = 0; i < max; i++) {
+            final Comparator<String> comparator = i == 0 ? FIRST_ITEM : String.CASE_INSENSITIVE_ORDER;
+            final int result = comparator.compare(version[i], parm.version[i]);
+            if (result != 0) {
+                return result;
+            }
         }
-
-        return compare(version.length, parm.version.length);
+        return Integer.compare(version.length, parm.version.length);
     }
 
     @Override
@@ -105,5 +73,4 @@ public final class Version implements Comparable<Version> {
     public int hashCode() {
         return toString().toUpperCase(Locale.ENGLISH).hashCode();
     }
-
 }

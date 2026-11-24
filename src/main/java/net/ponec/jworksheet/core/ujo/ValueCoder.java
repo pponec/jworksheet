@@ -28,6 +28,7 @@ import java.time.format.DateTimeFormatter;
 import java.util.Locale;
 import java.util.StringTokenizer;
 import org.ujorm.core.Key;
+import org.ujorm.tools.common.Primitive;
 
 /**
  * A converter between a value and its text representation.
@@ -127,7 +128,7 @@ public final class ValueCoder {
      *         where the required type is not a {@link String}. */
     @SuppressWarnings({"unchecked", "rawtypes"})
     public static Object decode(final Class<?> requiredType, final String text) {
-        final Class<?> type = Keys.box(requiredType);
+        final Class<?> type = Primitive.wrapPrimitive(requiredType);
         if (text == null || String.class == type) {
             return text;
         }
