@@ -38,7 +38,9 @@ import org.ujorm.tools.common.Primitive;
  * written by the previous releases.
  * <p>A type which is not listed explicitly is encoded by its {@code toString()} method
  * and decoded by its constructor with a single {@link String} argument. The rule covers
- * the {@code Time}, the {@code LocalDate} and the {@code Version} value types.
+ * the {@code Time} and the {@code Version} value types.
+ * <p>The {@link LocalDate} and the {@link LocalDateTime} have got their own formats,
+ * which accept the data of the previous releases too.
  *
  * @author Pavel Ponec
  */

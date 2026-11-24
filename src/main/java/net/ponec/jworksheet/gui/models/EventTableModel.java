@@ -84,7 +84,7 @@ public class EventTableModel extends UjoTableModel<Event> {
         Event lastRow = getRowLast();
         if (lastRow!=null) {
             // Set the last period:
-            lastRow.setPeriod(row.getTime());
+            lastRow.setTimeFinished(row.getTime());
         }
         super.addRow(row);
     }
@@ -109,7 +109,7 @@ public class EventTableModel extends UjoTableModel<Event> {
     public void setTimeOfLastPeriod() {
         if (getRowCount()>0 && applContext.isToday()) {
             final Event lastRow = getRowLast();
-            lastRow.setPeriod(new Time(true));
+            lastRow.setTimeFinished(Time.now());
         }
     }
     
@@ -157,7 +157,7 @@ public class EventTableModel extends UjoTableModel<Event> {
         for (int i=0; i<getRowCount(); i++) {
             Event newEvent = getRow(i);
             if (lastEvent!=null) {
-                lastEvent.setPeriod(newEvent.getTime());
+                lastEvent.setTimeFinished(newEvent.getTime());
             }
             lastEvent = newEvent;
         }
@@ -197,18 +197,16 @@ public class EventTableModel extends UjoTableModel<Event> {
         if (MetaEvent.period==column) {
             String data = String.valueOf(value);
             
-            final int timeSeparator = data.indexOf(':');
-            if (timeSeparator>=0) {
-                int mins =   Integer.parseInt(data.substring(timeSeparator+1)); 
-                mins += 60 * Integer.parseInt(data.substring(0, timeSeparator)); 
-                value = new Short((short) mins);
+            if (data.indexOf(':')>=0) {
+                // A format of the time: 1:30
+                value = (short) new Time(data).getMinutes();
             } else {
                 if (data.indexOf(',')>=0) {
                     data = data.replace(',', '.');
                 }
                 final float f = Float.parseFloat(data);
                 final boolean deciFormat = data.indexOf('.')>=0;
-                value = new Short((short)Math.round(f * (deciFormat?60:1)));      
+                value = (short) Math.round(f * (deciFormat?60:1));
             }
             
             // Test:

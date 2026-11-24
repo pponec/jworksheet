@@ -215,13 +215,14 @@ public final class Keys {
         return (D) PROTOTYPES.computeIfAbsent(domainClass, Keys::newInstance);
     }
 
-    /** Creates a new instance of the domain class. */
-    public static <D> D newInstance(final Class<D> domainClass) {
+    /** Creates a new instance of the class by its constructor without arguments,
+     * the method replaces the deprecated {@code Class.newInstance()}. */
+    public static <D> D newInstance(final Class<D> type) {
         try {
-            return domainClass.getDeclaredConstructor().newInstance();
+            return type.getDeclaredConstructor().newInstance();
         } catch (ReflectiveOperationException e) {
-            throw new IllegalStateException("A domain class requires a public constructor"
-                    + " without arguments: " + domainClass.getName(), e);
+            throw new IllegalStateException("A class requires a public constructor"
+                    + " without arguments: " + type.getName(), e);
         }
     }
 }

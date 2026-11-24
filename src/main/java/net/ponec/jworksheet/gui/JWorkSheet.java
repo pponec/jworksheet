@@ -374,19 +374,10 @@ public final class JWorkSheet extends TopFrame {
         }
     }
 
-    /** <ul>
-     * <li>Value 0 = the current date.</li>
-     * <li>Value MIN_VALUE = only refresh date.</li>
-     * <li>Value X = Add day count.</li>
-     *  </ul>
-     */
-    private void changeCurrentDate(int skip) {
+    /** Selects the day and displays its events. An open cell editor is submitted first,
+     * so its value belongs to the previous day. */
+    private void selectDay(final LocalDate day) {
         eventTable.submitEditMode(true);
-
-        final LocalDate day
-                = skip == Integer.MIN_VALUE ? applContext.getSelectedDay()
-                : skip == 0 ? LocalDate.now()
-                : applContext.getSelectedDay().plusDays(skip);
         applContext.selectWorkDay(day);
         displaySelectedDay();
         setEventTableModel(false);
@@ -1201,8 +1192,7 @@ public final class JWorkSheet extends TopFrame {
     private void bGotoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_bGotoActionPerformed
         final LocalDate date = new DateDialog(applContext).getResult();
         if (date!=null) {
-            applContext.selectWorkDay(date);
-            changeCurrentDate(Integer.MIN_VALUE);
+            selectDay(date);
         }
     }//GEN-LAST:event_bGotoActionPerformed
 
@@ -1374,12 +1364,12 @@ public final class JWorkSheet extends TopFrame {
     }//GEN-LAST:event_bSortActionPerformed
 
     private void bTodayActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_bTodayActionPerformed
-        changeCurrentDate(0);
+        selectDay(LocalDate.now());
     }//GEN-LAST:event_bTodayActionPerformed
 
     private void bDayNextActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_bDayNextActionPerformed
         int step = evt.getSource()==bDayNext ? +1 : -1 ;
-        changeCurrentDate(step);
+        selectDay(applContext.getSelectedDay().plusDays(step));
     }//GEN-LAST:event_bDayNextActionPerformed
 
     private void bCloneActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_bCloneActionPerformed
@@ -1389,7 +1379,7 @@ public final class JWorkSheet extends TopFrame {
             UjoTableModel model = eventTable.getModel();
             int lastRow = model.getRowCount();
             Time  time1 = (Time) model.getValueAt(lastRow-1, MetaEvent.time);
-            Time  time2 = applContext.isToday() ? new Time(true) : ((Event)model.getRowLast()).getTimeFinished();
+            Time  time2 = applContext.isToday() ? Time.now() : ((Event)model.getRowLast()).getTimeFinished();
             Short period = time2.substract(time1);
             //
             model.cloneRow(rowIndex, 2);
@@ -1435,7 +1425,7 @@ public final class JWorkSheet extends TopFrame {
     /** Create new work Event */
     public void createWorkEvent(boolean currentDay) {
         if (currentDay) {
-            changeCurrentDate(0);
+            selectDay(LocalDate.now());
         }
         tabbedPane.setSelectedIndex(0);
         bCreateActionPerformed(null);

@@ -137,16 +137,16 @@ public final class ApplTools {
         return Date.from(date.atStartOfDay(ZoneId.systemDefault()).toInstant());
     }
 
-    /** Formats the date by a pattern of the {@link SimpleDateFormat}, the users can change it. */
-    public static String format(final LocalDate date, final String pattern, final Locale locale) {
-        return dateFormatter(pattern, locale).apply(date);
-    }
-
     /** Creates a formatter of the dates by a pattern of the {@link SimpleDateFormat} for a repeated use.
      * The {@code DateTimeFormatter} is not used, because it interprets some user patterns differently
-     * (the week of the year, for example). The result is not thread safe. */
-    public static Function<LocalDate, String> dateFormatter(final String pattern, final Locale locale) {
+     * (the week of the year, for example). The result is not thread safe.
+     * @param firstDayOfWeek The first day of the week in the {@link java.util.Calendar} format
+     *        (the SUNDAY is 1), it affects the week of the year.
+     */
+    public static Function<LocalDate, String> dateFormatter(final String pattern, final Locale locale,
+            final int firstDayOfWeek) {
         final SimpleDateFormat format = new SimpleDateFormat(pattern, locale);
+        format.getCalendar().setFirstDayOfWeek(firstDayOfWeek);
         return date -> format.format(toDate(date));
     }
 
@@ -316,13 +316,14 @@ public final class ApplTools {
      * @param dateFormat
      * @param language
      */
-    public static javax.swing.JSpinner createSpinnerDate( String dateFormat, Locale language ) {
+    public static javax.swing.JSpinner createSpinnerDate(String dateFormat, Locale language, int firstDayOfWeek) {
         JSpinner result = new JSpinner
         (new javax.swing.SpinnerDateModel());
         result.setLocale(language);
 
-        result.setEditor(new javax.swing.JSpinner.DateEditor
-        (result, dateFormat));
+        final JSpinner.DateEditor editor = new JSpinner.DateEditor(result, dateFormat);
+        editor.getFormat().getCalendar().setFirstDayOfWeek(firstDayOfWeek);
+        result.setEditor(editor);
 
         result.addMouseWheelListener(new java.awt.event.MouseWheelListener() {
             public void mouseWheelMoved(java.awt.event.MouseWheelEvent evt) {

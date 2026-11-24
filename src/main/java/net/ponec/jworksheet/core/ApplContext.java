@@ -19,7 +19,6 @@ package net.ponec.jworksheet.core;
 
 import net.ponec.jworksheet.core.ujo.Keys;
 
-import net.ponec.jworksheet.bo.meta.MetaEvent;
 import net.ponec.jworksheet.bo.meta.MetaParameters;
 import net.ponec.jworksheet.bo.meta.MetaWorkSpace;
 
@@ -40,6 +39,7 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Locale;
 import java.util.concurrent.atomic.AtomicBoolean;
+import java.util.function.Function;
 import java.util.function.Predicate;
 import java.util.regex.Pattern;
 import java.util.jar.JarEntry;
@@ -67,6 +67,7 @@ import net.ponec.jworksheet.report.MetaReport;
 import net.ponec.jworksheet.resources.ResourceProvider;
 import net.ponec.jworksheet.core.ujo.BundleManager;
 import net.ponec.jworksheet.core.ujo.XmlManager;
+import org.ujorm.core.Key;
 import org.ujorm.tools.Check;
 
 /**
@@ -239,7 +240,7 @@ public class ApplContext implements TableModelListener, Runnable, JwsContext {
                     String className = content.substring(i).trim();
                     if (Check.hasLength(content)) {
                         Class<ModuleApi> mod = ApplTools.getClass(className, file);
-                        ModuleApi mapi = mod.newInstance();
+                        ModuleApi mapi = Keys.newInstance(mod);
                         mapi.setJwsContext(this);
                         this.modules.add(mapi);
                     }
@@ -328,7 +329,7 @@ public class ApplContext implements TableModelListener, Runnable, JwsContext {
             if (events.size()>=1) {
                 Event lastEvent   = events.get(events.size()-1);
                 Time finishedTime = lastEvent.getTimeFinished();
-                Time currentTime  = new Time(true);
+                Time currentTime  = Time.now();
 
                 if (currentTime.compareTo(finishedTime)>=0) {
                     String exitDescr = parameters.getExitEventDescription();
@@ -336,7 +337,7 @@ public class ApplContext implements TableModelListener, Runnable, JwsContext {
 
                     if (lastEvent.getProject()==null
                     &&  lastEvent.getTask()==null
-                    &&  MetaEvent.descr.equals(lastEvent, exitDescr)
+                    &&  lastEvent.getDescr().equals(exitDescr)
                     &&  events.size()>=2
                     ){
                         exitEvent = lastEvent;
@@ -348,7 +349,7 @@ public class ApplContext implements TableModelListener, Runnable, JwsContext {
 
                     exitEvent.setTime(currentTime);
                     exitEvent.setDescr(exitDescr);
-                    lastEvent.setPeriod(currentTime);
+                    lastEvent.setTimeFinished(currentTime);
                 }
             }
         }
@@ -404,18 +405,19 @@ public class ApplContext implements TableModelListener, Runnable, JwsContext {
      * carried by the parameters of the application. */
     @Override
     public File getDataFile() {
-        return Keys.isDefault(MetaParameters.dataFilePath, getParameters())
-             ? new File(getConfigDir(), FILE_DATA)
-             : getParameters().getDataFilePath()
-             ;
+        return fileOrDefault(MetaParameters.dataFilePath, FILE_DATA);
     }
 
     /** Shared Projects Data File, see the {@link #getDataFile()} method for the default value. */
     public File getProjectsFile() {
-        return Keys.isDefault(MetaParameters.sharedProjectsFilePath, getParameters())
-             ? new File(getConfigDir(), PROJECTS_DATA)
-             : getParameters().getSharedProjectsFilePath()
-             ;
+        return fileOrDefault(MetaParameters.sharedProjectsFilePath, PROJECTS_DATA);
+    }
+
+    /** Returns the file of the parameter, or a file of the configuration directory for the default value. */
+    private File fileOrDefault(final Key<Parameters, File> key, final String defaultName) {
+        return Keys.isDefault(key, getParameters())
+             ? new File(getConfigDir(), defaultName)
+             : key.getValue(getParameters());
     }
 
     /** Data File for a temporarry usage.
@@ -468,7 +470,13 @@ public class ApplContext implements TableModelListener, Runnable, JwsContext {
 
     /** GetCurrentDay */
     public String getSelectedDayStr() {
-        return ApplTools.format(getSelectedDay(), parameters.getDateFormat(MetaParameters.dateMainFormat, this), getLanguage());
+        return dateFormatter(parameters.getDateFormat(MetaParameters.dateMainFormat, this)).apply(getSelectedDay());
+    }
+
+    /** Creates a formatter of the dates by the language and the first day of the week of the parameters,
+     * see the {@link ApplTools#dateFormatter(String, Locale, int)}. */
+    public Function<LocalDate, String> dateFormatter(final String pattern) {
+        return ApplTools.dateFormatter(pattern, getLanguage(), parameters.getFirstDayOfWeek());
     }
 
     /** Is selected time Today? */

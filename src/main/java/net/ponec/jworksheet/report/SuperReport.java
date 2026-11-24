@@ -10,10 +10,8 @@
 package net.ponec.jworksheet.report;
 
 import net.ponec.jworksheet.bo.meta.MetaParameters;
-import net.ponec.jworksheet.bo.meta.MetaWorkDay;
 
 import java.io.IOException;
-import java.util.List;
 import net.ponec.jworksheet.core.ApplContext;
 import net.ponec.jworksheet.core.ApplTools;
 import net.ponec.jworksheet.core.Calculator;
@@ -22,6 +20,8 @@ import net.ponec.jworksheet.bo.Parameters;
 import net.ponec.jworksheet.bo.WorkDay;
 import net.ponec.jworksheet.bo.WorkSpace;
 import java.time.LocalDate;
+import java.util.Set;
+import java.util.stream.Collectors;
 import net.ponec.jworksheet.core.LanguageManager;
 import net.ponec.jworksheet.gui.JWorkSheet;
 import net.ponec.jworksheet.resources.ResourceProvider;
@@ -42,6 +42,9 @@ public abstract class SuperReport implements Calculator {
     
     /** Work Day Count */
     protected int workDayCount = 0;
+
+    /** The days off of the work space, see the {@link #isDayOff(LocalDate)}. */
+    private Set<LocalDate> daysOff;
     
     public SuperReport() {
     }
@@ -235,14 +238,13 @@ public abstract class SuperReport implements Calculator {
     
     /** Is the day a DayOff? */
     protected boolean isDayOff(LocalDate aDay) {
-        final List<WorkDay> days = applContext.getWorkSpace().getDays();
-        for(WorkDay day : days) {
-            if (MetaWorkDay.date.equals(day, aDay)) {
-                final boolean result = day.isDayOff();
-                return result;
-            }
+        if (daysOff == null) {
+            daysOff = applContext.getWorkSpace().getDays().stream()
+                    .filter(WorkDay::isDayOff)
+                    .map(WorkDay::getDate)
+                    .collect(Collectors.toSet());
         }
-        return false;
+        return daysOff.contains(aDay);
     }
     
         

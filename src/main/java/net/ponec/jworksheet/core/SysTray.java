@@ -17,6 +17,7 @@
 package net.ponec.jworksheet.core;
 
 import javax.annotation.Nonnull;
+import net.ponec.jworksheet.core.ujo.Keys;
 
 /**
  * Dummu System Tray management.
@@ -52,7 +53,7 @@ public class SysTray {
     public static SysTray getInstance(ApplContext applContext) {
         SysTray result;
         try {
-            result = (SysTray) Class.forName("net.ponec.jworksheet.core.SysTray6").newInstance();
+            result = Keys.newInstance(Class.forName("net.ponec.jworksheet.core.SysTray6").asSubclass(SysTray.class));
         } catch (Throwable e) {
             result = new SysTray();
         }

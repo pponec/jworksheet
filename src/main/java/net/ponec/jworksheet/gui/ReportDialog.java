@@ -147,7 +147,7 @@ public class ReportDialog extends TopDialog implements java.awt.event.ActionList
 
     /** Create a date spinner */
     private JSpinner createDateSpinner() {
-        return ApplTools.createSpinnerDate(spinnerFormat, getLocale());
+        return ApplTools.createSpinnerDate(spinnerFormat, getLocale(), applContext.getParameters().getFirstDayOfWeek());
     }
 
     /** Returns a date from a JSpinner component. */
@@ -644,7 +644,7 @@ public class ReportDialog extends TopDialog implements java.awt.event.ActionList
                 applContext.showReport(null, metaReport.getXSL(), getXslParams(metaReport));
 
             } else {
-                Calculator cal = (Calculator) metaReport.getTypeClass().newInstance();
+                Calculator cal = Keys.newInstance(metaReport.getTypeClass());
 
                 cal.init
                 ( applContext

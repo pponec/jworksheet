@@ -27,10 +27,10 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.Locale;
+import java.util.Map;
 import java.util.Objects;
 import java.util.function.Function;
-import net.ponec.jworksheet.core.ApplTools;
+import java.util.stream.Collectors;
 import net.ponec.jworksheet.core.ApplContext;
 import net.ponec.jworksheet.bo.Event;
 import net.ponec.jworksheet.bo.Parameters;
@@ -111,12 +111,12 @@ public class ReportTab extends SuperReport {
         
         List<TaskGroup> projs = getProjects();
         List<LocalDate> days = getDays();
+        final Map<LocalDate, List<TaskGroup>> groupsByDay = getGroupsByDay();
         
-        final Locale locale = applContext.getLanguage();
-        final Function<LocalDate, String> exportFormat = ApplTools.dateFormatter
-                (applContext.getParameters().getDateReportFormat2(), locale);
-        final Function<LocalDate, String> tipFormat = ApplTools.dateFormatter
-                (applContext.getParameters().getDateFormat(MetaParameters.dateReportFormat, applContext), locale);
+        final Function<LocalDate, String> exportFormat = applContext.dateFormatter
+                (applContext.getParameters().getDateReportFormat2());
+        final Function<LocalDate, String> tipFormat = applContext.dateFormatter
+                (applContext.getParameters().getDateFormat(MetaParameters.dateReportFormat, applContext));
         
         // Header ---
         sb.append("<tr>\n<th>");
@@ -147,7 +147,7 @@ public class ReportTab extends SuperReport {
             
             int total = 0;
             for(LocalDate day : days) {
-                int time = getCellTime(proj, day);
+                int time = getCellTime(groupsByDay, proj, day);
                 total += time;
                 sb.append("<td class=\"num\">");
                 sb.append(formatTimeZero(time));
@@ -166,7 +166,7 @@ public class ReportTab extends SuperReport {
         sb.append(getText("TotalTime"));
         sb.append("</td>\n");
         for(LocalDate day : days) {
-            int time = getDayTime(day);
+            int time = getDayTime(groupsByDay, day);
             totals.add(time);
             total += time;
             
@@ -205,35 +205,28 @@ public class ReportTab extends SuperReport {
         return sb.toString();
     }
     
-    /** Returns a time in minutes for selected day and project. */
-    private int getCellTime(TaskGroup aProj, LocalDate aDay) {
-        
-        for (GroupSet set : data) {
-            for (TaskGroup proj : set.getGroups()) {
-                final LocalDate day = proj.getDay();
-                if (aDay.equals(day)
-                &&  comparator.equals(aProj, proj)
-                ){
-                    return proj.getTime();
-                }
-            }
-        }
-        return 0;
+    /** Returns the groups of the data indexed by their day, so a cell value is found quickly. */
+    private Map<LocalDate, List<TaskGroup>> getGroupsByDay() {
+        return data.stream()
+                .flatMap(set -> Arrays.stream(set.getGroups()))
+                .filter(group -> group.getDay() != null)
+                .collect(Collectors.groupingBy(TaskGroup::getDay));
     }
-    
+
+    /** Returns a time in minutes for selected day and project. */
+    private int getCellTime(Map<LocalDate, List<TaskGroup>> groupsByDay, TaskGroup aProj, LocalDate aDay) {
+        return groupsByDay.getOrDefault(aDay, List.of()).stream()
+                .filter(group -> comparator.equals(aProj, group))
+                .findFirst()
+                .map(TaskGroup::getTime)
+                .orElse(0);
+    }
+
     /** Returns a time in minutes for a selected day */
-    private int getDayTime(LocalDate aDay) {
-        int result = 0;
-        
-        for (GroupSet set : data) {
-            for (TaskGroup proj : set.getGroups()) {
-                final LocalDate day = proj.getDay();
-                if (aDay.equals(day)) {
-                    result += proj.getBusinessTime();
-                }
-            }
-        }
-        return result;
+    private int getDayTime(Map<LocalDate, List<TaskGroup>> groupsByDay, LocalDate aDay) {
+        return groupsByDay.getOrDefault(aDay, List.of()).stream()
+                .mapToInt(TaskGroup::getBusinessTime)
+                .sum();
     }
     
     /** Returns the distinct days of the groups in the order of their occurrence. */

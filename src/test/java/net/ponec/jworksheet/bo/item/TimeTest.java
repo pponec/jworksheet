@@ -68,6 +68,18 @@ public class TimeTest {
         assertThrows(MessageException.class, () -> new Time("8:"));
         assertThrows(MessageException.class, () -> new Time("abc"));
         assertThrows(MessageException.class, () -> new Time("24:01"));
+        assertThrows(MessageException.class, () -> new Time("8:75"), "Minutes out of the range");
+        assertThrows(MessageException.class, () -> new Time("875"), "Minutes out of the range");
+        assertThrows(MessageException.class, () -> new Time("8:-5"), "Negative minutes");
+        assertEquals("08:59", new Time("8:59").toString());
+    }
+
+    @Test
+    @DisplayName("The current time is between the midnight and the end of the day")
+    public void now() {
+        final Time now = Time.now();
+        assertTrue(now.compareTo(Time.MIDNIGHT) >= 0);
+        assertTrue(now.getMinutes() < Time.VALUE_MAX);
     }
 
     @Test

@@ -106,7 +106,7 @@ public class Event implements Exportable, DomainObject {
 
     /** Init time */
     public Event initTime() {
-        setTime(new Time(true));
+        setTime(Time.now());
         return this;
     }
 
@@ -115,8 +115,9 @@ public class Event implements Exportable, DomainObject {
         return time.cloneAdd(period);
     }
 
-    /** Set a time period */
-    public void setPeriod(final Time finishedTime) {
+    /** Assigns the finished time, so the period is calculated from the start time.
+     * A finished time before the start time provides the zero period. */
+    public void setTimeFinished(final Time finishedTime) {
         setPeriod(finishedTime.substract(time));
     }
 

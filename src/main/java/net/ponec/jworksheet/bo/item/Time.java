@@ -62,11 +62,9 @@ public final class Time implements Comparable<Time>, Serializable {
         this.minutes = valid(minutes);
     }
 
-    /**
-     * Creates a new instance of a System Time, or the midnight.
-     */
-    public Time(final boolean systemTime) {
-        this(systemTime ? LocalTime.now().get(ChronoField.MINUTE_OF_DAY) : 0);
+    /** Returns the current system time. */
+    public static Time now() {
+        return new Time(LocalTime.now().get(ChronoField.MINUTE_OF_DAY));
     }
 
     /** Converts a text to minutes, see the {@link #Time(String)} constructor. */
@@ -75,16 +73,25 @@ public final class Time implements Comparable<Time>, Serializable {
         final int separator = text.indexOf(SEPARATOR);
         try {
             if (separator >= 0) {
-                return Integer.parseInt(text.substring(0, separator)) * 60
-                     + Integer.parseInt(text.substring(separator + 1));
+                return minutesOf(time,
+                        Integer.parseInt(text.substring(0, separator)),
+                        Integer.parseInt(text.substring(separator + 1)));
             }
             final int value = Integer.parseInt(text);
             return text.length() <= 2
-                 ? value * 60                    // Hours only: 8
-                 : value / 100 * 60 + value % 100; // Hours and minutes: 830
+                 ? minutesOf(time, value, 0)               // Hours only: 8
+                 : minutesOf(time, value / 100, value % 100); // Hours and minutes: 830
         } catch (NumberFormatException e) {
             throw new MessageException("Invalid time: " + time, e);
         }
+    }
+
+    /** Returns minutes of the day, the minute must be in the range 0 to 59. */
+    private static int minutesOf(final String time, final int hour, final int minute) {
+        if (minute < 0 || minute > 59) {
+            throw new MessageException("Invalid minutes of the time: " + time);
+        }
+        return hour * 60 + minute;
     }
 
     /** Returns the valid minutes, or throws an exception. */

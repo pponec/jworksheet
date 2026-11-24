@@ -20,7 +20,6 @@ package net.ponec.jworksheet.gui;
 import net.ponec.jworksheet.bo.meta.MetaParameters;
 
 import java.awt.event.ActionEvent;
-import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.util.Date;
 import java.util.logging.Logger;
@@ -87,7 +86,7 @@ public class DateDialog extends TopDialog implements java.awt.event.ActionListen
 
     /** Create a date spinner */
     private JSpinner createDateSpinner() {
-        return ApplTools.createSpinnerDate(gotoFormat, getLocale());
+        return ApplTools.createSpinnerDate(gotoFormat, getLocale(), applContext.getParameters().getFirstDayOfWeek());
     }
 
     /** Return result */
@@ -200,9 +199,7 @@ public class DateDialog extends TopDialog implements java.awt.event.ActionListen
     }// </editor-fold>//GEN-END:initComponents
 
     private void tDateStateChanged(javax.swing.event.ChangeEvent evt) {//GEN-FIRST:event_tDateStateChanged
-        Date date = (Date) tDate.getValue();
-        SimpleDateFormat df = new SimpleDateFormat(mainFormat, applContext.getLanguage());
-        setTitle(df.format(date));
+        setTitle(applContext.dateFormatter(mainFormat).apply(ApplTools.toLocalDate((Date) tDate.getValue())));
     }//GEN-LAST:event_tDateStateChanged
 
     private void bTodayActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_bTodayActionPerformed
