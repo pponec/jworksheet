@@ -20,11 +20,11 @@ import net.ponec.jworksheet.core.ujo.DomainObject;
 import org.ujorm.annotation.UColumn;
 import java.util.ArrayList;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.stream.Collectors;
 import lombok.Getter;
 import lombok.Setter;
-import java.time.LocalDate;
 import net.ponec.jworksheet.bo.meta.MetaWorkSpace;
 import net.ponec.jworksheet.core.Version;
 import net.ponec.jworksheet.core.ujo.ExportAction;
@@ -47,17 +47,19 @@ public class WorkSpace implements Exportable, DomainObject {
     @UColumn(name = "Version")
     private Version version = new Version("0");
 
+    /** The timestamps are stored including the time, because the previous releases
+     * (based on the {@code java.util.Date}) can't read a date only. */
     @UColumn(name = "Created")
-    private LocalDate created;
+    private LocalDateTime created;
 
     @UColumn(name = "Archived")
-    private LocalDate archived;
+    private LocalDateTime archived;
 
     @UColumn(name = "Username")
     private String username = "?";
 
     @UColumn(name = "CheckReleaseDate")
-    private LocalDate checkReleaseDate = LocalDate.EPOCH;
+    private LocalDateTime checkReleaseDate = LocalDate.EPOCH.atStartOfDay();
 
     @UColumn(name = "CheckReleaseVersion")
     private Version checkReleaseVersion = JWorkSheet.APPL_VERSION;
@@ -200,7 +202,7 @@ public class WorkSpace implements Exportable, DomainObject {
     public boolean isReleaseNotification(final Parameters params) {
         boolean result = false;
 
-        if (!LocalDate.now().isBefore(checkReleaseDate)) {
+        if (!LocalDateTime.now().isBefore(checkReleaseDate)) {
 
             final Version currentVersion = JWorkSheet.APPL_VERSION;
             final Version webVersion = params.getWebRelease();

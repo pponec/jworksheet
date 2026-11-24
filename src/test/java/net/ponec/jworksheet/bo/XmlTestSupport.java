@@ -154,7 +154,7 @@ public abstract class XmlTestSupport {
     /** A minimal WorkSpace with the mandatory attributes assigned. */
     protected static WorkSpace newWorkSpace() {
         final WorkSpace result = new WorkSpace();
-        result.setArchived(LocalDate.of(2021, 3, 14));
+        result.setArchived(LocalDate.of(2021, 3, 14).atStartOfDay());
         return result;
     }
 }

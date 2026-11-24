@@ -20,9 +20,9 @@ import java.awt.Color;
 import java.awt.Rectangle;
 import java.io.File;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.Locale;
 import net.ponec.jworksheet.bo.item.Time;
-import java.time.LocalDate;
 import net.ponec.jworksheet.core.SysTray;
 import net.ponec.jworksheet.core.Version;
 import org.junit.jupiter.api.DisplayName;
@@ -73,6 +73,18 @@ public class ValueCoderTest {
         assertEquals(date, ValueCoder.decode(LocalDate.class, "2021-03-14"));
         // A time of the previous releases is ignored:
         assertEquals(date, ValueCoder.decode(LocalDate.class, "2021-03-14T11:51:31.634"));
+    }
+
+    @Test
+    @DisplayName("A timestamp keeps the format of the java.util.Date of the previous releases")
+    public void timestampFormat() {
+        final LocalDateTime time = LocalDateTime.of(2021, 3, 14, 11, 51, 31, 634_000_000);
+
+        assertEquals("2021-03-14T11:51:31.634", ValueCoder.encode(time));
+        assertEquals("2021-03-14T00:00:00.000", ValueCoder.encode(time.toLocalDate().atStartOfDay()));
+        assertEquals(time, ValueCoder.decode(LocalDateTime.class, "2021-03-14T11:51:31.634"));
+        // A date only was written by the release 2.00-SNAPSHOT:
+        assertEquals(time.toLocalDate().atStartOfDay(), ValueCoder.decode(LocalDateTime.class, "2021-03-14"));
     }
 
     @Test

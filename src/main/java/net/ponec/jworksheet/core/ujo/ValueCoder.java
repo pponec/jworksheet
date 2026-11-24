@@ -23,6 +23,8 @@ import java.io.File;
 import java.lang.reflect.Constructor;
 import java.math.BigDecimal;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.Locale;
 import java.util.StringTokenizer;
 import org.ujorm.core.Key;
@@ -46,6 +48,10 @@ public final class ValueCoder {
 
     /** A length of the ISO date text, sample: {@code 2021-03-14}. */
     private static final int DATE_LENGTH = 10;
+
+    /** A format of the timestamp, it is the format of the {@code java.util.Date} of the original
+     * {@code UjoCoder}, so the previous releases can read the data file still. */
+    private static final DateTimeFormatter TIMESTAMP_FORMAT = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss.SSS");
 
     /** A separator of the {@link Rectangle} and the {@link Dimension} items. */
     private static final String SHAPE_SEPARATOR = ",";
@@ -88,6 +94,9 @@ public final class ValueCoder {
         }
         if (value instanceof final Enum<?> result) {
             return result.name();
+        }
+        if (value instanceof final LocalDateTime result) {
+            return TIMESTAMP_FORMAT.format(result);
         }
         if (value instanceof final Rectangle r) {
             return r.x + SHAPE_SEPARATOR + r.y + SHAPE_SEPARATOR + r.width + SHAPE_SEPARATOR + r.height;
@@ -145,6 +154,12 @@ public final class ValueCoder {
             if (LocalDate.class == type) {
                 // The previous releases wrote a time of the day too, it is ignored:
                 return LocalDate.parse(text.length() > DATE_LENGTH ? text.substring(0, DATE_LENGTH) : text);
+            }
+            if (LocalDateTime.class == type) {
+                // A date without the time was written by the release 2.00-SNAPSHOT:
+                return text.length() > DATE_LENGTH
+                        ? LocalDateTime.parse(text, TIMESTAMP_FORMAT)
+                        : LocalDate.parse(text).atStartOfDay();
             }
             if (Color.class.isAssignableFrom(type)) {
                 return new Color(Integer.parseInt(text, 16));

@@ -55,7 +55,7 @@ import net.ponec.jworksheet.bo.TaskType;
 import net.ponec.jworksheet.bo.WorkDay;
 import net.ponec.jworksheet.bo.WorkSpace;
 import net.ponec.jworksheet.bo.item.Time;
-import java.time.LocalDate;
+import java.time.LocalDateTime;
 import net.ponec.jworksheet.core.ApplContext;
 import net.ponec.jworksheet.core.Version;
 import net.ponec.jworksheet.gui.component.CheckBoxRenderer;
@@ -304,7 +304,7 @@ public final class JWorkSheet extends TopFrame {
                                 browse(APPL_HOMEPAGE + "#download");
                                 break;
                             case 1:
-                                applContext.getWorkSpace().setCheckReleaseDate(LocalDate.now().plusDays(1));
+                                applContext.getWorkSpace().setCheckReleaseDate(LocalDateTime.now().plusHours(1));
                                 break;
                             case 2:
                                 Version version = applContext.getParameters().getWebRelease();

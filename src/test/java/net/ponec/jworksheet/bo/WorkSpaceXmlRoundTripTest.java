@@ -20,9 +20,9 @@ import net.ponec.jworksheet.bo.meta.MetaEvent;
 import net.ponec.jworksheet.core.ujo.Keys;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
 import net.ponec.jworksheet.bo.item.Time;
-import java.time.LocalDate;
 import net.ponec.jworksheet.core.Version;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
@@ -60,9 +60,9 @@ public class WorkSpaceXmlRoundTripTest extends XmlTestSupport {
         @Test
         @DisplayName("A2) All the scalar attributes survive the round trip")
         public void allScalarAttributes() {
-            final LocalDate created = LocalDate.of(2021, 3, 14);
-            final LocalDate archived = LocalDate.of(2021, 3, 13);
-            final LocalDate checkDate = LocalDate.of(2022, 1, 1);
+            final LocalDateTime created = LocalDateTime.of(2021, 3, 14, 11, 51, 31, 634_000_000);
+            final LocalDateTime archived = LocalDateTime.of(2021, 3, 13, 0, 0);
+            final LocalDateTime checkDate = LocalDateTime.of(2022, 1, 1, 1, 0);
 
             final WorkSpace workSpace = new WorkSpace();
             workSpace.setVersion(new Version("1.00"));

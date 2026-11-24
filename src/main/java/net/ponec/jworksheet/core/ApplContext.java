@@ -35,6 +35,7 @@ import static java.nio.charset.StandardCharsets.UTF_8;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.Collections;
 import java.util.List;
 import java.util.Locale;
@@ -58,7 +59,6 @@ import net.ponec.jworksheet.bo.TaskType;
 import net.ponec.jworksheet.bo.WorkDay;
 import net.ponec.jworksheet.bo.WorkSpace;
 import net.ponec.jworksheet.bo.item.Time;
-import java.time.LocalDate;
 import net.ponec.jworksheet.gui.JWorkSheet;
 import net.ponec.jworksheet.module.ModuleApi;
 import net.ponec.jworksheet.report.MetaReport;
@@ -96,6 +96,11 @@ public class ApplContext implements TableModelListener, Runnable, JwsContext {
 
     /** A temporarry extension */
     public static final String EXTENSION_TMP = ".tmp";
+    /** A name prefix of the temporary data file. */
+    private static final String PREFIX_DATA_TMP = "data";
+    /** A name of the temporary data file created by the {@link #getDataFileTemp()} method. */
+    private static final java.util.regex.Pattern DATA_TMP_NAME = java.util.regex.Pattern.compile
+            (PREFIX_DATA_TMP + "\\d+" + java.util.regex.Pattern.quote(EXTENSION_TMP));
 
     public static final String MODULE_ENTRY = "META-INF/JWS-MODULE.MF";
 
@@ -159,9 +164,9 @@ public class ApplContext implements TableModelListener, Runnable, JwsContext {
             }
         }
 
-        deleteTempFiles();
         saveStyleFiles();
         loadParameters();
+        deleteTempFiles(); // The parameters are required to find the data directory
 
         final File dataFile   = getDataFile();
         final File backupFile = getDataFileBackup();
@@ -205,7 +210,7 @@ public class ApplContext implements TableModelListener, Runnable, JwsContext {
         // Backup an Original File, if parsing and loading was successful.
         if (isTimeToBackup() && dataFile.exists()) try {
             ApplTools.copy(dataFile, backupFile);
-            workSpace.setArchived(LocalDate.now());
+            workSpace.setArchived(LocalDateTime.now());
         } catch (Throwable e) {
             LOGGER.log(Level.WARNING, "Can't create backup", e);
         }
@@ -250,20 +255,20 @@ public class ApplContext implements TableModelListener, Runnable, JwsContext {
      * <br>WARNING: The method must be called allways, because it can initialize a MetaWorkSpace.archived property.
      */
     private boolean isTimeToBackup() {
-        final LocalDate today = LocalDate.now();
-        final LocalDate archived = workSpace.getArchived();
+        final LocalDateTime now = LocalDateTime.now();
+        final LocalDateTime archived = workSpace.getArchived();
         if (archived == null) {
-            workSpace.setArchived(today);
+            workSpace.setArchived(now);
             return false;
         }
-        return today.isAfter(archived) && !isDataRestored();
+        return now.toLocalDate().isAfter(archived.toLocalDate()) && !isDataRestored();
     }
 
     /** Save data into file(s) */
     public synchronized void saveData(boolean includeParams) {
         try {
             // WorkSpace attributes
-            workSpace.setCreated(LocalDate.now());
+            workSpace.setCreated(LocalDateTime.now());
             workSpace.setVersion(JWorkSheet.APPL_VERSION);
             workSpace.setUsername(getParameters().getUsername());
 
@@ -411,15 +416,27 @@ public class ApplContext implements TableModelListener, Runnable, JwsContext {
              ;
     }
 
-    /** Data File for a temporarry usage. */
+    /** Data File for a temporarry usage.
+     * <p>The file is created in the directory of the data file, so it can replace the data file
+     * by an atomic move - a move between two file systems can't be atomic. */
     @Override
     public File getDataFileTemp() throws IOException {
-        return File.createTempFile("data", EXTENSION_TMP, getConfigFile().getParentFile());
+        return File.createTempFile(PREFIX_DATA_TMP, EXTENSION_TMP, getDataFile().getAbsoluteFile().getParentFile());
     }
 
-    /** Delete all temporarry files from a Config Directory. */
+    /** Delete all temporarry files from a Config Directory and the temporary data files
+     * from the directory of the data file. A foreign file of the data directory is never removed. */
     public void deleteTempFiles() {
-        final File[] files = getConfigDir().listFiles((dir, name) -> name.endsWith(EXTENSION_TMP));
+        deleteFiles(getConfigDir(), name -> name.endsWith(EXTENSION_TMP));
+        final File dataDir = getDataFile().getAbsoluteFile().getParentFile();
+        if (dataDir != null && !dataDir.equals(getConfigDir().getAbsoluteFile())) {
+            deleteFiles(dataDir, name -> DATA_TMP_NAME.matcher(name).matches());
+        }
+    }
+
+    /** Deletes the files of the directory whose name is accepted by the filter. */
+    private static void deleteFiles(final File dir, final java.util.function.Predicate<String> filter) {
+        final File[] files = dir.listFiles((d, name) -> filter.test(name));
         if (files != null) {
             for (File file : files) {
                 file.delete();

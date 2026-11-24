@@ -16,10 +16,15 @@
 
 package net.ponec.jworksheet.core.ujo;
 
+import java.awt.Dimension;
+import java.awt.Point;
+import java.awt.Rectangle;
 import java.lang.invoke.MethodType;
 import java.lang.reflect.Field;
 import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
+import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
@@ -166,11 +171,37 @@ public final class Keys {
      * instance of the domain class - the field initializers are the single source of the truth.
      * The prototype is created lazily and cached, so a dynamic default (a system locale
      * or a system login) is evaluated exactly once.
-     * <p><strong>The value is shared</strong> by all the callers, so a mutable value
-     * (a {@code Rectangle}, a {@code Date} or a {@code List}) must not be modified,
-     * otherwise the default value changes for the whole application. */
+     * <p>A mutable value (a {@code Rectangle}, a {@code Dimension}, a {@code Date} or a {@code List})
+     * is provided as a copy, so a caller can assign it to a domain object and modify it safely
+     * - the default value of the application never changes. */
+    @SuppressWarnings("unchecked")
     public static <D, V> V defaultOf(final Key<D, V> key) {
+        return (V) copyOfMutable(sharedDefaultOf(key));
+    }
+
+    /** Returns the default value from the shared prototype without any copy, for reading only. */
+    private static <D, V> V sharedDefaultOf(final Key<D, V> key) {
         return key.getValue(prototypeOf(key.domainClass()));
+    }
+
+    /** Returns a copy of a known mutable value, otherwise the original (immutable) value. */
+    private static Object copyOfMutable(final Object value) {
+        if (value instanceof final Rectangle r) {
+            return new Rectangle(r);
+        }
+        if (value instanceof final Dimension d) {
+            return new Dimension(d);
+        }
+        if (value instanceof final Point p) {
+            return new Point(p);
+        }
+        if (value instanceof final Date d) {
+            return d.clone();
+        }
+        if (value instanceof final List<?> list) {
+            return new ArrayList<>(list);
+        }
+        return value;
     }
 
     /** Has the domain object the default value of the key? */
@@ -180,7 +211,7 @@ public final class Keys {
 
     /** Is the value equal to the default value of the key? */
     public static boolean isDefaultValue(final Key<?, ?> key, final Object value) {
-        return Objects.equals(value, defaultOf(key));
+        return Objects.equals(value, sharedDefaultOf(key));
     }
 
     /** Returns a shared prototype of the domain class to read the default values from. */

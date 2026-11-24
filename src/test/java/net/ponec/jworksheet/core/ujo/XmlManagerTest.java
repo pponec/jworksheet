@@ -51,6 +51,20 @@ public class XmlManagerTest {
     }
 
     @Test
+    @DisplayName("An invalid value is skipped, the rest of the document is loaded")
+    public void invalidValueIsSkipped() {
+        final String created = Keys.nameOf(MetaWorkSpace.created);
+        final String name = Keys.nameOf(MetaWorkSpace.username);
+        final WorkSpace result = parse("<body>"
+                + "<" + created + ">not-a-date</" + created + ">"
+                + "<" + name + ">Pavel</" + name + ">"
+                + "</body>");
+
+        assertNull(result.getCreated());
+        assertEquals("Pavel", result.getUsername());
+    }
+
+    @Test
     @DisplayName("The names of the elements are case sensitive")
     public void elementNameIsCaseSensitive() {
         final String name = Keys.nameOf(MetaWorkSpace.username);

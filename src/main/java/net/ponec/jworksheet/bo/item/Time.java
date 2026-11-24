@@ -24,7 +24,7 @@ import net.ponec.jworksheet.core.*;
 import org.jetbrains.annotations.NotNull;
 
 /**
- * Time
+ * Time - an immutable value, so the instance can be shared by more events.
  * <p>The value is serialized by the {@code toString()} method and restored by the
  * constructor with a single {@link String} argument, see the {@code ValueCoder} class.
  * @author Pavel Ponec
@@ -39,7 +39,7 @@ public class Time implements Comparable<Time>, Serializable {
     public static int VALUE_MAX = 24*60;
 
     /** minutes from 0 to 60*24-1 */
-    private short minutes = 0;
+    private final short minutes;
 
     /**
      * Creates a new instance of Time
@@ -62,14 +62,14 @@ public class Time implements Comparable<Time>, Serializable {
         StringTokenizer st = new StringTokenizer(time, SEPARATOR);
         int hourse = Integer.parseInt(st.nextToken());
         int minute = Integer.parseInt(st.nextToken());
-        setTime(hourse, minute);
+        this.minutes = valid(hourse * 60 + minute);
     }
 
     /**
      * Creates a new instance of a System Time.
      */
     public Time(int minutes) {
-        setTime(minutes);
+        this.minutes = valid(minutes);
     }
 
 
@@ -77,25 +77,13 @@ public class Time implements Comparable<Time>, Serializable {
      * Creates a new instance of a System Time.
      */
     public Time(boolean systemTime) {
-        if (systemTime) {
-            setTimeFromSystem();
-        }
+        this(systemTime ? systemMinutes() : 0);
     }
 
-    /** Assign a system time. */
-    public void setTimeFromSystem() {
-        Calendar cal = Calendar.getInstance();
-        setTime( cal.get(Calendar.HOUR_OF_DAY), cal.get(Calendar.MINUTE));
-    }
-
-    public void setTime(int hourse, int minute) {
-        final int $mins  = hourse * 60 + minute;
-        setTime($mins);
-    }
-
-    public void setTime(int minutes) {
-        valid(minutes);
-        this.minutes = (short) minutes;
+    /** Returns minutes of the current system time. */
+    private static int systemMinutes() {
+        final Calendar cal = Calendar.getInstance();
+        return cal.get(Calendar.HOUR_OF_DAY) * 60 + cal.get(Calendar.MINUTE);
     }
 
     /** Returns Time in minutes. */
@@ -103,23 +91,14 @@ public class Time implements Comparable<Time>, Serializable {
         return minutes;
     }
 
-    protected void valid(int minutes) {
+    /** Returns the valid minutes, or throws an exception. */
+    protected static short valid(int minutes) {
         if (minutes<VALUE_MIN
         ||  minutes>VALUE_MAX
         ){
             throw new MessageException("Time is out of range: " + (minutes/60) + SEPARATOR + (minutes % 60)  );
         }
-    }
-
-    public void addMinute(int minutes) {
-        int result = this.minutes += minutes;
-        valid(result);
-        this.minutes = (short) result;
-    }
-
-    public void addHour(float aHours) {
-        int hours   = (int)   aHours ;
-        int minutes = (int) ((aHours - hours) * 60f);
+        return (short) minutes;
     }
 
     /** Result [minutes]: this - time. */

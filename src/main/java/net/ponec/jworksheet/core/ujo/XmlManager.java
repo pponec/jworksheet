@@ -23,6 +23,8 @@ import java.io.InputStream;
 import java.io.Writer;
 import java.nio.file.Files;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import java.util.regex.Pattern;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
@@ -61,6 +63,8 @@ public final class XmlManager {
     /** Characters which are not allowed by the XML 1.0 specification. */
     private static final Pattern INVALID_CHARS = Pattern.compile
             ("[^\\t\\n\\r\\x20-\\uD7FF\\uE000-\\uFFFD\\x{10000}-\\x{10FFFF}]");
+
+    private static final Logger LOGGER = Logger.getLogger(XmlManager.class.getName());
 
     private XmlManager() {
     }
@@ -129,7 +133,8 @@ public final class XmlManager {
     // ------------------------ IMPORT ------------------------
 
     /** Reads a domain object from an XML document. The name of the root element is not checked,
-     * an element of an unknown name (the names are case sensitive) is skipped including its children. */
+     * an element of an unknown name (the names are case sensitive) is skipped including its children.
+     * An invalid value of a known element is logged and skipped, the key keeps its default value. */
     public static <T extends DomainObject> T parseXML(final InputStream is, final Class<T> rootType) {
         try {
             final DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
@@ -164,8 +169,12 @@ public final class XmlManager {
                         ((List<Object>) key.getValue(result)).add(read(child, Keys.itemTypeOf(key).asSubclass(DomainObject.class)));
                     } else if (Keys.isDomain(key.type())) {
                         key.setValue(result, read(child, key.type().asSubclass(DomainObject.class)));
-                    } else {
+                    } else try {
                         key.setValue(result, ValueCoder.decode(key, child.getTextContent()));
+                    } catch (RuntimeException e) {
+                        // A single invalid value must not discard the whole document, see the BundleManager:
+                        LOGGER.log(Level.WARNING, "Invalid value of the element " + Keys.fullNameOf(key)
+                                + ": " + child.getTextContent(), e);
                     }
                 });
             }
