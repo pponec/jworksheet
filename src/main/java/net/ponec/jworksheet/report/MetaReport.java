@@ -25,35 +25,41 @@ import org.ujorm.tools.Check;
  * Report Description
  * @author Pavel Ponec
  */
-public class MetaReport implements Comparable<MetaReport> {
+public final class MetaReport implements Comparable<MetaReport> {
 
     /** Name or key */
-    private String title;
+    private final String title;
 
     /** Report class */
-    private Class<? extends Calculator>  typeClass;
+    private final Class<? extends Calculator> typeClass;
 
     /** XSL transformer */
-    private File xsl;
+    private final File xsl;
 
     /** XML data source */
-    private String dataFile;
+    private final String dataFile;
 
     /** Creates a new instance of MetaReport */
     public MetaReport(String title, Class<? extends Calculator> type) {
-        setTitle(title);
-        setTypeClass(type);
+        this(title, type, null, null);
     }
 
     /** Creates a new instance of MetaReport */
     public MetaReport(String title, File xsl, String dataType) {
-        if (Check.isEmpty(title)) {
-            title = xsl.getName();
-        }
+        this(Check.isEmpty(title) ? xsl.getName() : title, null, xsl, dataType);
+    }
 
-        setTitle(title);
-        setXSL(xsl);
-        setDataType(dataType);
+    /** Creates a new instance with all the attributes. */
+    private MetaReport(String title, Class<? extends Calculator> typeClass, File xsl, String dataFile) {
+        this.title = title;
+        this.typeClass = typeClass;
+        this.xsl = xsl;
+        this.dataFile = dataFile;
+    }
+
+    /** Returns a copy with a new title, this instance is unchanged. */
+    public MetaReport withTitle(String title) {
+        return new MetaReport(title, typeClass, xsl, dataFile);
     }
 
     /** Report Title */
@@ -61,16 +67,8 @@ public class MetaReport implements Comparable<MetaReport> {
         return title;
     }
 
-    public void setTitle(String title) {
-        this.title = title;
-    }
-
     public Class<? extends Calculator> getTypeClass() {
         return typeClass;
-    }
-
-    public void setTypeClass(Class<? extends Calculator> typeClass) {
-        this.typeClass = typeClass;
     }
 
     public File getXSL() {
@@ -82,25 +80,19 @@ public class MetaReport implements Comparable<MetaReport> {
         return xsl!=null ? xsl.getName() : "" ;
     }
 
-    public void setXSL(File xsl) {
-        this.xsl = xsl;
-    }
-
     public String getDataFile() {
         return dataFile;
     }
 
-    /** Plaing file name. */
-    public void setDataType(String dataFile) {
-        this.dataFile = dataFile;
-    }
-
     /** Returns title */
+    @Override
     public String toString() {
         return title;
     }
 
-    /** Compara object by title. */
+    /** Compare objects by the name of the XSL file.
+     * Note: the order is not consistent with the equals(), two reports of the same file are different objects. */
+    @Override
     public int compareTo(MetaReport param) {
         final int result = this.getXslName().compareToIgnoreCase(param.getXslName());
         return result;

@@ -136,9 +136,8 @@ public class ReportDialog extends TopDialog implements java.awt.event.ActionList
  // TODO:       model.addElement(new MetaReport(getTitle("AttendanceReport"     ), ReportAttendance.class));
 
         for (MetaReport report : applContext.getMetaReports()) {
-            String title = report.getTitle();
-            report.setTitle(getTitle(title));
-            model.addElement(report);
+            // A copy keeps the original (untranslated) title of the shared report:
+            model.addElement(report.withTitle(getTitle(report.getTitle())));
         }
 
         return model;

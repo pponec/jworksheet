@@ -20,12 +20,15 @@ import java.util.Locale;
 import java.util.StringTokenizer;
 
 /**
- * Code version.
+ * Code version - an immutable value.
+ * <p>The items are compared case insensitive, the first item by its length too,
+ * so the {@link #equals(Object)} and the {@link #hashCode()} follow the same rule.
  * @author Pavel Ponec
  */
-final public class Version implements Comparable<Version>{
+public final class Version implements Comparable<Version> {
 
-    final private String[] version;
+    /** The items of the version, the array is never exposed. */
+    private final String[] version;
 
     public Version(final String code) {
         StringTokenizer st = new StringTokenizer(code, ".");
@@ -75,7 +78,8 @@ final public class Version implements Comparable<Version>{
     }
 
     /** Compare to antother version. */
-    public int compareTo(Version parm) {
+    @Override
+    public int compareTo(final Version parm) {
         int max = Math.min
                 ( this.version.length
                 , parm.version.length
@@ -92,9 +96,14 @@ final public class Version implements Comparable<Version>{
     }
 
     @Override
-    @SuppressWarnings("EqualsWhichDoesntCheckParameterClass")
-    public boolean equals(Object obj) {
-        return compareTo((Version)obj)==0;
+    public boolean equals(final Object obj) {
+        return obj instanceof final Version other && compareTo(other) == 0;
+    }
+
+    /** The hash is consistent with the case insensitive {@link #compareTo(Version)}. */
+    @Override
+    public int hashCode() {
+        return toString().toUpperCase(Locale.ENGLISH).hashCode();
     }
 
 }

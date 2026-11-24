@@ -21,6 +21,7 @@ import java.io.Serializable;
 import java.util.Calendar;
 import java.util.StringTokenizer;
 import net.ponec.jworksheet.core.*;
+import lombok.EqualsAndHashCode;
 import org.jetbrains.annotations.NotNull;
 
 /**
@@ -29,14 +30,15 @@ import org.jetbrains.annotations.NotNull;
  * constructor with a single {@link String} argument, see the {@code ValueCoder} class.
  * @author Pavel Ponec
  */
-public class Time implements Comparable<Time>, Serializable {
+@EqualsAndHashCode
+public final class Time implements Comparable<Time>, Serializable {
 
     /** Separator */
     public static final String SEPARATOR = ":";
 
 
-    public static int VALUE_MIN = 0;
-    public static int VALUE_MAX = 24*60;
+    public static final int VALUE_MIN = 0;
+    public static final int VALUE_MAX = 24*60;
 
     /** minutes from 0 to 60*24-1 */
     private final short minutes;
@@ -92,7 +94,7 @@ public class Time implements Comparable<Time>, Serializable {
     }
 
     /** Returns the valid minutes, or throws an exception. */
-    protected static short valid(int minutes) {
+    private static short valid(int minutes) {
         if (minutes<VALUE_MIN
         ||  minutes>VALUE_MAX
         ){
@@ -127,11 +129,6 @@ public class Time implements Comparable<Time>, Serializable {
         result.append(minute);
 
         return result.toString();
-    }
-
-    @Override
-    public boolean equals(Object obj) {
-        return this.minutes == ((Time)obj).minutes;
     }
 
     @Override
