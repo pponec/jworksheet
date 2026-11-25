@@ -16,7 +16,6 @@
 
 package net.ponec.jworksheet.core.ujo;
 
-import net.ponec.jworksheet.bo.meta.MetaTaskType;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -25,6 +24,7 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.*;
+import net.ponec.jworksheet.core.ujo.MetaAliases.TT;
 
 /** The comparator of the domain objects used by the tables and the reports.
  * @author Pavel Ponec
@@ -46,7 +46,7 @@ public class UjoComparatorTest {
                 , newTask(1, "Charlie")
                 , newTask(2, "Alfa")));
 
-        UjoComparator.<TaskType>newInstance(MetaTaskType.id, MetaTaskType.descr).sort(list);
+        UjoComparator.<TaskType>newInstance(TT.id, TT.descr).sort(list);
 
         assertEquals("Charlie", list.get(0).getDescr());
         assertEquals("Alfa", list.get(1).getDescr());
@@ -56,7 +56,7 @@ public class UjoComparatorTest {
     @Test
     @DisplayName("An undefined value is the first one")
     public void undefinedValueIsFirst() {
-        final UjoComparator<TaskType> comparator = UjoComparator.newInstance(MetaTaskType.descr);
+        final UjoComparator<TaskType> comparator = UjoComparator.newInstance(TT.descr);
         final TaskType undefined = newTask(1, null); // The setter stores an empty text
         undefined.setDescr(null);
 
@@ -68,7 +68,7 @@ public class UjoComparatorTest {
     @Test
     @DisplayName("The equals() method compares the selected keys only")
     public void equalsBySelectedKeys() {
-        final UjoComparator<TaskType> comparator = UjoComparator.newInstance(MetaTaskType.id);
+        final UjoComparator<TaskType> comparator = UjoComparator.newInstance(TT.id);
 
         assertTrue(comparator.equals(newTask(1, "Alfa"), newTask(1, "Bravo")), "The same identifier");
         assertFalse(comparator.equals(newTask(1, "Alfa"), newTask(2, "Alfa")), "A different identifier");
@@ -78,7 +78,7 @@ public class UjoComparatorTest {
     @DisplayName("A comparison of the equal items provides the zero")
     public void equalItems() {
         final UjoComparator<TaskType> comparator = UjoComparator
-                .newInstance(MetaTaskType.id, MetaTaskType.descr);
+                .newInstance(TT.id, TT.descr);
         assertEquals(0, comparator.compare(newTask(7, "Alfa"), newTask(7, "Alfa")));
     }
 }

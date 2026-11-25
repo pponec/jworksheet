@@ -23,11 +23,11 @@ import java.util.List;
 import lombok.Getter;
 import lombok.Setter;
 import java.time.LocalDate;
-import net.ponec.jworksheet.bo.meta.MetaWorkDay;
 import net.ponec.jworksheet.core.ujo.ExportAction;
 import net.ponec.jworksheet.core.ujo.Exportable;
 import org.ujorm.annotation.Domain;
 import org.ujorm.core.Key;
+import net.ponec.jworksheet.core.ujo.MetaAliases.WD;
 
 /**
  * One Work Day
@@ -59,7 +59,7 @@ public class WorkDay implements Comparable<WorkDay>, Exportable, DomainObject {
     /** A day off flag is exported for a true value only. */
     @Override
     public boolean isExportable(final ExportAction action, final Key<?,?> key, final Object value) {
-        if (action == ExportAction.XML && key == MetaWorkDay.dayOff) {
+        if (action == ExportAction.XML && key == WD.dayOff) {
             return Boolean.TRUE.equals(value);
         }
         return true;

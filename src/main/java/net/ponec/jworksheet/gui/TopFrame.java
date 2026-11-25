@@ -18,7 +18,6 @@ package net.ponec.jworksheet.gui;
 
 import net.ponec.jworksheet.core.ujo.Keys;
 
-import net.ponec.jworksheet.bo.meta.MetaParameters;
 
 import java.io.IOException;
 import java.net.URI;
@@ -35,6 +34,7 @@ import net.ponec.jworksheet.core.ApplTools;
 import net.ponec.jworksheet.core.MessageException;
 import net.ponec.jworksheet.bo.Parameters;
 import org.ujorm.tools.Check;
+import net.ponec.jworksheet.core.ujo.MetaAliases.PA;
 
 /**
  * A TopFrame.
@@ -132,7 +132,7 @@ public class TopFrame extends JFrame {
             try {
                 uri = new URI(url);
                 browser = applContext.getParameters().getSystemBrowserPath();
-                if (Keys.defaultOf(MetaParameters.systemBrowserPath).equals(browser)) {
+                if (Keys.defaultOf(PA.systemBrowserPath).equals(browser)) {
                     browser = "";
                 }
                 ApplTools.browse(uri, browser);
@@ -147,7 +147,7 @@ public class TopFrame extends JFrame {
             }
         } catch (Throwable e) {
             String msg = "<html>Can't open link: " + url
-            + "<br>Try to modify a parameter: " + MetaParameters.systemBrowserPath + "</html>"
+            + "<br>Try to modify a parameter: " + PA.systemBrowserPath + "</html>"
             ;
             showMessage(msg, e);
         }

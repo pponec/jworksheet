@@ -16,7 +16,6 @@
 
 package net.ponec.jworksheet.core.ujo;
 
-import net.ponec.jworksheet.bo.meta.MetaParameters;
 
 import java.awt.Rectangle;
 import java.io.File;
@@ -30,6 +29,7 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.io.TempDir;
 
 import static org.junit.jupiter.api.Assertions.*;
+import net.ponec.jworksheet.core.ujo.MetaAliases.PA;
 
 /** The configuration file of the application.
  * @author Pavel Ponec
@@ -88,8 +88,8 @@ public class BundleManagerTest {
         final Parameters result = BundleManager.load(file, Parameters.class);
 
         assertTrue(result.isHideButtonIcons(), "The stored value");
-        assertEquals(Keys.defaultOf(MetaParameters.workingHours), result.getWorkingHours());
-        assertEquals(Keys.defaultOf(MetaParameters.exitEventDescription), result.getExitEventDescription());
+        assertEquals(Keys.defaultOf(PA.workingHours), result.getWorkingHours());
+        assertEquals(Keys.defaultOf(PA.exitEventDescription), result.getExitEventDescription());
     }
 
     @Test
@@ -101,8 +101,8 @@ public class BundleManagerTest {
         final Parameters result = BundleManager.load(file, Parameters.class);
 
         assertTrue(result.isHideButtonIcons(), "The valid value");
-        assertEquals(Keys.defaultOf(MetaParameters.workingHours), result.getWorkingHours());
-        assertEquals(Keys.defaultOf(MetaParameters.dateMainFormat), result.getDateMainFormat());
+        assertEquals(Keys.defaultOf(PA.workingHours), result.getWorkingHours());
+        assertEquals(Keys.defaultOf(PA.dateMainFormat), result.getDateMainFormat());
     }
 
     @Test

@@ -21,11 +21,11 @@ import org.ujorm.annotation.UColumn;
 import lombok.Getter;
 import lombok.Setter;
 import net.ponec.jworksheet.bo.item.Time;
-import net.ponec.jworksheet.bo.meta.MetaEvent;
 import net.ponec.jworksheet.core.ujo.ExportAction;
 import net.ponec.jworksheet.core.ujo.Exportable;
 import org.ujorm.annotation.Domain;
 import org.ujorm.core.Key;
+import net.ponec.jworksheet.core.ujo.MetaAliases.EV;
 
 /** An Event of the Work Day.
  * <p>The identifiers {@code projectId} and {@code taskId} are persistent references
@@ -130,11 +130,11 @@ public class Event implements Exportable, DomainObject {
 
     /** Is the project or the task of the key finished? */
     public boolean isFinished(final Key<Event,?> key) {
-        if (MetaEvent.project == key) {
+        if (EV.project == key) {
             return project != null && project.isFinished();
         }
-        if (MetaEvent.task == key) {
-            return isFinished(MetaEvent.project) || task != null && task.isFinished();
+        if (EV.task == key) {
+            return isFinished(EV.project) || task != null && task.isFinished();
         }
         return false;
     }
@@ -143,8 +143,8 @@ public class Event implements Exportable, DomainObject {
     @Override
     public boolean isExportable(final ExportAction action, final Key<?,?> key, final Object value) {
         if (action == ExportAction.XML) {
-            return key != MetaEvent.project
-                && key != MetaEvent.task;
+            return key != EV.project
+                && key != EV.task;
         }
         return true;
     }

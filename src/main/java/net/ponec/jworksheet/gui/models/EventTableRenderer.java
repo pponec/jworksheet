@@ -17,7 +17,6 @@
 package net.ponec.jworksheet.gui.models;
 
 import lombok.RequiredArgsConstructor;
-import net.ponec.jworksheet.bo.meta.MetaEvent;
 
 import java.awt.Color;
 import java.awt.Component;
@@ -31,6 +30,7 @@ import net.ponec.jworksheet.bo.Project;
 import net.ponec.jworksheet.core.ApplTools;
 import net.ponec.jworksheet.gui.component.*;
 import org.ujorm.core.Key;
+import net.ponec.jworksheet.core.ujo.MetaAliases.EV;
 
 /**
  * EventTableRenderer.
@@ -71,9 +71,9 @@ public class EventTableRenderer extends DefaultTableCellRenderer {
         Key column = table.getColumn(viewColumn);
         Event event = (Event) model.getRow(rowIndex);
         //
-        boolean projOrTask = column==MetaEvent.project || column==MetaEvent.task ;
+        boolean projOrTask = column==EV.project || column==EV.task ;
         boolean editable = (nimbus
-            ? (column==MetaEvent.time || column==MetaEvent.period)
+            ? (column==EV.time || column==EV.period)
             : !projOrTask  )
             && model.isCellEditable(rowIndex, column)
             ;
@@ -90,13 +90,13 @@ public class EventTableRenderer extends DefaultTableCellRenderer {
         );
         result.setBackground
         ( isSelected             ? aTable.getSelectionBackground()
-        : (column==MetaEvent.time) ? getColorOfEditableArea(rowIndex)
+        : (column==EV.time) ? getColorOfEditableArea(rowIndex)
         : editable               ? getColorOfEditableArea()
         : table.getBackground()
         );
         result.setHorizontalAlignment(isNumericalType(column) ? JLabel.RIGHT : JLabel.LEFT );
         
-        if (column==MetaEvent.period) {
+        if (column==EV.period) {
             /** Num Formatter */
             final String time = context.getParameters().formatTime((Short)value);
             result.setText(time);
@@ -107,8 +107,8 @@ public class EventTableRenderer extends DefaultTableCellRenderer {
     
     /** Return true, it column is nuberical type. */
     public boolean isNumericalType(Key property) {
-        if (property==MetaEvent.time  ) return true;
-        if (property==MetaEvent.period) return true;
+        if (property==EV.time  ) return true;
+        if (property==EV.period) return true;
         return false;
     }
     

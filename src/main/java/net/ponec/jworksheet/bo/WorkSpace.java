@@ -25,13 +25,13 @@ import java.util.List;
 import java.util.stream.Collectors;
 import lombok.Getter;
 import lombok.Setter;
-import net.ponec.jworksheet.bo.meta.MetaWorkSpace;
 import net.ponec.jworksheet.core.Version;
 import net.ponec.jworksheet.core.ujo.ExportAction;
 import net.ponec.jworksheet.core.ujo.Exportable;
 import net.ponec.jworksheet.gui.JWorkSheet;
 import org.ujorm.annotation.Domain;
 import org.ujorm.core.Key;
+import net.ponec.jworksheet.core.ujo.MetaAliases.WS;
 
 /**
  * This is a <strong>root</strong> of all persistent business objects.
@@ -193,7 +193,7 @@ public class WorkSpace implements Exportable, DomainObject {
     @Override
     public boolean isExportable(final ExportAction action, final Key<?,?> key, final Object value) {
         return action != ExportAction.XML
-            || MetaWorkSpace.days != key
+            || WS.days != key
             || !(value instanceof final WorkDay workDay)
             || !workDay.getEvents().isEmpty();
     }

@@ -18,12 +18,12 @@ package net.ponec.jworksheet.gui.models;
 
 import java.util.Locale;
 import net.ponec.jworksheet.bo.Parameters;
-import net.ponec.jworksheet.bo.meta.MetaParameters;
-import net.ponec.jworksheet.gui.models.meta.MetaUjoKeyRow;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.*;
+import net.ponec.jworksheet.core.ujo.MetaAliases.PA;
+import net.ponec.jworksheet.core.ujo.MetaAliases.UR;
 
 /** The parameter table edits a value by its text representation.
  * @author Pavel Ponec
@@ -46,13 +46,13 @@ public class SingleUjoTabModelTest {
         final Parameters parameters = new Parameters();
         final SingleUjoTabModel model = new SingleUjoTabModel(parameters);
 
-        final int hours = rowOf(model, MetaParameters.workingHours);
-        model.setValueAt("7.5", hours, MetaUjoKeyRow.value);
+        final int hours = rowOf(model, PA.workingHours);
+        model.setValueAt("7.5", hours, UR.value);
         assertEquals(7.5f, parameters.getWorkingHours());
-        assertEquals("7.5", model.getValueAt(hours, MetaUjoKeyRow.value));
+        assertEquals("7.5", model.getValueAt(hours, UR.value));
 
-        final int language = rowOf(model, MetaParameters.language);
-        model.setValueAt("cs-CZ", language, MetaUjoKeyRow.value);
+        final int language = rowOf(model, PA.language);
+        model.setValueAt("cs-CZ", language, UR.value);
         assertEquals(new Locale("cs", "CZ"), parameters.getLanguage());
     }
 
@@ -60,7 +60,7 @@ public class SingleUjoTabModelTest {
     @DisplayName("The hidden parameters have got no row")
     public void hiddenParameters() {
         final SingleUjoTabModel model = new SingleUjoTabModel(new Parameters());
-        assertThrows(IllegalArgumentException.class, () -> rowOf(model, MetaParameters.windowSize));
-        assertThrows(IllegalArgumentException.class, () -> rowOf(model, MetaParameters.sortProjColumn));
+        assertThrows(IllegalArgumentException.class, () -> rowOf(model, PA.windowSize));
+        assertThrows(IllegalArgumentException.class, () -> rowOf(model, PA.sortProjColumn));
     }
 }

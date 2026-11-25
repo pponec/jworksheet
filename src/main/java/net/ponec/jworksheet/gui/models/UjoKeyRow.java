@@ -22,9 +22,9 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.RequiredArgsConstructor;
 import net.ponec.jworksheet.core.ujo.Keys;
-import net.ponec.jworksheet.gui.models.meta.MetaUjoKeyRow;
 import org.ujorm.annotation.Domain;
 import org.ujorm.core.Key;
+import net.ponec.jworksheet.core.ujo.MetaAliases.UR;
 
 /**
  * A single row of a table which presents the keys of one domain object including their values.
@@ -73,7 +73,7 @@ public class UjoKeyRow implements DomainObject {
     }
 
     public void setIndex(final Integer index) {
-        throw new UnsupportedOperationException("Read only: " + MetaUjoKeyRow.index);
+        throw new UnsupportedOperationException("Read only: " + UR.index);
     }
 
     public String getName() {
@@ -81,7 +81,7 @@ public class UjoKeyRow implements DomainObject {
     }
 
     public void setName(final String name) {
-        throw new UnsupportedOperationException("Read only: " + MetaUjoKeyRow.name);
+        throw new UnsupportedOperationException("Read only: " + UR.name);
     }
 
     public Class getType() {
@@ -89,7 +89,7 @@ public class UjoKeyRow implements DomainObject {
     }
 
     public void setType(final Class type) {
-        throw new UnsupportedOperationException("Read only: " + MetaUjoKeyRow.type);
+        throw new UnsupportedOperationException("Read only: " + UR.type);
     }
 
     /** A simple name of the value type. */
@@ -102,7 +102,7 @@ public class UjoKeyRow implements DomainObject {
     }
 
     public void setTypeName(final String typeName) {
-        throw new UnsupportedOperationException("Read only: " + MetaUjoKeyRow.typeName);
+        throw new UnsupportedOperationException("Read only: " + UR.typeName);
     }
 
     /** Reads the value of the key from the domain object. */
@@ -126,7 +126,7 @@ public class UjoKeyRow implements DomainObject {
     }
 
     public void setDefaultValue(final Object defaultValue) {
-        throw new UnsupportedOperationException("Read only: " + MetaUjoKeyRow.defaultValue);
+        throw new UnsupportedOperationException("Read only: " + UR.defaultValue);
     }
 
     // ------------------------ TOOLS ------------------------

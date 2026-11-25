@@ -17,7 +17,6 @@
 package net.ponec.jworksheet.gui.models;
 
 import net.ponec.jworksheet.core.ujo.DomainObject;
-import net.ponec.jworksheet.gui.models.meta.MetaUjoKeyRow;
 
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -27,6 +26,7 @@ import net.ponec.jworksheet.core.ujo.Exportable;
 import net.ponec.jworksheet.core.ujo.Keys;
 import org.ujorm.core.Key;
 import net.ponec.jworksheet.core.ujo.ValueCoder;
+import net.ponec.jworksheet.core.ujo.MetaAliases.UR;
 
 /**
  * A table model which presents the keys of a single domain object, one key per a row.
@@ -67,13 +67,13 @@ public class SingleUjoTabModel extends UjoTableModel<UjoKeyRow> {
     /** Only the value is editable. */
     @Override
     public boolean isCellEditable(final int rowIndex, final Key column) {
-        return column == MetaUjoKeyRow.value;
+        return column == UR.value;
     }
 
     /** Set a value to a cell of table model. A text is decoded to the type of the presented key. */
     @Override
     public void setValueAt(final Object value, final int rowIndex, final Key column) {
-        if (column == MetaUjoKeyRow.value && value instanceof final String text) {
+        if (column == UR.value && value instanceof final String text) {
             final UjoKeyRow row = getRow(rowIndex);
             row.setValue(ValueCoder.decode(row.getKey(), text));
             fireTableCellUpdated(rowIndex, getColumnIndex(column));
@@ -85,7 +85,7 @@ public class SingleUjoTabModel extends UjoTableModel<UjoKeyRow> {
     /** The value and the default value are presented in a text format. */
     @Override
     public Object getValueAt(final int rowIndex, final Key column) {
-        if (column == MetaUjoKeyRow.value || column == MetaUjoKeyRow.defaultValue) {
+        if (column == UR.value || column == UR.defaultValue) {
             final UjoKeyRow row = getRow(rowIndex);
             return ValueCoder.encode(super.getValueAt(rowIndex, column));
         }

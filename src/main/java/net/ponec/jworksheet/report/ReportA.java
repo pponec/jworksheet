@@ -17,8 +17,6 @@
 
 package net.ponec.jworksheet.report;
 
-import net.ponec.jworksheet.bo.meta.MetaEvent;
-import net.ponec.jworksheet.report.meta.MetaTaskGroup;
 
 import java.io.IOException;
 import net.ponec.jworksheet.bo.Parameters;
@@ -27,6 +25,8 @@ import net.ponec.jworksheet.bo.Project;
 import net.ponec.jworksheet.bo.TaskType;
 import net.ponec.jworksheet.bo.WorkDay;
 import net.ponec.jworksheet.core.ujo.UjoComparator;
+import net.ponec.jworksheet.core.ujo.MetaAliases.EV;
+import net.ponec.jworksheet.core.ujo.MetaAliases.TG;
 
 /**
  * Standard report
@@ -42,13 +42,13 @@ public class ReportA extends SuperReport {
     protected void init() {
         if (groupSet==null) {
             UjoComparator<TaskGroup> comparator = createUjoComparator();
-            groupSet = new GroupSet(comparator, MetaEvent.period);
+            groupSet = new GroupSet(comparator, EV.period);
         }
     }
     
     /** Create Comparator */
     protected UjoComparator<TaskGroup> createUjoComparator() {
-        return UjoComparator.<TaskGroup>newInstance(MetaTaskGroup.project, MetaTaskGroup.task);
+        return UjoComparator.<TaskGroup>newInstance(TG.project, TG.task);
     }
     
     /** Create report */
@@ -81,8 +81,8 @@ public class ReportA extends SuperReport {
         int total = 0;
         
         sb.append("<tr>");
-        sb.append("<th align=\"left\">").append(getText(MetaEvent.project)).append("</th>");
-        sb.append("<th align=\"left\">").append(getText(MetaEvent.task)).append("</th>");
+        sb.append("<th align=\"left\">").append(getText(EV.project)).append("</th>");
+        sb.append("<th align=\"left\">").append(getText(EV.task)).append("</th>");
         sb.append("<th align=\"right\">").append(getText("Time[hours]")).append("</th>");
         sb.append("</tr>");
         

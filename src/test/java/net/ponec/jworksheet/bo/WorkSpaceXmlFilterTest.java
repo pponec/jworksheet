@@ -16,7 +16,6 @@
 
 package net.ponec.jworksheet.bo;
 
-import net.ponec.jworksheet.bo.meta.MetaEvent;
 
 import net.ponec.jworksheet.core.Version;
 import org.junit.jupiter.api.BeforeEach;
@@ -24,6 +23,7 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.*;
+import net.ponec.jworksheet.core.ujo.MetaAliases.EV;
 
 /** The XML export rules implemented by the methods
  * {@code readAuthorization()}, {@code readValue()} and {@code writeValue()}
@@ -73,8 +73,8 @@ public class WorkSpaceXmlFilterTest extends XmlTestSupport {
         assertEquals(Integer.valueOf(1), event.getTaskId(), "The identifier of the task");
 
         // ... and the keys provide the same values:
-        assertEquals(Integer.valueOf(3), MetaEvent.projectId.getValue(event));
-        assertEquals(Integer.valueOf(1), MetaEvent.taskId.getValue(event));
+        assertEquals(Integer.valueOf(3), EV.projectId.getValue(event));
+        assertEquals(Integer.valueOf(1), EV.taskId.getValue(event));
 
         // A cleared reference clears its identifier as well:
         event.setTask(null);

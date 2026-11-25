@@ -16,9 +16,9 @@
 
 package net.ponec.jworksheet.report;
 
-import net.ponec.jworksheet.report.meta.MetaTaskGroup;
 
 import net.ponec.jworksheet.core.ujo.UjoComparator;
+import net.ponec.jworksheet.core.ujo.MetaAliases.TG;
 
 /**
  * Day Report with a project resolution.
@@ -29,7 +29,7 @@ public class ReportTabProj extends ReportTab {
     /** Create Comparator */
     @Override
     protected UjoComparator<TaskGroup> createUjoComparator() {
-        return UjoComparator.<TaskGroup>newInstance(MetaTaskGroup.project);
+        return UjoComparator.<TaskGroup>newInstance(TG.project);
     }
 
 }

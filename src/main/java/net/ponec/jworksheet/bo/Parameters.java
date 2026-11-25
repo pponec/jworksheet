@@ -29,7 +29,6 @@ import java.util.Locale;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.Setter;
-import net.ponec.jworksheet.bo.meta.MetaParameters;
 import net.ponec.jworksheet.core.*;
 import net.ponec.jworksheet.core.ujo.ExportAction;
 import net.ponec.jworksheet.core.ujo.Exportable;
@@ -39,6 +38,7 @@ import net.ponec.jworksheet.gui.JWorkSheet;
 import org.ujorm.annotation.Domain;
 import org.ujorm.core.Key;
 import org.ujorm.tools.Check;
+import net.ponec.jworksheet.core.ujo.MetaAliases.PA;
 
 /**
  * Parameters of the application.
@@ -263,9 +263,9 @@ public class Parameters implements Exportable, DomainObject {
         return switch (action) {
             // A default value is not stored to the configuration file:
             case RESOURCE_BUNDLE -> !Keys.isDefaultValue(key, value);
-            case TABLE_SHOW -> key != MetaParameters.sortProjColumn
-                            && key != MetaParameters.windowSize
-                            && (key != MetaParameters.dataFilePath || !Keys.isDefaultValue(key, value));
+            case TABLE_SHOW -> key != PA.sortProjColumn
+                            && key != PA.windowSize
+                            && (key != PA.dataFilePath || !Keys.isDefaultValue(key, value));
             default -> true;
         };
     }

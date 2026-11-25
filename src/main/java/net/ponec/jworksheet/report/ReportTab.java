@@ -17,9 +17,6 @@
 
 package net.ponec.jworksheet.report;
 
-import net.ponec.jworksheet.bo.meta.MetaEvent;
-import net.ponec.jworksheet.bo.meta.MetaParameters;
-import net.ponec.jworksheet.report.meta.MetaTaskGroup;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -37,6 +34,9 @@ import net.ponec.jworksheet.bo.Parameters;
 import net.ponec.jworksheet.bo.WorkDay;
 import java.time.LocalDate;
 import net.ponec.jworksheet.core.ujo.UjoComparator;
+import net.ponec.jworksheet.core.ujo.MetaAliases.EV;
+import net.ponec.jworksheet.core.ujo.MetaAliases.PA;
+import net.ponec.jworksheet.core.ujo.MetaAliases.TG;
 
 /**
  * Day Report with a task resolution.
@@ -71,14 +71,14 @@ public class ReportTab extends SuperReport {
     
     /** Create Comparator */
     protected UjoComparator<TaskGroup> createUjoComparator() {
-        return UjoComparator.<TaskGroup>newInstance(MetaTaskGroup.project, MetaTaskGroup.task);
+        return UjoComparator.<TaskGroup>newInstance(TG.project, TG.task);
     }
     
     private void saveDay() {
         LocalDate ymd = lastWorkDay.getDate();
         
         report = new ReportA();
-        GroupSet groupSet = new GroupSet(createUjoComparator(), MetaEvent.period);
+        GroupSet groupSet = new GroupSet(createUjoComparator(), EV.period);
         groupSet.setShowEmptyProject(true);
         report.setGroupSet(groupSet);
         
@@ -116,7 +116,7 @@ public class ReportTab extends SuperReport {
         final Function<LocalDate, String> exportFormat = applContext.dateFormatter
                 (applContext.getParameters().getDateReportFormat2());
         final Function<LocalDate, String> tipFormat = applContext.dateFormatter
-                (applContext.getParameters().getDateFormat(MetaParameters.dateReportFormat, applContext));
+                (applContext.getParameters().getDateFormat(PA.dateReportFormat, applContext));
         
         // Header ---
         sb.append("<tr>\n<th>");

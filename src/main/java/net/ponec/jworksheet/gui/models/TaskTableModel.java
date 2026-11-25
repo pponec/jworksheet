@@ -17,11 +17,11 @@
 
 package net.ponec.jworksheet.gui.models;
 
-import net.ponec.jworksheet.bo.meta.MetaTaskType;
 
 import net.ponec.jworksheet.bo.TaskType;
 import net.ponec.jworksheet.core.ApplContext;
 import org.ujorm.core.Key;
+import net.ponec.jworksheet.core.ujo.MetaAliases.TT;
 
 
 
@@ -66,17 +66,17 @@ public class TaskTableModel extends UjoTableModel<TaskType> {
     @Override
     @SuppressWarnings("unchecked")
     public void setValueAt(Object value, int rowIndex, Key column) {
-        if (column==MetaTaskType.defaultTask && (Boolean) value) {
+        if (column==TT.defaultTask && (Boolean) value) {
             TaskType selected = getRow(rowIndex);
             for (TaskType task : rows) {
                 column.setValue(task, Boolean.valueOf(task==selected));
             }
-            super.setValueAt(Boolean.FALSE, rowIndex, MetaTaskType.finished);
+            super.setValueAt(Boolean.FALSE, rowIndex, TT.finished);
             super.fireTableColumnUpdated(column);
             return;
         }
-        if (column==MetaTaskType.finished && (Boolean) value) {
-            super.setValueAt(Boolean.FALSE, rowIndex, MetaTaskType.defaultTask);
+        if (column==TT.finished && (Boolean) value) {
+            super.setValueAt(Boolean.FALSE, rowIndex, TT.defaultTask);
         }
         super.setValueAt(value, rowIndex, column);
     }
