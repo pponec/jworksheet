@@ -256,7 +256,7 @@ public class ApplContext implements TableModelListener, Runnable, JwsContext {
     /** Is the time to backup data?
      *  If the archived timestamp is undefined, then method setup the timestamp to current date only
      *  however it does not overwrite the previous backup file by reason of  better security.
-     * <br>WARNING: The method must be called allways, because it can initialize a MetaWorkSpace.archived property.
+     * <br>WARNING: The method must be called allways, because it can initialize a WS.archived property.
      */
     private boolean isTimeToBackup() {
         final LocalDateTime now = LocalDateTime.now();

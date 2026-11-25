@@ -44,7 +44,7 @@ public class ParamTableModel extends SingleUjoTabModel {
         , UR.name
         , UR.typeName
         , UR.value
-        //, MetaUjoKeyRow.value
+        //, UR.value
         , UR.defaultValue
         );
         this.applContext = applContext;

@@ -443,7 +443,7 @@ public final class JWorkSheet extends TopFrame {
         }
     }
 
-    /** Show or hide button icons by the persistent MetaParameters.hideButtonIcons attribute. */
+    /** Show or hide button icons by the persistent PA.hideButtonIcons attribute. */
     public void initIcons() {
         ResourceProvider imageProvider = new ResourceProvider();
         setIconImage    (imageProvider.getImage(ResourceProvider.LOGO));
