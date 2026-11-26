@@ -30,7 +30,7 @@ import net.ponec.jworksheet.bo.Project;
 import net.ponec.jworksheet.core.ApplTools;
 import net.ponec.jworksheet.gui.component.*;
 import org.ujorm.core.Key;
-import net.ponec.jworksheet.core.ujo.MetaAliases.EV;
+import net.ponec.jworksheet.core.ujo.MetaAliases._EV;
 
 /**
  * EventTableRenderer.
@@ -71,9 +71,9 @@ public class EventTableRenderer extends DefaultTableCellRenderer {
         Key column = table.getColumn(viewColumn);
         Event event = (Event) model.getRow(rowIndex);
         //
-        boolean projOrTask = column==EV.project || column==EV.task ;
+        boolean projOrTask = column==_EV.project || column==_EV.task ;
         boolean editable = (nimbus
-            ? (column==EV.time || column==EV.period)
+            ? (column==_EV.time || column==_EV.period)
             : !projOrTask  )
             && model.isCellEditable(rowIndex, column)
             ;
@@ -90,13 +90,13 @@ public class EventTableRenderer extends DefaultTableCellRenderer {
         );
         result.setBackground
         ( isSelected             ? aTable.getSelectionBackground()
-        : (column==EV.time) ? getColorOfEditableArea(rowIndex)
+        : (column==_EV.time) ? getColorOfEditableArea(rowIndex)
         : editable               ? getColorOfEditableArea()
         : table.getBackground()
         );
         result.setHorizontalAlignment(isNumericalType(column) ? JLabel.RIGHT : JLabel.LEFT );
         
-        if (column==EV.period) {
+        if (column==_EV.period) {
             /** Num Formatter */
             final String time = context.getParameters().formatTime((Short)value);
             result.setText(time);
@@ -107,8 +107,8 @@ public class EventTableRenderer extends DefaultTableCellRenderer {
     
     /** Return true, it column is nuberical type. */
     public boolean isNumericalType(Key property) {
-        if (property==EV.time  ) return true;
-        if (property==EV.period) return true;
+        if (property==_EV.time  ) return true;
+        if (property==_EV.period) return true;
         return false;
     }
     

@@ -27,7 +27,7 @@ import org.junit.jupiter.api.parallel.Resources;
 
 import static java.nio.charset.StandardCharsets.UTF_8;
 import static org.junit.jupiter.api.Assertions.*;
-import net.ponec.jworksheet.core.ujo.MetaAliases.WS;
+import net.ponec.jworksheet.core.ujo.MetaAliases._WS;
 
 /** The parsing rules of the XML documents, which are not covered by the round trip tests.
  * @author Pavel Ponec
@@ -41,7 +41,7 @@ public class XmlManagerTest {
     @Test
     @DisplayName("An unknown element is skipped including its children")
     public void unknownElementIsSkipped() {
-        final String name = Keys.nameOf(WS.username);
+        final String name = Keys.nameOf(_WS.username);
         final WorkSpace result = parse("<body>"
                 + "<Unknown><" + name + ">Wrong</" + name + "></Unknown>"
                 + "<" + name + ">Pavel</" + name + ">"
@@ -53,8 +53,8 @@ public class XmlManagerTest {
     @Test
     @DisplayName("An invalid value is skipped, the rest of the document is loaded")
     public void invalidValueIsSkipped() {
-        final String created = Keys.nameOf(WS.created);
-        final String name = Keys.nameOf(WS.username);
+        final String created = Keys.nameOf(_WS.created);
+        final String name = Keys.nameOf(_WS.username);
         final WorkSpace result = parse("<body>"
                 + "<" + created + ">not-a-date</" + created + ">"
                 + "<" + name + ">Pavel</" + name + ">"
@@ -67,7 +67,7 @@ public class XmlManagerTest {
     @Test
     @DisplayName("The names of the elements are case sensitive")
     public void elementNameIsCaseSensitive() {
-        final String name = Keys.nameOf(WS.username);
+        final String name = Keys.nameOf(_WS.username);
         final WorkSpace result = parse("<body><" + name.toLowerCase() + ">Wrong</" + name.toLowerCase() + "></body>");
 
         assertEquals(new WorkSpace().getUsername(), result.getUsername());
@@ -91,7 +91,7 @@ public class XmlManagerTest {
     @Test
     @DisplayName("A document type is rejected, so no external entity is resolved")
     public void doctypeIsRejected() {
-        final String name = Keys.nameOf(WS.username);
+        final String name = Keys.nameOf(_WS.username);
         final String xml = "<?xml version=\"1.0\"?>"
                 + "<!DOCTYPE body [<!ENTITY secret SYSTEM \"file:///etc/hostname\">]>"
                 + "<body><" + name + ">&secret;</" + name + "></body>";
@@ -102,7 +102,7 @@ public class XmlManagerTest {
     @Test
     @DisplayName("A text is escaped, an empty text is written as a pair of tags")
     public void textIsEscaped() throws Exception {
-        final String name = Keys.nameOf(WS.username);
+        final String name = Keys.nameOf(_WS.username);
         final String text = "a & b <c> \"d\" 'e' ěšč";
         final WorkSpace workSpace = new WorkSpace();
         workSpace.setUsername(text);

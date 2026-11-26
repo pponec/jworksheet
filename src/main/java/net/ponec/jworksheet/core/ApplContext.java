@@ -68,8 +68,8 @@ import net.ponec.jworksheet.core.ujo.BundleManager;
 import net.ponec.jworksheet.core.ujo.XmlManager;
 import org.ujorm.core.Key;
 import org.ujorm.tools.Check;
-import net.ponec.jworksheet.core.ujo.MetaAliases.PA;
-import net.ponec.jworksheet.core.ujo.MetaAliases.WS;
+import net.ponec.jworksheet.core.ujo.MetaAliases._PA;
+import net.ponec.jworksheet.core.ujo.MetaAliases._WS;
 
 /**
  * A Main Application Context
@@ -256,7 +256,7 @@ public class ApplContext implements TableModelListener, Runnable, JwsContext {
     /** Is the time to backup data?
      *  If the archived timestamp is undefined, then method setup the timestamp to current date only
      *  however it does not overwrite the previous backup file by reason of  better security.
-     * <br>WARNING: The method must be called allways, because it can initialize a WS.archived property.
+     * <br>WARNING: The method must be called allways, because it can initialize a _WS.archived property.
      */
     private boolean isTimeToBackup() {
         final LocalDateTime now = LocalDateTime.now();
@@ -290,7 +290,7 @@ public class ApplContext implements TableModelListener, Runnable, JwsContext {
             Rectangle rect
             = parameters.isWindowSizeRestoration()
             ? topFrame.getBounds()
-            : Keys.defaultOf(PA.windowSize) ;
+            : Keys.defaultOf(_PA.windowSize) ;
             parameters.setWindowSize(rect);
 
             saveParameters();
@@ -406,12 +406,12 @@ public class ApplContext implements TableModelListener, Runnable, JwsContext {
      * carried by the parameters of the application. */
     @Override
     public File getDataFile() {
-        return fileOrDefault(PA.dataFilePath, FILE_DATA);
+        return fileOrDefault(_PA.dataFilePath, FILE_DATA);
     }
 
     /** Shared Projects Data File, see the {@link #getDataFile()} method for the default value. */
     public File getProjectsFile() {
-        return fileOrDefault(PA.sharedProjectsFilePath, PROJECTS_DATA);
+        return fileOrDefault(_PA.sharedProjectsFilePath, PROJECTS_DATA);
     }
 
     /** Returns the file of the parameter, or a file of the configuration directory for the default value. */
@@ -471,7 +471,7 @@ public class ApplContext implements TableModelListener, Runnable, JwsContext {
 
     /** GetCurrentDay */
     public String getSelectedDayStr() {
-        return dateFormatter(parameters.getDateFormat(PA.dateMainFormat, this)).apply(getSelectedDay());
+        return dateFormatter(parameters.getDateFormat(_PA.dateMainFormat, this)).apply(getSelectedDay());
     }
 
     /** Creates a formatter of the dates by the language and the first day of the week of the parameters,
@@ -645,7 +645,7 @@ public class ApplContext implements TableModelListener, Runnable, JwsContext {
     public float getDataVersion() {
         try {
             DecimalFormat form = ApplTools.createDecimalFormat("0.0");
-            String tagContent = getTagContent(getDataFile(), Keys.nameOf(WS.version));
+            String tagContent = getTagContent(getDataFile(), Keys.nameOf(_WS.version));
             float result = tagContent!=null ? form.parse(tagContent).floatValue() : -1 ;
             return result;
         } catch (Throwable ex) {

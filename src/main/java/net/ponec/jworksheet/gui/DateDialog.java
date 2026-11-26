@@ -29,7 +29,7 @@ import net.ponec.jworksheet.core.ApplTools;
 import net.ponec.jworksheet.bo.Parameters;
 import net.ponec.jworksheet.core.LanguageManager;
 import net.ponec.jworksheet.resources.ResourceProvider;
-import net.ponec.jworksheet.core.ujo.MetaAliases.PA;
+import net.ponec.jworksheet.core.ujo.MetaAliases._PA;
 
 /**
  * Date Dialog
@@ -55,8 +55,8 @@ public class DateDialog extends TopDialog implements java.awt.event.ActionListen
         super(aContext);
         setLocale(aContext.getLanguage());
 
-        mainFormat = applContext.getParameters().getDateFormat(PA.dateMainFormat, aContext);
-        gotoFormat = applContext.getParameters().getDateFormat(PA.dateGotoFormat, aContext);
+        mainFormat = applContext.getParameters().getDateFormat(_PA.dateMainFormat, aContext);
+        gotoFormat = applContext.getParameters().getDateFormat(_PA.dateGotoFormat, aContext);
 
         initComponents();
         tDate.setValue(ApplTools.toDate(applContext.getSelectedDay()));

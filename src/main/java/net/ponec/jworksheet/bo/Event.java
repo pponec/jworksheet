@@ -25,7 +25,7 @@ import net.ponec.jworksheet.core.ujo.ExportAction;
 import net.ponec.jworksheet.core.ujo.Exportable;
 import org.ujorm.annotation.Domain;
 import org.ujorm.core.Key;
-import net.ponec.jworksheet.core.ujo.MetaAliases.EV;
+import net.ponec.jworksheet.core.ujo.MetaAliases._EV;
 
 /** An Event of the Work Day.
  * <p>The identifiers {@code projectId} and {@code taskId} are persistent references
@@ -130,11 +130,11 @@ public class Event implements Exportable, DomainObject {
 
     /** Is the project or the task of the key finished? */
     public boolean isFinished(final Key<Event,?> key) {
-        if (EV.project == key) {
+        if (_EV.project == key) {
             return project != null && project.isFinished();
         }
-        if (EV.task == key) {
-            return isFinished(EV.project) || task != null && task.isFinished();
+        if (_EV.task == key) {
+            return isFinished(_EV.project) || task != null && task.isFinished();
         }
         return false;
     }
@@ -143,8 +143,8 @@ public class Event implements Exportable, DomainObject {
     @Override
     public boolean isExportable(final ExportAction action, final Key<?,?> key, final Object value) {
         if (action == ExportAction.XML) {
-            return key != EV.project
-                && key != EV.task;
+            return key != _EV.project
+                && key != _EV.task;
         }
         return true;
     }

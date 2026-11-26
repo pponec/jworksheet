@@ -26,7 +26,7 @@ import net.ponec.jworksheet.gui.JWorkSheet;
 import net.ponec.jworksheet.resources.ResourceProvider;
 import net.ponec.jworksheet.core.ujo.Keys;
 import org.ujorm.core.Key;
-import net.ponec.jworksheet.core.ujo.MetaAliases.PA;
+import net.ponec.jworksheet.core.ujo.MetaAliases._PA;
 
 /**
  * Standard report
@@ -195,7 +195,7 @@ public abstract class SuperReport implements Calculator {
          , "<meta http-equiv=\"Content-Type\" content=\"text/html; charset=UTF-8\">"
          , "<title>" + escape(title) + "</title>"
          , "<meta name=\"Generator\" content=\""+JWorkSheet.APPL_NAME+"\" />"
-         , "<link rel=\"stylesheet\" type=\"text/css\" href=\""+Keys.defaultOf(PA.reportCss)                    +"\" />"
+         , "<link rel=\"stylesheet\" type=\"text/css\" href=\""+Keys.defaultOf(_PA.reportCss)                    +"\" />"
          //, "<!-- A style from an application setup -- >"
          , "<link rel=\"stylesheet\" type=\"text/css\" href=\""+applContext.getParameters().getReportCss()+"\" />"
          , "</head>"

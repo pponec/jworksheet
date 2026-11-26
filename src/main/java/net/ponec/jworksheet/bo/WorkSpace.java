@@ -31,7 +31,7 @@ import net.ponec.jworksheet.core.ujo.Exportable;
 import net.ponec.jworksheet.gui.JWorkSheet;
 import org.ujorm.annotation.Domain;
 import org.ujorm.core.Key;
-import net.ponec.jworksheet.core.ujo.MetaAliases.WS;
+import net.ponec.jworksheet.core.ujo.MetaAliases._WS;
 
 /**
  * This is a <strong>root</strong> of all persistent business objects.
@@ -193,7 +193,7 @@ public class WorkSpace implements Exportable, DomainObject {
     @Override
     public boolean isExportable(final ExportAction action, final Key<?,?> key, final Object value) {
         return action != ExportAction.XML
-            || WS.days != key
+            || _WS.days != key
             || !(value instanceof final WorkDay workDay)
             || !workDay.getEvents().isEmpty();
     }

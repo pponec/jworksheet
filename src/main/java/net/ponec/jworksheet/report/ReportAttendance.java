@@ -26,7 +26,7 @@ import java.util.logging.Logger;
 import net.ponec.jworksheet.bo.Event;
 import net.ponec.jworksheet.bo.Project;
 import net.ponec.jworksheet.bo.WorkDay;
-import net.ponec.jworksheet.core.ujo.MetaAliases.WD;
+import net.ponec.jworksheet.core.ujo.MetaAliases._WD;
 
 /**
  * Days Report
@@ -104,7 +104,7 @@ public class ReportAttendance extends SuperReport {
         Appendable sb = repBody;
 
         sb.append("<tr>");
-        sb.append("<th align=\"left\">").append(getText(WD.date)).append("</th>");
+        sb.append("<th align=\"left\">").append(getText(_WD.date)).append("</th>");
         sb.append("<th align=\"left\">").append(escape(arrival)).append("</th>");
         sb.append("<th align=\"left\">").append(escape(departure)).append("</th>");
         sb.append("<th align=\"left\">").append(escape(breakTime)).append("</th>");
@@ -134,7 +134,7 @@ public class ReportAttendance extends SuperReport {
     public void printHeader(StringBuilder sb) throws IOException {
 
         sb.append("<tr>");
-        sb.append("<th align=\"left\">").append(getText(WD.date)).append("</th>");
+        sb.append("<th align=\"left\">").append(getText(_WD.date)).append("</th>");
         sb.append("<th align=\"left\">").append(getText("Arrival")).append("</th>");
         sb.append("<th align=\"left\">").append(getText("Departure")).append("</th>");
         sb.append("<th align=\"left\">").append(getText("Break")).append("</th>");

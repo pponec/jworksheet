@@ -29,7 +29,7 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.io.TempDir;
 
 import static org.junit.jupiter.api.Assertions.*;
-import net.ponec.jworksheet.core.ujo.MetaAliases.PA;
+import net.ponec.jworksheet.core.ujo.MetaAliases._PA;
 
 /** The configuration file of the application.
  * @author Pavel Ponec
@@ -88,8 +88,8 @@ public class BundleManagerTest {
         final Parameters result = BundleManager.load(file, Parameters.class);
 
         assertTrue(result.isHideButtonIcons(), "The stored value");
-        assertEquals(Keys.defaultOf(PA.workingHours), result.getWorkingHours());
-        assertEquals(Keys.defaultOf(PA.exitEventDescription), result.getExitEventDescription());
+        assertEquals(Keys.defaultOf(_PA.workingHours), result.getWorkingHours());
+        assertEquals(Keys.defaultOf(_PA.exitEventDescription), result.getExitEventDescription());
     }
 
     @Test
@@ -101,8 +101,8 @@ public class BundleManagerTest {
         final Parameters result = BundleManager.load(file, Parameters.class);
 
         assertTrue(result.isHideButtonIcons(), "The valid value");
-        assertEquals(Keys.defaultOf(PA.workingHours), result.getWorkingHours());
-        assertEquals(Keys.defaultOf(PA.dateMainFormat), result.getDateMainFormat());
+        assertEquals(Keys.defaultOf(_PA.workingHours), result.getWorkingHours());
+        assertEquals(Keys.defaultOf(_PA.dateMainFormat), result.getDateMainFormat());
     }
 
     @Test

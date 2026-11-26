@@ -70,10 +70,10 @@ import net.ponec.jworksheet.core.ujo.Keys;
 import org.ujorm.core.Key;
 import net.ponec.jworksheet.gui.models.UjoTableModel;
 import net.ponec.jworksheet.gui.models.UjoKeyRow;
-import net.ponec.jworksheet.core.ujo.MetaAliases.EV;
-import net.ponec.jworksheet.core.ujo.MetaAliases.PR;
-import net.ponec.jworksheet.core.ujo.MetaAliases.TT;
-import net.ponec.jworksheet.core.ujo.MetaAliases.UR;
+import net.ponec.jworksheet.core.ujo.MetaAliases._EV;
+import net.ponec.jworksheet.core.ujo.MetaAliases._PR;
+import net.ponec.jworksheet.core.ujo.MetaAliases._TT;
+import net.ponec.jworksheet.core.ujo.MetaAliases._UR;
 
 /**
  * Java Work Sheet
@@ -164,8 +164,8 @@ public final class JWorkSheet extends TopFrame {
                     final EventTableModel model = (EventTableModel) eventTable.getModel();
                     Key column = e.getColumn()>=0 ? model.getColumn(e.getColumn()) : null ;
                     if (column==null
-                            ||  column==EV.period
-                            ||  column==EV.time ){
+                            ||  column==_EV.period
+                            ||  column==_EV.time ){
                         displayTotalTime();
                     }
                     if (e.getLastRow()>=model.getRowCount()-1) {
@@ -188,41 +188,41 @@ public final class JWorkSheet extends TopFrame {
 
             // ComboBox Editor:
             setTableEventEditor();
-            eventTable.getTableColumn(EV.task).setCellEditor( new TaskCellEditor() );
+            eventTable.getTableColumn(_EV.task).setCellEditor( new TaskCellEditor() );
 
-            eventTable.getTableColumn(EV.time  ).setMaxWidth(48);
-            eventTable.getTableColumn(EV.period).setMaxWidth(48);
-            eventTable.getTableColumn(EV.project  ).setPreferredWidth(10);
-            eventTable.getTableColumn(EV.task  ).setPreferredWidth(10);
-            projTable .getTableColumn(PR.id  ).setMaxWidth(48);
-            projTable .getTableColumn(PR.privateProject).setMaxWidth(58);
-            projTable .getTableColumn(PR.defaultProject).setMaxWidth(58);
-            projTable .getTableColumn(PR.finished ).setMaxWidth(58);
+            eventTable.getTableColumn(_EV.time  ).setMaxWidth(48);
+            eventTable.getTableColumn(_EV.period).setMaxWidth(48);
+            eventTable.getTableColumn(_EV.project  ).setPreferredWidth(10);
+            eventTable.getTableColumn(_EV.task  ).setPreferredWidth(10);
+            projTable .getTableColumn(_PR.id  ).setMaxWidth(48);
+            projTable .getTableColumn(_PR.privateProject).setMaxWidth(58);
+            projTable .getTableColumn(_PR.defaultProject).setMaxWidth(58);
+            projTable .getTableColumn(_PR.finished ).setMaxWidth(58);
             projTable .showSortedColumn(applContext.getParameters().getSortProjColumn());
-            taskTable .getTableColumn(TT.id    ).setMaxWidth(48);
-            taskTable .getTableColumn(TT.defaultTask).setMaxWidth(58);
-            taskTable .getTableColumn(TT.finished).setMaxWidth(58);
-            paramTable.getTableColumn(UR.defaultValue).setMinWidth(0);
-            paramTable.getTableColumn(UR.defaultValue).setMaxWidth(0);
-            paramTable.getTableColumn(UR.index).setMaxWidth(30);
-            paramTable.getTableColumn(UR.name ).setPreferredWidth(100);
-            paramTable.getTableColumn(UR.value).setPreferredWidth(200);
+            taskTable .getTableColumn(_TT.id    ).setMaxWidth(48);
+            taskTable .getTableColumn(_TT.defaultTask).setMaxWidth(58);
+            taskTable .getTableColumn(_TT.finished).setMaxWidth(58);
+            paramTable.getTableColumn(_UR.defaultValue).setMinWidth(0);
+            paramTable.getTableColumn(_UR.defaultValue).setMaxWidth(0);
+            paramTable.getTableColumn(_UR.index).setMaxWidth(30);
+            paramTable.getTableColumn(_UR.name ).setPreferredWidth(100);
+            paramTable.getTableColumn(_UR.value).setPreferredWidth(200);
 
             if (ApplTools.isNimbusLAF()) {
                 CheckBoxRenderer checkBoxRenderer = new CheckBoxRenderer();
-                projTable.getTableColumn(PR.privateProject).setCellRenderer(checkBoxRenderer);
-                projTable.getTableColumn(PR.defaultProject).setCellRenderer(checkBoxRenderer);
-                projTable.getTableColumn(PR.finished).setCellRenderer(checkBoxRenderer);
+                projTable.getTableColumn(_PR.privateProject).setCellRenderer(checkBoxRenderer);
+                projTable.getTableColumn(_PR.defaultProject).setCellRenderer(checkBoxRenderer);
+                projTable.getTableColumn(_PR.finished).setCellRenderer(checkBoxRenderer);
 
-                taskTable.getTableColumn(TT.defaultTask).setCellRenderer(checkBoxRenderer);
-                taskTable.getTableColumn(TT.finished).setCellRenderer(checkBoxRenderer);
+                taskTable.getTableColumn(_TT.defaultTask).setCellRenderer(checkBoxRenderer);
+                taskTable.getTableColumn(_TT.finished).setCellRenderer(checkBoxRenderer);
             }
 
             // A Period Editor:
             JTextField text = new JTextField(5);
             text.setHorizontalAlignment(JTextField.RIGHT);
             text.setBorder(javax.swing.BorderFactory.createLineBorder(Color.BLACK));
-            eventTable.getTableColumn(EV.period).setCellEditor(new DefaultCellEditor(text));
+            eventTable.getTableColumn(_EV.period).setCellEditor(new DefaultCellEditor(text));
 
             projTable.getSelectionModel().addListSelectionListener( new ListSelectionListener() {
                 public void valueChanged(ListSelectionEvent e) {
@@ -285,7 +285,7 @@ public final class JWorkSheet extends TopFrame {
     /** Set a Project editor of Event Table. */
     private void setTableEventEditor() {
         UjoComboBoxModel m2 = new UjoComboBoxModel(applContext.getWorkSpace().getOpenProjects());
-        eventTable.getTableColumn(EV.project).setCellEditor( new DefaultCellEditor(new JComboBox(m2)) );
+        eventTable.getTableColumn(_EV.project).setCellEditor( new DefaultCellEditor(new JComboBox(m2)) );
     }
 
     /** Check new release. */
@@ -429,7 +429,7 @@ public final class JWorkSheet extends TopFrame {
         List<TaskType> list = project!=null ? project.getTasks() : new ArrayList<TaskType>();
         taskTable.getModel().setRows(list);
         taskTable.selectRow(0);
-        taskTable.showSortedColumn(TT.id);
+        taskTable.showSortedColumn(_TT.id);
     }
 
     /** Show an info dialog "Result to Clibpoard is finished" */
@@ -1288,8 +1288,8 @@ public final class JWorkSheet extends TopFrame {
 
     private void bTaskSortActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_bTaskSortActionPerformed
         taskTable.submitEditMode(true);
-        taskTable.getModel().sort(TT.id,  TT.descr);
-        taskTable.showSortedColumn(TT.id);
+        taskTable.getModel().sort(_TT.id,  _TT.descr);
+        taskTable.showSortedColumn(_TT.id);
     }//GEN-LAST:event_bTaskSortActionPerformed
 
     private void bTaskCloneActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_bTaskCloneActionPerformed
@@ -1318,8 +1318,8 @@ public final class JWorkSheet extends TopFrame {
 
     private void bProjSortActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_bProjSortActionPerformed
         projTable.submitEditMode(true);
-        projTable.getModel().sort(PR.id,  PR.descr);
-        projTable.showSortedColumn(PR.id);
+        projTable.getModel().sort(_PR.id,  _PR.descr);
+        projTable.showSortedColumn(_PR.id);
     }//GEN-LAST:event_bProjSortActionPerformed
 
     private void bProjCloneActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_bProjCloneActionPerformed
@@ -1378,14 +1378,14 @@ public final class JWorkSheet extends TopFrame {
         if (rowIndex>=0) {
             UjoTableModel model = eventTable.getModel();
             int lastRow = model.getRowCount();
-            Time  time1 = (Time) model.getValueAt(lastRow-1, EV.time);
+            Time  time1 = (Time) model.getValueAt(lastRow-1, _EV.time);
             Time  time2 = applContext.isToday() ? Time.now() : ((Event)model.getRowLast()).getTimeFinished();
             Short period = time2.substract(time1);
             //
             model.cloneRow(rowIndex, 2);
-            model.setValueAt( period                , lastRow-1, EV.period);
-            model.setValueAt( time2                 , lastRow  , EV.time);
-            model.setValueAt(Event.ZERO_SHORT, lastRow  , EV.period);
+            model.setValueAt( period                , lastRow-1, _EV.period);
+            model.setValueAt( time2                 , lastRow  , _EV.time);
+            model.setValueAt(Event.ZERO_SHORT, lastRow  , _EV.period);
 
         }
         eventTable.selectRow(Integer.MAX_VALUE);

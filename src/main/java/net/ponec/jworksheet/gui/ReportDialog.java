@@ -48,9 +48,9 @@ import net.ponec.jworksheet.report.ReportTabProj;
 import net.ponec.jworksheet.resources.ResourceProvider;
 import net.ponec.jworksheet.core.ujo.Keys;
 import org.ujorm.core.Key;
-import net.ponec.jworksheet.core.ujo.MetaAliases.EV;
-import net.ponec.jworksheet.core.ujo.MetaAliases.PA;
-import net.ponec.jworksheet.core.ujo.MetaAliases.PR;
+import net.ponec.jworksheet.core.ujo.MetaAliases._EV;
+import net.ponec.jworksheet.core.ujo.MetaAliases._PA;
+import net.ponec.jworksheet.core.ujo.MetaAliases._PR;
 
 /**
  * Report Dialog
@@ -80,7 +80,7 @@ public class ReportDialog extends TopDialog implements java.awt.event.ActionList
         originalDay = aContext.getSelectedDay();
 
         setLocale(aContext.getLanguage());
-        spinnerFormat = applContext.getParameters().getDateFormat(PA.dateReportFormat, aContext);
+        spinnerFormat = applContext.getParameters().getDateFormat(_PA.dateReportFormat, aContext);
         initComponents();
         selectDayAction(new java.awt.event.ActionEvent(rbDay, -1, ""));
 
@@ -170,10 +170,10 @@ public class ReportDialog extends TopDialog implements java.awt.event.ActionList
         result.add(new String[] {"JWSName"    , JWorkSheet.APPL_NAME});
         result.add(new String[] {"JWSHomePage", JWorkSheet.APPL_HOMEPAGE});
         result.add(new String[] {"Title"      , metaReport.getTitle()});
-        result.add(getXslParamItem(PA.workingHours));
-        result.add(getXslParamItem(PA.colorOfPrivateProject));
-        result.add(getXslParamItem(PA.colorOfFinishedProject));
-        result.add(getXslParamItem(PA.reportCss));
+        result.add(getXslParamItem(_PA.workingHours));
+        result.add(getXslParamItem(_PA.colorOfPrivateProject));
+        result.add(getXslParamItem(_PA.colorOfFinishedProject));
+        result.add(getXslParamItem(_PA.reportCss));
 
         // Labels:
         result.add(new String[] {"labelCreated" , getText("Created")});
@@ -183,16 +183,16 @@ public class ReportDialog extends TopDialog implements java.awt.event.ActionList
         result.add(new String[] {"labelTasks"   , getText("Tasks")});
 
         Key[] properties = new Key[]
-        { EV.descr
-        , EV.period
-        , EV.project
-        , EV.task
-        , EV.time
-        , PR.id
-        , PR.defaultProject
-        , PR.finished
-        , PR.privateProject
-        , PR.tasks
+        { _EV.descr
+        , _EV.period
+        , _EV.project
+        , _EV.task
+        , _EV.time
+        , _PR.id
+        , _PR.defaultProject
+        , _PR.finished
+        , _PR.privateProject
+        , _PR.tasks
         };
         for (Key p : properties) {
            result.add(getXslLabelItem(p));

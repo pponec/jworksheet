@@ -23,8 +23,8 @@ import net.ponec.jworksheet.bo.Event;
 import net.ponec.jworksheet.bo.Project;
 import net.ponec.jworksheet.bo.TaskType;
 import net.ponec.jworksheet.core.ujo.UjoComparator;
-import net.ponec.jworksheet.core.ujo.MetaAliases.EV;
-import net.ponec.jworksheet.core.ujo.MetaAliases.TG;
+import net.ponec.jworksheet.core.ujo.MetaAliases._EV;
+import net.ponec.jworksheet.core.ujo.MetaAliases._TG;
 
 /**
  * Standard report
@@ -35,7 +35,7 @@ public class ReportB extends ReportA {
     /** Create Comparator */
     @Override
     protected UjoComparator createUjoComparator() {
-        return UjoComparator.<TaskGroup>newInstance(TG.project);
+        return UjoComparator.<TaskGroup>newInstance(_TG.project);
     }
     
     /** Print the result. */
@@ -44,7 +44,7 @@ public class ReportB extends ReportA {
         int total = 0;
         
         sb.append("<tr>");
-        sb.append("<th>").append(getText(EV.project)).append("</th>");
+        sb.append("<th>").append(getText(_EV.project)).append("</th>");
         sb.append("<th align=\"right\">").append(getText("Time[hours]")).append("</th>");
         sb.append("</tr>");
         

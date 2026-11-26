@@ -27,7 +27,7 @@ import net.ponec.jworksheet.bo.meta.MetaWorkSpace;
 /**
  * Short aliases of the generated key interfaces made of the capital letters of the entity name
  * (two letters), so that a key can be written short but still qualified by its domain,
- * e.g. {@code WS.username}. Import the nested type, e.g. {@code import net.ponec.jworksheet.core.ujo.MetaAliases.WS;}
+ * e.g. {@code _WS.username}. Import the nested type, e.g. {@code import net.ponec.jworksheet.core.ujo.MetaAliases._WS;}
  */
 public final class MetaAliases {
 
@@ -35,19 +35,19 @@ public final class MetaAliases {
     }
 
     /** {@link MetaEvent} */
-    public interface EV extends MetaEvent {}
+    public interface _EV extends MetaEvent {}
     /** {@link MetaParameters} */
-    public interface PA extends MetaParameters {}
+    public interface _PA extends MetaParameters {}
     /** {@link MetaProject} */
-    public interface PR extends MetaProject {}
+    public interface _PR extends MetaProject {}
     /** {@link MetaTaskGroup} */
-    public interface TG extends MetaTaskGroup {}
+    public interface _TG extends MetaTaskGroup {}
     /** {@link MetaTaskType} */
-    public interface TT extends MetaTaskType {}
+    public interface _TT extends MetaTaskType {}
     /** {@link MetaUjoKeyRow} */
-    public interface UR extends MetaUjoKeyRow {}
+    public interface _UR extends MetaUjoKeyRow {}
     /** {@link MetaWorkDay} */
-    public interface WD extends MetaWorkDay {}
+    public interface _WD extends MetaWorkDay {}
     /** {@link MetaWorkSpace} */
-    public interface WS extends MetaWorkSpace {}
+    public interface _WS extends MetaWorkSpace {}
 }

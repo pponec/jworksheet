@@ -29,7 +29,7 @@ import net.ponec.jworksheet.bo.TaskType;
 import net.ponec.jworksheet.bo.item.Time;
 import net.ponec.jworksheet.core.ujo.DomainTools;
 import org.ujorm.core.Key;
-import net.ponec.jworksheet.core.ujo.MetaAliases.EV;
+import net.ponec.jworksheet.core.ujo.MetaAliases._EV;
 
 /**
  * Event Table Model
@@ -52,11 +52,11 @@ public class EventTableModel extends UjoTableModel<Event> {
      */
     public EventTableModel(ApplContext applContext) {
         super
-        ( EV.time
-        , EV.period
-        , EV.project
-        , EV.task
-        , EV.descr
+        ( _EV.time
+        , _EV.period
+        , _EV.project
+        , _EV.task
+        , _EV.descr
         );
         this.applContext = applContext;
     }
@@ -64,7 +64,7 @@ public class EventTableModel extends UjoTableModel<Event> {
     /** Is the cell editable? */
     @Override
     public boolean isCellEditable(int rowIndex, Key column) {
-        if (EV.period==column) {
+        if (_EV.period==column) {
             return rowIndex==(getRowCount()-1);
         } else {
             return applContext.getParameters().isModifyFinishedProject()
@@ -143,7 +143,7 @@ public class EventTableModel extends UjoTableModel<Event> {
 
         timeChange = false;
         Event lastRow = getRowLast();
-        super.sort(EV.time);
+        super.sort(_EV.time);
         
         if (enableInsertAction) {
             performAfterInsertAction(lastRow);
@@ -184,7 +184,7 @@ public class EventTableModel extends UjoTableModel<Event> {
     
     @Override
     public Class getColumnClass(Key column) {
-        return EV.period == column
+        return _EV.period == column
                 ? Object.class
                 : super.getColumnClass(column);
     }
@@ -194,7 +194,7 @@ public class EventTableModel extends UjoTableModel<Event> {
     public void setValueAt(Object value, int rowIndex, Key column) {
         
         // Convert a decimal value to minutes:
-        if (EV.period==column) {
+        if (_EV.period==column) {
             String data = String.valueOf(value);
             
             if (data.indexOf(':')>=0) {
@@ -212,19 +212,19 @@ public class EventTableModel extends UjoTableModel<Event> {
             // Test:
             getRow(rowIndex).getTime().cloneAdd((Short) value);
         }
-        else if (EV.time==column
-        ||       EV.project==column // a case PRIVATE state change
+        else if (_EV.time==column
+        ||       _EV.project==column // a case PRIVATE state change
         ){
             // the time change listener
             timeChange=true;
         }
         
-        if (column==EV.project
+        if (column==_EV.project
         &&  value!=null
         &&  value!=getValueAt(rowIndex, column)
         ){
             TaskType taskType = ((Project) value).findDefaultTask();
-            super.setValueAt(taskType, rowIndex, EV.task);
+            super.setValueAt(taskType, rowIndex, _EV.task);
         }
         super.setValueAt(value, rowIndex, column);
 

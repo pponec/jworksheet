@@ -31,7 +31,7 @@ import org.junit.jupiter.params.provider.CsvSource;
 import org.junit.jupiter.params.provider.ValueSource;
 
 import static org.junit.jupiter.api.Assertions.*;
-import net.ponec.jworksheet.core.ujo.MetaAliases.EV;
+import net.ponec.jworksheet.core.ujo.MetaAliases._EV;
 
 /** A round trip of the data tree: WorkSpace &rarr; XML &rarr; WorkSpace.
  * @author Pavel Ponec
@@ -317,7 +317,7 @@ public class WorkSpaceXmlRoundTripTest extends XmlTestSupport {
         @DisplayName("C5b) An undefined period is normalized to the zero")
         public void undefinedPeriod() {
             final Event event = new Event();
-            EV.period.setValue(event, null);
+            _EV.period.setValue(event, null);
             event.setTime(new Time("08:00"));
             assertEquals(Event.ZERO_SHORT, event.getPeriod());
         }
@@ -326,7 +326,7 @@ public class WorkSpaceXmlRoundTripTest extends XmlTestSupport {
         @DisplayName("C5c) An undefined start time is normalized to the midnight")
         public void undefinedTime() {
             final Event event = new Event();
-            EV.time.setValue(event, null);
+            _EV.time.setValue(event, null);
             assertEquals("00:00", event.getTime().toString());
         }
 

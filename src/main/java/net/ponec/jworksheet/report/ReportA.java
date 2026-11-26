@@ -25,8 +25,8 @@ import net.ponec.jworksheet.bo.Project;
 import net.ponec.jworksheet.bo.TaskType;
 import net.ponec.jworksheet.bo.WorkDay;
 import net.ponec.jworksheet.core.ujo.UjoComparator;
-import net.ponec.jworksheet.core.ujo.MetaAliases.EV;
-import net.ponec.jworksheet.core.ujo.MetaAliases.TG;
+import net.ponec.jworksheet.core.ujo.MetaAliases._EV;
+import net.ponec.jworksheet.core.ujo.MetaAliases._TG;
 
 /**
  * Standard report
@@ -42,13 +42,13 @@ public class ReportA extends SuperReport {
     protected void init() {
         if (groupSet==null) {
             UjoComparator<TaskGroup> comparator = createUjoComparator();
-            groupSet = new GroupSet(comparator, EV.period);
+            groupSet = new GroupSet(comparator, _EV.period);
         }
     }
     
     /** Create Comparator */
     protected UjoComparator<TaskGroup> createUjoComparator() {
-        return UjoComparator.<TaskGroup>newInstance(TG.project, TG.task);
+        return UjoComparator.<TaskGroup>newInstance(_TG.project, _TG.task);
     }
     
     /** Create report */
@@ -81,8 +81,8 @@ public class ReportA extends SuperReport {
         int total = 0;
         
         sb.append("<tr>");
-        sb.append("<th align=\"left\">").append(getText(EV.project)).append("</th>");
-        sb.append("<th align=\"left\">").append(getText(EV.task)).append("</th>");
+        sb.append("<th align=\"left\">").append(getText(_EV.project)).append("</th>");
+        sb.append("<th align=\"left\">").append(getText(_EV.task)).append("</th>");
         sb.append("<th align=\"right\">").append(getText("Time[hours]")).append("</th>");
         sb.append("</tr>");
         

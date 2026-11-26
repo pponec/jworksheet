@@ -24,8 +24,8 @@ import net.ponec.jworksheet.bo.Parameters;
 import net.ponec.jworksheet.core.ApplContext;
 import net.ponec.jworksheet.core.ujo.Keys;
 import org.ujorm.core.Key;
-import net.ponec.jworksheet.core.ujo.MetaAliases.PA;
-import net.ponec.jworksheet.core.ujo.MetaAliases.UR;
+import net.ponec.jworksheet.core.ujo.MetaAliases._PA;
+import net.ponec.jworksheet.core.ujo.MetaAliases._UR;
 
 /**
  * Row of Parameters table.
@@ -40,12 +40,12 @@ public class ParamTableModel extends SingleUjoTabModel {
     public ParamTableModel(Parameters params, ApplContext applContext) {
         super
         ( params
-        , UR.index
-        , UR.name
-        , UR.typeName
-        , UR.value
-        //, UR.value
-        , UR.defaultValue
+        , _UR.index
+        , _UR.name
+        , _UR.typeName
+        , _UR.value
+        //, _UR.value
+        , _UR.defaultValue
         );
         this.applContext = applContext;
     }
@@ -62,11 +62,11 @@ public class ParamTableModel extends SingleUjoTabModel {
         super.setValueAt(value, rowIndex, column);
 
         final UjoKeyRow row = getRow(rowIndex);
-        if (PA.colorOfEditableArea==row.getKey()) {
+        if (_PA.colorOfEditableArea==row.getKey()) {
             // Repaint color background;
             fireTableColumnUpdated(column);
-        } else if (PA.hideButtonIcons==row.getKey()
-        ||         PA.automaticSortingByTime==row.getKey()) {
+        } else if (_PA.hideButtonIcons==row.getKey()
+        ||         _PA.automaticSortingByTime==row.getKey()) {
             applContext.getTopFrame().initIcons();
         }
     }

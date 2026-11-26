@@ -38,7 +38,7 @@ import net.ponec.jworksheet.gui.JWorkSheet;
 import org.ujorm.annotation.Domain;
 import org.ujorm.core.Key;
 import org.ujorm.tools.Check;
-import net.ponec.jworksheet.core.ujo.MetaAliases.PA;
+import net.ponec.jworksheet.core.ujo.MetaAliases._PA;
 
 /**
  * Parameters of the application.
@@ -263,9 +263,9 @@ public class Parameters implements Exportable, DomainObject {
         return switch (action) {
             // A default value is not stored to the configuration file:
             case RESOURCE_BUNDLE -> !Keys.isDefaultValue(key, value);
-            case TABLE_SHOW -> key != PA.sortProjColumn
-                            && key != PA.windowSize
-                            && (key != PA.dataFilePath || !Keys.isDefaultValue(key, value));
+            case TABLE_SHOW -> key != _PA.sortProjColumn
+                            && key != _PA.windowSize
+                            && (key != _PA.dataFilePath || !Keys.isDefaultValue(key, value));
             default -> true;
         };
     }

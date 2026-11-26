@@ -21,7 +21,7 @@ package net.ponec.jworksheet.gui.models;
 import net.ponec.jworksheet.bo.Project;
 import net.ponec.jworksheet.core.ApplContext;
 import org.ujorm.core.Key;
-import net.ponec.jworksheet.core.ujo.MetaAliases.PR;
+import net.ponec.jworksheet.core.ujo.MetaAliases._PR;
 
 /**
  * Project Table Model
@@ -31,11 +31,11 @@ public class ProjectTableModel extends UjoTableModel<Project> {
 
     /** Table columns. */
     private static final Key[] TABLE_COLUMNS =
-    { PR.id
-    , PR.defaultProject
-    , PR.finished
-    , PR.privateProject
-    , PR.descr
+    { _PR.id
+    , _PR.defaultProject
+    , _PR.finished
+    , _PR.privateProject
+    , _PR.descr
     };
     
 
@@ -74,17 +74,17 @@ public class ProjectTableModel extends UjoTableModel<Project> {
     /** Set value to cell. */
     @SuppressWarnings("unchecked")
     public void setValueAt(Object value, int rowIndex, Key column) {
-        if (column==PR.defaultProject && (Boolean) value) {
+        if (column==_PR.defaultProject && (Boolean) value) {
             Project selected = getRow(rowIndex);
             for (Project proj : rows) {
                 column.setValue(proj, Boolean.valueOf(proj==selected));
             }
-            super.setValueAt(Boolean.FALSE, rowIndex, PR.finished);
+            super.setValueAt(Boolean.FALSE, rowIndex, _PR.finished);
             super.fireTableColumnUpdated(column);
             return;
         }
-        if (column==PR.finished && (Boolean) value) {
-            super.setValueAt(Boolean.FALSE, rowIndex, PR.defaultProject);
+        if (column==_PR.finished && (Boolean) value) {
+            super.setValueAt(Boolean.FALSE, rowIndex, _PR.defaultProject);
         }
         
         super.setValueAt(value, rowIndex, column);

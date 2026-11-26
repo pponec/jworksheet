@@ -27,7 +27,7 @@ import net.ponec.jworksheet.core.ujo.ExportAction;
 import net.ponec.jworksheet.core.ujo.Exportable;
 import org.ujorm.annotation.Domain;
 import org.ujorm.core.Key;
-import net.ponec.jworksheet.core.ujo.MetaAliases.WD;
+import net.ponec.jworksheet.core.ujo.MetaAliases._WD;
 
 /**
  * One Work Day
@@ -59,7 +59,7 @@ public class WorkDay implements Comparable<WorkDay>, Exportable, DomainObject {
     /** A day off flag is exported for a true value only. */
     @Override
     public boolean isExportable(final ExportAction action, final Key<?,?> key, final Object value) {
-        if (action == ExportAction.XML && key == WD.dayOff) {
+        if (action == ExportAction.XML && key == _WD.dayOff) {
             return Boolean.TRUE.equals(value);
         }
         return true;
