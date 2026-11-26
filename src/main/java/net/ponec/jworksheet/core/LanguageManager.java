@@ -427,9 +427,9 @@ public class LanguageManager {
         // --- TitledBorder --------------
 
         if(aCont instanceof javax.swing.JComponent) {
-            javax.swing.border.Border border_ = ((javax.swing.JComponent)aCont).getBorder();
-            if (border_ instanceof javax.swing.border.TitledBorder) {
-                javax.swing.border.TitledBorder border = (javax.swing.border.TitledBorder) border_;
+            javax.swing.border.Border componentBorder = ((javax.swing.JComponent)aCont).getBorder();
+            if (componentBorder instanceof javax.swing.border.TitledBorder) {
+                javax.swing.border.TitledBorder border = (javax.swing.border.TitledBorder) componentBorder;
 
                 // SetName:
                 if (firstRuning && Check.isEmpty(name)) {
