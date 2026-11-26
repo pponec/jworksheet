@@ -149,6 +149,15 @@
                         <arg>-Aujorm.metaPackage=meta</arg>
                     </compilerArgs>
                 </configuration>
+                <executions>
+                    <!-- The tests have no domain classes, so javac would warn that no processor used the -Aujorm options -->
+                    <execution>
+                        <id>default-testCompile</id>
+                        <configuration>
+                            <compilerArgs combine.self="override"/>
+                        </configuration>
+                    </execution>
+                </executions>
             </plugin>
 
             <!-- Generates the Ujorm domain handlers (the implementation of the Keys)
