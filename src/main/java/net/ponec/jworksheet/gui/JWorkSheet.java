@@ -71,6 +71,7 @@ import org.ujorm.core.Key;
 import net.ponec.jworksheet.gui.models.UjoTableModel;
 import net.ponec.jworksheet.gui.models.UjoKeyRow;
 import net.ponec.jworksheet.core.ujo.MetaAliases._EV;
+import net.ponec.jworksheet.core.ujo.MetaAliases._PA;
 import net.ponec.jworksheet.core.ujo.MetaAliases._PR;
 import net.ponec.jworksheet.core.ujo.MetaAliases._TT;
 import net.ponec.jworksheet.core.ujo.MetaAliases._UR;
@@ -268,7 +269,7 @@ public final class JWorkSheet extends TopFrame {
             }));
 
             // Window sizing:
-            ApplTools.windowsSizing(this, applContext.getParameters().getWindowSize());
+            ApplTools.windowsSizing(this, applContext.getParameters().getWindowSize(), Keys.defaultOf(_PA.windowSize));
 
             applContext.tableChanged(null); // Save a startup event
 

@@ -289,12 +289,30 @@ public class ApplContext implements TableModelListener, Runnable, JwsContext {
             // Window Sizing:
             Rectangle rect
             = parameters.isWindowSizeRestoration()
-            ? topFrame.getBounds()
+            ? windowAreaToSave()
             : Keys.defaultOf(_PA.windowSize) ;
             parameters.setWindowSize(rect);
 
             saveParameters();
         }
+    }
+
+    /**
+     * Returns the window area to save. A minimized, hidden or otherwise unusable area
+     * is never saved (the application could not be found after the next start),
+     * the last good area is kept instead.
+     */
+    private Rectangle windowAreaToSave() {
+        Rectangle result = parameters.getWindowSize();
+        if (topFrame != null
+        && (topFrame.getExtendedState() & java.awt.Frame.ICONIFIED) == 0
+        &&  topFrame.isShowing()) {
+            final Rectangle current = topFrame.getBounds();
+            if (ApplTools.isWindowAreaUsable(current)) {
+                result = current;
+            }
+        }
+        return ApplTools.isWindowAreaUsable(result) ? result : Keys.defaultOf(_PA.windowSize);
     }
 
     /** Close The Application (no exit) */

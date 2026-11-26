@@ -53,6 +53,7 @@ import java.time.LocalDate;
 import java.time.ZoneId;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 import java.util.Locale;
 import java.util.function.Function;
 import java.util.logging.Level;
@@ -456,8 +457,26 @@ public final class ApplTools {
 
 
 
-    /** Window Sizing */
-    public static void windowsSizing(java.awt.Window window, Rectangle rect) {
+    /** The minimal width of a restored window in pixels. */
+    private static final int MIN_WINDOW_WIDTH = 200;
+    /** The minimal height of a restored window in pixels. */
+    private static final int MIN_WINDOW_HEIGHT = 100;
+    /** The height of the top strip of a window, which must be reachable by a mouse. */
+    private static final int REACHABLE_STRIP_HEIGHT = 40;
+
+    /**
+     * Window Sizing.
+     * An unusable area (a minimized window, a tiny window or a window out of all screens)
+     * is replaced by the fallback, so the window is always found by the user.
+     *
+     * @param window The window to set.
+     * @param rect The required area, where a negative position means the center of the screen.
+     * @param fallback A default area for an unusable rectangle.
+     */
+    public static void windowsSizing(java.awt.Window window, Rectangle rect, Rectangle fallback) {
+        if (!isWindowAreaUsable(rect)) {
+            rect = fallback;
+        }
         if (rect.x<0 || rect.y<0) {
             Dimension screenSize = java.awt.Toolkit.getDefaultToolkit().getScreenSize();
             rect   = (Rectangle) rect.clone();
@@ -465,6 +484,49 @@ public final class ApplTools {
             rect.y = (screenSize.height - rect.height) >> 1 ;
         }
         window.setBounds(rect);
+    }
+
+    /** Returns true if the window area is worth storing into the configuration, see {@link #isWindowAreaUsable(Rectangle, List)}. */
+    public static boolean isWindowAreaUsable(Rectangle rect) {
+        return isWindowAreaUsable(rect, screenAreas());
+    }
+
+    /**
+     * Returns true if the window area is not minimized, not too small and it is reachable on a screen.
+     * A negative position is allowed, because it means the center of the screen.
+     *
+     * @param rect An area of the window.
+     * @param screens Areas of all screens, an empty list means a screen is not known.
+     */
+    static boolean isWindowAreaUsable(Rectangle rect, List<Rectangle> screens) {
+        if (rect == null
+        ||  rect.width  < MIN_WINDOW_WIDTH
+        ||  rect.height < MIN_WINDOW_HEIGHT) {
+            return false;
+        }
+        if (rect.x < 0 || rect.y < 0 || screens.isEmpty()) {
+            return true;
+        }
+        final Rectangle strip = new Rectangle(rect.x, rect.y, rect.width, REACHABLE_STRIP_HEIGHT);
+        for (Rectangle screen : screens) {
+            final Rectangle common = screen.intersection(strip);
+            if (common.width >= MIN_WINDOW_WIDTH / 2 && common.height >= REACHABLE_STRIP_HEIGHT / 2) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    /** Returns areas of all screens or an empty list in a headless environment. */
+    private static List<Rectangle> screenAreas() {
+        final List<Rectangle> result = new ArrayList<>();
+        if (!java.awt.GraphicsEnvironment.isHeadless()) {
+            for (java.awt.GraphicsDevice device : java.awt.GraphicsEnvironment
+                    .getLocalGraphicsEnvironment().getScreenDevices()) {
+                result.add(device.getDefaultConfiguration().getBounds());
+            }
+        }
+        return result;
     }
 
     /**
